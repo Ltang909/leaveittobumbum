@@ -3,10 +3,10 @@
 import { FormEvent, useMemo, useState } from "react";
 
 const tools = [
-  { icon: "✦", name: "Quick Quote", tag: "Sales", description: "Turn a few job details into a clean estimate your customer can understand.", action: "Build a quote" },
-  { icon: "↗", name: "Friendly Follow-up", tag: "Customers", description: "Write the message you have been putting off, without sounding like a robot.", action: "Write a follow-up" },
-  { icon: "✓", name: "Job Notes", tag: "Operations", description: "Turn messy field notes into a tidy summary and a clear next-step list.", action: "Clean up notes" },
-  { icon: "$", name: "Profit Peek", tag: "Money", description: "Check the rough profit on a job before you send the quote.", action: "Check a job" },
+  { icon: "✦", name: "Quick Quote", tag: "Sales", description: "Turn a few job details into a clean estimate your customer can understand.", action: "Build a quote", href: null },
+  { icon: "↗", name: "Friendly Follow-up", tag: "Customers", description: "Write the message you have been putting off, without sounding like a robot.", action: "Write a follow-up", href: null },
+  { icon: "✓", name: "Job Notes", tag: "Operations", description: "Turn messy field notes into a tidy summary and a clear next-step list.", action: "Clean up notes", href: null },
+  { icon: "$", name: "Profit Peek", tag: "Money", description: "Check the rough profit on a job before you send the quote.", action: "Check a job", href: "/tools/profit-peek/" },
 ];
 
 const plans = [
@@ -15,11 +15,6 @@ const plans = [
   { name: "Operator", price: "$49", note: "per month", credits: "6,000 actions each month", features: ["Everything in Helper", "10 team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
 ];
 
-const paymentLinks: Record<string, string> = {
-  helper: "https://buy.stripe.com/5kQdR80vdgrzgj639E9ws00",
-  operator: "https://buy.stripe.com/8x26oGb9R8Z7eaYdOi9ws01",
-};
-
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 
 export default function Home() {
@@ -27,26 +22,11 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [requestOpen, setRequestOpen] = useState(false);
   const [requestState, setRequestState] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const [billingBusy, setBillingBusy] = useState<string | null>(null);
   const filtered = useMemo(() => tools.filter((tool) => (category === "All" || tool.tag === category) && `${tool.name} ${tool.description}`.toLowerCase().includes(query.toLowerCase())), [category, query]);
 
-  async function checkout(plan: string) {
+  function checkout(plan: string) {
     if (plan === "free") { document.querySelector("#toolbox")?.scrollIntoView({ behavior: "smooth" }); return; }
-    setBillingBusy(plan);
-    const paymentLink = paymentLinks[plan];
-    if (paymentLink) {
-      window.location.href = paymentLink;
-      return;
-    }
-    try {
-      const response = await fetch("/api/stripe/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan }) });
-      const data = await response.json();
-      if (!response.ok || !data.url) throw new Error(data.error || "Checkout is unavailable.");
-      window.location.href = data.url;
-    } catch (error) {
-      alert(error instanceof Error ? error.message : "Checkout is unavailable right now.");
-      setBillingBusy(null);
-    }
+    window.location.href = `/checkout/?plan=${encodeURIComponent(plan)}`;
   }
 
   async function submitRequest(event: FormEvent<HTMLFormElement>) {
@@ -61,7 +41,7 @@ export default function Home() {
     <main>
       <header className="nav shell">
         <a className="brand" href="#top" aria-label="Leave It to Bum Bum home"><span className="brand-mark">BB</span><span>Leave It to<br /><b>Bum Bum</b></span></a>
-        <nav aria-label="Main navigation"><a href="#toolbox">Tools</a><a href="#pricing">Pricing</a><a href="#guarantee">36 hours</a></nav>
+        <nav aria-label="Main navigation"><a href="#toolbox">Tools</a><a href="#pricing">Pricing</a><a href="#guarantee">36 hours</a><a href="/account/">Account</a></nav>
         <button className="button button-small" onClick={() => setRequestOpen(true)}>Ask Bum Bum <Arrow /></button>
       </header>
 
@@ -93,7 +73,7 @@ export default function Home() {
           <label><span className="sr-only">Find a tool</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="What are you trying to get done?" /><span>⌕</span></label>
           <div className="filters" aria-label="Tool categories">{["All", "Sales", "Customers", "Operations", "Money"].map((item) => <button key={item} className={category === item ? "active" : ""} onClick={() => setCategory(item)}>{item}</button>)}</div>
         </div>
-        <div className="tool-grid">{filtered.map((tool, index) => <article className={`tool-card card-${index + 1}`} key={tool.name}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span></div><h3>{tool.name}</h3><p>{tool.description}</p><button onClick={() => alert(`${tool.name} is next in Bum Bum’s build queue. Request early access and we will let you know when it opens.`)}>{tool.action} <Arrow /></button></article>)}</div>
+        <div className="tool-grid">{filtered.map((tool, index) => <article className={`tool-card card-${index + 1}`} key={tool.name}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span></div><h3>{tool.name}</h3><p>{tool.description}</p><button onClick={() => tool.href ? window.location.href = tool.href : alert(`${tool.name} is next in Bum Bum’s build queue. Request early access and we will let you know when it opens.`)}>{tool.action} <Arrow /></button></article>)}</div>
         {!filtered.length && <p className="empty">Bum Bum could not find that one. Sounds like a good tool request.</p>}
         <button className="request-strip" onClick={() => setRequestOpen(true)}><span><b>Can’t find your oddly specific problem?</b><small>Tell Bum Bum what keeps eating your time.</small></span><span>Request a tool <Arrow /></span></button>
       </section>
@@ -104,7 +84,7 @@ export default function Home() {
 
       <section className="pricing shell" id="pricing">
         <div className="section-heading"><div><p className="kicker">One shared meter</p><h2>Pay for useful work,<br />not a maze of limits.</h2></div><p>Every completed result uses one action. Your whole team and every tool share the same monthly bucket.</p></div>
-        <div className="plan-grid">{plans.map((plan) => <article className={`plan ${plan.featured ? "featured" : ""}`} key={plan.name}>{plan.featured && <span className="popular">BUM BUM’S PICK</span>}<h3>{plan.name}</h3><div className="price">{plan.price}<small>{plan.note}</small></div><p className="credits">{plan.credits}</p><ul>{plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul><button className={plan.featured ? "button" : "button outline"} disabled={billingBusy === plan.plan} onClick={() => checkout(plan.plan)}>{billingBusy === plan.plan ? "Opening…" : plan.cta} <Arrow /></button></article>)}</div>
+        <div className="plan-grid">{plans.map((plan) => <article className={`plan ${plan.featured ? "featured" : ""}`} key={plan.name}>{plan.featured && <span className="popular">BUM BUM’S PICK</span>}<h3>{plan.name}</h3><div className="price">{plan.price}<small>{plan.note}</small></div><p className="credits">{plan.credits}</p><ul>{plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul><button className={plan.featured ? "button" : "button outline"} onClick={() => checkout(plan.plan)}>{plan.cta} <Arrow /></button></article>)}</div>
         <p className="pricing-note">Actions reset monthly and do not roll over. We warn you at 80% and 100%. Paid plans can keep going with simple action packs, or you can pause until the reset.</p>
       </section>
 
@@ -118,4 +98,3 @@ export default function Home() {
     </main>
   );
 }
-

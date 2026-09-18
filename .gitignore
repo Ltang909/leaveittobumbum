@@ -5,4 +5,4 @@ node_modules/
 *.log
 *.tsbuildinfo
 .DS_Store
-
+hostinger/leaveittobumbum-config.php

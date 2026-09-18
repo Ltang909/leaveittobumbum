@@ -1,0 +1,19 @@
+<?php
+require dirname(__DIR__) . '/_bootstrap.php';
+requirePost();
+$input = body();
+requireCsrf($input);
+$user = requireUser();
+$revenue = filter_var($input['revenue'] ?? null, FILTER_VALIDATE_FLOAT);
+$materials = filter_var($input['materials'] ?? null, FILTER_VALIDATE_FLOAT);
+$labor = filter_var($input['labor'] ?? null, FILTER_VALIDATE_FLOAT);
+$other = filter_var($input['other'] ?? 0, FILTER_VALIDATE_FLOAT);
+$idempotency = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($input['idempotencyKey'] ?? ''));
+if ($revenue === false || $materials === false || $labor === false || $other === false || min($revenue, $materials, $labor, $other) < 0) jsonResponse(['error' => 'Enter valid amounts of zero or more.'], 422);
+if (strlen($idempotency) < 16 || strlen($idempotency) > 128) jsonResponse(['error' => 'Invalid request identifier.'], 422);
+$cost = $materials + $labor + $other;
+$profit = $revenue - $cost;
+$margin = $revenue > 0 ? ($profit / $revenue) * 100 : 0;
+$count = consumeAction((int) $user['id'], (string) $user['plan'], periodKey($user), 'profit-peek', $idempotency);
+if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+jsonResponse(['result' => ['revenue' => round($revenue, 2), 'cost' => round($cost, 2), 'profit' => round($profit, 2), 'margin' => round($margin, 1)], 'usage' => usageFor($user), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
