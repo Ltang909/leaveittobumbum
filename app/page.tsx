@@ -15,6 +15,11 @@ const plans = [
   { name: "Operator", price: "$49", note: "per month", credits: "6,000 actions each month", features: ["Everything in Helper", "10 team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
 ];
 
+const paymentLinks: Record<string, string> = {
+  helper: "https://buy.stripe.com/5kQdR80vdgrzgj639E9ws00",
+  operator: "https://buy.stripe.com/8x26oGb9R8Z7eaYdOi9ws01",
+};
+
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 
 export default function Home() {
@@ -28,6 +33,11 @@ export default function Home() {
   async function checkout(plan: string) {
     if (plan === "free") { document.querySelector("#toolbox")?.scrollIntoView({ behavior: "smooth" }); return; }
     setBillingBusy(plan);
+    const paymentLink = paymentLinks[plan];
+    if (paymentLink) {
+      window.location.href = paymentLink;
+      return;
+    }
     try {
       const response = await fetch("/api/stripe/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan }) });
       const data = await response.json();
