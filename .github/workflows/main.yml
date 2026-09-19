@@ -8,39 +8,34 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+
       - run: npm ci
       - run: STATIC_EXPORT=true npx next build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: static-export
-          path: out/
 
-  deploy:
-    # Deploy only on pushes to main (not on PRs). workflow_dispatch on main also deploys.
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: static-export
-          path: out/
-      - name: Pack static export
+      - name: Assemble deploy package
         run: |
-          tar -czf site.tar.gz -C out .
-          echo "=== out/ contents ==="
-          ls -la out | head -30
-          echo "=== tarball contents ==="
-          tar -tzf site.tar.gz | head -30
+          rm -rf deploy-pkg site.tar.gz
+          mkdir -p deploy-pkg
+          # Static export (index.html, _next/, 404.html, ...)
+          cp -a out/. deploy-pkg/
+          # PHP backend (api/, account/, checkout/, tools/, app.css, ...)
+          # lives in hostinger/public_html/ in the repo.
+          cp -a hostinger/public_html/. deploy-pkg/
+          tar -czf site.tar.gz -C deploy-pkg .
+          echo "Deploy package contents:"
+          tar -tzf site.tar.gz | head -40
+
       - name: Copy archive to server over SSH
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -49,7 +44,9 @@ jobs:
           port: 65002
           source: "site.tar.gz"
           target: "~/"
-      - name: Extract into public_html
+
+      - name: Extract into the website document root
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -57,15 +54,20 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: 65002
           script: |
-            set -e
-            mkdir -p ~/public_html
-            tar -xzf ~/site.tar.gz -C ~/public_html
-            rm -f ~/site.tar.gz
+            DOCROOT="$HOME/domains/leaveittobumbum.com/public_html"
+            if [ ! -d "$DOCROOT" ]; then
+              echo "ERROR: document root not found: $DOCROOT"
+              ls "$HOME/domains" || true
+              exit 1
+            fi
+            tar -xzf "$HOME/site.tar.gz" -C "$DOCROOT"
+            rm -f "$HOME/site.tar.gz"
             # Safety net: the web server needs 755 on dirs and 644 on files.
-            find ~/public_html -type d -exec chmod 755 {} +
-            find ~/public_html -type f -exec chmod 644 {} +
-            echo "=== public_html after deploy ==="
-            ls -la ~/public_html | head -40
-            echo "=== key files ==="
-            ls -la ~/public_html/index.html ~/public_html/checkout ~/public_html/api/usage.php 2>&1
-            echo "Deployed OK"
+            find "$DOCROOT" -type d -exec chmod 755 {} +
+            find "$DOCROOT" -type f -exec chmod 644 {} +
+            echo "Document root after deploy:"
+            ls "$DOCROOT"
+            echo "Key paths:"
+            for p in index.html checkout/index.php account/index.php api/usage.php app.css; do
+              if [ -e "$DOCROOT/$p" ]; then echo "OK: $p"; else echo "MISSING: $p"; fi
+            done
