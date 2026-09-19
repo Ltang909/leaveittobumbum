@@ -34,7 +34,12 @@ jobs:
           name: static-export
           path: out/
       - name: Pack static export
-        run: tar -czf site.tar.gz -C out .
+        run: |
+          tar -czf site.tar.gz -C out .
+          echo "=== out/ contents ==="
+          ls -la out | head -30
+          echo "=== tarball contents ==="
+          tar -tzf site.tar.gz | head -30
       - name: Copy archive to server over SSH
         uses: appleboy/scp-action@v1.0.0
         with:
@@ -59,4 +64,8 @@ jobs:
             # Safety net: the web server needs 755 on dirs and 644 on files.
             find ~/public_html -type d -exec chmod 755 {} +
             find ~/public_html -type f -exec chmod 644 {} +
+            echo "=== public_html after deploy ==="
+            ls -la ~/public_html | head -40
+            echo "=== key files ==="
+            ls -la ~/public_html/index.html ~/public_html/checkout ~/public_html/api/usage.php 2>&1
             echo "Deployed OK"
