@@ -34,7 +34,7 @@ jobs:
           name: static-export
           path: out/
       - name: Deploy static export to Hostinger via FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
