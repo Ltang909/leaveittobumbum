@@ -33,15 +33,30 @@ jobs:
         with:
           name: static-export
           path: out/
-      - name: Deploy static export to Hostinger via FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+      - name: Pack static export
+        run: tar -czf site.tar.gz -C out .
+      - name: Copy archive to server over SSH
+        uses: appleboy/scp-action@v1.0.0
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          local-dir: ./out/
-          server-dir: ./public_html/
-          # Never wipe the server dir: the PHP backend (api/, account/,
-          # checkout/, tools/) and other server-managed files must survive.
-          dangerous-clean-slate: false
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 65002
+          source: "site.tar.gz"
+          target: "~/"
+      - name: Extract into public_html
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 65002
+          script: |
+            set -e
+            mkdir -p ~/public_html
+            tar -xzf ~/site.tar.gz -C ~/public_html
+            rm -f ~/site.tar.gz
+            # Safety net: the web server needs 755 on dirs and 644 on files.
+            find ~/public_html -type d -exec chmod 755 {} +
+            find ~/public_html -type f -exec chmod 644 {} +
+            echo "Deployed OK"
