@@ -21,6 +21,9 @@
 .activity{list-style:none;padding:0;margin:14px 0 0}
 .activity li{padding:10px 0;border-top:2px solid var(--line)}
 .activity li span:first-child{font-weight:800}
+#activity ul.activity{max-height:280px;overflow-y:auto;padding-right:10px}
+main .grid{margin-top:28px}
+main .grid .panel{margin-top:0}
 @media(max-width:700px){.tool-cards{grid-template-columns:1fr}}
 </style></head><body>
 <?php $showMeter = (bool) $user; require __DIR__ . '/../includes/site-header.php'; ?><main class="shell">
@@ -79,13 +82,6 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <?php endforeach; ?>
 </div>
 </section>
-<section class="panel" id="activity"><h2 style="margin-top:0">Recent activity</h2>
-<?php if (!$activityRows): ?><p class="lede" style="margin:0"><img src="/bum/cat-sleepy.png" alt="Bum Bum napping" class="sticker" style="width:88px;vertical-align:middle;margin-right:10px">Quiet so far. Use any tool and your actions will line up here.</p>
-<?php else: ?><ul class="activity">
-<?php foreach ($activityRows as $row): $rk = (string) $row['tool_key']; $rn = isset($DASHBOARD_TOOLS[$rk]) ? $DASHBOARD_TOOLS[$rk]['name'] : ucfirst($rk); $rc = (int) $row['action_count']; try { $rdt = new DateTime((string) $row['created_at'], new DateTimeZone('UTC')); $rdt->setTimezone($toronto); $rdate = $rdt->format('M j, g:i A'); } catch (Throwable $e) { $rdate = (string) $row['created_at']; } ?>
-<li><span><?= htmlspecialchars($rdate) ?></span> · <span><?= htmlspecialchars($rn) ?></span> · <span><?= $rc ?> action<?= $rc === 1 ? '' : 's' ?></span></li>
-<?php endforeach; ?></ul><?php endif; ?>
-</section>
 <div class="grid"><section class="stat"><span><?= ($bill['team_role'] ?? 'owner') === 'member' ? 'Team actions used' : 'Actions used' ?></span><b><?= $usage['used'] ?> / <?= $usage['limit'] ?></b><div class="meter"><span style="width:<?= $percent ?>%"></span></div><p><?= $usage['remaining'] ?> actions left in this period.<?= ($bill['team_role'] ?? 'owner') === 'member' ? ' Shared with ' . htmlspecialchars((string) $bill['team_owner_email']) . '\'s team.' : '' ?></p></section><section class="panel"><h2><?= $isMember ? 'Your billing' : 'Billing' ?></h2><p><?= $isMember ? 'This manages your own subscription only. The team plan is billed to the team owner.' : 'Update your payment method, download invoices, or change your subscription securely through Stripe.' ?></p><button id="billing">Manage billing</button><button id="logout" class="button secondary">Sign out</button><p id="message" class="error"></p><p><img src="/bum/cat-butt.png" alt="Bum Bum walking away" class="sticker" style="width:104px;transform:rotate(5deg)"> <span class="lede">BRB…</span></p></section></div>
 <section class="panel" id="team"><h2 style="margin-top:0">Team</h2><div id="team-body"><p class="lede">Waking Bum Bum up…</p></div></section>
 <?php if ($isMember): ?>
@@ -98,6 +94,13 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <section class="panel" id="requests"><h2>Custom tool requests</h2>
 <?php if ($isOperator): ?><p class="lede">One request per month. Delivered within 36 hours or your next month is free.</p><div id="req-list"></div><form id="req-form"><label>Give it a name</label><input name="title" maxlength="180" required placeholder="e.g. Invoice chaser"><label>What annoying task should it handle? What does done look like?</label><textarea name="details" maxlength="5000" required></textarea><button>Send request</button><p id="req-error" class="error"></p></form>
 <?php else: ?><p class="lede">Operator includes one custom tool request every month. Describe the annoying task, get a working tool in 36 hours, or your next month is free.</p><a class="button" data-plan="operator" data-context="requests" href="/checkout/?plan=operator">Get Operator, $49/mo</a><?php endif; ?>
+</section>
+<section class="panel" id="activity"><h2 style="margin-top:0">Recent activity</h2>
+<?php if (!$activityRows): ?><p class="lede" style="margin:0"><img src="/bum/cat-sleepy.png" alt="Bum Bum napping" class="sticker" style="width:88px;vertical-align:middle;margin-right:10px">Quiet so far. Use any tool and your actions will line up here.</p>
+<?php else: ?><ul class="activity">
+<?php foreach ($activityRows as $row): $rk = (string) $row['tool_key']; $rn = isset($DASHBOARD_TOOLS[$rk]) ? $DASHBOARD_TOOLS[$rk]['name'] : ucfirst($rk); $rc = (int) $row['action_count']; try { $rdt = new DateTime((string) $row['created_at'], new DateTimeZone('UTC')); $rdt->setTimezone($toronto); $rdate = $rdt->format('M j, g:i A'); } catch (Throwable $e) { $rdate = (string) $row['created_at']; } ?>
+<li><span><?= htmlspecialchars($rdate) ?></span> · <span><?= htmlspecialchars($rn) ?></span> · <span><?= $rc ?> action<?= $rc === 1 ? '' : 's' ?></span></li>
+<?php endforeach; ?></ul><?php endif; ?>
 </section>
 <script>
 async function session(){return fetch('/api/session.php').then(r=>r.json())}
