@@ -65,6 +65,18 @@ if ($action === 'delete') {
     jsonResponse(['ok' => true]);
 }
 
+if ($action === 'update') {
+    $id = (int) ($input['id'] ?? 0);
+    $transcript = (string) ($input['transcript'] ?? '');
+    if (mb_strlen($transcript) > 100000) jsonResponse(['error' => 'That note is too long to save.'], 422);
+    if (trim($transcript) === '') jsonResponse(['error' => 'Cannot save an empty note.'], 422);
+    $title = mb_substr(preg_replace('/\s+/', ' ', trim($transcript)), 0, 60);
+    $stmt = $pdo->prepare('UPDATE notes_entries SET title = ?, transcript = ? WHERE id = ? AND user_id = ?');
+    $stmt->execute([$title, $transcript, $id, $userId]);
+    if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Note not found.'], 404);
+    jsonResponse(['ok' => true, 'title' => $title]);
+}
+
 if ($action === 'finalize') {
     $transcript = (string) ($input['transcript'] ?? '');
     if (mb_strlen($transcript) > 100000) jsonResponse(['error' => 'That note is too long to save.'], 422);
