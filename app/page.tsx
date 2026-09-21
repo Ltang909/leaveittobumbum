@@ -36,10 +36,14 @@ const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "Ar
 
 const FACES = [
   { src: "/bum/cat-work.png", alt: "Bum Bum at work" },
-  { src: "/bum/cat-blep.png", alt: "Bum Bum blepping" },
+  { src: "/bum/cat-default.png", alt: "Bum Bum, just vibing" },
   { src: "/bum/cat-wink.png", alt: "Bum Bum winking" },
+  { src: "/bum/cat-blep.png", alt: "Bum Bum blepping" },
   { src: "/bum/cat-cool.png", alt: "Bum Bum looking cool" },
   { src: "/bum/cat-excited.png", alt: "Bum Bum excited" },
+  { src: "/bum/cat-judging.png", alt: "Bum Bum judging your tabs" },
+  { src: "/bum/cat-peek.png", alt: "Bum Bum peeking in" },
+  { src: "/bum/cat-sleepy.png", alt: "Bum Bum napping on the job" },
 ];
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }
