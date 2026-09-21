@@ -132,7 +132,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className={`ticker${napZoom ? " zoomies" : ""}`} aria-label="Examples"><div>QUOTE IT <span>✦</span> CHASE IT <span>✦</span> SORT IT <span>✦</span> PRICE IT <span>✦</span> SEND IT <span>✦</span> LEAVE IT TO BUM BUM <span>✦</span></div></section>
+      <section className={`ticker${napZoom ? " zoomies" : ""}`} aria-label="Examples"><div className="ticker-track">{[0, 1].map((copy) => (<div className="ticker-chunk" key={copy} aria-hidden={copy === 1 || undefined}>{["QUOTE IT", "CHASE IT", "SORT IT", "PRICE IT", "SEND IT", "LEAVE IT TO BUM BUM"].map((t) => (<span key={t} className="ticker-item">{t}<i>✦</i></span>))}</div>))}</div></section>
 
       <section className="toolbox shell" id="toolbox">
         <div className="section-heading"><div><p className="kicker">Bum Bum’s toolbox</p><h2>Pick the thing you<br />don’t want to do.</h2></div><p>Every finished result uses one action. The shelf keeps growing, so poke around.</p></div>
