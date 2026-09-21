@@ -17,3 +17,6 @@
 .menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(9px) rotate(45deg)}
 .menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
 .menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-9px) rotate(45deg)}
+/* Mobile header fixes: base .menu-toggle{display:none} above wins by cascade, so re-assert after; hide nav-right inside the dropdown flow; fix close-icon X */
+@media(max-width:700px){.menu-toggle{display:inline-flex}.nav-right{display:none}}
+.menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}

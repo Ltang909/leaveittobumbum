@@ -13,9 +13,6 @@ $shMeter = !empty($showMeter);
 <script>
 (function(){var t=document.getElementById('bbMenuToggle'),n=document.getElementById('bbPhpNav');if(!t||!n)return;t.addEventListener('click',function(){var open=n.classList.toggle('open');t.setAttribute('aria-expanded',open?'true':'false');t.setAttribute('aria-label',open?'Close menu':'Open menu');});n.addEventListener('click',function(e){if(e.target.closest('a')){n.classList.remove('open');t.setAttribute('aria-expanded','false');t.setAttribute('aria-label','Open menu');}});})();
 </script>
-<script>
-(function(){var t=document.getElementById('bbMenuToggle'),n=document.getElementById('bbPhpNav');if(!t||!n)return;t.addEventListener('click',function(){var open=n.classList.toggle('open');t.setAttribute('aria-expanded',open?'true':'false');t.setAttribute('aria-label',open?'Close menu':'Open menu');});n.addEventListener('click',function(e){if(e.target.closest('a')){n.classList.remove('open');t.setAttribute('aria-expanded','false');t.setAttribute('aria-label','Open menu');}});})();
-</script>
 <?php if ($shUser): ?><script>
 (function(){var b=document.getElementById('bbSignOut');if(!b)return;b.addEventListener('click',async function(){b.disabled=true;try{var s=await fetch('/api/session.php').then(function(r){return r.json()});await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout',csrf:s.csrf})});}catch(e){}location.reload();});})();
 </script><?php endif; ?>
