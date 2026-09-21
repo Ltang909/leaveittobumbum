@@ -56,6 +56,7 @@ export default function Home() {
   const [party, setParty] = useState(false);
   const [napZoom, setNapZoom] = useState(false);
   const [napping, setNapping] = useState(false);
+  const [portraitOk, setPortraitOk] = useState(true);
 
   useEffect(() => {
     console.log("%c🐈 psst — Bum Bum sees you.\n%cOpened devtools, huh? Respect. If you're snooping for fun: hello@leaveittobumbum.com", "font-weight:bold;font-size:14px", "font-size:12px");
@@ -122,8 +123,8 @@ export default function Home() {
         <div className="hero-portrait" aria-label="Bum Bum, chief tiny-tool operator">
           <div className="portrait-burst"></div>
           <div key={boingKey} className={`portrait-frame boopable${boingKey && !party ? " boing" : ""}${party ? " dance" : ""}`} onClick={boopBumBum} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); boopBumBum(); } }} role="button" tabIndex={0} aria-label="Boop Bum Bum">
-            <img src={FACES[face].src} alt={FACES[face].alt} onError={(event) => { event.currentTarget.style.display = "none"; }} />
-            <div className="photo-fallback"><span>🐈</span><small>Bum Bum’s portrait<br />is clocking in</small></div>
+            <img src={FACES[face].src} alt={FACES[face].alt} onLoad={() => setPortraitOk(true)} onError={(event) => { setPortraitOk(false); event.currentTarget.style.display = "none"; }} />
+            {!portraitOk && <div className="photo-fallback"><span>🐈</span><small>Bum Bum’s portrait<br />is clocking in</small></div>}
           </div>
           {quip && <div className="quip-bubble" role="status">{quip}</div>}
           <div className="scribble scribble-one">this is Bum Bum</div>
