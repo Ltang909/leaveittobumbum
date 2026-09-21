@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postbuild": "node -e \"const fs=require('fs');if(fs.existsSync('out/tools.html')){fs.mkdirSync('out/tools',{recursive:true});fs.copyFileSync('out/tools.html','out/tools/index.html');console.log('postbuild: tools/index.html ready')}\""
   },
   "dependencies": {
     "next": "^16.3.5",
@@ -21,4 +22,3 @@
     "typescript": "5.9.2"
   }
 }
-
