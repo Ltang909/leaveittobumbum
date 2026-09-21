@@ -30,6 +30,7 @@ return [
         'api_key' => 'phx_replace_me',
     ],
     'cron_secret' => 'replace_me', // generate with: openssl rand -hex 24
+    'groq_api_key' => 'replace_me', // server-side Groq key for Notes transcription on iPhone (free: https://console.groq.com/keys)
 
     // Optional: only needed if you want Cutline renewal reminder emails.
     // Uncomment and fill in to enable them.
