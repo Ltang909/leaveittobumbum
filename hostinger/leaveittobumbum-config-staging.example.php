@@ -30,4 +30,15 @@ return [
         'api_key' => 'phx_replace_me',
     ],
     'cron_secret' => 'replace_me', // generate with: openssl rand -hex 24
+
+    // Optional: only needed if you want Cutline renewal reminder emails.
+    // Uncomment and fill in to enable them.
+    // 'mail' => [
+    //     'host' => 'replace_me',       // e.g. smtp.hostinger.com
+    //     'port' => 587,
+    //     'user' => 'replace_me',
+    //     'pass' => 'replace_me',
+    //     'from_email' => 'replace_me',
+    //     'from_name' => 'replace_me',  // e.g. Bum Bum
+    // ],
 ];

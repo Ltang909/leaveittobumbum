@@ -1,0 +1,71 @@
+<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor($user) : null; ?>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bum Bum Notes | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+.notes-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.notes-row .button{margin-top:0}
+#notesRec{font-size:20px;padding:16px 30px}
+.notes-timer{font-size:34px;font-weight:900}
+.notes-status{font-weight:700;margin:14px 0 0}
+#notesMeter{width:100%;height:56px;display:block;margin-top:16px;border:2px solid var(--line);border-radius:10px;background:#fff}
+.notes-transcript{background:var(--cream);border:2px solid var(--line);border-radius:10px;padding:14px;min-height:120px;max-height:260px;overflow-y:auto;line-height:1.6;margin-top:8px}
+.notes-transcript .interim,.notes-placeholder{opacity:.55}
+select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+</style></head><body><header class="shell"><a class="brand" href="/">BB · Leave It to Bum Bum</a><span><?php require dirname(__DIR__, 2) . '/includes/meter.php'; ?> <a href="/account/">Account</a></span></header><main class="shell"><p class="eyebrow">Bum Bum's toolbox</p><h1>Talk it out. We'll write it down.</h1><p class="lede">Hit record and talk it out. Your words appear as you speak, and when you stop you get an editable transcript to copy or download. The audio never leaves your browser. One finished note uses one action.</p>
+<?php if (!$user): ?><section class="panel"><h2>Sign in to use Bum Bum Notes</h2><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Sign in or create an account</a></section><?php else: ?>
+<?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
+<?php $out = ($usage['remaining'] ?? 0) <= 0; ?>
+<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
+<?php if ($out): ?>
+<div id="upgrade-slot"></div>
+<?php else: ?>
+<section class="panel" id="recorder"><div class="notes-row"><button id="notesRec" class="button" type="button">Record</button><button id="notesStop" class="button secondary" type="button" disabled>Stop</button><span id="notesTimer" class="notes-timer">00:00</span></div><canvas id="notesMeter" width="640" height="56" aria-hidden="true"></canvas><p id="notesStatus" class="notes-status">Ready when you are.</p><label>Transcription language<select id="notesLang"><option value="en-US" selected>English (US)</option><option value="en-GB">English (UK)</option><option value="es-ES">Español</option><option value="fr-FR">Français</option><option value="de-DE">Deutsch</option><option value="it-IT">Italiano</option><option value="pt-BR">Português (BR)</option><option value="zh-CN">中文 (简体)</option><option value="zh-TW">中文 (繁體)</option><option value="yue-Hant-HK">粵語 (香港)</option><option value="ja-JP">日本語</option><option value="ko-KR">한국어</option></select></label><p class="eyebrow" style="margin-top:20px">Live transcript <span id="notesSrHint"></span></p><div id="notesLive" class="notes-transcript" aria-live="polite"><span class="notes-placeholder">Your words appear here while you record...</span></div></section>
+<section id="notesResult" class="panel hidden"><h2>Here's what I heard</h2><p class="lede" id="notesNote"></p><label>Transcript (tweak anything I misheard)</label><textarea id="notesText" rows="8"></textarea><div class="notes-row"><button id="notesCopy" class="button" type="button">Copy text</button><button id="notesDlTxt" class="button secondary" type="button">Download .txt</button><button id="notesDlAudio" class="button secondary" type="button">Download audio</button><button id="notesAgain" class="button secondary" type="button">Record another</button></div><p id="notesUsage"></p></section>
+<div id="upgrade-slot"></div>
+<?php endif; ?>
+<script>
+const TOOL_KEY='notes';
+const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
+if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
+<?php if ($out): ?>
+document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
+bindUpgradeClicks(document,'page_load');
+bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'page_load'});
+<?php else: ?>
+const recBtn=document.querySelector('#notesRec');
+const stopBtn=document.querySelector('#notesStop');
+const timerEl=document.querySelector('#notesTimer');
+const statusEl=document.querySelector('#notesStatus');
+const liveEl=document.querySelector('#notesLive');
+const srHint=document.querySelector('#notesSrHint');
+const langSel=document.querySelector('#notesLang');
+const meterCanvas=document.querySelector('#notesMeter');
+const resultEl=document.querySelector('#notesResult');
+const textEl=document.querySelector('#notesText');
+const usageEl=document.querySelector('#notesUsage');
+const noteEl=document.querySelector('#notesNote');
+const copyBtn=document.querySelector('#notesCopy');
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let recording=false,micStream=null,recorder=null,chunks=[],audioCtx=null,analyser=null,meterRAF=0,timerInt=0,startTs=0,recog=null,finalTranscript='',audioBlob=null,audioMime='',attempt=crypto.randomUUID();
+if(!SR){srHint.textContent='Live transcription needs Chrome or Edge. Recording and audio download still work fine here.';}
+function fmtTime(sec){sec=Math.max(0,Math.floor(sec));return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');}
+function pickAudioMime(){const c=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
+function setStatus(msg,isError){statusEl.textContent=msg;statusEl.classList.toggle('error',!!isError);}
+function drawMeter(){const g=meterCanvas.getContext('2d');const W=meterCanvas.width,H=meterCanvas.height;const data=new Uint8Array(analyser.frequencyBinCount);(function frame(){if(!recording)return;meterRAF=requestAnimationFrame(frame);analyser.getByteFrequencyData(data);g.clearRect(0,0,W,H);const bars=48,bw=W/bars;for(let i=0;i<bars;i++){const v=data[Math.floor(i*data.length/bars)]/255;const h=Math.max(3,v*H);g.fillStyle='#ff7448';g.globalAlpha=0.3+v*0.7;g.fillRect(i*bw+bw*0.2,(H-h)/2,bw*0.6,h);}g.globalAlpha=1;})();}
+function renderLive(interim){liveEl.innerHTML='';const done=finalTranscript.trim();if(done)liveEl.appendChild(document.createTextNode(done));if(interim){if(done)liveEl.appendChild(document.createTextNode(' '));const s=document.createElement('span');s.className='interim';s.textContent=interim;liveEl.appendChild(s);}if(!done&&!interim)liveEl.innerHTML='<span class="notes-placeholder">Listening...</span>';liveEl.scrollTop=liveEl.scrollHeight;}
+function startRecognition(){if(!SR)return;srHint.textContent='Live: '+langSel.options[langSel.selectedIndex].text;const r=new SR();r.lang=langSel.value;r.continuous=true;r.interimResults=true;r.onresult=e=>{let interim='';for(let i=e.resultIndex;i<e.results.length;i++){const res=e.results[i];const txt=res[0].transcript;if(res.isFinal){finalTranscript+=(finalTranscript&&!/\s$/.test(finalTranscript)?' ':'')+txt.trim()+' ';}else{interim+=txt;}}renderLive(interim);};r.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed'){srHint.textContent='Transcription was blocked. Check the microphone permission.';}};r.onend=()=>{if(recording){try{r.start();}catch(_){}}};recog=r;try{r.start();}catch(_){}}
+function cleanupAudio(){if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null;}if(audioCtx){audioCtx.close().catch(()=>{});audioCtx=null;analyser=null;}}
+async function startRecording(){if(recording)return;if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){setStatus('This browser cannot access the microphone.',true);return;}try{micStream=await navigator.mediaDevices.getUserMedia({audio:true});}catch(e){setStatus('Microphone permission denied.',true);return;}try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();analyser=audioCtx.createAnalyser();analyser.fftSize=256;audioCtx.createMediaStreamSource(micStream).connect(analyser);}catch(e){analyser=null;}chunks=[];const mime=pickAudioMime();try{recorder=new MediaRecorder(micStream,mime?{mimeType:mime}:undefined);}catch(e){cleanupAudio();setStatus('Recording is not supported in this browser.',true);return;}recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};recorder.onstop=onVoiceStop;finalTranscript='';liveEl.innerHTML='<span class="notes-placeholder">Listening...</span>';startRecognition();try{recorder.start(250);}catch(e){cleanupAudio();if(recog){try{recog.onend=null;recog.stop();}catch(_){}recog=null;}recBtn.disabled=false;setStatus('Recording could not start in this browser.',true);return;}recording=true;startTs=Date.now();if(analyser)drawMeter();timerInt=setInterval(()=>{timerEl.textContent=fmtTime((Date.now()-startTs)/1000);},500);timerEl.textContent='00:00';recBtn.disabled=true;stopBtn.disabled=false;langSel.disabled=true;resultEl.classList.add('hidden');setStatus(SR?'Recording. Speak now.':'Recording (no live transcription in this browser).');bbTrack('recording_started',{tool:TOOL_KEY});}
+function stopRecording(){if(!recording)return;recording=false;clearInterval(timerInt);cancelAnimationFrame(meterRAF);if(recog){try{recog.onend=null;recog.stop();}catch(e){}recog=null;}try{recorder.stop();}catch(e){onVoiceStop();}recBtn.disabled=false;stopBtn.disabled=true;langSel.disabled=false;setStatus('Wrapping up...');}
+function onVoiceStop(){audioMime=(recorder&&recorder.mimeType)||'audio/webm';audioBlob=new Blob(chunks,{type:audioMime});cleanupAudio();const text=finalTranscript.trim();textEl.value=text;noteEl.textContent=text?('Noted. That was '+fmtTime((Date.now()-startTs)/1000)+' of brilliance.'):'Hmm, I did not catch any words. Your audio is still below if you want it.';resultEl.classList.remove('hidden');resultEl.scrollIntoView({behavior:'smooth',block:'nearest'});meterIt(text.length);}
+async function meterIt(chars){const key=attempt;attempt=crypto.randomUUID();usageEl.textContent='';try{const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/notes.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:session.csrf,idempotencyKey:key,transcriptChars:chars})});const data=await response.json();if(!response.ok){if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');usageEl.textContent='This note was not counted. Your transcript is safe above.';}else{usageEl.textContent='Could not log this note ('+(data.error||'hmm')+'). Your transcript is safe above.';}return;}bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining,chars:chars});usageEl.textContent=data.usage.remaining+' actions remaining this month.';}catch(e){usageEl.textContent='Could not log this note right now. Your transcript is safe above.';}}
+function stampName(ext){const d=new Date();const p=n=>String(n).padStart(2,'0');return 'bum-bum-note-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+ext;}
+function downloadBlob(blob,filename){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
+copyBtn.addEventListener('click',async()=>{const t=textEl.value;try{await navigator.clipboard.writeText(t);copyBtn.textContent='Copied!';}catch(e){textEl.select();try{document.execCommand('copy');copyBtn.textContent='Copied!';}catch(_){copyBtn.textContent='Copy failed. Select the text manually.';}}setTimeout(()=>{copyBtn.textContent='Copy text';},1500);});
+document.querySelector('#notesDlTxt').addEventListener('click',()=>{downloadBlob(new Blob([textEl.value],{type:'text/plain'}),stampName('.txt'));bbTrack('note_downloaded',{tool:TOOL_KEY,format:'txt'});});
+document.querySelector('#notesDlAudio').addEventListener('click',()=>{if(!audioBlob)return;const m=audioMime.split(';')[0];const ext=m.indexOf('mp4')>=0?'m4a':(m.indexOf('ogg')>=0?'ogg':'webm');downloadBlob(audioBlob,stampName('.'+ext));bbTrack('note_downloaded',{tool:TOOL_KEY,format:'audio'});});
+document.querySelector('#notesAgain').addEventListener('click',()=>{resultEl.classList.add('hidden');textEl.value='';finalTranscript='';audioBlob=null;liveEl.innerHTML='<span class="notes-placeholder">Your words appear here while you record...</span>';timerEl.textContent='00:00';setStatus('Ready when you are.');recBtn.focus();});
+recBtn.addEventListener('click',startRecording);
+stopBtn.addEventListener('click',stopRecording);
+<?php endif; ?>
+</script><?php endif; ?></main></body></html>

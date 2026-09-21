@@ -7,10 +7,13 @@ const tools = [
   { icon: "↗", name: "Friendly Follow-up", tag: "Customers", description: "Write the message you have been putting off, without sounding like a robot.", action: "Write a follow-up", href: null },
   { icon: "✓", name: "Job Notes", tag: "Operations", description: "Turn messy field notes into a tidy summary and a clear next-step list.", action: "Clean up notes", href: null },
   { icon: "$", name: "Profit Peek", tag: "Money", description: "Check the rough profit on a job before you send the quote.", action: "Check a job", href: "/tools/profit-peek/" },
+  { icon: "◉", name: "Bum Bum Clips", tag: "Video", description: "Record your screen right in your browser. Download the clip, keep it forever.", action: "Record a clip", href: "/tools/clips/" },
+  { icon: "♪", name: "Bum Bum Notes", tag: "Voice", description: "Talk it out and get a live transcript you can copy or download.", action: "Record a note", href: "/tools/notes/" },
+  { icon: "✂", name: "Cutline", tag: "Money", description: "Every subscription you forgot about, in one place, with renewal reminders.", action: "Track subscriptions", href: "/tools/cutline/" },
 ];
 
 const plans = [
-  { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["3 active tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
+  { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["4 active tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
   { name: "Helper", price: "$12", note: "per month", credits: "1,500 actions each month", features: ["All current tools", "3 team members", "Email support", "$6 per extra 1,000 actions"], cta: "Choose Helper", plan: "helper" },
   { name: "Operator", price: "$49", note: "per month", credits: "6,000 actions each month", features: ["Everything in Helper", "10 team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
 ];
