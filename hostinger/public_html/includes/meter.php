@@ -1,0 +1,5 @@
+<?php
+// Header usage pill for signed-in users. Requires $user and $usage (from usageFor()).
+if (!empty($user) && !empty($usage) && (int) $usage['limit'] > 0) : ?>
+<a class="usage-pill" href="/account/"><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?> actions left</a>
+<?php endif; ?>

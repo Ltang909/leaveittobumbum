@@ -16,4 +16,10 @@ return [
         'operator_price' => 'price_1UH7nlAknPcpAXyT3oW2EFKX',
         'portal_configuration' => '',
     ],
+    'posthog' => [
+        'key' => 'phc_replace_me', // client-side project key (safe to expose in page HTML)
+        'host' => 'https://us.i.posthog.com',
+        'api_key' => 'phx_replace_me', // server-side personal API key, keep secret
+    ],
+    'cron_secret' => 'replace_me', // shared secret for /api/cron-check-requests.php
 ];

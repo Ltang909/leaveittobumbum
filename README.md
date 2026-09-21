@@ -11,6 +11,12 @@ Initial production website and product shell for leaveittobumbum.com.
 
 An action is one completed useful result, regardless of which tool produced it. This keeps metering predictable across the whole toolbox.
 
+## Pricing funnel tracking
+
+Client-side funnel events go to PostHog (`hostinger/public_html/includes/analytics.php`): `signed_up`, `signed_in`, `action_completed`, `usage_milestone_80`, `limit_reached`, `upgrade_prompt_shown`, `upgrade_clicked`, `checkout_started`, `request_submitted`. Server-side events (`subscription_created`, `subscription_cancelled`, `guarantee_credit_applied`) are captured from `api/webhook.php` and `api/cron-check-requests.php`. Configure the `posthog` block in the server config to enable.
+
+Custom tool requests (Operator 36-hour guarantee) live in the `custom_requests` table. Apply `hostinger/schema-custom-requests.sql` once, then schedule a daily hit to `/api/cron-check-requests.php?secret=CRON_SECRET` to auto-credit missed deadlines via Stripe customer balance.
+
 ## Production setup
 
 Copy `.env.example` to `.env.local` for local development. In production, add the same values through the host's environment settings. Never commit secret values.

@@ -115,6 +115,19 @@ function consumeAction(int $userId, string $plan, string $period, string $tool, 
     }
 }
 
+function posthogCapture(string $event, string $distinctId, array $properties = []): void {
+    $ph = config()['posthog'] ?? [];
+    $apiKey = (string) ($ph['api_key'] ?? '');
+    if ($apiKey === '' || $apiKey === 'phx_replace_me') return;
+    $host = rtrim((string) ($ph['host'] ?? 'https://us.i.posthog.com'), '/');
+    $payload = json_encode(['api_key' => $apiKey, 'event' => $event, 'distinct_id' => $distinctId, 'properties' => $properties]);
+    $curl = curl_init($host . '/capture/');
+    curl_setopt_array($curl, [CURLOPT_RETURNTRANSFER => true, CURLOPT_POST => true, CURLOPT_POSTFIELDS => $payload, CURLOPT_HTTPHEADER => ['Content-Type: application/json'], CURLOPT_TIMEOUT => 3]);
+    $ok = curl_exec($curl);
+    if ($ok === false) error_log('PostHog capture failed: ' . curl_error($curl));
+    curl_close($curl);
+}
+
 function stripeRequest(string $method, string $path, array $params = []): array {
     $stripe = config()['stripe'];
     $curl = curl_init('https://api.stripe.com' . $path);
