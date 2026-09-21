@@ -8,6 +8,7 @@ export type Tool = {
   description: string;
   url: string;
   cta: string;
+  mascot?: string;
 };
 
 const data = registry as { tools: Tool[] };

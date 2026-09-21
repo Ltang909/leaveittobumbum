@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { tools } from "./lib/tools";
+import { SiteHeader, SiteFooter } from "./components/chrome";
 import { useRequestTool } from "./components/request-tool";
 
 const plans = [
@@ -33,11 +34,19 @@ const CONFETTI = Array.from({ length: 90 }, (_, i) => ({
 
 const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 
+const FACES = [
+  { src: "/bum-bum.png", alt: "Bum Bum the cat" },
+  { src: "/bum/cat-blep.png", alt: "Bum Bum blepping" },
+  { src: "/bum/cat-wink.png", alt: "Bum Bum winking" },
+  { src: "/bum/cat-cool.png", alt: "Bum Bum looking cool" },
+  { src: "/bum-bum-funny.png", alt: "Bum Bum making a funny face" },
+];
+
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 
 export default function Home() {
   const { openRequest, requestModal } = useRequestTool();
-  const [booped, setBooped] = useState(false);
+  const [face, setFace] = useState(0);
   const [quip, setQuip] = useState<string | null>(null);
   const [boingKey, setBoingKey] = useState(0);
   const [party, setParty] = useState(false);
@@ -46,7 +55,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log("%c🐈 psst — Bum Bum sees you.\n%cOpened devtools, huh? Respect. If you're snooping for fun: hello@leaveittobumbum.com", "font-weight:bold;font-size:14px", "font-size:12px");
-    new Image().src = "/bum-bum-funny.png";
+    FACES.forEach((f) => { new Image().src = f.src; });
     let pos = 0;
     let napBuf = "";
     let napTimer: number | undefined;
@@ -88,24 +97,15 @@ export default function Home() {
   }
 
   function boopBumBum() {
-    const next = !booped;
-    setBooped(next);
+    setFace((f) => (f + 1) % FACES.length);
     setBoingKey((k) => k + 1);
-    if (next) {
-      setQuip(QUIPS[Math.floor(Math.random() * QUIPS.length)]);
-      window.setTimeout(() => setQuip(null), 2600);
-    } else {
-      setQuip(null);
-    }
+    setQuip(QUIPS[Math.floor(Math.random() * QUIPS.length)]);
+    window.setTimeout(() => setQuip(null), 2600);
   }
 
   return (
     <main>
-      <header className="nav shell">
-        <a className="brand" href="#top" aria-label="Leave It to Bum Bum home"><span className="brand-mark">BB</span><span>Leave It to<br /><b>Bum Bum</b></span></a>
-        <nav aria-label="Main navigation"><a href="/tools/">Tools</a><a href="#pricing">Pricing</a><a href="#guarantee">36 hours</a><a href="/account/">Account</a></nav>
-        <button className="button button-small" onClick={() => openRequest()}>Ask Bum Bum <Arrow /></button>
-      </header>
+      <SiteHeader />
 
       <section className="hero shell" id="top">
         <div className="hero-copy">
@@ -118,7 +118,7 @@ export default function Home() {
         <div className="hero-portrait" aria-label="Bum Bum, chief tiny-tool operator">
           <div className="portrait-burst"></div>
           <div key={boingKey} className={`portrait-frame boopable${boingKey && !party ? " boing" : ""}${party ? " dance" : ""}`} onClick={boopBumBum} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); boopBumBum(); } }} role="button" tabIndex={0} aria-label="Boop Bum Bum">
-            <img src={booped ? "/bum-bum-funny.png" : "/bum-bum.png"} alt={booped ? "Bum Bum making a funny face" : "Bum Bum the cat"} onError={(event) => { event.currentTarget.style.display = "none"; }} />
+            <img src={FACES[face].src} alt={FACES[face].alt} onError={(event) => { event.currentTarget.style.display = "none"; }} />
             <div className="photo-fallback"><span>🐈</span><small>Bum Bum’s portrait<br />is clocking in</small></div>
           </div>
           {quip && <div className="quip-bubble" role="status">{quip}</div>}
@@ -132,7 +132,7 @@ export default function Home() {
 
       <section className="toolbox shell" id="toolbox">
         <div className="section-heading"><div><p className="kicker">Bum Bum’s toolbox</p><h2>Pick the thing you<br />don’t want to do.</h2></div><p>Every finished result uses one action. The shelf keeps growing, so poke around.</p></div>
-        <div className="tool-grid">{tools.slice(0, 3).map((tool, index) => <article className={`tool-card card-${index + 1}`} key={tool.key}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span></div><h3>{tool.name}</h3><p>{tool.description}</p><button onClick={() => openTool(tool)}>{tool.cta} <Arrow /></button></article>)}</div>
+        <div className="tool-grid">{tools.slice(0, 3).map((tool, index) => <article className={`tool-card card-${index + 1}`} key={tool.key}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span>{tool.mascot && <img className="tool-mascot" src={tool.mascot} alt="" aria-hidden="true" />}</div><h3>{tool.name}</h3><p>{tool.description}</p><button onClick={() => openTool(tool)}>{tool.cta} <Arrow /></button></article>)}</div>
         <div className="toolbox-more"><a className="button" href="/tools/">Browse the full toolbox <Arrow /></a></div>
       </section>
 
@@ -150,7 +150,7 @@ export default function Home() {
 
       <section className="closing shell"><p className="kicker">Your to-don’t list starts here</p><h2>There has to be one thing<br />you would happily never do again.</h2><button className="button" onClick={() => openRequest()}>Tell Bum Bum <Arrow /></button></section>
 
-      <footer className="footer shell"><a className="brand" href="#top"><span className="brand-mark">BB</span><span>Leave It to<br /><b>Bum Bum</b></span></a><p>Useful little tools for busy little businesses.<br />© {new Date().getFullYear()} Leave It to Bum Bum</p><div><a href="mailto:hello@leaveittobumbum.com">hello@leaveittobumbum.com</a><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></footer>
+      <SiteFooter />
 
       {requestModal}
 

@@ -23,7 +23,7 @@
 .activity li span:first-child{font-weight:800}
 @media(max-width:700px){.tool-cards{grid-template-columns:1fr}}
 </style></head><body>
-<header class="shell"><a class="brand" href="/">BB · Leave It to Bum Bum</a><span><?php if ($user) require __DIR__ . '/../includes/meter.php'; ?> <a href="/tools/">Toolbox</a></span></header><main class="shell">
+<?php $showMeter = (bool) $user; require __DIR__ . '/../includes/site-header.php'; ?><main class="shell">
 <?php if (!$user): ?><p class="eyebrow">Your workspace</p><h1>First, tell Bum Bum who you are.</h1><div class="grid"><section class="panel"><h2>Sign in</h2><form data-action="login"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Sign in</button><p class="error"></p></form></section><section class="panel"><h2>Create an account</h2><p>Your free workspace includes 75 completed actions each month.</p><form data-action="register"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Create free account</button><p class="error"></p></form></section></div>
 <script>
 document.querySelectorAll('form').forEach(form=>form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button');button.disabled=true;const session=await fetch('/api/session.php').then(r=>r.json());const fields=Object.fromEntries(new FormData(form));const response=await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...fields,action:form.dataset.action,csrf:session.csrf})});const data=await response.json();if(response.ok){bbIdentify(fields.email);bbTrack(form.dataset.action==='register'?'signed_up':'signed_in',{});const next=new URLSearchParams(location.search).get('next');location.href=next||'/account/'}else{form.querySelector('.error').textContent=data.error;button.disabled=false}}));
@@ -62,6 +62,11 @@ try {
 } catch (Throwable $e) { $activityRows = []; }
 $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your workspace</p><h1><?= $greet ?>. <?= ucfirst(htmlspecialchars($user['plan'])) ?> is handling it.</h1><p class="lede"><?= htmlspecialchars($user['email']) ?> · Subscription <?= htmlspecialchars($user['subscription_status']) ?></p>
 <section id="toolbox"><div class="toolbox-head"><h2>Your toolbox</h2><button id="customizeBtn" class="button secondary" style="margin-top:0">Customize</button></div>
+<div id="tool-picker" class="hidden"><p class="lede" style="margin:0">Pick the tools that show up here.</p><div class="tool-pick">
+<?php foreach ($DASHBOARD_ORDER as $key): $t = $DASHBOARD_TOOLS[$key]; ?>
+<label><input type="checkbox" value="<?= htmlspecialchars($key) ?>"<?= in_array($key, $selectedKeys, true) ? ' checked' : '' ?>> <?= htmlspecialchars($t['name']) ?></label>
+<?php endforeach; ?>
+</div><button id="toolSave">Save</button><span id="toolMsg" class="error"></span></div>
 <div class="tool-cards">
 <?php $ci = 0; foreach ($selectedKeys as $key): $t = $DASHBOARD_TOOLS[$key]; $cc = 'tc-' . ['yellow', 'pink', 'mint', 'blue', 'cream'][$ci % 5]; $ci++; ?>
 <a class="tool-card <?= $cc ?>" href="<?= htmlspecialchars($t['url']) ?>" data-tool="<?= htmlspecialchars($key) ?>">
@@ -72,20 +77,15 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 </a>
 <?php endforeach; ?>
 </div>
-<div id="tool-picker" class="hidden"><p class="lede" style="margin:0">Pick the tools that show up here.</p><div class="tool-pick">
-<?php foreach ($DASHBOARD_ORDER as $key): $t = $DASHBOARD_TOOLS[$key]; ?>
-<label><input type="checkbox" value="<?= htmlspecialchars($key) ?>"<?= in_array($key, $selectedKeys, true) ? ' checked' : '' ?>> <?= htmlspecialchars($t['name']) ?></label>
-<?php endforeach; ?>
-</div><button id="toolSave">Save</button><span id="toolMsg" class="error"></span></div>
 </section>
 <section class="panel" id="activity"><h2 style="margin-top:0">Recent activity</h2>
-<?php if (!$activityRows): ?><p class="lede" style="margin:0">Quiet so far. Use any tool and your actions will line up here.</p>
+<?php if (!$activityRows): ?><p class="lede" style="margin:0"><img src="/bum/cat-sleepy.png" alt="Bum Bum napping" class="sticker" style="width:88px;vertical-align:middle;margin-right:10px">Quiet so far. Use any tool and your actions will line up here.</p>
 <?php else: ?><ul class="activity">
 <?php foreach ($activityRows as $row): $rk = (string) $row['tool_key']; $rn = isset($DASHBOARD_TOOLS[$rk]) ? $DASHBOARD_TOOLS[$rk]['name'] : ucfirst($rk); $rc = (int) $row['action_count']; try { $rdt = new DateTime((string) $row['created_at'], new DateTimeZone('UTC')); $rdt->setTimezone($toronto); $rdate = $rdt->format('M j, g:i A'); } catch (Throwable $e) { $rdate = (string) $row['created_at']; } ?>
 <li><span><?= htmlspecialchars($rdate) ?></span> · <span><?= htmlspecialchars($rn) ?></span> · <span><?= $rc ?> action<?= $rc === 1 ? '' : 's' ?></span></li>
 <?php endforeach; ?></ul><?php endif; ?>
 </section>
-<div class="grid"><section class="stat"><span>Actions used</span><b><?= $usage['used'] ?> / <?= $usage['limit'] ?></b><div class="meter"><span style="width:<?= $percent ?>%"></span></div><p><?= $usage['remaining'] ?> actions left in this period.</p></section><section class="panel"><h2>Billing</h2><p>Update your payment method, download invoices, or change your subscription securely through Stripe.</p><button id="billing">Manage billing</button><button id="logout" class="button secondary">Sign out</button><p id="message" class="error"></p></section></div>
+<div class="grid"><section class="stat"><span>Actions used</span><b><?= $usage['used'] ?> / <?= $usage['limit'] ?></b><div class="meter"><span style="width:<?= $percent ?>%"></span></div><p><?= $usage['remaining'] ?> actions left in this period.</p></section><section class="panel"><h2>Billing</h2><p>Update your payment method, download invoices, or change your subscription securely through Stripe.</p><button id="billing">Manage billing</button><button id="logout" class="button secondary">Sign out</button><p id="message" class="error"></p><p><img src="/bum/cat-butt.png" alt="Bum Bum walking away" class="sticker" style="width:104px;transform:rotate(5deg)"> <span class="lede">BRB…</span></p></section></div>
 <?php if ($user['plan'] === 'free'): ?>
 <section class="panel" id="upgrade"><h2><?= $lowUsage ? 'Almost out of free actions.' : 'Need more than 75 actions a month?' ?></h2><p class="lede"><?= $lowUsage ? 'You are getting real work done. Keep the momentum with more actions every month.' : 'Your free workspace resets every month. Paid plans give you room to grow.' ?></p><div class="plan-cards"><div class="panel"><h2>Helper</h2><p><b>$12</b>/month</p><ul><li>1,500 actions every month</li><li>Every tool in the toolbox</li><li>Cancel anytime</li></ul><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper</a></div><div class="panel"><h2>Operator</h2><p><b>$49</b>/month</p><ul><li>6,000 actions every month</li><li>One custom tool built for you each month</li><li>Delivered in 36 hours or your next month is free</li></ul><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator</a></div></div></section>
 <?php elseif ($user['plan'] === 'helper'): ?>

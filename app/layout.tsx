@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://leaveittobumbum.com"),
   title: "Leave It to Bum Bum | Tiny tools for busy businesses",
   description: "Useful little tools for the annoying parts of running a small business. Start free, then pay as your business uses more.",
-  icons: { icon: "/favicon.svg" },
+  icons: { icon: [{ url: "/bum/favicon-cat.png" }, { url: "/favicon.svg", type: "image/svg+xml" }] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

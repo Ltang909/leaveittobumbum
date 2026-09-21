@@ -28,6 +28,12 @@ export default function About() {
             <figure><img src="/bum-bum-character.png" alt="Bum Bum, illustrated portrait" /><figcaption>The official portrait</figcaption></figure>
             <figure><img src="/bum-bum-funny.png" alt="Bum Bum making a funny face" /><figcaption>After the third espresso</figcaption></figure>
           </div>
+          <h3>The many moods of Bum Bum</h3>
+          <div className="moods">
+            {[["cat-default", "Default"], ["cat-wink", "Wink"], ["cat-blep", "Blep"], ["cat-cool", "Cool"], ["cat-excited", "Excited"], ["cat-judging", "Judging"], ["cat-peek", "Peek"], ["cat-sleepy", "Sleepy"]].map(([file, label]) => (
+              <figure key={file}><img src={`/bum/${file}.png`} alt={`Bum Bum: ${label}`} /><figcaption>{label}</figcaption></figure>
+            ))}
+          </div>
           <h2>The Operator promise</h2>
           <p>Operator members can request one scoped custom tool a month, and Bum Bum ships it within 36 hours of agreed scope &mdash; or the next month is on us. A missing tool should not become a six-month project.</p>
           <h2>Say hello</h2>

@@ -65,6 +65,7 @@ export default function ToolsView() {
               <div className="tool-top">
                 <span className="tool-icon">{tool.icon}</span>
                 <span className="tool-tag">{tool.tag}</span>
+                {tool.mascot && <img className="tool-mascot" src={tool.mascot} alt="" aria-hidden="true" />}
               </div>
               <h3>{tool.name}</h3>
               <p>{tool.description}</p>
