@@ -22,4 +22,5 @@ return [
         'api_key' => 'phx_replace_me', // server-side personal API key, keep secret
     ],
     'cron_secret' => 'replace_me', // shared secret for /api/cron-check-requests.php
+    'groq_api_key' => 'replace_me', // server-side Groq key for Notes transcription on iPhone (free: https://console.groq.com/keys)
 ];
