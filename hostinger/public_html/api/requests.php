@@ -1,13 +1,16 @@
 <?php
-// Custom tool requests (Operator plan). GET lists mine, POST submits a new one.
+// Custom tool requests (Operator plan). GET lists the billing account's
+// requests, POST submits a new one against the billing account's monthly slot.
+// Team members draw on the team owner's Operator perk and shared allowance.
 require __DIR__ . '/_bootstrap.php';
 $user = requireUser();
-$userId = (int) $user['id'];
+$bill = billingUser($user);
+$billId = (int) $bill['id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $stmt = db()->prepare('SELECT id, title, status, requested_at, deadline_at, delivered_at FROM custom_requests WHERE user_id = ? ORDER BY requested_at DESC LIMIT 20');
-        $stmt->execute([$userId]);
+        $stmt->execute([$billId]);
         jsonResponse($stmt->fetchAll());
     } catch (PDOException $error) {
         jsonResponse(['error' => 'Requests are not set up yet.'], 503);
@@ -17,20 +20,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 requirePost();
 $input = body();
 requireCsrf($input);
-if ($user['plan'] !== 'operator' || !in_array($user['subscription_status'], ['active', 'trialing', 'past_due'], true)) {
+if ($bill['plan'] !== 'operator' || !in_array($bill['subscription_status'], ['active', 'trialing', 'past_due'], true)) {
     jsonResponse(['error' => 'Custom tool requests are an Operator perk.'], 403);
 }
 $title = trim((string) ($input['title'] ?? ''));
 $details = trim((string) ($input['details'] ?? ''));
 if ($title === '' || mb_strlen($title) > 180) jsonResponse(['error' => 'Give the request a short name.'], 422);
 if ($details === '' || mb_strlen($details) > 5000) jsonResponse(['error' => 'Describe the task and what done looks like.'], 422);
-$period = periodKey($user);
+$period = periodKey($bill);
 try {
     $open = db()->prepare("SELECT id FROM custom_requests WHERE user_id = ? AND status = 'open' AND DATE_FORMAT(requested_at, '%Y-%m') = ? LIMIT 1");
-    $open->execute([$userId, $period]);
-    if ($open->fetch()) jsonResponse(['error' => 'One request per month. Your current one is still in progress.'], 409);
+    $open->execute([$billId, $period]);
+    if ($open->fetch()) jsonResponse(['error' => 'One request per month. The current one is still in progress.'], 409);
     $stmt = db()->prepare('INSERT INTO custom_requests (user_id, title, details, deadline_at) VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 36 HOUR))');
-    $stmt->execute([$userId, $title, $details]);
+    $stmt->execute([$billId, $title, $details]);
     $id = (int) db()->lastInsertId();
     $row = db()->prepare('SELECT id, title, status, requested_at, deadline_at FROM custom_requests WHERE id = ?');
     $row->execute([$id]);

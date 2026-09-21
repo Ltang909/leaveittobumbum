@@ -119,11 +119,22 @@ foreach ($due as $sub) {
     if (!$mailConfigured) { $skipped++; continue; }
 
     // One action per email. If the user is out of actions, skip the email
-    // rather than sending unmetered mail.
+    // rather than sending unmetered mail. Team members draw from the owner's bucket.
+    $billId = billingUserId((int) $sub['user_id']);
+    $billPlan = (string) $sub['plan'];
+    $billPeriod = periodKey($sub);
+    if ($billId !== (int) $sub['user_id']) {
+        $orow = $pdo->prepare('SELECT plan, period_start FROM users WHERE id = ?');
+        $orow->execute([$billId]);
+        if ($o = $orow->fetch()) {
+            $billPlan = (string) $o['plan'];
+            $billPeriod = periodKey($o);
+        }
+    }
     $count = consumeAction(
-        (int) $sub['user_id'],
-        (string) $sub['plan'],
-        periodKey($sub),
+        $billId,
+        $billPlan,
+        $billPeriod,
         'cutline',
         "cutline-reminder-{$subId}-{$renewalDate}"
     );

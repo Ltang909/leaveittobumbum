@@ -4,6 +4,7 @@ requirePost();
 $input = body();
 requireCsrf($input);
 $user = requireUser();
+$bill = billingUser($user);
 $revenue = filter_var($input['revenue'] ?? null, FILTER_VALIDATE_FLOAT);
 $materials = filter_var($input['materials'] ?? null, FILTER_VALIDATE_FLOAT);
 $labor = filter_var($input['labor'] ?? null, FILTER_VALIDATE_FLOAT);
@@ -14,6 +15,6 @@ if (strlen($idempotency) < 16 || strlen($idempotency) > 128) jsonResponse(['erro
 $cost = $materials + $labor + $other;
 $profit = $revenue - $cost;
 $margin = $revenue > 0 ? ($profit / $revenue) * 100 : 0;
-$count = consumeAction((int) $user['id'], (string) $user['plan'], periodKey($user), 'profit-peek', $idempotency);
+$count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'profit-peek', $idempotency);
 if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
-jsonResponse(['result' => ['revenue' => round($revenue, 2), 'cost' => round($cost, 2), 'profit' => round($profit, 2), 'margin' => round($margin, 1)], 'usage' => usageFor($user), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
+jsonResponse(['result' => ['revenue' => round($revenue, 2), 'cost' => round($cost, 2), 'profit' => round($profit, 2), 'margin' => round($margin, 1)], 'usage' => usageFor($bill), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);

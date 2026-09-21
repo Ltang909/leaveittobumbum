@@ -35,6 +35,7 @@ requirePost();
 $input = body();
 requireCsrf($input);
 $user = requireUser();
+$bill = billingUser($user);
 $userId = (int) $user['id'];
 ensureNotesSchema();
 $pdo = db();
@@ -81,7 +82,7 @@ if ($action === 'finalize') {
     $transcript = (string) ($input['transcript'] ?? '');
     if (mb_strlen($transcript) > 100000) jsonResponse(['error' => 'That note is too long to save.'], 422);
     $idempotency = notes_idempotency($input);
-    $count = consumeAction($userId, (string) $user['plan'], periodKey($user), 'notes', $idempotency);
+    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'notes', $idempotency);
     if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
     $entry = null;
     $text = trim($transcript);
@@ -94,7 +95,7 @@ if ($action === 'finalize') {
     jsonResponse([
         'entry' => $entry,
         'saved' => $entry !== null,
-        'usage' => usageFor($user),
+        'usage' => usageFor($bill),
         'duplicate' => (bool) ($count['duplicate'] ?? false),
     ]);
 }

@@ -151,6 +151,7 @@ if (basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === 'cutline.php') {
     $input = body();
     requireCsrf($input);
     $user = requireUser();
+$bill = billingUser($user);
     $userId = (int) $user['id'];
     ensureCutlineSchema();
     $pdo = db();
@@ -185,7 +186,7 @@ if (basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === 'cutline.php') {
         }
         [$errors, $clean] = cutline_validate($input);
         if ($errors) jsonResponse(['error' => $errors[0]], 422);
-        $count = consumeAction($userId, (string) $user['plan'], periodKey($user), 'cutline', $idempotency);
+        $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'cutline', $idempotency);
         if (!empty($count['limit_reached'])) {
             jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
         }
@@ -211,7 +212,7 @@ if (basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === 'cutline.php') {
         }
         jsonResponse([
             'subscription' => $row ? cutline_public_row($row) : null,
-            'usage' => usageFor($user),
+            'usage' => usageFor($bill),
             'duplicate' => (bool) ($count['duplicate'] ?? false),
         ]);
     }
