@@ -148,9 +148,56 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 /* Snack chase easter egg */
 .snack-link { font-size:.85rem; }
 .snack-stage { position:fixed; inset:0; z-index:80; pointer-events:none; overflow:hidden; }
-.snack-treat { position:absolute; top:64%; left:-60px; font-size:46px; animation:snack-fly 3.4s linear forwards; }
-.snack-cat { position:absolute; top:56%; left:-200px; width:170px; border-radius:24px; background:#fff; border:var(--line); animation:snack-chase 3s linear forwards; }
-.snack-nom { position:absolute; top:50%; left:68%; font-weight:900; background:#fff; border:var(--line); border-radius:999px; padding:6px 14px; transform:rotate(-6deg); animation:snack-pop .25s ease-out; }
-@keyframes snack-fly { to { transform:translateX(120vw) rotate(560deg); } }
-@keyframes snack-chase { to { transform:translateX(120vw); } }
-@keyframes snack-pop { from { transform:rotate(-6deg) scale(.4); } to { transform:rotate(-6deg) scale(1); } }
+.snack-treat { position:absolute; top:62%; left:-70px; font-size:44px; animation:snack-fly 1.7s ease-out forwards; }
+.snack-runner { position:absolute; top:50%; left:-230px; width:185px; animation:snack-run 1.7s linear forwards; }
+.snack-chaser { display:block; width:100%; animation:snack-gallop .16s ease-in-out 9 alternate; }
+.snack-nommer { position:absolute; top:46%; left:60vw; width:150px; opacity:0; animation:snack-nompop 1.9s ease-out 1.65s forwards; }
+.snack-nom { position:absolute; top:34%; left:56vw; font-weight:900; font-size:1.35rem; background:#fff; border:var(--line); border-radius:999px; padding:8px 18px; transform:rotate(-6deg) scale(0); animation:snack-munch 1.7s ease-out 1.9s forwards; white-space:nowrap; }
+.snack-dust { position:absolute; top:74%; width:26px; height:26px; border-radius:50%; background:radial-gradient(circle, rgba(190,170,150,.55), rgba(190,170,150,0)); opacity:0; animation:snack-poof .55s ease-out forwards; }
+.snack-dust.d1 { left:12vw; animation-delay:.45s; }
+.snack-dust.d2 { left:28vw; animation-delay:.75s; }
+.snack-dust.d3 { left:44vw; animation-delay:1.05s; }
+.snack-dust.d4 { left:58vw; animation-delay:1.35s; width:34px; height:34px; }
+@keyframes snack-fly {
+  0% { transform:translate(0,0) rotate(-20deg); }
+  55% { transform:translate(38vw,-26vh) rotate(200deg); }
+  80% { transform:translate(58vw,-4vh) rotate(420deg); }
+  88% { transform:translate(61vw,0) rotate(480deg) scale(1); opacity:1; }
+  96%, 100% { transform:translate(61vw,0) rotate(480deg) scale(.1); opacity:0; }
+}
+@keyframes snack-run {
+  0% { transform:translateX(0); opacity:1; }
+  82% { transform:translateX(61vw) translateY(0); opacity:1; }
+  90% { transform:translateX(62vw) translateY(-84px) rotate(-6deg) scale(1.06); opacity:1; }
+  97% { transform:translateX(63vw) translateY(0) scale(1); opacity:1; }
+  100% { transform:translateX(63vw) translateY(0); opacity:0; }
+}
+@keyframes snack-gallop {
+  from { transform:translateY(0) rotate(-4deg); }
+  to { transform:translateY(-14px) rotate(4deg); }
+}
+@keyframes snack-nompop {
+  0% { opacity:0; transform:translateX(-30px) scale(.3) rotate(8deg); }
+  12% { opacity:1; transform:translateX(0) scale(1.15) rotate(-4deg); }
+  20% { transform:scale(1) rotate(0); }
+  35% { transform:rotate(-7deg); }
+  50% { transform:rotate(7deg); }
+  65% { transform:rotate(-7deg); }
+  80% { transform:rotate(0) scale(1); opacity:1; }
+  100% { transform:translateY(30px) scale(.9); opacity:0; }
+}
+@keyframes snack-munch {
+  0% { transform:rotate(-6deg) scale(0); }
+  15% { transform:rotate(-6deg) scale(1.1); }
+  25% { transform:rotate(-6deg) scale(1); }
+  40% { transform:rotate(-6deg) scale(1.12); }
+  55% { transform:rotate(-6deg) scale(1); }
+  70% { transform:rotate(-6deg) scale(1.12); }
+  85% { transform:rotate(-6deg) scale(1); opacity:1; }
+  100% { transform:rotate(-6deg) scale(1) translateY(-14px); opacity:0; }
+}
+@keyframes snack-poof {
+  0% { opacity:0; transform:scale(.3) translateY(0); }
+  30% { opacity:.7; }
+  100% { opacity:0; transform:scale(1.8) translateY(-24px); }
+}
