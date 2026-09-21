@@ -1,16 +1,8 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
-
-const tools = [
-  { icon: "✦", name: "Quick Quote", tag: "Sales", description: "Turn a few job details into a clean estimate your customer can understand.", action: "Build a quote", href: null },
-  { icon: "↗", name: "Friendly Follow-up", tag: "Customers", description: "Write the message you have been putting off, without sounding like a robot.", action: "Write a follow-up", href: null },
-  { icon: "✓", name: "Job Notes", tag: "Operations", description: "Turn messy field notes into a tidy summary and a clear next-step list.", action: "Clean up notes", href: null },
-  { icon: "$", name: "Profit Peek", tag: "Money", description: "Check the rough profit on a job before you send the quote.", action: "Check a job", href: "/tools/profit-peek/" },
-  { icon: "◉", name: "Bum Bum Clips", tag: "Video", description: "Record your screen right in your browser. Download the clip, keep it forever.", action: "Record a clip", href: "/tools/clips/" },
-  { icon: "♪", name: "Bum Bum Notes", tag: "Voice", description: "Talk it out and get a live transcript you can copy or download.", action: "Record a note", href: "/tools/notes/" },
-  { icon: "✂", name: "Cutline", tag: "Money", description: "Every subscription you forgot about, in one place, with renewal reminders.", action: "Track subscriptions", href: "/tools/cutline/" },
-];
+import { useEffect, useState } from "react";
+import { tools } from "./lib/tools";
+import { useRequestTool } from "./components/request-tool";
 
 const plans = [
   { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["4 active tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
@@ -44,18 +36,13 @@ const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "Ar
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 
 export default function Home() {
-  const [category, setCategory] = useState("All");
-  const [query, setQuery] = useState("");
-  const [requestOpen, setRequestOpen] = useState(false);
-  const [requestState, setRequestState] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const [prefill, setPrefill] = useState("");
+  const { openRequest, requestModal } = useRequestTool();
   const [booped, setBooped] = useState(false);
   const [quip, setQuip] = useState<string | null>(null);
   const [boingKey, setBoingKey] = useState(0);
   const [party, setParty] = useState(false);
   const [napZoom, setNapZoom] = useState(false);
   const [napping, setNapping] = useState(false);
-  const filtered = useMemo(() => tools.filter((tool) => (category === "All" || tool.tag === category) && `${tool.name} ${tool.description}`.toLowerCase().includes(query.toLowerCase())), [category, query]);
 
   useEffect(() => {
     console.log("%c🐈 psst — Bum Bum sees you.\n%cOpened devtools, huh? Respect. If you're snooping for fun: hello@leaveittobumbum.com", "font-weight:bold;font-size:14px", "font-size:12px");
@@ -92,19 +79,12 @@ export default function Home() {
   }, []);
 
   function checkout(plan: string) {
-    if (plan === "free") { document.querySelector("#toolbox")?.scrollIntoView({ behavior: "smooth" }); return; }
+    if (plan === "free") { window.location.href = "/tools/"; return; }
     window.location.href = `/checkout/?plan=${encodeURIComponent(plan)}`;
   }
 
-  function openRequest(prefillText = "") {
-    setPrefill(prefillText);
-    setRequestState("idle");
-    setRequestOpen(true);
-  }
-
-  function requestTool(tool: { name: string; href: string | null }) {
-    if (tool.href) { window.location.href = tool.href; return; }
-    openRequest(`Early access: ${tool.name}\nI'd use it for: `);
+  function openTool(tool: { url: string }) {
+    window.location.href = tool.url;
   }
 
   function boopBumBum() {
@@ -119,28 +99,20 @@ export default function Home() {
     }
   }
 
-  async function submitRequest(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setRequestState("sending");
-    const form = new FormData(event.currentTarget);
-    const response = await fetch("/api/tool-requests", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(form)) });
-    setRequestState(response.ok ? "sent" : "error");
-  }
-
   return (
     <main>
       <header className="nav shell">
         <a className="brand" href="#top" aria-label="Leave It to Bum Bum home"><span className="brand-mark">BB</span><span>Leave It to<br /><b>Bum Bum</b></span></a>
-        <nav aria-label="Main navigation"><a href="#toolbox">Tools</a><a href="#pricing">Pricing</a><a href="#guarantee">36 hours</a><a href="/account/">Account</a></nav>
+        <nav aria-label="Main navigation"><a href="/tools/">Tools</a><a href="#pricing">Pricing</a><a href="#guarantee">36 hours</a><a href="/account/">Account</a></nav>
         <button className="button button-small" onClick={() => openRequest()}>Ask Bum Bum <Arrow /></button>
       </header>
 
       <section className="hero shell" id="top">
         <div className="hero-copy">
           <p className="eyebrow"><span>●</span> Small business busywork, handled</p>
-          <h1>Don’t wanna do it?<br /><em>Leave it to Bum Bum.</em></h1>
+          <h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1>
           <p className="lede">Useful little tools for quotes, follow-ups, job notes, and all the fiddly stuff stealing your afternoon.</p>
-          <div className="hero-actions"><a className="button" href="#toolbox">Open the toolbox <Arrow /></a><button className="text-button" onClick={() => openRequest()}>Request a tool</button></div>
+          <div className="hero-actions"><a className="button" href="/tools/">Open the toolbox <Arrow /></a><button className="text-button" onClick={() => openRequest()}>Request a tool</button></div>
           <p className="fine">Start free. No card. No call with a guy named Chad.</p>
         </div>
         <div className="hero-portrait" aria-label="Bum Bum, chief tiny-tool operator">
@@ -159,14 +131,9 @@ export default function Home() {
       <section className={`ticker${napZoom ? " zoomies" : ""}`} aria-label="Examples"><div>QUOTE IT <span>✦</span> CHASE IT <span>✦</span> SORT IT <span>✦</span> PRICE IT <span>✦</span> SEND IT <span>✦</span> LEAVE IT TO BUM BUM <span>✦</span></div></section>
 
       <section className="toolbox shell" id="toolbox">
-        <div className="section-heading"><div><p className="kicker">Bum Bum’s toolbox</p><h2>Pick the thing you<br />don’t want to do.</h2></div><p>Each action is one useful result: one quote, one cleaned-up note, one follow-up. Simple.</p></div>
-        <div className="finder">
-          <label><span className="sr-only">Find a tool</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="What are you trying to get done?" /><span>⌕</span></label>
-          <div className="filters" aria-label="Tool categories">{["All", "Sales", "Customers", "Operations", "Money"].map((item) => <button key={item} className={category === item ? "active" : ""} onClick={() => setCategory(item)}>{item}</button>)}</div>
-        </div>
-        <div className="tool-grid">{filtered.map((tool, index) => <article className={`tool-card card-${index + 1}`} key={tool.name}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span></div><h3>{tool.name}</h3><p>{tool.description}</p><button onClick={() => requestTool(tool)}>{tool.action} <Arrow /></button></article>)}</div>
-        {!filtered.length && <p className="empty">Bum Bum could not find that one. Sounds like a good tool request.</p>}
-        <button className="request-strip" onClick={() => openRequest()}><span><b>Can’t find your oddly specific problem?</b><small>Tell Bum Bum what keeps eating your time.</small></span><span>Request a tool <Arrow /></span></button>
+        <div className="section-heading"><div><p className="kicker">Bum Bum’s toolbox</p><h2>Pick the thing you<br />don’t want to do.</h2></div><p>Every finished result uses one action. The shelf keeps growing, so poke around.</p></div>
+        <div className="tool-grid">{tools.slice(0, 3).map((tool, index) => <article className={`tool-card card-${index + 1}`} key={tool.key}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span></div><h3>{tool.name}</h3><p>{tool.description}</p><button onClick={() => openTool(tool)}>{tool.cta} <Arrow /></button></article>)}</div>
+        <div className="toolbox-more"><a className="button" href="/tools/">Browse the full toolbox <Arrow /></a></div>
       </section>
 
       <section className="how">
@@ -185,7 +152,7 @@ export default function Home() {
 
       <footer className="footer shell"><a className="brand" href="#top"><span className="brand-mark">BB</span><span>Leave It to<br /><b>Bum Bum</b></span></a><p>Useful little tools for busy little businesses.<br />© {new Date().getFullYear()} Leave It to Bum Bum</p><div><a href="mailto:hello@leaveittobumbum.com">hello@leaveittobumbum.com</a><a href="/about/">About</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></footer>
 
-      {requestOpen && <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setRequestOpen(false)}><section className="modal" role="dialog" aria-modal="true" aria-labelledby="request-title"><button className="modal-close" aria-label="Close" onClick={() => setRequestOpen(false)}>×</button>{requestState === "sent" ? <div className="success"><span>✓</span><h2>Bum Bum is on it.</h2><p>We have your request and will follow up with a sensible tiny version.</p><button className="button" onClick={() => { setRequestOpen(false); setRequestState("idle"); }}>Done</button></div> : <><p className="kicker">Request a tool</p><h2 id="request-title">What do you wish would just do itself?</h2><form onSubmit={submitRequest}><label>Your name<input name="name" required autoFocus /></label><label>Work email<input name="email" type="email" required /></label><label>The annoying task<textarea name="problem" required placeholder="Every Friday I copy..." rows={4} key={prefill} defaultValue={prefill} /></label><label>What would “done” look like?<textarea name="outcome" required placeholder="I want to click once and get..." rows={3} /></label><button className="button" disabled={requestState === "sending"}>{requestState === "sending" ? "Sending…" : "Send to Bum Bum"} <Arrow /></button>{requestState === "error" && <p className="form-error">That did not go through. Email hello@leaveittobumbum.com and we will pick it up.</p>}</form></>}</section></div>}
+      {requestModal}
 
       {party && <div className="confetti" aria-hidden="true">{CONFETTI.map((piece, i) => <span key={i} style={{ left: `${piece.left}%`, background: piece.color, width: piece.size, height: piece.size, borderRadius: piece.round ? "50%" : "2px", animationDelay: `${piece.delay}s`, animationDuration: `${piece.dur}s` }}>{piece.sparkle ? "✦" : ""}</span>)}</div>}
     </main>

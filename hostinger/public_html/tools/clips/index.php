@@ -31,10 +31,10 @@
 <p id="micNote" class="hidden">Mic unavailable, recording screen audio only.</p>
 <p><label style="display:inline-flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="camToggle" style="width:auto;margin:0"> Include my camera (floating bubble)</label></p>
 <p id="camNote" class="hidden">Camera unavailable, recording screen only.</p>
+<p id="camHint" class="hidden" style="font-size:14px;opacity:.75">While you record, your bubble floats on screen so you can see exactly where it lands.</p>
 <button id="startBtn">Start recording</button>
 <div id="recordingView" class="hidden">
 <p class="lede">Recording <strong id="timer">00:00</strong></p>
-<p><video id="camPreview" class="hidden" autoplay muted playsinline style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)"></video></p>
 <button id="stopBtn">Stop</button>
 </div>
 <p id="clipError" class="error"></p>
@@ -84,7 +84,8 @@ if(!screenOK){
   const micNote=document.querySelector('#micNote');
   const camToggle=document.querySelector('#camToggle');
   const camNote=document.querySelector('#camNote');
-  const camPreview=document.querySelector('#camPreview');
+  const camHint=document.querySelector('#camHint');
+  camToggle.addEventListener('change',()=>{camHint.classList.toggle('hidden',!camToggle.checked)});
   const recordingView=document.querySelector('#recordingView');
   const recorderSection=document.querySelector('#recorder');
   const doneView=document.querySelector('#doneView');
@@ -110,10 +111,90 @@ if(!screenOK){
   let screenStream=null,micStream=null,camStream=null,recorder=null,chunks=[],startTime=0,timerInt=null,mime='',blobUrl='',attempt=crypto.randomUUID();
   let screenVideoEl=null,camVideoEl=null,compCanvas=null,compCtx=null,drawRAF=0;
   let recordedBlob=null,editBlobUrl='',editSpeed=1;
+  let pipWin=null,bubbleTimerEl=null,fallbackBubble=null;
   function pickMime(){const c=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t}return ''}
   function setError(m){errorEl.textContent=m}
-  function stopTracks(){[screenStream,micStream,camStream].forEach(s=>{if(s)s.getTracks().forEach(t=>t.stop())});screenStream=null;micStream=null;camStream=null;if(drawRAF)cancelAnimationFrame(drawRAF);drawRAF=0;if(camPreview){try{camPreview.srcObject=null}catch(e){}camPreview.classList.add('hidden')}screenVideoEl=null;camVideoEl=null;compCanvas=null;compCtx=null}
+  function stopTracks(){[screenStream,micStream,camStream].forEach(s=>{if(s)s.getTracks().forEach(t=>t.stop())});screenStream=null;micStream=null;camStream=null;if(drawRAF)cancelAnimationFrame(drawRAF);drawRAF=0;screenVideoEl=null;camVideoEl=null;compCanvas=null;compCtx=null;closeBubbleWindow()}
   function doStop(){if(recorder&&recorder.state!=='inactive')recorder.stop()}
+  // --- floating self-view bubble -------------------------------------------
+  // An always-on-top bubble window with a stop button, positioned as a live
+  // reference for where the bubble lands in the recording. Uses the Document
+  // Picture-in-Picture API (Chrome/Edge); other browsers get a fixed
+  // floating bubble in the page instead.
+  async function openBubbleWindow(){
+    if(!camStream||!camStream.getVideoTracks().length)return;
+    if(pipWin&&!pipWin.closed){pipWin.focus();return}
+    if(window.documentPictureInPicture){
+      try{
+        pipWin=await window.documentPictureInPicture.requestWindow({width:280,height:340});
+        const link=pipWin.document.createElement('link');
+        link.rel='stylesheet';link.href='/app.css';
+        pipWin.document.head.appendChild(link);
+        const style=pipWin.document.createElement('style');
+        style.textContent='html,body{margin:0;padding:16px;min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}'+
+          '.bubble{width:180px;height:180px;border-radius:50%;overflow:hidden;border:4px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,.25);background:#000}'+
+          '.bubble video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}'+
+          '.bubble-timer{font-weight:700;font-size:15px;opacity:.7}'+
+          '.bubble-note{font-size:13px;opacity:.7;margin:0}';
+        pipWin.document.head.appendChild(style);
+        const bubble=pipWin.document.createElement('div');
+        bubble.className='bubble';
+        const vid=pipWin.document.createElement('video');
+        vid.autoplay=true;vid.muted=true;vid.playsInline=true;
+        vid.srcObject=camStream;
+        bubble.appendChild(vid);
+        vid.play().catch(()=>{});
+        bubbleTimerEl=pipWin.document.createElement('div');
+        bubbleTimerEl.className='bubble-timer';
+        bubbleTimerEl.textContent='00:00';
+        const stopButton=pipWin.document.createElement('button');
+        stopButton.className='button';
+        stopButton.type='button';
+        stopButton.textContent='Stop';
+        stopButton.addEventListener('click',()=>{doStop()});
+        const note=pipWin.document.createElement('p');
+        note.className='bubble-note';
+        note.textContent='Keep this corner clear, your bubble sits here in the final video.';
+        pipWin.document.body.appendChild(bubble);
+        pipWin.document.body.appendChild(bubbleTimerEl);
+        pipWin.document.body.appendChild(stopButton);
+        pipWin.document.body.appendChild(note);
+        pipWin.addEventListener('pagehide',()=>{pipWin=null;bubbleTimerEl=null});
+        bbTrack('bubble_window_opened',{tool:TOOL_KEY});
+        return;
+      }catch(err){pipWin=null}
+    }
+    // Fallback: fixed floating bubble in the page (bottom-right).
+    fallbackBubble=document.createElement('div');
+    fallbackBubble.style.cssText='position:fixed;right:24px;bottom:24px;z-index:9999;display:flex;flex-direction:column;align-items:center;gap:10px;background:#fff;border:2px solid var(--line,#1a1a1a);border-radius:18px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.25);text-align:center';
+    const fbVid=document.createElement('video');
+    fbVid.autoplay=true;fbVid.muted=true;fbVid.playsInline=true;
+    fbVid.srcObject=camStream;
+    fbVid.style.cssText='width:150px;height:150px;border-radius:50%;object-fit:cover;transform:scaleX(-1);border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.2)';
+    fbVid.play().catch(()=>{});
+    bubbleTimerEl=document.createElement('div');
+    bubbleTimerEl.style.cssText='font-weight:700;font-size:14px';
+    bubbleTimerEl.textContent='00:00';
+    const fbStop=document.createElement('button');
+    fbStop.className='button';
+    fbStop.type='button';
+    fbStop.textContent='Stop';
+    fbStop.addEventListener('click',()=>{doStop()});
+    const fbNote=document.createElement('div');
+    fbNote.style.cssText='font-size:12px;opacity:.7;max-width:170px';
+    fbNote.textContent='Keep this corner clear, your bubble sits here in the final video.';
+    fallbackBubble.appendChild(fbVid);
+    fallbackBubble.appendChild(bubbleTimerEl);
+    fallbackBubble.appendChild(fbStop);
+    fallbackBubble.appendChild(fbNote);
+    document.body.appendChild(fallbackBubble);
+    bbTrack('bubble_window_opened',{tool:TOOL_KEY});
+  }
+  function closeBubbleWindow(){
+    if(pipWin){try{pipWin.close()}catch(e){}pipWin=null}
+    bubbleTimerEl=null;
+    if(fallbackBubble){fallbackBubble.remove();fallbackBubble=null}
+  }
   function scaledSize(w,h,cap){if(!cap||Math.max(w,h)<=cap)return{w,h};const scale=cap/Math.max(w,h);return{w:Math.round(w*scale/2)*2,h:Math.round(h*scale/2)*2}}
   function drawFrame(){
     if(screenVideoEl&&screenVideoEl.videoWidth&&compCtx){
@@ -182,8 +263,15 @@ if(!screenOK){
     }
     camStream=cs;
     const useCamera=!!camStream;
+    const screenTrack=screenStream.getVideoTracks()[0];
+    const screenSettings=(screenTrack&&screenTrack.getSettings)?screenTrack.getSettings():{};
+    const displaySurface=screenSettings.displaySurface||'';
+    // A full-screen capture already includes the floating bubble window, so
+    // only burn the bubble into the video for tab/window captures, where the
+    // floating window sits outside the recorded surface.
+    const compositeCamera=useCamera&&displaySurface!=='monitor';
     let videoTracks;
-    if(useCamera){
+    if(compositeCamera){
       try{
         screenVideoEl=document.createElement('video');
         screenVideoEl.muted=true;screenVideoEl.playsInline=true;
@@ -196,12 +284,9 @@ if(!screenOK){
       }catch(err){screenVideoEl=null;camVideoEl=null}
       compCanvas=document.createElement('canvas');
       compCtx=compCanvas.getContext('2d');
-      const st=screenStream.getVideoTracks()[0].getSettings();
-      const target=scaledSize(st.width||1280,st.height||720,1920);
+      const target=scaledSize(screenSettings.width||1280,screenSettings.height||720,1920);
       compCanvas.width=target.w;compCanvas.height=target.h;
       videoTracks=compCanvas.captureStream(30).getVideoTracks();
-      camPreview.srcObject=camStream;
-      camPreview.classList.remove('hidden');
     }else{
       videoTracks=screenStream.getVideoTracks();
     }
@@ -214,13 +299,14 @@ if(!screenOK){
     recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
     recorder.onstop=onStop;
     try{recorder.start(250)}catch(err){setError('Recording could not start. Please try again.');stopTracks();return}
-    if(useCamera){
+    if(compositeCamera){
       const draw=()=>{if(recorder&&recorder.state!=='inactive'){drawFrame();drawRAF=requestAnimationFrame(draw)}};
       draw();
     }
+    if(useCamera){openBubbleWindow();}
     startTime=Date.now();
     timerEl.textContent='00:00';
-    timerInt=setInterval(()=>{timerEl.textContent=fmt(Date.now()-startTime)},250);
+    timerInt=setInterval(()=>{const t=fmt(Date.now()-startTime);timerEl.textContent=t;if(bubbleTimerEl)bubbleTimerEl.textContent=t},250);
     const vt=screenStream.getVideoTracks()[0];
     if(vt)vt.addEventListener('ended',()=>{if(recorder&&recorder.state!=='inactive')doStop()});
     startBtn.disabled=true;micToggle.disabled=true;camToggle.disabled=true;
@@ -367,6 +453,7 @@ if(!screenOK){
     });
   });
   againBtn.addEventListener('click',()=>{
+    closeBubbleWindow();
     if(blobUrl){URL.revokeObjectURL(blobUrl);blobUrl=''}
     if(editBlobUrl){URL.revokeObjectURL(editBlobUrl);editBlobUrl=''}
     preview.removeAttribute('src');preview.load();
