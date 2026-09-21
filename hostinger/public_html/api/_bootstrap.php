@@ -3,10 +3,22 @@ declare(strict_types=1);
 
 const PLAN_LIMITS = ['free' => 75, 'helper' => 1500, 'operator' => 6000];
 
+function isStagingHost(): bool {
+    $host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
+    return str_starts_with($host, 'staging.');
+}
+
 function config(): array {
     static $config;
     if ($config) return $config;
-    $path = getenv('LITBB_CONFIG') ?: dirname((string) $_SERVER['DOCUMENT_ROOT']) . '/leaveittobumbum-config.php';
+    $docroot = (string) $_SERVER['DOCUMENT_ROOT'];
+    if (isStagingHost()) {
+        // Staging lives in a subfolder of the main site's web root, so its
+        // config sits next to the domain folder, outside the web root.
+        $path = getenv('LITBB_CONFIG') ?: dirname($docroot, 2) . '/leaveittobumbum-config-staging.php';
+    } else {
+        $path = getenv('LITBB_CONFIG') ?: dirname($docroot) . '/leaveittobumbum-config.php';
+    }
     if (!is_file($path)) throw new RuntimeException('Server configuration is missing.');
     $config = require $path;
     return $config;
@@ -120,6 +132,7 @@ function posthogCapture(string $event, string $distinctId, array $properties = [
     $apiKey = (string) ($ph['api_key'] ?? '');
     if ($apiKey === '' || $apiKey === 'phx_replace_me') return;
     $host = rtrim((string) ($ph['host'] ?? 'https://us.i.posthog.com'), '/');
+    $properties['env'] = isStagingHost() ? 'staging' : 'production';
     $payload = json_encode(['api_key' => $apiKey, 'event' => $event, 'distinct_id' => $distinctId, 'properties' => $properties]);
     $curl = curl_init($host . '/capture/');
     curl_setopt_array($curl, [CURLOPT_RETURNTRANSFER => true, CURLOPT_POST => true, CURLOPT_POSTFIELDS => $payload, CURLOPT_HTTPHEADER => ['Content-Type: application/json'], CURLOPT_TIMEOUT => 3]);
