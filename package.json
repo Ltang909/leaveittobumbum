@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "postbuild": "node -e \"const fs=require('fs');for(const p of ['tools','pricing','36-hours']){const f='out/'+p+'.html';if(fs.existsSync(f)){fs.mkdirSync('out/'+p,{recursive:true});fs.copyFileSync(f,'out/'+p+'/index.html');console.log('postbuild: '+p+'/index.html ready')}}\""
+    "postbuild": "node scripts/postbuild.js"
   },
   "dependencies": {
     "next": "^16.3.5",
