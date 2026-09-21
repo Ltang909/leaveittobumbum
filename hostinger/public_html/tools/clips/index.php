@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bum Bum Clips | Leave It to Bum Bum</title>
-<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="/app.css?v=3">
 <?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?>
 </head>
 <body>
@@ -128,7 +128,7 @@ if(!screenOK){
       try{
         pipWin=await window.documentPictureInPicture.requestWindow({width:280,height:340});
         const link=pipWin.document.createElement('link');
-        link.rel='stylesheet';link.href='/app.css';
+        link.rel='stylesheet';link.href='/app.css?v=3';
         pipWin.document.head.appendChild(link);
         const style=pipWin.document.createElement('style');
         style.textContent='html,body{margin:0;padding:16px;min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}'+

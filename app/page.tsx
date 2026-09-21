@@ -35,11 +35,11 @@ const CONFETTI = Array.from({ length: 90 }, (_, i) => ({
 const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 
 const FACES = [
-  { src: "/bum-bum.png", alt: "Bum Bum the cat" },
+  { src: "/bum/cat-work.png", alt: "Bum Bum at work" },
   { src: "/bum/cat-blep.png", alt: "Bum Bum blepping" },
   { src: "/bum/cat-wink.png", alt: "Bum Bum winking" },
   { src: "/bum/cat-cool.png", alt: "Bum Bum looking cool" },
-  { src: "/bum-bum-funny.png", alt: "Bum Bum making a funny face" },
+  { src: "/bum/cat-excited.png", alt: "Bum Bum excited" },
 ];
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }
@@ -122,8 +122,7 @@ export default function Home() {
             <div className="photo-fallback"><span>🐈</span><small>Bum Bum’s portrait<br />is clocking in</small></div>
           </div>
           {quip && <div className="quip-bubble" role="status">{quip}</div>}
-          <div className="scribble scribble-one">Chief operator</div>
-          <div className="scribble scribble-two">curious<br />capable<br />cat</div>
+          <div className="scribble scribble-one">this is Bum Bum</div>
           <div className="stamp">BUILT FOR<br /><b>REAL WORK</b></div>
         </div>
       </section>
@@ -144,9 +143,10 @@ export default function Home() {
         <div className="section-heading"><div><p className="kicker">One shared meter</p><h2>Pay for useful work,<br />not a maze of limits.</h2></div><p>Every completed result uses one action. Your whole team and every tool share the same monthly bucket.</p></div>
         <div className="plan-grid">{plans.map((plan) => <article className={`plan ${plan.featured ? "featured" : ""}`} key={plan.name}>{plan.featured && <span className="popular">BUM BUM’S PICK</span>}<h3>{plan.name}</h3><div className="price">{plan.price}<small>{plan.note}</small></div><p className="credits">{plan.credits}</p><ul>{plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul><button className={plan.featured ? "button" : "button outline"} onClick={() => checkout(plan.plan)}>{plan.cta} <Arrow /></button></article>)}</div>
         <p className="pricing-note">Actions reset monthly and do not roll over. We warn you at 80% and 100%. Paid plans can keep going with simple action packs, or you can pause until the reset.</p>
+        <p className="section-more"><a href="/pricing/">How pricing works, in plain English <Arrow /></a></p>
       </section>
 
-      <section className="guarantee" id="guarantee"><div className="shell guarantee-inner"><div className="guarantee-number" title="psst — triple-click me" onClick={(event) => { if (event.detail === 3) { setNapping(true); window.setTimeout(() => setNapping(false), 3200); } }}>36<span>HRS</span>{napping && <div className="nap-bubble">😴 Bum Bum is napping. The 36-hour clock respects nap time.</div>}</div><div><p className="kicker">The Operator promise</p><h2>A missing tool should not become a six-month project.</h2><p>Operator members get one scoped request each month. Once we agree on the tiny, useful version, Bum Bum ships it within 36 hours.</p><details><summary>What counts as a scoped request? <span>+</span></summary><p>One focused workflow that can be built in about four working hours. It can use approved existing services, but it cannot include regulated data, complex migrations, mobile app store review, or work waiting on a third party. The clock begins when scope and access are confirmed. Weekends and US federal holidays are excluded. If we miss the window, your next month is on us.</p></details></div></div></section>
+      <section className="guarantee" id="guarantee"><div className="shell guarantee-inner"><div className="guarantee-number" title="psst — triple-click me" onClick={(event) => { if (event.detail === 3) { setNapping(true); window.setTimeout(() => setNapping(false), 3200); } }}>36<span>HRS</span>{napping && <div className="nap-bubble">😴 Bum Bum is napping. The 36-hour clock respects nap time.</div>}</div><div><p className="kicker">The Operator promise</p><h2>A missing tool should not become a six-month project.</h2><p>Operator members get one scoped request each month. Once we agree on the tiny, useful version, Bum Bum ships it within 36 hours.</p><details><summary>What counts as a scoped request? <span>+</span></summary><p>One focused workflow that can be built in about four working hours. It can use approved existing services, but it cannot include regulated data, complex migrations, mobile app store review, or work waiting on a third party. The clock begins when scope and access are confirmed. Weekends and US federal holidays are excluded. If we miss the window, your next month is on us.</p></details><p className="section-more section-more-left"><a href="/36-hours/">Read the full 36-hour promise <Arrow /></a></p></div></div></section>
 
       <section className="closing shell"><p className="kicker">Your to-don’t list starts here</p><h2>There has to be one thing<br />you would happily never do again.</h2><button className="button" onClick={() => openRequest()}>Tell Bum Bum <Arrow /></button></section>
 

@@ -4,7 +4,7 @@ $user = currentUser();
 $plan = ($_GET['plan'] ?? '') === 'operator' ? 'operator' : 'helper';
 $publishableKey = (string) config()['stripe']['publishable_key'];
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Checkout | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css"><?php require dirname(__DIR__) . '/includes/analytics.php'; ?><script src="https://js.stripe.com/clover/stripe.js"></script></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Checkout | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=3"><?php require dirname(__DIR__) . '/includes/analytics.php'; ?><script src="https://js.stripe.com/clover/stripe.js"></script></head><body>
 <?php $showMeter = false; require dirname(__DIR__) . '/includes/site-header.php'; ?>
 <main class="shell"><p class="eyebrow">Bum Bum’s checkout</p><img class="tool-mascot-page" src="/bum/cat-spa.png" alt="Bum Bum relaxing at the spa"><h1>Put the busywork on a shorter leash.</h1><p class="lede">Bum Bum approves this treat-yourself moment.</p>
 <div class="plan-switch"><a class="<?= $plan === 'helper' ? 'active' : '' ?>" href="?plan=helper">Helper · $12</a><a class="<?= $plan === 'operator' ? 'active' : '' ?>" href="?plan=operator">Operator · $49</a></div>

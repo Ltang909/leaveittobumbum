@@ -1,12 +1,12 @@
 <?php require dirname(__DIR__) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor($user) : null; ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your account | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css"><?php require __DIR__ . '/../includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your account | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=3"><?php require __DIR__ . '/../includes/analytics.php'; ?><style>
 #toolbox{margin-top:28px}
 .toolbox-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .toolbox-head h2{font-size:32px;margin:0}
 .tool-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
 .tool-card{border:2px solid var(--line);border-radius:22px;padding:24px;box-shadow:8px 8px 0 var(--line);text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform .12s ease,box-shadow .12s ease}
 .tool-card:hover{transform:translate(-2px,-2px);box-shadow:10px 10px 0 var(--line)}
-.tool-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.tool-card-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
 .tool-icon{width:46px;height:46px;border:2px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;font-size:20px;font-weight:900}
 .tool-tag{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
 .tool-card h3{margin:0 0 8px;font-size:30px;line-height:1.05}
@@ -89,7 +89,7 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <?php if ($user['plan'] === 'free'): ?>
 <section class="panel" id="upgrade"><h2><?= $lowUsage ? 'Almost out of free actions.' : 'Need more than 75 actions a month?' ?></h2><p class="lede"><?= $lowUsage ? 'You are getting real work done. Keep the momentum with more actions every month.' : 'Your free workspace resets every month. Paid plans give you room to grow.' ?></p><div class="plan-cards"><div class="panel"><h2>Helper</h2><p><b>$12</b>/month</p><ul><li>1,500 actions every month</li><li>Every tool in the toolbox</li><li>Cancel anytime</li></ul><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper</a></div><div class="panel"><h2>Operator</h2><p><b>$49</b>/month</p><ul><li>6,000 actions every month</li><li>One custom tool built for you each month</li><li>Delivered in 36 hours or your next month is free</li></ul><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator</a></div></div></section>
 <?php elseif ($user['plan'] === 'helper'): ?>
-<section class="panel" id="upgrade"><h2>Want a tool built just for you?</h2><p class="lede">Operator adds 6,000 actions a month plus one custom tool request. Describe the annoying task, get a working tool in 36 hours, or your next month is free.</p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></section>
+<section class="panel" id="upgrade-helper"><h2>Want a tool built just for you?</h2><p class="lede">Operator adds 6,000 actions a month plus one custom tool request. Describe the annoying task, get a working tool in 36 hours, or your next month is free.</p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></section>
 <?php endif; ?>
 <section class="panel" id="requests"><h2>Custom tool requests</h2>
 <?php if ($isOperator): ?><p class="lede">One request per month. Delivered within 36 hours or your next month is free.</p><div id="req-list"></div><form id="req-form"><label>Give it a name</label><input name="title" maxlength="180" required placeholder="e.g. Invoice chaser"><label>What annoying task should it handle? What does done look like?</label><textarea name="details" maxlength="5000" required></textarea><button>Send request</button><p id="req-error" class="error"></p></form>

@@ -1,5 +1,5 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor($user) : null; ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bum Bum Notes | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bum Bum Notes | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=3"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .notes-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
 .notes-row .button{margin-top:0}
 #notesRec{font-size:20px;padding:16px 30px}

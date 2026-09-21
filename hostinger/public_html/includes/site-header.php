@@ -6,7 +6,7 @@ $shMeter = !empty($showMeter);
 ?>
 <header class="nav shell">
   <a class="brand" href="/" aria-label="Leave It to Bum Bum home" title="psst… boop the cat on the homepage"><img class="brand-cat" src="/bum/favicon-cat.png" alt="Bum Bum the cat"><span>Leave It to<br><b>Bum Bum</b></span></a>
-  <nav aria-label="Main navigation" id="bbPhpNav"><a href="/tools/">Tools</a><a href="/#pricing">Pricing</a><a href="/#guarantee">36 hours</a><a href="/account/">Account</a></nav>
+  <nav aria-label="Main navigation" id="bbPhpNav"><a href="/tools/">Tools</a><a href="/pricing/">Pricing</a><a href="/36-hours/">36 hours</a><a href="/account/">Account</a></nav>
   <span class="nav-right"><?php if ($shMeter) require __DIR__ . '/meter.php'; ?><?php if ($shUser): ?><button type="button" class="button button-small secondary" id="bbSignOut">Sign out</button><?php else: ?><a class="button button-small" href="/account/">Sign in</a><?php endif; ?></span>
   <button type="button" class="menu-toggle" id="bbMenuToggle" aria-expanded="false" aria-controls="bbPhpNav" aria-label="Open menu"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
 </header>

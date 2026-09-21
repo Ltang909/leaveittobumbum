@@ -10,8 +10,8 @@ export function SiteHeader() {
       <a className="brand" href="/" aria-label="Leave It to Bum Bum home" title="psst… boop the cat on the homepage"><img className="brand-cat" src="/bum/favicon-cat.png" alt="Bum Bum the cat" /><span>Leave It to<br /><b>Bum Bum</b></span></a>
       <nav aria-label="Main navigation" className={open ? "open" : ""}>
         <a href="/tools/" onClick={() => setOpen(false)}>Tools</a>
-        <a href="/#pricing" onClick={() => setOpen(false)}>Pricing</a>
-        <a href="/#guarantee" onClick={() => setOpen(false)}>36 hours</a>
+        <a href="/pricing/" onClick={() => setOpen(false)}>Pricing</a>
+        <a href="/36-hours/" onClick={() => setOpen(false)}>36 hours</a>
         <a href="/account/" onClick={() => setOpen(false)}>Account</a>
         <span className="nav-menu-cta"><AuthCta /></span>
       </nav>
