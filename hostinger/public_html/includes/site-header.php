@@ -13,6 +13,30 @@ $shMeter = !empty($showMeter);
 <script>
 (function(){var t=document.getElementById('bbMenuToggle'),n=document.getElementById('bbPhpNav');if(!t||!n)return;t.addEventListener('click',function(){var open=n.classList.toggle('open');t.setAttribute('aria-expanded',open?'true':'false');t.setAttribute('aria-label',open?'Close menu':'Open menu');});n.addEventListener('click',function(e){if(e.target.closest('a')){n.classList.remove('open');t.setAttribute('aria-expanded','false');t.setAttribute('aria-label','Open menu');}});})();
 </script>
+<script>
+/* Live actions pill: repaint every .usage-pill the moment any tool API
+   response carries fresh usage, so the header balance updates without reload. */
+(function(){
+  function paint(u){
+    if(!u||typeof u.remaining==='undefined'||typeof u.limit==='undefined')return;
+    var label=u.remaining+' of '+u.limit+' actions left';
+    document.querySelectorAll('.usage-pill').forEach(function(el){el.textContent=label;});
+  }
+  document.addEventListener('bb:usage',function(e){paint(e.detail);});
+  var origFetch=window.fetch;
+  window.fetch=function(input,init){
+    var url=typeof input==='string'?input:(input&&input.url)||'';
+    return origFetch.apply(this,arguments).then(function(res){
+      if(url.indexOf('/api/tools/')===0){
+        res.clone().json().then(function(data){
+          if(data&&data.usage)document.dispatchEvent(new CustomEvent('bb:usage',{detail:data.usage}));
+        }).catch(function(){});
+      }
+      return res;
+    });
+  };
+})();
+</script>
 <?php if ($shUser): ?><script>
 (function(){var b=document.getElementById('bbSignOut');if(!b)return;b.addEventListener('click',async function(){b.disabled=true;try{var s=await fetch('/api/session.php').then(function(r){return r.json()});await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout',csrf:s.csrf})});}catch(e){}location.reload();});})();
 </script><?php endif; ?>

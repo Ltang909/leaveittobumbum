@@ -1,7 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthCta } from "./auth-cta";
+
+type Usage = { remaining: number; limit: number };
+
+function ActionsPill() {
+  const [usage, setUsage] = useState<Usage | null>(null);
+
+  useEffect(() => {
+    fetch("/api/usage.php", { credentials: "same-origin" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && d.usage && typeof d.usage.remaining === "number") setUsage(d.usage);
+      })
+      .catch(() => {});
+    const onUsage = (e: Event) => {
+      const u = (e as CustomEvent).detail as Usage | undefined;
+      if (u && typeof u.remaining === "number" && typeof u.limit === "number") setUsage(u);
+    };
+    document.addEventListener("bb:usage", onUsage);
+    return () => document.removeEventListener("bb:usage", onUsage);
+  }, []);
+
+  if (!usage || !(usage.limit > 0)) return null;
+  return (
+    <a className="usage-pill" href="/account/">
+      {usage.remaining} of {usage.limit} actions left
+    </a>
+  );
+}
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -13,9 +41,9 @@ export function SiteHeader() {
         <a href="/pricing/" onClick={() => setOpen(false)}>Pricing</a>
         <a href="/36-hours/" onClick={() => setOpen(false)}>36 hours</a>
         <a href="/account/" onClick={() => setOpen(false)}>Account</a>
-        <span className="nav-menu-cta"><AuthCta /></span>
+        <span className="nav-menu-cta"><ActionsPill /><AuthCta /></span>
       </nav>
-      <span className="nav-desktop-cta"><AuthCta /></span>
+      <span className="nav-desktop-cta"><ActionsPill /><AuthCta /></span>
       <button type="button" className="menu-toggle" aria-expanded={open} aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
         <span aria-hidden="true" /><span aria-hidden="true" /><span aria-hidden="true" />
       </button>
