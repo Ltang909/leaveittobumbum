@@ -1,0 +1,74 @@
+name: Build and deploy staging to Hostinger
+
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: STATIC_EXPORT=true npx next build
+
+      - name: Assemble deploy package
+        run: |
+          rm -rf deploy-pkg site.tar.gz
+          mkdir -p deploy-pkg
+          # Static export (index.html, _next/, 404.html, ...)
+          cp -a out/. deploy-pkg/
+          # PHP backend (api/, account/, checkout/, tools/, app.css, ...)
+          # lives in hostinger/public_html/ in the repo.
+          cp -a hostinger/public_html/. deploy-pkg/
+          # Keep staging out of search engines (it is also reachable under the
+          # main domain's /staging path, so block indexing on both hostnames).
+          printf 'User-agent: *\nDisallow: /\n' > deploy-pkg/robots.txt
+          tar -czf site.tar.gz -C deploy-pkg .
+          echo "Deploy package contents:"
+          tar -tzf site.tar.gz | head -40
+
+      - name: Copy archive to server over SSH
+        if: github.event_name != 'pull_request'
+        uses: appleboy/scp-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 65002
+          source: "site.tar.gz"
+          target: "~/"
+
+      - name: Extract into the staging document root
+        if: github.event_name != 'pull_request'
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 65002
+          script: |
+            DOCROOT="$HOME/domains/leaveittobumbum.com/public_html/staging"
+            if [ ! -d "$DOCROOT" ]; then
+              echo "ERROR: staging document root not found: $DOCROOT"
+              ls "$HOME/domains" || true
+              exit 1
+            fi
+            tar -xzf "$HOME/site.tar.gz" -C "$DOCROOT"
+            rm -f "$HOME/site.tar.gz"
+            # Safety net: the web server needs 755 on dirs and 644 on files.
+            find "$DOCROOT" -type d -exec chmod 755 {} +
+            find "$DOCROOT" -type f -exec chmod 644 {} +
+            echo "Document root after deploy:"
+            ls "$DOCROOT"
+            echo "Key paths:"
+            for p in index.html checkout/index.php account/index.php api/usage.php app.css; do
+              if [ -e "$DOCROOT/$p" ]; then echo "OK: $p"; else echo "MISSING: $p"; fi
+            done
