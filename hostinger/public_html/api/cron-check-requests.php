@@ -16,7 +16,7 @@ $errors = [];
 try {
     $rows = db()->query("SELECT r.id, r.user_id, u.plan, u.stripe_customer_id FROM custom_requests r JOIN users u ON u.id = r.user_id WHERE r.status = 'open' AND r.deadline_at < NOW()")->fetchAll();
 } catch (PDOException $error) {
-    jsonResponse(['error' => 'Requests are not set up yet.'], 503);
+    jsonResponse(['error' => 'Requests query failed: ' . $error->getMessage()], 503);
 }
 foreach ($rows as $row) {
     $checked++;
