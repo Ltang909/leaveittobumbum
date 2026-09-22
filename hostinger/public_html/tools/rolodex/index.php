@@ -25,7 +25,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 @media(min-width:760px){.modal-overlay{align-items:center;padding:24px}}
 .modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;padding:20px;position:relative}
 @media(min-width:760px){.modal{border-radius:20px}}
-.modal-close{position:sticky;top:0;float:right;border:2px solid var(--line);background:#fff;border-radius:999px;width:36px;height:36px;font-size:18px;font-weight:800;cursor:pointer;line-height:1}
+.modal-close{position:absolute;top:16px;right:16px;border:2px solid var(--line);background:#fff;border-radius:999px;width:36px;height:36px;font-size:18px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 .modal h2{margin:0 0 4px;padding-right:44px}
 .modal .lede{margin:0 0 8px}
 .modal label{display:block;margin:10px 0}
@@ -104,7 +104,7 @@ async function openDetail(id){
   const c=data.contact;
   body.innerHTML=`
     <h2>${esc(c.name)}</h2>
-    <p class="lede">${c.contact_info?esc(c.contact_info)+' · ':''}${c.source?'met '+esc(c.source)+' · ':''}${stageBadge(c.stage)}</p>
+    <p class="lede">${c.contact_info?esc(c.contact_info)+' · ':''}${stageBadge(c.stage)}</p>
     <label>Stage<select data-f="stage">${STAGES.map(s=>`<option value="${s}"${c.stage===s?' selected':''}>${s}</option>`).join('')}</select></label>
     <label>Deal value<input data-f="deal_value" type="number" min="0" step="0.01" value="${c.deal_value??''}" placeholder="0"></label>
     <label>Follow up on<input data-f="follow_up_date" type="date" value="${esc(c.follow_up_date||'')}"></label>
