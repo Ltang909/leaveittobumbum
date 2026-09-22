@@ -19,6 +19,10 @@
 .timeline .when{font-size:12px;opacity:.65}
 .followup{border:2px solid var(--ink);border-radius:14px;background:#fff;padding:14px;margin-bottom:10px;box-shadow:4px 4px 0 var(--yellow)}
 .followup .draft{background:var(--cream);border:2px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;font-size:14px;white-space:pre-wrap}
+.followup .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#contactList{max-height:520px;overflow-y:auto;padding-right:6px}
+#addForm input,#addForm select{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit;background-color:#fff}
+.modal select,#addForm select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px!important;cursor:pointer}
 .quiet{box-shadow:4px 4px 0 var(--line)}
 input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:0}
