@@ -31,7 +31,7 @@ function RequestToolModal({ open, prefill, onClose }: { open: boolean; prefill: 
     event.preventDefault();
     setState("sending");
     const form = new FormData(event.currentTarget);
-    const response = await fetch("/api/tool-requests", {
+    const response = await fetch("/api/tool-requests.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(Object.fromEntries(form)),
@@ -60,6 +60,7 @@ function RequestToolModal({ open, prefill, onClose }: { open: boolean; prefill: 
               <label>Work email<input name="email" type="email" required /></label>
               <label>The annoying task<textarea name="problem" required placeholder="Every Friday I copy..." rows={4} key={prefill} defaultValue={prefill} /></label>
               <label>What would “done” look like?<textarea name="outcome" required placeholder="I want to click once and get..." rows={3} /></label>
+              <input name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
               <button className="button" disabled={state === "sending"}>{state === "sending" ? "Sending…" : "Send to Bum Bum"} <span aria-hidden="true">↗</span></button>
               {state === "error" && <p className="form-error">That did not go through. Email hello@leaveittobumbum.com and we will pick it up.</p>}
             </form>

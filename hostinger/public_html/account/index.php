@@ -1,5 +1,5 @@
 <?php require dirname(__DIR__) . '/api/_bootstrap.php'; $user = currentUser(); $bill = $user ? billingUser($user) : null; $usage = $bill ? usageFor($bill) : null; ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your account | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=3"><?php require __DIR__ . '/../includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Your account | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=4"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"><?php require __DIR__ . '/../includes/analytics.php'; ?><style>
 #toolbox{margin-top:28px}
 .toolbox-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .toolbox-head h2{font-size:32px;margin:0}
@@ -133,4 +133,4 @@ if(customizeBtn&&toolPicker)customizeBtn.addEventListener('click',()=>{const hid
 const toolSave=document.querySelector('#toolSave');
 if(toolSave)toolSave.addEventListener('click',async()=>{const msg=document.querySelector('#toolMsg');msg.textContent='';const keys=[...document.querySelectorAll('#tool-picker input[type="checkbox"]:checked')].map(c=>c.value);if(!keys.length){msg.textContent='Pick at least one tool.';return}toolSave.disabled=true;const s=await session();const response=await fetch('/api/account/tools.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save',keys:keys,csrf:s.csrf})});const data=await response.json();toolSave.disabled=false;if(!response.ok){msg.textContent=data.error||'Could not save.';return}bbTrack('dashboard_customized',{count:keys.length});location.reload();});
 <?php endif; ?>
-</script><?php endif; ?></main></body></html>
+</script><?php endif; ?></main><?php require dirname(__DIR__)."/includes/site-footer.php"; ?></body></html>
