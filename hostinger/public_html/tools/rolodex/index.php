@@ -32,6 +32,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
 <div class="stat-row"><div class="stat-card"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card"><b id="statWon">$0</b><span>won</span></div><div class="stat-card"><b id="statCount">0</b><span>contacts</span></div></div>
 <section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Contact info<input name="contact_info" type="text" maxlength="191" placeholder="jordan@acme.co or @jordan"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label></div><button class="button" style="margin-top:10px">Add to Rolodex</button><p id="addError" class="error"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Columns: <b>name</b> (required), contact_info, source, deal_value, stage (new, talking, quoted, won, lost), follow_up_date (YYYY-MM-DD). Up to 200 rows, one action per imported contact. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><button class="button secondary" style="margin-top:10px">Import CSV</button><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
 <section class="panel"><h2 style="margin-top:0">Your people</h2><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="usage"></p></section>
 <div id="upgrade-slot"></div>
 <style>.nudge-grid{display:grid;gap:12px}@media(min-width:760px){.nudge-grid{grid-template-columns:1fr 1fr}}</style>
@@ -148,6 +149,41 @@ addForm.addEventListener('submit',async e=>{
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
   document.querySelector('#usage').textContent=data.usage.remaining+' actions remaining this month.';
   addForm.reset();await refresh();
+});
+const csvForm=document.querySelector('#csvForm');
+document.querySelector('#tplLink').addEventListener('click',e=>{
+  e.preventDefault();
+  const blob=new Blob(['name,contact_info,source,deal_value,stage,follow_up_date\nJordan Lee,jordan@acme.co,Indie Hackers meetup,2500,talking,2026-10-01\nPriya Shah,@priya_builds,Twitter DM,800,new,\n'],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='rolodex-template.csv';a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+});
+csvForm.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const file=document.querySelector('#csvFile').files[0];
+  const errEl=document.querySelector('#csvError'),resEl=document.querySelector('#csvResult');
+  errEl.textContent='';resEl.textContent='';
+  if(!file){errEl.textContent='Pick a CSV file first.';return}
+  const text=await file.text();
+  const btn=csvForm.querySelector('button');btn.disabled=true;btn.textContent='Importing...';
+  const{response,data}=await apiCall({action:'import',csv:text,idempotencyKey:crypto.randomUUID()});
+  btn.disabled=false;btn.textContent='Import CSV';
+  if(response.status===402){
+    bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
+    errEl.textContent=data.error||'Out of actions.';
+    document.querySelector('#usage').textContent=data.usage.remaining+' actions remaining this month.';
+    document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
+    document.querySelectorAll('#upgrade-slot [data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:'limit',tool:TOOL_KEY})));
+    await refresh();return;
+  }
+  if(!response.ok){errEl.textContent=data.error||'Import failed.';return}
+  bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
+  bbTrack('rolodex_imported',{tool:TOOL_KEY,imported:data.imported});
+  document.querySelector('#usage').textContent=data.usage.remaining+' actions remaining this month.';
+  let msg=`Imported ${data.imported} contact${data.imported===1?'':'s'}.`;
+  if(data.skipped)msg+=` Skipped ${data.skipped}.`;
+  if(data.errors&&data.errors.length)msg+='\n'+data.errors.join('\n');
+  resEl.textContent=msg;
+  csvForm.reset();await refresh();
 });
 refresh();
 </script><?php endif; ?></main></body></html>

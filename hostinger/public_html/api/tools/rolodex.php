@@ -157,6 +157,66 @@ if ($action === 'add') {
     jsonResponse(['contact' => $contact, 'usage' => usageFor($bill), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
 }
 
+if ($action === 'import') {
+    $csv = (string) ($input['csv'] ?? '');
+    if (trim($csv) === '') jsonResponse(['error' => 'The file looks empty.'], 422);
+    if (strlen($csv) > 1000000) jsonResponse(['error' => 'Keep the CSV under 1 MB.'], 422);
+    $batchKey = rolodex_idempotency($input);
+    $stream = fopen('php://memory', 'r+');
+    fwrite($stream, $csv);
+    rewind($stream);
+    $aliases = [
+        'name' => 'name', 'full name' => 'name',
+        'contact_info' => 'contact_info', 'contact' => 'contact_info', 'email' => 'contact_info', 'phone' => 'contact_info',
+        'source' => 'source', 'where you met' => 'source', 'where we met' => 'source',
+        'deal_value' => 'deal_value', 'value' => 'deal_value', 'deal' => 'deal_value',
+        'stage' => 'stage',
+        'follow_up_date' => 'follow_up_date', 'follow up' => 'follow_up_date', 'followup' => 'follow_up_date',
+    ];
+    $header = fgetcsv($stream);
+    if (!$header) jsonResponse(['error' => 'Could not read the CSV header row.'], 422);
+    $cols = [];
+    foreach ($header as $h) {
+        $k = strtolower(trim((string) $h));
+        $cols[] = $aliases[$k] ?? null;
+    }
+    if (!in_array('name', $cols, true)) jsonResponse(['error' => 'The CSV needs a "name" column.', 'hint' => 'Columns: name, contact_info, source, deal_value, stage, follow_up_date'], 422);
+    $imported = 0;
+    $skipped = 0;
+    $errors = [];
+    $rows = 0;
+    $limitHit = false;
+    while (($row = fgetcsv($stream)) !== false && $rows < 200) {
+        $rows++;
+        $rec = ['name' => '', 'contact_info' => '', 'source' => '', 'deal_value' => null, 'stage' => 'new', 'follow_up_date' => null];
+        foreach ($cols as $i => $field) {
+            if ($field === null) continue;
+            $rec[$field] = trim((string) ($row[$i] ?? ''));
+        }
+        if ($rec['name'] === '' || mb_strlen($rec['name']) > 80) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: missing or too-long name."; continue; }
+        if (mb_strlen($rec['contact_info']) > 191 || mb_strlen($rec['source']) > 191) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: contact info or source too long."; continue; }
+        $stage = strtolower($rec['stage']);
+        if (!in_array($stage, ROLODEX_STAGES, true)) $stage = 'new';
+        $dealValue = null;
+        if ($rec['deal_value'] !== '') {
+            $dealValue = filter_var($rec['deal_value'], FILTER_VALIDATE_FLOAT);
+            if ($dealValue === false || $dealValue < 0 || $dealValue > 100000000) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: invalid deal value."; continue; }
+        }
+        $followUp = $rec['follow_up_date'] === '' ? null : rolodex_clean_date($rec['follow_up_date']);
+        if ($followUp === false) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: invalid follow-up date (use YYYY-MM-DD)."; continue; }
+        $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'rolodex', $batchKey . '-' . $rows);
+        if (!empty($count['limit_reached'])) { $limitHit = true; break; }
+        if (empty($count['duplicate'])) {
+            $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())');
+            $stmt->execute([$userId, $rec['name'], $rec['contact_info'], $rec['source'], $dealValue, $stage, $followUp]);
+            $imported++;
+        }
+    }
+    fclose($stream);
+    if ($limitHit) jsonResponse(['error' => 'You ran out of actions partway through. ' . $imported . ' contacts imported, ' . $skipped . ' skipped.', 'imported' => $imported, 'skipped' => $skipped, 'usage' => usageFor($bill)], 402);
+    jsonResponse(['imported' => $imported, 'skipped' => $skipped, 'errors' => $errors, 'usage' => usageFor($bill)]);
+}
+
 if ($action === 'update') {
     $id = (int) ($input['id'] ?? 0);
     $fields = [];
