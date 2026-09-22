@@ -15,7 +15,7 @@ $next = '/join/?token=' . urlencode($token);
 <?php $showMeter = false; require __DIR__ . '/../includes/site-header.php'; ?><main class="shell">
 <?php if (!$invite): ?>
 <p class="eyebrow">Team invite</p><h1>This invite link is spent.</h1>
-<p class="lede"><img src="/bum/cat-sleepy.png" alt="Bum Bum napping" class="sticker" style="width:88px;vertical-align:middle;margin-right:10px">It was already used, revoked, or never existed. Ask the team owner for a fresh one.</p>
+<p class="lede"><img src="/bum/cat-sleepy-v2.png" alt="Bum Bum napping" class="sticker" style="width:88px;vertical-align:middle;margin-right:10px">It was already used, revoked, or never existed. Ask the team owner for a fresh one.</p>
 <a class="button" href="/account/">Go to your account</a>
 <?php elseif (!$user): ?>
 <p class="eyebrow">Team invite</p><h1><?= htmlspecialchars($invite['owner_email']) ?> invited you to their Bum Bum team.</h1>
@@ -27,7 +27,7 @@ document.querySelectorAll('form').forEach(form=>form.addEventListener('submit',a
 <?php else: $isOwn = strtolower((string)$user['email']) === strtolower((string)$invite['owner_email']); $already = teamMembership((int)$user['id']); $hasPaid = in_array($user['subscription_status'], ['active','trialing','past_due'], true) && $user['plan'] !== 'free'; ?>
 <p class="eyebrow">Team invite</p><h1>Join <?= htmlspecialchars($invite['owner_email']) ?>'s team?</h1>
 <div class="grid"><section class="panel">
-<p><img src="/bum/cat-peek.png" alt="Bum Bum peeking in" class="sticker" style="width:96px;vertical-align:middle;margin-right:10px">Here's the deal:</p>
+<p><img src="/bum/cat-peeking.png" alt="Bum Bum peeking in" class="sticker" style="width:96px;vertical-align:middle;margin-right:10px">Here's the deal:</p>
 <ul>
 <li>Your completed actions draw from <b><?= htmlspecialchars($invite['owner_email']) ?></b>'s shared bucket (<?= htmlspecialchars(ucfirst($invite['owner_plan'])) ?> plan).</li>
 <li>You keep your own login. Only the owner can manage billing and seats.</li>
