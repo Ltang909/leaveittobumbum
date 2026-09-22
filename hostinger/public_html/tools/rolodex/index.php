@@ -43,7 +43,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
 <div class="stat-row"><div class="stat-card"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card"><b id="statWon">$0</b><span>won</span></div><div class="stat-card"><b id="statCount">0</b><span>contacts</span></div></div>
 <section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Contact info<input name="contact_info" type="text" maxlength="191" placeholder="jordan@acme.co or @jordan"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label></div><button class="button" style="margin-top:10px">Add to Rolodex</button><p id="addError" class="error"></p></form></section>
-<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Columns: <b>name</b> (required), contact_info, source, deal_value, stage (new, talking, quoted, won, lost), follow_up_date (YYYY-MM-DD). Names that already exist get <b>updated</b> (free, empty cells keep their current values); new names get added at one action each. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><button class="button secondary" style="margin-top:10px">Import CSV</button><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Columns: <b>name</b> (required), contact_info, source, deal_value, stage (new, talking, quoted, won, lost), follow_up_date (YYYY-MM-DD). Names that already exist get <b>updated</b> (free, empty cells keep their current values); new names get added at one action each. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button><button type="button" class="button secondary" style="margin-top:10px" id="csvDownload">Download CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
 <section class="panel"><h2 style="margin-top:0">Your people</h2><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="usage"></p></section>
 <div id="upgrade-slot"></div>
 <div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
@@ -175,6 +175,17 @@ addForm.addEventListener('submit',async e=>{
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
   document.querySelector('#usage').textContent=data.usage.remaining+' actions remaining this month.';
   addForm.reset();await refresh();
+});
+document.querySelector('#csvDownload').addEventListener('click',async e=>{
+  e.preventDefault();
+  const btn=e.currentTarget;btn.disabled=true;
+  const{response,data}=await apiCall({action:'export'});
+  btn.disabled=false;
+  if(!response.ok||!data.csv){document.querySelector('#csvError').textContent=data.error||'Download failed.';return}
+  const blob=new Blob([data.csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=data.filename||'rolodex-export.csv';a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  bbTrack('rolodex_exported',{tool:TOOL_KEY});
 });
 const csvForm=document.querySelector('#csvForm');
 document.querySelector('#tplLink').addEventListener('click',e=>{

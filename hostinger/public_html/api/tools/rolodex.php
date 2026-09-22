@@ -240,6 +240,27 @@ if ($action === 'import') {
     jsonResponse(['imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'errors' => $errors, 'usage' => usageFor($bill)]);
 }
 
+if ($action === 'export') {
+    $stmt = $pdo->prepare('SELECT name, contact_info, source, deal_value, stage, follow_up_date FROM rolodex_contacts WHERE user_id = ? ORDER BY name ASC LIMIT 2000');
+    $stmt->execute([$userId]);
+    $stream = fopen('php://memory', 'r+');
+    fputcsv($stream, ['name', 'contact_info', 'source', 'deal_value', 'stage', 'follow_up_date']);
+    foreach ($stmt->fetchAll() as $row) {
+        fputcsv($stream, [
+            $row['name'],
+            $row['contact_info'],
+            $row['source'],
+            $row['deal_value'] === null ? '' : (string) (float) $row['deal_value'],
+            $row['stage'],
+            $row['follow_up_date'] ?? '',
+        ]);
+    }
+    rewind($stream);
+    $csv = stream_get_contents($stream);
+    fclose($stream);
+    jsonResponse(['csv' => $csv, 'filename' => 'rolodex-export-' . date('Y-m-d') . '.csv']);
+}
+
 if ($action === 'update') {
     $id = (int) ($input['id'] ?? 0);
     $fields = [];
