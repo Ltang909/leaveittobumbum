@@ -111,13 +111,13 @@ if(!screenOK){
   const editDownload=document.querySelector('#editDownload');
   const editBody=document.querySelector('#editBody');
   const editNote=document.querySelector('#editNote');
-  let screenStream=null,micStream=null,camStream=null,recorder=null,chunks=[],startTime=0,timerInt=null,mime='',blobUrl='',attempt=crypto.randomUUID();
+  let screenStream=null,micStream=null,camStream=null,recorder=null,chunks=[],startTime=0,timerInt=null,mime='',blobUrl='',mixCtx=null,attempt=crypto.randomUUID();
   let screenVideoEl=null,camVideoEl=null,compCanvas=null,compCtx=null,drawRAF=0;
   let recordedBlob=null,editBlobUrl='',editSpeed=1;
   let pipWin=null,bubbleTimerEl=null,fallbackBubble=null;
   function pickMime(){const c=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t}return ''}
   function setError(m){errorEl.textContent=m}
-  function stopTracks(){[screenStream,micStream,camStream].forEach(s=>{if(s)s.getTracks().forEach(t=>t.stop())});screenStream=null;micStream=null;camStream=null;if(drawRAF)cancelAnimationFrame(drawRAF);drawRAF=0;screenVideoEl=null;camVideoEl=null;compCanvas=null;compCtx=null;closeBubbleWindow()}
+  function stopTracks(){[screenStream,micStream,camStream].forEach(s=>{if(s)s.getTracks().forEach(t=>t.stop())});screenStream=null;micStream=null;camStream=null;if(drawRAF)cancelAnimationFrame(drawRAF);drawRAF=0;screenVideoEl=null;camVideoEl=null;compCanvas=null;compCtx=null;if(mixCtx){mixCtx.close().catch(()=>{});mixCtx=null}closeBubbleWindow()}
   function doStop(){if(recorder&&recorder.state!=='inactive')recorder.stop()}
   // --- floating self-view bubble -------------------------------------------
   // An always-on-top bubble window with a stop button, positioned as a live
@@ -293,8 +293,22 @@ if(!screenOK){
     }else{
       videoTracks=screenStream.getVideoTracks();
     }
-    const tracks=[...videoTracks,...screenStream.getAudioTracks()];
-    if(micStream)tracks.push(...micStream.getAudioTracks());
+    const tracks=[...videoTracks];
+    // Mix audio through an AudioContext (same pattern as loom-ish): raw
+    // audio tracks from different sources can record silent, but a mixed
+    // MediaStreamDestination track captures properly.
+    const audioSources=[];
+    if(screenStream.getAudioTracks().length)audioSources.push(new MediaStream([screenStream.getAudioTracks()[0]]));
+    if(micStream&&micStream.getAudioTracks().length)audioSources.push(new MediaStream([micStream.getAudioTracks()[0]]));
+    if(audioSources.length){
+      try{
+        mixCtx=new (window.AudioContext||window.webkitAudioContext)();
+        if(mixCtx.state==='suspended')mixCtx.resume().catch(()=>{});
+        const dest=mixCtx.createMediaStreamDestination();
+        audioSources.forEach(ms=>{mixCtx.createMediaStreamSource(ms).connect(dest);});
+        tracks.push(...dest.stream.getAudioTracks());
+      }catch(err){mixCtx=null;}
+    }
     // If the browser gave us no audio at all (e.g. window/screen share with no
     // system sound and mic denied), say so now instead of a silent clip.
     if(!tracks.some(t=>t.kind==='audio'))audioWarn.classList.remove('hidden');
