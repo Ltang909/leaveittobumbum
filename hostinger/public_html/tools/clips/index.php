@@ -29,12 +29,14 @@
 <section class="panel" id="recorder">
 <p><label style="display:inline-flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="micToggle" checked style="width:auto;margin:0"> Include my microphone</label></p>
 <p id="micNote" class="hidden">Mic unavailable, recording screen audio only.</p>
+<p style="font-size:14px;opacity:.75">Tip: your computer's own sound only comes through when you share a browser <strong>tab</strong> and tick "Share tab audio" in the picker. Window and full-screen shares cannot carry system sound on most computers.</p>
 <p><label style="display:inline-flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="camToggle" style="width:auto;margin:0"> Include my camera (floating bubble)</label></p>
 <p id="camNote" class="hidden">Camera unavailable, recording screen only.</p>
 <p id="camHint" class="hidden" style="font-size:14px;opacity:.75">While you record, your bubble floats on screen so you can see exactly where it lands.</p>
 <button id="startBtn">Start recording</button>
 <div id="recordingView" class="hidden">
 <p class="lede">Recording <strong id="timer">00:00</strong></p>
+<p id="audioWarn" class="hidden" style="font-weight:700">No audio is being captured. To get sound, stop and share a browser tab with "Share tab audio" ticked, and keep "Include my microphone" checked.</p>
 <button id="stopBtn">Stop</button>
 </div>
 <p id="clipError" class="error"></p>
@@ -85,6 +87,7 @@ if(!screenOK){
   const camToggle=document.querySelector('#camToggle');
   const camNote=document.querySelector('#camNote');
   const camHint=document.querySelector('#camHint');
+  const audioWarn=document.querySelector('#audioWarn');
   camToggle.addEventListener('change',()=>{camHint.classList.toggle('hidden',!camToggle.checked)});
   const recordingView=document.querySelector('#recordingView');
   const recorderSection=document.querySelector('#recorder');
@@ -245,7 +248,7 @@ if(!screenOK){
     });
   }
   startBtn.addEventListener('click',async()=>{
-    setError('');micNote.classList.add('hidden');camNote.classList.add('hidden');
+    setError('');micNote.classList.add('hidden');camNote.classList.add('hidden');audioWarn.classList.add('hidden');
     let ss;
     try{ss=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true})}
     catch(err){const n=err&&err.name?err.name:'UnknownError';setError(n==='NotAllowedError'?'Screen sharing was blocked or cancelled. No worries, try again when you are ready.':'Could not start screen capture ('+n+'). Try Chrome or Edge on a desktop.');return}
@@ -292,6 +295,9 @@ if(!screenOK){
     }
     const tracks=[...videoTracks,...screenStream.getAudioTracks()];
     if(micStream)tracks.push(...micStream.getAudioTracks());
+    // If the browser gave us no audio at all (e.g. window/screen share with no
+    // system sound and mic denied), say so now instead of a silent clip.
+    if(!tracks.some(t=>t.kind==='audio'))audioWarn.classList.remove('hidden');
     mime=pickMime();
     if(!mime){setError('This browser cannot record video. Try Chrome or Edge.');stopTracks();return}
     chunks=[];
@@ -406,7 +412,6 @@ if(!screenOK){
     bbTrack('clip_edit_started',{tool:TOOL_KEY,speed:editSpeed});
     const srcVideo=document.createElement('video');
     srcVideo.src=URL.createObjectURL(recordedBlob);
-    srcVideo.muted=true;
     srcVideo.playsInline=true;
     await new Promise(res=>srcVideo.addEventListener('loadedmetadata',res,{once:true}));
     await new Promise(res=>{srcVideo.currentTime=start;srcVideo.addEventListener('seeked',res,{once:true})});
