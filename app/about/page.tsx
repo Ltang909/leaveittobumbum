@@ -30,7 +30,7 @@ export default function About() {
           </div>
           <h3>The many moods of Bum Bum</h3>
           <div className="moods">
-            {[["cat-default", "Default"], ["cat-wink", "Wink"], ["cat-blep", "Blep"], ["cat-cool", "Cool"], ["cat-excited", "Excited"], ["cat-judging", "Judging"], ["cat-peek", "Peek"], ["cat-sleepy", "Sleepy"]].map(([file, label]) => (
+            {[["cat-curious", "Default"], ["cat-wink-blep", "Wink"], ["cat-licking", "Blep"], ["cat-sunglasses", "Cool"], ["cat-excited-v2", "Excited"], ["cat-bowtie", "Judging"], ["cat-peeking", "Peek"], ["cat-sleepy-v2", "Sleepy"]].map(([file, label]) => (
               <figure key={file}><img src={`/bum/${file}.png`} alt={`Bum Bum: ${label}`} /><figcaption>{label}</figcaption></figure>
             ))}
           </div>
