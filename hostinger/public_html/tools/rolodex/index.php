@@ -111,7 +111,6 @@ async function openDetail(id){
     <div class="btnrow"><button type="button" class="button secondary" data-save="${id}">Save changes</button><button type="button" class="button secondary" data-del="${id}">Delete</button></div>
     <h3 style="margin:14px 0 4px">Log an interaction</h3>
     <label>What happened<textarea data-f="log_body" placeholder="Had a great call, they want a proposal by Friday..."></textarea></label>
-    <label>Next follow-up<input data-f="log_next" type="date"></label>
     <div class="btnrow"><button type="button" class="button secondary" data-log="${id}">Log it</button></div>
     <h3 style="margin:14px 0 4px">Timeline</h3>
     <ul class="timeline">${data.notes.length?data.notes.map(n=>`<li>${esc(n.body)}<br><span class="when">${esc(n.created_at)}</span></li>`).join(''):'<li>No interactions logged yet.</li>'}</ul>
@@ -131,7 +130,7 @@ async function openDetail(id){
   body.querySelector('[data-log]').addEventListener('click',async()=>{
     const noteBody=body.querySelector('[data-f=log_body]').value.trim();
     if(!noteBody){body.querySelector('[data-err]').textContent='Write a note about the interaction first.';return}
-    const r=await apiCall({action:'log',id,body:noteBody,follow_up_date:body.querySelector('[data-f=log_next]').value});
+    const r=await apiCall({action:'log',id,body:noteBody});
     if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Log failed.';return}
     bbTrack('rolodex_logged',{tool:TOOL_KEY});await refresh();openDetail(id);
   });
