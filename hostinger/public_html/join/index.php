@@ -11,7 +11,7 @@ if (preg_match('/^[a-f0-9]{64}$/', $token)) {
 $user = currentUser();
 $next = '/join/?token=' . urlencode($token);
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Join a team | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=3"><?php require __DIR__ . '/../includes/analytics.php'; ?></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Join a team | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=4"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"><?php require __DIR__ . '/../includes/analytics.php'; ?></head><body>
 <?php $showMeter = false; require __DIR__ . '/../includes/site-header.php'; ?><main class="shell">
 <?php if (!$invite): ?>
 <p class="eyebrow">Team invite</p><h1>This invite link is spent.</h1>
@@ -42,4 +42,4 @@ const joinBtn=document.querySelector('#joinBtn');
 if(joinBtn)joinBtn.addEventListener('click',async()=>{joinBtn.disabled=true;const s=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/team.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'accept',token:<?= json_encode($token) ?>,csrf:s.csrf})});const data=await response.json();if(response.ok){location.href='/account/'}else{document.querySelector('#joinMsg').textContent=data.error;joinBtn.disabled=false}});
 </script>
 <?php endif; ?>
-</main></body></html>
+</main><?php require dirname(__DIR__)."/includes/site-footer.php"; ?></body></html>

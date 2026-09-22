@@ -1,5 +1,6 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor(billingUser($user)) : null; ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nudge | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=3"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Nudge | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=4"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+h1,.lede{max-width:none}
 .nudge-grid{display:grid;gap:14px}
 @media(min-width:760px){.nudge-grid{grid-template-columns:1fr 1fr}}
 .email-card{border:2px solid var(--line);border-radius:14px;background:#fff;padding:16px}
@@ -12,7 +13,7 @@
 .badge{display:inline-block;font-size:12px;font-weight:800;background:var(--yellow);border:2px solid var(--ink);border-radius:999px;padding:2px 10px;margin-left:8px;vertical-align:middle}
 #nudgeResult .lede{margin-top:0}
 input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum judging late payers"><h1>Get paid without the awkward.</h1><p class="lede">Chasing an overdue invoice is the worst part of freelancing. Tell Nudge the details and it writes three ready to send emails, from a friendly nudge to a final notice, so you never have to agonize over the wording again. One generation uses one action.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Nudge"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum judging late payers"><h1>Get paid without the awkward.</h1><p class="lede">Chasing an overdue invoice is the worst part of freelancing. Tell Nudge the details and it writes three ready to send emails, from a friendly nudge to a final notice, so you never have to agonize over the wording again. One generation uses one action.</p>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to use Nudge</h2><a class="button" href="/account/?next=<?= urlencode('/tools/nudge/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
@@ -38,4 +39,4 @@ document.querySelector('#emails').innerHTML=order.map(k=>{const e=r.emails[k];co
 document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{const k=b.getAttribute('data-copy');const e=r.emails[k];const text='Subject: '+e.subject+'\n\n'+e.body;try{await navigator.clipboard.writeText(text);b.textContent='Copied!';}catch(_){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');b.textContent='Copied!';}catch(__){b.textContent='Copy failed';}ta.remove();}setTimeout(()=>{b.textContent='Copy email';},2000);bbTrack('nudge_copied',{tool:TOOL_KEY,tone:k})}));
 document.querySelector('#usage').textContent=data.usage.remaining+' actions remaining this month.';
 document.querySelector('#result').classList.remove('hidden');document.querySelector('#result').scrollIntoView({behavior:'smooth',block:'start'})});
-</script><?php endif; ?></main></body></html>
+</script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
