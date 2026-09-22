@@ -21,6 +21,17 @@
 .followup .draft{background:var(--cream);border:2px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;font-size:14px;white-space:pre-wrap}
 .quiet{box-shadow:4px 4px 0 var(--line)}
 input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:0}
+@media(min-width:760px){.modal-overlay{align-items:center;padding:24px}}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;padding:20px;position:relative}
+@media(min-width:760px){.modal{border-radius:20px}}
+.modal-close{position:sticky;top:0;float:right;border:2px solid var(--line);background:#fff;border-radius:999px;width:36px;height:36px;font-size:18px;font-weight:800;cursor:pointer;line-height:1}
+.modal h2{margin:0 0 4px;padding-right:44px}
+.modal .lede{margin:0 0 8px}
+.modal label{display:block;margin:10px 0}
+.modal input,.modal select,.modal textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+.modal textarea{min-height:70px}
+.hidden{display:none!important}
 .stat-row{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}
 .stat-card{flex:1;min-width:140px;border:2px solid var(--line);border-radius:14px;background:#fff;padding:12px;text-align:center}
 .stat-card b{font-size:22px;display:block}
@@ -35,6 +46,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 <section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Columns: <b>name</b> (required), contact_info, source, deal_value, stage (new, talking, quoted, won, lost), follow_up_date (YYYY-MM-DD). Up to 200 rows, one action per imported contact. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><button class="button secondary" style="margin-top:10px">Import CSV</button><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
 <section class="panel"><h2 style="margin-top:0">Your people</h2><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="usage"></p></section>
 <div id="upgrade-slot"></div>
+<div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
 <style>.nudge-grid{display:grid;gap:12px}@media(min-width:760px){.nudge-grid{grid-template-columns:1fr 1fr}}</style>
 <script>
 const TOOL_KEY='rolodex';
@@ -60,7 +72,7 @@ function contactCard(c){
   const info=c.contact_info?` · ${esc(c.contact_info)}`:'';
   const src=c.source?` · met ${esc(c.source)}`:'';
   const fup=c.follow_up_date?` · follow up ${esc(c.follow_up_date)}`:'';
-  return `<div class="contact" data-id="${c.id}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}<span style="flex:1"></span><button type="button" class="button secondary" data-open="${c.id}">Open</button></div><p class="meta">${deal}${info}${src}${fup}</p><div class="detail hidden" id="detail-${c.id}"></div></div>`;
+  return `<div class="contact" data-id="${c.id}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}<span style="flex:1"></span><button type="button" class="button secondary" data-open="${c.id}">Open</button></div><p class="meta">${deal}${info}${src}${fup}</p></div>`;
 }
 function renderContacts(){
   const el=document.querySelector('#contactList');
@@ -82,13 +94,17 @@ function bindCardButtons(root){
   }));
 }
 async function openDetail(id){
-  const d=document.querySelector('#detail-'+id);
-  if(!d)return;
-  if(!d.classList.contains('hidden')){d.classList.add('hidden');d.innerHTML='';return}
+  const overlay=document.querySelector('#modalOverlay');
+  const body=document.querySelector('#modalBody');
+  overlay.classList.remove('hidden');
+  document.body.style.overflow='hidden';
+  body.innerHTML='<p class="lede">Loading...</p>';
   const{response,data}=await apiCall({action:'get',id});
-  if(!response.ok){d.innerHTML=`<p class="error">${esc(data.error||'Could not load.')}</p>`;d.classList.remove('hidden');return}
+  if(!response.ok){body.innerHTML=`<p class="error">${esc(data.error||'Could not load.')}</p>`;return}
   const c=data.contact;
-  d.innerHTML=`
+  body.innerHTML=`
+    <h2>${esc(c.name)}</h2>
+    <p class="lede">${c.contact_info?esc(c.contact_info)+' · ':''}${c.source?'met '+esc(c.source)+' · ':''}${stageBadge(c.stage)}</p>
     <label>Stage<select data-f="stage">${STAGES.map(s=>`<option value="${s}"${c.stage===s?' selected':''}>${s}</option>`).join('')}</select></label>
     <label>Deal value<input data-f="deal_value" type="number" min="0" step="0.01" value="${c.deal_value??''}" placeholder="0"></label>
     <label>Follow up on<input data-f="follow_up_date" type="date" value="${esc(c.follow_up_date||'')}"></label>
@@ -100,27 +116,37 @@ async function openDetail(id){
     <h3 style="margin:14px 0 4px">Timeline</h3>
     <ul class="timeline">${data.notes.length?data.notes.map(n=>`<li>${esc(n.body)}<br><span class="when">${esc(n.created_at)}</span></li>`).join(''):'<li>No interactions logged yet.</li>'}</ul>
     <p class="error" data-err></p>`;
-  d.classList.remove('hidden');
-  d.querySelector('[data-save]').addEventListener('click',async()=>{
-    const payload={action:'update',id,stage:d.querySelector('[data-f=stage]').value,deal_value:d.querySelector('[data-f=deal_value]').value,follow_up_date:d.querySelector('[data-f=follow_up_date]').value};
+  body.querySelector('[data-save]').addEventListener('click',async()=>{
+    const payload={action:'update',id,stage:body.querySelector('[data-f=stage]').value,deal_value:body.querySelector('[data-f=deal_value]').value,follow_up_date:body.querySelector('[data-f=follow_up_date]').value};
     const r=await apiCall(payload);
-    if(!r.response.ok){d.querySelector('[data-err]').textContent=r.data.error||'Save failed.';return}
-    bbTrack('rolodex_updated',{tool:TOOL_KEY});await refresh();
+    if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Save failed.';return}
+    bbTrack('rolodex_updated',{tool:TOOL_KEY});await refresh();openDetail(id);
   });
-  d.querySelector('[data-del]').addEventListener('click',async()=>{
+  body.querySelector('[data-del]').addEventListener('click',async()=>{
     if(!confirm('Delete '+c.name+' and their whole timeline?'))return;
     const r=await apiCall({action:'delete',id});
-    if(!r.response.ok){d.querySelector('[data-err]').textContent=r.data.error||'Delete failed.';return}
-    await refresh();
+    if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Delete failed.';return}
+    closeModal();await refresh();
   });
-  d.querySelector('[data-log]').addEventListener('click',async()=>{
-    const body=d.querySelector('[data-f=log_body]').value.trim();
-    if(!body){d.querySelector('[data-err]').textContent='Write a note about the interaction first.';return}
-    const r=await apiCall({action:'log',id,body,follow_up_date:d.querySelector('[data-f=log_next]').value});
-    if(!r.response.ok){d.querySelector('[data-err]').textContent=r.data.error||'Log failed.';return}
-    bbTrack('rolodex_logged',{tool:TOOL_KEY});await refresh();
+  body.querySelector('[data-log]').addEventListener('click',async()=>{
+    const noteBody=body.querySelector('[data-f=log_body]').value.trim();
+    if(!noteBody){body.querySelector('[data-err]').textContent='Write a note about the interaction first.';return}
+    const r=await apiCall({action:'log',id,body:noteBody,follow_up_date:body.querySelector('[data-f=log_next]').value});
+    if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Log failed.';return}
+    bbTrack('rolodex_logged',{tool:TOOL_KEY});await refresh();openDetail(id);
   });
 }
+function closeModal(){
+  document.querySelector('#modalOverlay').classList.add('hidden');
+  document.body.style.overflow='';
+}
+document.querySelector('#modalClose').addEventListener('click',closeModal);
+document.querySelector('#modalOverlay').addEventListener('click',e=>{
+  if(e.target.id==='modalOverlay')closeModal();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!document.querySelector('#modalOverlay').classList.contains('hidden'))closeModal();
+});
 async function refresh(){
   const{response,data}=await apiCall({action:'list'});
   if(!response.ok){document.querySelector('#contactList').innerHTML=`<p class="error">${esc(data.error||'Could not load.')}</p>`;return}
