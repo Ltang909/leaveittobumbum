@@ -182,13 +182,14 @@ if ($action === 'import') {
     }
     if (!in_array('name', $cols, true)) jsonResponse(['error' => 'The CSV needs a "name" column.', 'hint' => 'Columns: name, contact_info, source, deal_value, stage, follow_up_date'], 422);
     $imported = 0;
+    $updated = 0;
     $skipped = 0;
     $errors = [];
     $rows = 0;
     $limitHit = false;
     while (($row = fgetcsv($stream)) !== false && $rows < 200) {
         $rows++;
-        $rec = ['name' => '', 'contact_info' => '', 'source' => '', 'deal_value' => null, 'stage' => 'new', 'follow_up_date' => null];
+        $rec = ['name' => '', 'contact_info' => '', 'source' => '', 'deal_value' => '', 'stage' => '', 'follow_up_date' => ''];
         foreach ($cols as $i => $field) {
             if ($field === null) continue;
             $rec[$field] = trim((string) ($row[$i] ?? ''));
@@ -196,25 +197,47 @@ if ($action === 'import') {
         if ($rec['name'] === '' || mb_strlen($rec['name']) > 80) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: missing or too-long name."; continue; }
         if (mb_strlen($rec['contact_info']) > 191 || mb_strlen($rec['source']) > 191) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: contact info or source too long."; continue; }
         $stage = strtolower($rec['stage']);
-        if (!in_array($stage, ROLODEX_STAGES, true)) $stage = 'new';
+        $stageValid = in_array($stage, ROLODEX_STAGES, true);
         $dealValue = null;
-        if ($rec['deal_value'] !== '') {
-            $dealValue = filter_var($rec['deal_value'], FILTER_VALIDATE_FLOAT);
+        $dealRaw = $rec['deal_value'];
+        if ($dealRaw !== '') {
+            $dealValue = filter_var($dealRaw, FILTER_VALIDATE_FLOAT);
             if ($dealValue === false || $dealValue < 0 || $dealValue > 100000000) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: invalid deal value."; continue; }
         }
         $followUp = $rec['follow_up_date'] === '' ? null : rolodex_clean_date($rec['follow_up_date']);
         if ($followUp === false) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: invalid follow-up date (use YYYY-MM-DD)."; continue; }
+        // Match existing contact by name (case-insensitive). Empty cells leave existing values alone.
+        $stmt = $pdo->prepare('SELECT id FROM rolodex_contacts WHERE user_id = ? AND LOWER(name) = LOWER(?) LIMIT 1');
+        $stmt->execute([$userId, $rec['name']]);
+        $existing = $stmt->fetch();
+        if ($existing) {
+            $sets = [];
+            $params = [];
+            if ($rec['contact_info'] !== '') { $sets[] = 'contact_info = ?'; $params[] = $rec['contact_info']; }
+            if ($rec['source'] !== '') { $sets[] = 'source = ?'; $params[] = $rec['source']; }
+            if ($dealRaw !== '') { $sets[] = 'deal_value = ?'; $params[] = $dealValue; }
+            if ($stageValid) { $sets[] = 'stage = ?'; $params[] = $stage; if (in_array($stage, ['won', 'lost'], true)) $sets[] = 'follow_up_date = NULL'; }
+            if ($followUp !== null) { $sets[] = 'follow_up_date = ?'; $params[] = $followUp; }
+            if ($sets) {
+                $params[] = $existing['id'];
+                $params[] = $userId;
+                $stmt = $pdo->prepare('UPDATE rolodex_contacts SET ' . implode(', ', $sets) . ' WHERE id = ? AND user_id = ?');
+                $stmt->execute($params);
+            }
+            $updated++;
+            continue;
+        }
         $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'rolodex', $batchKey . '-' . $rows);
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
             $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())');
-            $stmt->execute([$userId, $rec['name'], $rec['contact_info'], $rec['source'], $dealValue, $stage, $followUp]);
+            $stmt->execute([$userId, $rec['name'], $rec['contact_info'], $rec['source'], $dealValue, $stageValid ? $stage : 'new', $followUp]);
             $imported++;
         }
     }
     fclose($stream);
-    if ($limitHit) jsonResponse(['error' => 'You ran out of actions partway through. ' . $imported . ' contacts imported, ' . $skipped . ' skipped.', 'imported' => $imported, 'skipped' => $skipped, 'usage' => usageFor($bill)], 402);
-    jsonResponse(['imported' => $imported, 'skipped' => $skipped, 'errors' => $errors, 'usage' => usageFor($bill)]);
+    if ($limitHit) jsonResponse(['error' => 'You ran out of actions partway through. ' . $imported . ' new contacts added, ' . $updated . ' updated, ' . $skipped . ' skipped.', 'imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'usage' => usageFor($bill)], 402);
+    jsonResponse(['imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'errors' => $errors, 'usage' => usageFor($bill)]);
 }
 
 if ($action === 'update') {
