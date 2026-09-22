@@ -35,15 +35,15 @@ const CONFETTI = Array.from({ length: 90 }, (_, i) => ({
 const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 
 const FACES = [
-  { src: "/bum/cat-work.png", alt: "Bum Bum at work" },
-  { src: "/bum/cat-default.png", alt: "Bum Bum, just vibing" },
-  { src: "/bum/cat-wink.png", alt: "Bum Bum winking" },
-  { src: "/bum/cat-blep.png", alt: "Bum Bum blepping" },
-  { src: "/bum/cat-cool.png", alt: "Bum Bum looking cool" },
-  { src: "/bum/cat-excited.png", alt: "Bum Bum excited" },
-  { src: "/bum/cat-judging.png", alt: "Bum Bum judging your tabs" },
-  { src: "/bum/cat-peek.png", alt: "Bum Bum peeking in" },
-  { src: "/bum/cat-sleepy.png", alt: "Bum Bum napping on the job" },
+  { src: "/bum/cat-laptop.png", alt: "Bum Bum at work" },
+  { src: "/bum/cat-curious.png", alt: "Bum Bum, just vibing" },
+  { src: "/bum/cat-wink-blep.png", alt: "Bum Bum winking" },
+  { src: "/bum/cat-licking.png", alt: "Bum Bum blepping" },
+  { src: "/bum/cat-sunglasses.png", alt: "Bum Bum looking cool" },
+  { src: "/bum/cat-excited-v2.png", alt: "Bum Bum excited" },
+  { src: "/bum/cat-bowtie.png", alt: "Bum Bum judging your tabs" },
+  { src: "/bum/cat-peeking.png", alt: "Bum Bum peeking in" },
+  { src: "/bum/cat-sleepy-v2.png", alt: "Bum Bum napping on the job" },
 ];
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }

@@ -43,7 +43,7 @@ function RequestToolModal({ open, prefill, onClose }: { open: boolean; prefill: 
     <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <section className="modal" role="dialog" aria-modal="true" aria-labelledby="request-title">
         <button className="modal-close" aria-label="Close" onClick={onClose}>×</button>
-        <img className="modal-peek" src="/bum/cat-peek.png" alt="" aria-hidden="true" />
+        <img className="modal-peek" src="/bum/cat-peeking.png" alt="" aria-hidden="true" />
         {state === "sent" ? (
           <div className="success">
             <span>✓</span>

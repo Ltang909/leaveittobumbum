@@ -57,7 +57,7 @@ export function SiteFooter() {
       <a className="brand" href="/"><img className="brand-cat" src="/bum/favicon-cat.png" alt="Bum Bum the cat" /><span>Leave It to<br /><b>Bum Bum</b></span></a>
       <p>Useful little tools for busy little businesses.<br />© {new Date().getFullYear()} Leave It to Bum Bum</p>
       <div><a href="mailto:hello@leaveittobumbum.com">hello@leaveittobumbum.com</a><a href="/about/">About</a><a href="/team/">Team</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div>
-      <p className="exe"><img src="/bum/cat-butt.png" alt="" aria-hidden="true" /> BumBum.exe is running…</p>
+      <p className="exe"><img src="/bum/cat-butt-v2.png" alt="" aria-hidden="true" /> BumBum.exe is running…</p>
     </footer>
   );
 }
