@@ -14,6 +14,7 @@ h1,.lede{max-width:none}
 .stage{font-size:12px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:2px 10px}
 .stage.wishlist{background:#d8d3c8}.stage.applied{background:#8eb5ff}.stage.screening{background:#c3a6f2}.stage.interview{background:#ffd84d}.stage.final{background:#f7a9ca}.stage.offer{background:#83d6b2}.stage.accepted{background:#17150f;color:#fff}.stage.rejected{background:#e5484d;color:#fff}.stage.withdrawn{background:#8a8578;color:#fff}
 .meta{font-size:13px;opacity:.8;margin:6px 0 0}
+a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important}
 .detail{margin-top:12px;border-top:2px dashed var(--line);padding-top:12px}
 .detail label{display:block;margin:8px 0}
 .detail input,.detail select,.detail textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
@@ -84,9 +85,9 @@ function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 const CUR_SYMBOLS={CAD:'CA$',USD:'US$',EUR:'\u20AC',GBP:'\u00A3'};
 const CURRENCIES=['CAD','USD','EUR','GBP'];
-function money(n,cur){const sym=CUR_SYMBOLS[cur]||CUR_SYMBOLS.USD;return sym+Math.round(n||0).toLocaleString('en-US')}
+function money(n,cur){const sym=CUR_SYMBOLS[cur]||CUR_SYMBOLS.CAD;return sym+Math.round(n||0).toLocaleString('en-US')}
 function salaryRange(c){
-  const lo=c.salary_min,hi=c.salary_max,cur=c.currency||'USD';
+  const lo=c.salary_min,hi=c.salary_max,cur=c.currency||'CAD';
   if(lo==null&&hi==null)return '';
   if(lo!=null&&hi!=null)return money(lo,cur)+' - '+money(hi,cur);
   return money(lo!=null?lo:hi,cur);
@@ -180,7 +181,7 @@ async function openDetail(id){
     <label>Where found<input data-f="source" type="text" maxlength="191" value="${esc(c.source||'')}" placeholder="nanoglobals"></label>
     <label>Salary min<input data-f="salary_min" type="number" min="0" step="1" value="${c.salary_min??''}"></label>
     <label>Salary max<input data-f="salary_max" type="number" min="0" step="1" value="${c.salary_max??''}"></label>
-    <label>Currency<select data-f="currency">${CURRENCIES.map(cur=>`<option value="${cur}"${(c.currency||'USD')===cur?' selected':''}>${cur}</option>`).join('')}</select></label>
+    <label>Currency<select data-f="currency">${CURRENCIES.map(cur=>`<option value="${cur}"${(c.currency||'CAD')===cur?' selected':''}>${cur}</option>`).join('')}</select></label>
     <label>Date applied<input data-f="date_applied" type="date" value="${esc(c.date_applied||'')}"></label>
     <label>Follow up on<input data-f="follow_up_date" type="date" value="${esc(c.follow_up_date||'')}"></label>
     <label>Notes<textarea data-f="notes" maxlength="5000" placeholder="Anything worth remembering...">${esc(c.notes||'')}</textarea></label>
@@ -273,7 +274,7 @@ document.querySelector('#csvDownload').addEventListener('click',async e=>{
 const csvForm=document.querySelector('#csvForm');
 document.querySelector('#tplLink').addEventListener('click',e=>{
   e.preventDefault();
-  const blob=new Blob(['company,role,contact name,contact email,job url,location,salary min,salary max,currency,where found,date applied,stage,follow up,notes\nAcme Inc,Senior Growth Manager,Maya Chen,maya@acme.co,https://acme.co/jobs/123,Remote (US),120000,140000,CAD,nanoglobals,2026-09-23,applied,2026-09-30,"Applied via the careers page, recruiter reached out on LinkedIn"\nBuildly,Product Growth Lead,,,,Remote,100000,120000,USD,LinkedIn,,wishlist,,\n'],{type:'text/csv'});
+  const blob=new Blob(['company,role,contact name,contact email,job url,location,salary min,salary max,currency,where found,date applied,stage,follow up,notes\nAcme Inc,Senior Growth Manager,Maya Chen,maya@acme.co,https://acme.co/jobs/123,Remote (US),120000,140000,CAD,nanoglobals,2026-09-23,applied,2026-09-30,"Applied via the careers page, recruiter reached out on LinkedIn"\nBuildly,Product Growth Lead,,,,Remote,100000,120000,CAD,LinkedIn,,wishlist,,\n'],{type:'text/csv'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='corporate-bum-bum-template.csv';a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 });

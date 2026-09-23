@@ -39,11 +39,11 @@ function ensureJobtrackSchema(): void {
     $hasNotes = $pdo->query("SHOW COLUMNS FROM jobtrack_contacts LIKE 'notes'")->fetch();
     if (!$hasNotes) $pdo->exec("ALTER TABLE jobtrack_contacts ADD COLUMN notes MEDIUMTEXT NOT NULL DEFAULT ''");
     // Migration for tables created before the currency column existed.
-    // Legacy rows were always displayed as US$, so backfill them as USD to preserve meaning.
+    // Backfill existing rows as CAD per the user's call: everything is CAD now.
     $hasCurrency = $pdo->query("SHOW COLUMNS FROM jobtrack_contacts LIKE 'currency'")->fetch();
     if (!$hasCurrency) {
         $pdo->exec("ALTER TABLE jobtrack_contacts ADD COLUMN currency VARCHAR(3) NULL");
-        $pdo->exec("UPDATE jobtrack_contacts SET currency = 'USD' WHERE currency IS NULL");
+        $pdo->exec("UPDATE jobtrack_contacts SET currency = 'CAD' WHERE currency IS NULL");
     }
     $pdo->exec("CREATE TABLE IF NOT EXISTS jobtrack_notes (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -92,7 +92,7 @@ function jobtrack_public_contact(array $row): array {
         'location' => $row['location'] ?? '',
         'salary_min' => $row['salary_min'] === null ? null : (float) $row['salary_min'],
         'salary_max' => $row['salary_max'] === null ? null : (float) $row['salary_max'],
-        'currency' => $row['currency'] ?? 'USD',
+        'currency' => $row['currency'] ?? 'CAD',
         'source' => $row['source'],
         'date_applied' => $row['date_applied'],
         'stage' => $row['stage'],
