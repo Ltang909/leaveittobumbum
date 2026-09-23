@@ -49,7 +49,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 <div class="stat-row"><div class="stat-card"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card"><b id="statWon">$0</b><span>won</span></div><div class="stat-card"><b id="statCount">0</b><span>contacts</span></div></div>
 <section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Contact info<input name="contact_info" type="text" maxlength="191" placeholder="jordan@acme.co or @jordan"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label></div><button class="button" style="margin-top:10px">Add to Purrsuit</button><p id="addError" class="error"></p></form></section>
 <section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Columns: <b>name</b> (required), contact_info, source, deal_value, stage (new, talking, quoted, won, lost), follow_up_date (YYYY-MM-DD). Names that already exist get <b>updated</b> (free, empty cells keep their current values); new names get added at one action each. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button><button type="button" class="button secondary" style="margin-top:10px" id="csvDownload">Download CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
-<section class="panel"><h2 style="margin-top:0">Your people</h2><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="usage"></p></section>
+<section class="panel"><h2 style="margin-top:0">Your people</h2><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div id="upgrade-slot"></div>
 <div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
 <style>.nudge-grid{display:grid;gap:12px}@media(min-width:760px){.nudge-grid{grid-template-columns:1fr 1fr}}</style>
@@ -77,7 +77,7 @@ function contactCard(c){
   const info=c.contact_info?` · ${esc(c.contact_info)}`:'';
   const src=c.source?` · met ${esc(c.source)}`:'';
   const fup=c.follow_up_date?` · follow up ${esc(c.follow_up_date)}`:'';
-  return `<div class="contact" data-id="${c.id}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}<span style="flex:1"></span><button type="button" class="button secondary" data-open="${c.id}">Open</button></div><p class="meta">${deal}${info}${src}${fup}</p></div>`;
+  return `<div class="contact" data-id="${c.id}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}<span style="flex:1"></span><button type="button" class="button secondary" data-open="${c.id}">Open</button><button type="button" class="button secondary" data-del-card="${c.id}">Delete</button></div><p class="meta">${deal}${info}${src}${fup}</p></div>`;
 }
 function renderContacts(){
   const el=document.querySelector('#contactList');
@@ -90,6 +90,22 @@ function renderContacts(){
 }
 function bindCardButtons(root){
   root.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openDetail(parseInt(b.getAttribute('data-open'),10))));
+  root.querySelectorAll('[data-del-card]').forEach(b=>b.addEventListener('click',async()=>{
+    if(b.dataset.armed!=='1'){
+      b.dataset.armed='1';b.dataset.orig=b.textContent;b.textContent='Tap again to delete';
+      setTimeout(()=>{if(b.isConnected&&b.dataset.armed==='1'){b.dataset.armed='';b.textContent=b.dataset.orig}},6000);
+      return;
+    }
+    b.disabled=true;
+    const id=parseInt(b.getAttribute('data-del-card'),10);
+    const{response,data}=await apiCall({action:'delete',id});
+    b.disabled=false;
+    const errEl=document.querySelector('#listError');
+    if(!response.ok){b.dataset.armed='';b.textContent=b.dataset.orig||'Delete';if(errEl)errEl.textContent=data.error||'Delete failed.';return}
+    if(errEl)errEl.textContent='';
+    bbTrack('purrsuit_deleted',{tool:TOOL_KEY});
+    await refresh();
+  }));
   root.querySelectorAll('[data-copy-draft]').forEach(b=>b.addEventListener('click',async()=>{
     const c=DATA.contacts.find(x=>x.id===parseInt(b.getAttribute('data-copy-draft'),10))||DATA.followUpDue.find(x=>x.id===parseInt(b.getAttribute('data-copy-draft'),10))||DATA.goneQuiet.find(x=>x.id===parseInt(b.getAttribute('data-copy-draft'),10));
     if(!c||!c.draft)return;
@@ -116,6 +132,7 @@ async function openDetail(id){
     <div class="btnrow"><button type="button" class="button secondary" data-save="${id}">Save changes</button><button type="button" class="button secondary" data-del="${id}">Delete</button></div>
     <h3 style="margin:14px 0 4px">Log an interaction</h3>
     <label>What happened<textarea data-f="log_body" placeholder="Had a great call, they want a proposal by Friday..."></textarea></label>
+    <label>Next follow-up<input data-f="log_next" type="date" value="${esc(c.follow_up_date||'')}"><span class="meta">Leave empty to clear the reminder.</span></label>
     <div class="btnrow"><button type="button" class="button secondary" data-log="${id}">Log it</button></div>
     <h3 style="margin:14px 0 4px">Timeline</h3>
     <ul class="timeline">${data.notes.length?data.notes.map(n=>`<li>${esc(n.body)}<br><span class="when">${esc(n.created_at)}</span></li>`).join(''):'<li>No interactions logged yet.</li>'}</ul>
@@ -135,7 +152,10 @@ async function openDetail(id){
   body.querySelector('[data-log]').addEventListener('click',async()=>{
     const noteBody=body.querySelector('[data-f=log_body]').value.trim();
     if(!noteBody){body.querySelector('[data-err]').textContent='Write a note about the interaction first.';return}
-    const r=await apiCall({action:'log',id,body:noteBody});
+    const payload={action:'log',id,body:noteBody};
+    const nextVal=body.querySelector('[data-f=log_next]').value;
+    if(nextVal!==(c.follow_up_date||''))payload.follow_up_date=nextVal;
+    const r=await apiCall(payload);
     if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Log failed.';return}
     bbTrack('purrsuit_logged',{tool:TOOL_KEY});await refresh();openDetail(id);
   });

@@ -3,7 +3,7 @@
 // cards a user wants on their dashboard. Not metered.
 require dirname(__DIR__) . '/_bootstrap.php';
 
-const DASHBOARD_TOOL_KEYS = ['clips', 'notes', 'cutline', 'profit-peek'];
+const DASHBOARD_TOOL_KEYS = ['clips', 'notes', 'cutline', 'profit-peek', 'purrsuit'];
 
 function ensureToolPrefsSchema(): void {
     db()->exec("CREATE TABLE IF NOT EXISTS user_tool_prefs (

@@ -42,6 +42,7 @@ $DASHBOARD_TOOLS = [
   'notes' => ['name' => 'Bum Bum Notes', 'tag' => 'VOICE', 'icon' => '&#9834;', 'desc' => 'Talk it out and get a live transcript you can copy or download.', 'url' => '/tools/notes/', 'cta' => 'Record a note'],
   'cutline' => ['name' => 'Cutline', 'tag' => 'MONEY', 'icon' => '&#9986;', 'desc' => 'Every subscription you forgot about, in one place, with renewal nudges.', 'url' => '/tools/cutline/', 'cta' => 'Cut subscriptions'],
   'profit-peek' => ['name' => 'Profit Peek', 'tag' => 'MONEY', 'icon' => '$', 'desc' => 'Add the rough numbers and see if the job actually makes money.', 'url' => '/tools/profit-peek/', 'cta' => 'Check a job'],
+  'purrsuit' => ['name' => 'Purrsuit', 'tag' => 'CLIENTS', 'icon' => '&#128100;', 'desc' => 'A tiny CRM that tells you who to follow up with today and what to say.', 'url' => '/tools/purrsuit/', 'cta' => 'Track every lead'],
 ];
 $DASHBOARD_ORDER = array_keys($DASHBOARD_TOOLS);
 $selectedKeys = $DASHBOARD_ORDER;
