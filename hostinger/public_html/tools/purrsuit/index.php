@@ -23,6 +23,14 @@ h1,.lede{max-width:none}
 .followup .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 #contactList{max-height:520px;overflow-y:auto;padding-right:6px}
 #addForm input,#addForm select{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit;background-color:#fff}
+#addForm textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit;background-color:#fff;min-height:70px}
+.add-import-grid{display:grid;gap:28px;margin-top:28px}
+.add-import-grid .panel{margin-top:0;margin-bottom:0}
+@media(min-width:760px){.add-import-grid{grid-template-columns:1fr 1fr;gap:16px}}
+.span-all{grid-column:1/-1}
+.yp-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.yp-head h2{margin:0!important}
+.yp-head .button{margin-top:0}
 .modal select,#addForm select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px!important;cursor:pointer}
 .quiet{box-shadow:4px 4px 0 var(--line)}
 input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
@@ -47,9 +55,11 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
 <div class="stat-row"><div class="stat-card"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card"><b id="statWon">$0</b><span>won</span></div><div class="stat-card"><b id="statCount">0</b><span>contacts</span></div></div>
-<section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Contact info<input name="contact_info" type="text" maxlength="191" placeholder="jordan@acme.co or @jordan"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label></div><button class="button" style="margin-top:10px">Add to Purrsuit</button><p id="addError" class="error"></p></form></section>
-<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Columns: <b>name</b> (required), contact_info, source, deal_value, stage (new, talking, quoted, won, lost), follow_up_date (YYYY-MM-DD). Names that already exist get <b>updated</b> (free, empty cells keep their current values); new names get added at one action each. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button><button type="button" class="button secondary" style="margin-top:10px" id="csvDownload">Download CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
-<section class="panel"><h2 style="margin-top:0">Your people</h2><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
+<div class="add-import-grid">
+<section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Company<input name="company" type="text" maxlength="191" placeholder="Acme Inc"></label><label>Email<input name="email" type="email" maxlength="191" placeholder="jordan@acme.co"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Purrsuit</button><p id="addError" class="error"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>name</b> (required), company, email, where you met, deal value, stage (new, talking, quoted, won, lost), follow up (YYYY-MM-DD), notes. Names that already exist get <b>updated</b> (free, empty cells keep their current values); new names get added at one action each, with notes saved to their timeline. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
+</div>
+<section class="panel"><div class="yp-head"><h2>Your people</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div id="upgrade-slot"></div>
 <div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
 <style>.nudge-grid{display:grid;gap:12px}@media(min-width:760px){.nudge-grid{grid-template-columns:1fr 1fr}}</style>
@@ -73,11 +83,13 @@ function renderFollowups(){
   bindCardButtons(el);
 }
 function contactCard(c){
-  const deal=c.deal_value?` · ${money(c.deal_value)}`:'';
-  const info=c.contact_info?` · ${esc(c.contact_info)}`:'';
-  const src=c.source?` · met ${esc(c.source)}`:'';
-  const fup=c.follow_up_date?` · follow up ${esc(c.follow_up_date)}`:'';
-  return `<div class="contact" data-id="${c.id}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}<span style="flex:1"></span><button type="button" class="button secondary" data-open="${c.id}">Open</button><button type="button" class="button secondary" data-del-card="${c.id}">Delete</button></div><p class="meta">${deal}${info}${src}${fup}</p></div>`;
+  const parts=[];
+  if(c.company)parts.push(esc(c.company));
+  if(c.deal_value)parts.push(money(c.deal_value));
+  if(c.contact_info)parts.push(esc(c.contact_info));
+  if(c.source)parts.push('met '+esc(c.source));
+  if(c.follow_up_date)parts.push('follow up '+esc(c.follow_up_date));
+  return `<div class="contact" data-id="${c.id}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}<span style="flex:1"></span><button type="button" class="button secondary" data-open="${c.id}">Open</button><button type="button" class="button secondary" data-del-card="${c.id}">Delete</button></div>${parts.length?`<p class="meta">${parts.join(' · ')}</p>`:''}</div>`;
 }
 function renderContacts(){
   const el=document.querySelector('#contactList');
@@ -125,7 +137,7 @@ async function openDetail(id){
   const c=data.contact;
   body.innerHTML=`
     <h2>${esc(c.name)}</h2>
-    <p class="lede">${c.contact_info?esc(c.contact_info)+' · ':''}${stageBadge(c.stage)}</p>
+    <p class="lede">${c.company?esc(c.company)+' · ':''}${c.contact_info?esc(c.contact_info)+' · ':''}${stageBadge(c.stage)}</p>
     <label>Stage<select data-f="stage">${STAGES.map(s=>`<option value="${s}"${c.stage===s?' selected':''}>${s}</option>`).join('')}</select></label>
     <label>Deal value<input data-f="deal_value" type="number" min="0" step="0.01" value="${c.deal_value??''}" placeholder="0"></label>
     <label>Follow up on<input data-f="follow_up_date" type="date" value="${esc(c.follow_up_date||'')}"></label>
@@ -214,7 +226,7 @@ document.querySelector('#csvDownload').addEventListener('click',async e=>{
 const csvForm=document.querySelector('#csvForm');
 document.querySelector('#tplLink').addEventListener('click',e=>{
   e.preventDefault();
-  const blob=new Blob(['name,contact_info,source,deal_value,stage,follow_up_date\nJordan Lee,jordan@acme.co,Indie Hackers meetup,2500,talking,2026-10-01\nPriya Shah,@priya_builds,Twitter DM,800,new,\n'],{type:'text/csv'});
+  const blob=new Blob(['name,company,email,where you met,deal value,stage,follow up,notes\nJordan Lee,Acme Inc,jordan@acme.co,Indie Hackers meetup,2500,talking,2026-10-01,"Met at the mixer, wants a proposal by Friday"\nPriya Shah,Buildly,priya@buildly.co,Twitter DM,800,new,,\n'],{type:'text/csv'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='purrsuit-template.csv';a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 });
