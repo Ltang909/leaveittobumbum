@@ -2,17 +2,19 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Doodle | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=4"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1,.lede{max-width:none}
 .doodle-layout{display:grid;gap:16px;margin-top:20px}
-.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.tool-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 10px}
-.tool-group .lbl{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;opacity:.6}
-.seg{display:flex;border:2px solid var(--ink);border-radius:10px;overflow:hidden}
-.seg button{border:0;background:#fff;padding:10px 14px;font:inherit;font-weight:800;cursor:pointer;min-height:44px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.tool-group{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.tool-group .lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.55;flex:none}
+.seg{display:flex;height:44px;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:#fff;flex:none}
+.seg button{border:0;background:transparent;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;height:100%;display:flex;align-items:center;color:var(--ink)}
 .seg button.on{background:var(--ink);color:#fff}
-.swatch{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);cursor:pointer;padding:0}
+.swatch{width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);cursor:pointer;padding:0;flex:none}
 .swatch.on{outline:3px solid var(--ink);outline-offset:2px}
-input[type=color].pick{width:40px;height:40px;border:2px solid var(--ink);border-radius:50%;padding:2px;background:#fff;cursor:pointer}
-input[type=range].size{width:140px;accent-color:var(--ink)}
-.iconbtn{border:2px solid var(--ink);border-radius:10px;background:#fff;padding:10px 14px;font:inherit;font-weight:800;cursor:pointer;min-height:44px}
+input[type=color].pick{width:36px;height:36px;border:2px solid var(--ink);border-radius:50%;padding:2px;background:#fff;cursor:pointer;flex:none}
+.size-wrap{display:flex;align-items:center;gap:10px;height:44px;flex:none}
+.size-wrap b{min-width:2ch;text-align:right}
+input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
+.iconbtn{border:2px solid var(--ink);border-radius:12px;background:#fff;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;height:44px;display:inline-flex;align-items:center;flex:none;color:var(--ink)}
 .iconbtn:disabled{opacity:.35;cursor:default}
 .iconbtn.danger{border-color:#e5484d;color:#e5484d}
 .canvas-wrap{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:10px;box-shadow:4px 4px 0 var(--ink)}
@@ -27,7 +29,7 @@ input[type=range].size{width:140px;accent-color:var(--ink)}
 <div class="toolbar">
 <div class="tool-group"><span class="lbl">Tool</span><div class="seg" role="group" aria-label="Pen or eraser"><button type="button" id="penBtn" class="on">Pen</button><button type="button" id="eraserBtn">Eraser</button></div></div>
 <div class="tool-group"><span class="lbl">Color</span><button type="button" class="swatch on" data-color="#1a1a1a" style="background:#1a1a1a" aria-label="Black"></button><button type="button" class="swatch" data-color="#e5484d" style="background:#e5484d" aria-label="Red"></button><button type="button" class="swatch" data-color="#2f9e5f" style="background:#2f9e5f" aria-label="Green"></button><button type="button" class="swatch" data-color="#2f6fed" style="background:#2f6fed" aria-label="Blue"></button><button type="button" class="swatch" data-color="#f5a623" style="background:#f5a623" aria-label="Orange"></button><button type="button" class="swatch" data-color="#8e4ec6" style="background:#8e4ec6" aria-label="Purple"></button><input type="color" class="pick" id="customColor" value="#1a1a1a" aria-label="Custom color"></div>
-<div class="tool-group"><span class="lbl">Size</span><input type="range" class="size" id="sizeRange" min="2" max="60" value="8"><b id="sizeVal">8</b></div>
+<div class="tool-group"><span class="lbl">Size</span><div class="size-wrap"><input type="range" class="size" id="sizeRange" min="2" max="60" value="8"><b id="sizeVal">8</b></div></div>
 <div class="tool-group"><span class="lbl">History</span><button type="button" class="iconbtn" id="undoBtn" disabled>Undo</button><button type="button" class="iconbtn" id="redoBtn" disabled>Redo</button><button type="button" class="iconbtn danger" id="clearBtn">Clear</button></div>
 <div class="tool-group"><span class="lbl">Paper</span><div class="seg" role="group" aria-label="Background"><button type="button" data-bg="transparent" class="on">Clear</button><button type="button" data-bg="#ffffff">White</button><button type="button" data-bg="#fdf6e3">Cream</button></div></div>
 <div class="tool-group"><span class="lbl">Shape</span><div class="seg" role="group" aria-label="Canvas shape"><button type="button" data-aspect="wide" class="on">Classic</button><button type="button" data-aspect="sig">Signature</button><button type="button" data-aspect="square">Square</button></div></div>
