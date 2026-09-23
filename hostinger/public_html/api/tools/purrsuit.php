@@ -14,6 +14,7 @@ function ensureRolodexSchema(): void {
         user_id INT NOT NULL,
         name VARCHAR(80) NOT NULL,
         company VARCHAR(191) NOT NULL DEFAULT '',
+        title VARCHAR(191) NOT NULL DEFAULT '',
         contact_info VARCHAR(191) NOT NULL DEFAULT '',
         source VARCHAR(191) NOT NULL DEFAULT '',
         deal_value DECIMAL(12,2) NULL,
@@ -39,6 +40,11 @@ function ensureRolodexSchema(): void {
         $has = db()->query("SHOW COLUMNS FROM rolodex_contacts LIKE 'company'")->fetch();
         if (!$has) db()->exec("ALTER TABLE rolodex_contacts ADD COLUMN company VARCHAR(191) NOT NULL DEFAULT '' AFTER name");
     } catch (Throwable $e) { /* column check is best-effort; writes are validated below */ }
+    // Migration for databases created before the title field existed.
+    try {
+        $has = db()->query("SHOW COLUMNS FROM rolodex_contacts LIKE 'title'")->fetch();
+        if (!$has) db()->exec("ALTER TABLE rolodex_contacts ADD COLUMN title VARCHAR(191) NOT NULL DEFAULT '' AFTER company");
+    } catch (Throwable $e) { /* column check is best-effort; writes are validated below */ }
 }
 
 function rolodex_idempotency(array $input): string {
@@ -58,6 +64,7 @@ function rolodex_public_contact(array $row): array {
         'id' => (int) $row['id'],
         'name' => $row['name'],
         'company' => $row['company'] ?? '',
+        'title' => $row['title'] ?? '',
         'contact_info' => $row['contact_info'],
         'source' => $row['source'],
         'deal_value' => $row['deal_value'] === null ? null : (float) $row['deal_value'],
@@ -135,6 +142,7 @@ if ($action === 'get') {
 if ($action === 'add') {
     $name = trim((string) ($input['name'] ?? ''));
     $company = trim((string) ($input['company'] ?? ''));
+    $title = trim((string) ($input['title'] ?? ''));
     $email = trim((string) ($input['email'] ?? ($input['contact_info'] ?? '')));
     $source = trim((string) ($input['source'] ?? ''));
     $dealRaw = trim((string) ($input['deal_value'] ?? ''));
@@ -143,7 +151,7 @@ if ($action === 'add') {
     $notes = trim((string) ($input['notes'] ?? ''));
     if ($name === '') jsonResponse(['error' => 'Give the contact a name.'], 422);
     if (mb_strlen($name) > 80) jsonResponse(['error' => 'Keep the name under 80 characters.'], 422);
-    if (mb_strlen($company) > 191 || mb_strlen($email) > 191 || mb_strlen($source) > 191) jsonResponse(['error' => 'Keep company, email and where-you-met under 191 characters each.'], 422);
+    if (mb_strlen($company) > 191 || mb_strlen($title) > 191 || mb_strlen($email) > 191 || mb_strlen($source) > 191) jsonResponse(['error' => 'Keep company, title, email and where-you-met under 191 characters each.'], 422);
     if (mb_strlen($notes) > 5000) jsonResponse(['error' => 'Keep the note under 5000 characters.'], 422);
     if (!in_array($stage, ROLODEX_STAGES, true)) jsonResponse(['error' => 'Pick a valid stage.'], 422);
     if ($followUp === false) jsonResponse(['error' => 'Pick a valid follow-up date.'], 422);
@@ -157,8 +165,8 @@ if ($action === 'add') {
     if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
     $contact = null;
     if (empty($count['duplicate'])) {
-        $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, company, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-        $stmt->execute([$userId, $name, $company, $email, $source, $dealValue, $stage, $followUp]);
+        $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, company, title, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+        $stmt->execute([$userId, $name, $company, $title, $email, $source, $dealValue, $stage, $followUp]);
         $id = (int) $pdo->lastInsertId();
         if ($notes !== '') {
             $stmt = $pdo->prepare('INSERT INTO rolodex_notes (contact_id, user_id, body) VALUES (?, ?, ?)');
@@ -182,6 +190,7 @@ if ($action === 'import') {
     $aliases = [
         'name' => 'name', 'full name' => 'name',
         'company' => 'company', 'organization' => 'company', 'organisation' => 'company',
+        'title' => 'title', 'job title' => 'title', 'role' => 'title',
         'email' => 'email', 'contact_info' => 'email', 'contact' => 'email', 'phone' => 'email',
         'where you met' => 'source', 'where we met' => 'source', 'source' => 'source',
         'deal value' => 'deal_value', 'deal_value' => 'deal_value', 'value' => 'deal_value', 'deal' => 'deal_value',
@@ -205,13 +214,13 @@ if ($action === 'import') {
     $limitHit = false;
     while (($row = fgetcsv($stream)) !== false && $rows < 200) {
         $rows++;
-        $rec = ['name' => '', 'company' => '', 'email' => '', 'source' => '', 'deal_value' => '', 'stage' => '', 'follow_up_date' => '', 'notes' => ''];
+        $rec = ['name' => '', 'company' => '', 'title' => '', 'email' => '', 'source' => '', 'deal_value' => '', 'stage' => '', 'follow_up_date' => '', 'notes' => ''];
         foreach ($cols as $i => $field) {
             if ($field === null) continue;
             $rec[$field] = trim((string) ($row[$i] ?? ''));
         }
         if ($rec['name'] === '' || mb_strlen($rec['name']) > 80) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: missing or too-long name."; continue; }
-        if (mb_strlen($rec['company']) > 191 || mb_strlen($rec['email']) > 191 || mb_strlen($rec['source']) > 191) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: company, email or where-you-met too long."; continue; }
+        if (mb_strlen($rec['company']) > 191 || mb_strlen($rec['title']) > 191 || mb_strlen($rec['email']) > 191 || mb_strlen($rec['source']) > 191) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: company, title, email or where-you-met too long."; continue; }
         if (mb_strlen($rec['notes']) > 5000) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: notes too long (5000 max)."; continue; }
         $stage = strtolower($rec['stage']);
         $stageValid = in_array($stage, ROLODEX_STAGES, true);
@@ -231,6 +240,7 @@ if ($action === 'import') {
             $sets = [];
             $params = [];
             if ($rec['company'] !== '') { $sets[] = 'company = ?'; $params[] = $rec['company']; }
+            if ($rec['title'] !== '') { $sets[] = 'title = ?'; $params[] = $rec['title']; }
             if ($rec['email'] !== '') { $sets[] = 'contact_info = ?'; $params[] = $rec['email']; }
             if ($rec['source'] !== '') { $sets[] = 'source = ?'; $params[] = $rec['source']; }
             if ($dealRaw !== '') { $sets[] = 'deal_value = ?'; $params[] = $dealValue; }
@@ -248,8 +258,8 @@ if ($action === 'import') {
         $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'rolodex', $batchKey . '-' . $rows);
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
-            $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, company, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-            $stmt->execute([$userId, $rec['name'], $rec['company'], $rec['email'], $rec['source'], $dealValue, $stageValid ? $stage : 'new', $followUp]);
+            $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, company, title, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+            $stmt->execute([$userId, $rec['name'], $rec['company'], $rec['title'], $rec['email'], $rec['source'], $dealValue, $stageValid ? $stage : 'new', $followUp]);
             $newId = (int) $pdo->lastInsertId();
             if ($rec['notes'] !== '') {
                 $stmt = $pdo->prepare('INSERT INTO rolodex_notes (contact_id, user_id, body) VALUES (?, ?, ?)');
@@ -264,7 +274,7 @@ if ($action === 'import') {
 }
 
 if ($action === 'export') {
-    $stmt = $pdo->prepare('SELECT id, name, company, contact_info, source, deal_value, stage, follow_up_date FROM rolodex_contacts WHERE user_id = ? ORDER BY name ASC LIMIT 2000');
+    $stmt = $pdo->prepare('SELECT id, name, company, title, contact_info, source, deal_value, stage, follow_up_date FROM rolodex_contacts WHERE user_id = ? ORDER BY name ASC LIMIT 2000');
     $stmt->execute([$userId]);
     $contacts = $stmt->fetchAll();
     $noteMap = [];
@@ -278,11 +288,12 @@ if ($action === 'export') {
         }
     }
     $stream = fopen('php://memory', 'r+');
-    fputcsv($stream, ['name', 'company', 'email', 'where you met', 'deal value', 'stage', 'follow up', 'notes']);
+    fputcsv($stream, ['name', 'company', 'title', 'email', 'where you met', 'deal value', 'stage', 'follow up', 'notes']);
     foreach ($contacts as $row) {
         fputcsv($stream, [
             $row['name'],
             $row['company'],
+            $row['title'] ?? '',
             $row['contact_info'],
             $row['source'],
             $row['deal_value'] === null ? '' : (string) (float) $row['deal_value'],
@@ -319,6 +330,12 @@ if ($action === 'update') {
         if ($name === '' || mb_strlen($name) > 80) jsonResponse(['error' => 'Give the contact a valid name.'], 422);
         $fields[] = 'name = ?';
         $params[] = $name;
+    }
+    if (array_key_exists('title', $input)) {
+        $title = trim((string) $input['title']);
+        if (mb_strlen($title) > 191) jsonResponse(['error' => 'Keep the title under 191 characters.'], 422);
+        $fields[] = 'title = ?';
+        $params[] = $title;
     }
     if (array_key_exists('deal_value', $input)) {
         $dealRaw = trim((string) $input['deal_value']);
