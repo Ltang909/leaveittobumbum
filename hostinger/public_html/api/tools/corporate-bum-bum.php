@@ -6,6 +6,7 @@
 require dirname(__DIR__) . '/_bootstrap.php';
 
 const JOBTRACK_STAGES = ['wishlist', 'applied', 'screening', 'interview', 'final', 'offer', 'accepted', 'rejected', 'withdrawn'];
+const JOBTRACK_CURRENCIES = ['CAD', 'USD', 'EUR', 'GBP'];
 const JOBTRACK_TERMINAL = ['accepted', 'rejected', 'withdrawn'];
 const JOBTRACK_ACTIVE = ['wishlist', 'applied', 'screening', 'interview', 'final', 'offer'];
 
@@ -22,6 +23,7 @@ function ensureJobtrackSchema(): void {
         location VARCHAR(191) NOT NULL DEFAULT '',
         salary_min DECIMAL(12,2) NULL,
         salary_max DECIMAL(12,2) NULL,
+        currency VARCHAR(3) NULL,
         source VARCHAR(191) NOT NULL DEFAULT '',
         date_applied DATE NULL,
         stage VARCHAR(16) NOT NULL DEFAULT 'applied',
@@ -36,6 +38,13 @@ function ensureJobtrackSchema(): void {
     // Migration for tables created before the notes column existed.
     $hasNotes = $pdo->query("SHOW COLUMNS FROM jobtrack_contacts LIKE 'notes'")->fetch();
     if (!$hasNotes) $pdo->exec("ALTER TABLE jobtrack_contacts ADD COLUMN notes MEDIUMTEXT NOT NULL DEFAULT ''");
+    // Migration for tables created before the currency column existed.
+    // Legacy rows were always displayed as US$, so backfill them as USD to preserve meaning.
+    $hasCurrency = $pdo->query("SHOW COLUMNS FROM jobtrack_contacts LIKE 'currency'")->fetch();
+    if (!$hasCurrency) {
+        $pdo->exec("ALTER TABLE jobtrack_contacts ADD COLUMN currency VARCHAR(3) NULL");
+        $pdo->exec("UPDATE jobtrack_contacts SET currency = 'USD' WHERE currency IS NULL");
+    }
     $pdo->exec("CREATE TABLE IF NOT EXISTS jobtrack_notes (
         id INT AUTO_INCREMENT PRIMARY KEY,
         contact_id INT NOT NULL,
@@ -59,6 +68,11 @@ function jobtrack_clean_date($v) {
     return preg_match('/^\d{4}-\d{2}-\d{2}$/', $v) ? $v : false;
 }
 
+function jobtrack_clean_currency($v) {
+    $v = strtoupper(trim((string) ($v ?? '')));
+    return in_array($v, JOBTRACK_CURRENCIES, true) ? $v : 'CAD';
+}
+
 function jobtrack_clean_salary($v) {
     $v = trim((string) ($v ?? ''));
     if ($v === '') return null;
@@ -78,6 +92,7 @@ function jobtrack_public_contact(array $row): array {
         'location' => $row['location'] ?? '',
         'salary_min' => $row['salary_min'] === null ? null : (float) $row['salary_min'],
         'salary_max' => $row['salary_max'] === null ? null : (float) $row['salary_max'],
+        'currency' => $row['currency'] ?? 'USD',
         'source' => $row['source'],
         'date_applied' => $row['date_applied'],
         'stage' => $row['stage'],
@@ -174,6 +189,7 @@ if ($action === 'add') {
     $location = trim((string) ($input['location'] ?? ''));
     $salaryMin = jobtrack_clean_salary($input['salary_min'] ?? null);
     $salaryMax = jobtrack_clean_salary($input['salary_max'] ?? null);
+    $currency = jobtrack_clean_currency($input['currency'] ?? 'CAD');
     $source = trim((string) ($input['source'] ?? ''));
     $dateApplied = jobtrack_clean_date($input['date_applied'] ?? null);
     $stage = (string) ($input['stage'] ?? 'applied');
@@ -193,8 +209,8 @@ if ($action === 'add') {
     if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
     $contact = null;
     if (empty($count['duplicate'])) {
-        $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-        $stmt->execute([$userId, $company, $role, $contactName, $contactEmail, $jobUrl, $location, $salaryMin, $salaryMax, $source, $dateApplied, $stage, $followUp, $notes]);
+        $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+        $stmt->execute([$userId, $company, $role, $contactName, $contactEmail, $jobUrl, $location, $salaryMin, $salaryMax, $currency, $source, $dateApplied, $stage, $followUp, $notes]);
         $id = (int) $pdo->lastInsertId();
         $stmt = $pdo->prepare('SELECT * FROM jobtrack_contacts WHERE id = ?');
         $stmt->execute([$id]);
@@ -220,6 +236,7 @@ if ($action === 'import') {
         'location' => 'location', 'where' => 'location',
         'salary min' => 'salary_min', 'min salary' => 'salary_min', 'salary' => 'salary_min',
         'salary max' => 'salary_max', 'max salary' => 'salary_max',
+        'currency' => 'currency', 'curr' => 'currency',
         'where found' => 'source', 'where you found it' => 'source', 'source' => 'source',
         'date applied' => 'date_applied', 'applied' => 'date_applied', 'applied on' => 'date_applied',
         'stage' => 'stage',
@@ -242,7 +259,7 @@ if ($action === 'import') {
     $limitHit = false;
     while (($row = fgetcsv($stream)) !== false && $rows < 200) {
         $rows++;
-        $rec = ['company' => '', 'role' => '', 'contact_name' => '', 'contact_email' => '', 'job_url' => '', 'location' => '', 'salary_min' => '', 'salary_max' => '', 'source' => '', 'date_applied' => '', 'stage' => '', 'follow_up_date' => '', 'notes' => ''];
+        $rec = ['company' => '', 'role' => '', 'contact_name' => '', 'contact_email' => '', 'job_url' => '', 'location' => '', 'salary_min' => '', 'salary_max' => '', 'currency' => '', 'source' => '', 'date_applied' => '', 'stage' => '', 'follow_up_date' => '', 'notes' => ''];
         foreach ($cols as $i => $field) {
             if ($field === null) continue;
             $rec[$field] = trim((string) ($row[$i] ?? ''));
@@ -272,6 +289,7 @@ if ($action === 'import') {
             if ($rec['location'] !== '') { $sets[] = 'location = ?'; $params[] = $rec['location']; }
             if ($rec['salary_min'] !== '') { $sets[] = 'salary_min = ?'; $params[] = $salaryMin; }
             if ($rec['salary_max'] !== '') { $sets[] = 'salary_max = ?'; $params[] = $salaryMax; }
+            if ($rec['currency'] !== '') { $sets[] = 'currency = ?'; $params[] = jobtrack_clean_currency($rec['currency']); }
             if ($rec['source'] !== '') { $sets[] = 'source = ?'; $params[] = $rec['source']; }
             if ($dateApplied !== null) { $sets[] = 'date_applied = ?'; $params[] = $dateApplied; }
             if ($stageValid) { $sets[] = 'stage = ?'; $params[] = $stage; if (in_array($stage, JOBTRACK_TERMINAL, true)) $sets[] = 'follow_up_date = NULL'; }
@@ -289,8 +307,8 @@ if ($action === 'import') {
         $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'jobtrack', $batchKey . '-' . $rows);
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
-            $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-            $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, $rec['source'], $dateApplied, $stageValid ? $stage : 'applied', $followUp, $rec['notes']]);
+            $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+            $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, jobtrack_clean_currency($rec['currency']), $rec['source'], $dateApplied, $stageValid ? $stage : 'applied', $followUp, $rec['notes']]);
             $imported++;
         }
     }
@@ -304,7 +322,7 @@ if ($action === 'export') {
     $stmt->execute([$userId]);
     $contacts = $stmt->fetchAll();
     $stream = fopen('php://memory', 'r+');
-    fputcsv($stream, ['company', 'role', 'contact name', 'contact email', 'job url', 'location', 'salary min', 'salary max', 'where found', 'date applied', 'stage', 'follow up', 'notes']);
+    fputcsv($stream, ['company', 'role', 'contact name', 'contact email', 'job url', 'location', 'salary min', 'salary max', 'currency', 'where found', 'date applied', 'stage', 'follow up', 'notes']);
     foreach ($contacts as $row) {
         fputcsv($stream, [
             $row['company'],
@@ -315,6 +333,7 @@ if ($action === 'export') {
             $row['location'],
             $row['salary_min'] === null ? '' : (string) (float) $row['salary_min'],
             $row['salary_max'] === null ? '' : (string) (float) $row['salary_max'],
+            $row['currency'] ?? '',
             $row['source'],
             $row['date_applied'] ?? '',
             $row['stage'],
@@ -350,6 +369,16 @@ if ($action === 'update') {
         if (mb_strlen($notes) > 5000) jsonResponse(['error' => 'Keep the notes under 5000 characters.'], 422);
         $fields[] = 'notes = ?';
         $params[] = $notes;
+    }
+    if (array_key_exists('currency', $input)) {
+        $fields[] = 'currency = ?';
+        $params[] = jobtrack_clean_currency($input['currency']);
+    }
+    if (array_key_exists('source', $input)) {
+        $v = trim((string) $input['source']);
+        if (mb_strlen($v) > 191) jsonResponse(['error' => 'Keep where found under 191 characters.'], 422);
+        $fields[] = 'source = ?';
+        $params[] = $v;
     }
     if (array_key_exists('company', $input)) {
         $company = trim((string) $input['company']);
