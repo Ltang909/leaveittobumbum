@@ -34,9 +34,9 @@ input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
 <div class="tool-group"><span class="lbl">Paper</span><div class="seg" role="group" aria-label="Background"><button type="button" data-bg="transparent" class="on">Clear</button><button type="button" data-bg="#ffffff">White</button><button type="button" data-bg="#fdf6e3">Cream</button></div></div>
 <div class="tool-group"><span class="lbl">Shape</span><div class="seg" role="group" aria-label="Canvas shape"><button type="button" data-aspect="wide" class="on">Classic</button><button type="button" data-aspect="sig">Signature</button><button type="button" data-aspect="square">Square</button></div></div>
 </div>
+<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button><button type="button" class="button secondary" id="copyBtn">Copy</button></div>
 <div class="canvas-wrap"><canvas id="pad"></canvas></div>
 <p class="hint">Tip: pick Signature shape and Clear paper for a transparent signature you can drop onto any document.</p>
-<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button></div>
 </div>
 <div id="upgrade-slot"></div>
 <script>
@@ -113,6 +113,16 @@ document.querySelector('#svgBtn').addEventListener('click',()=>{
   svg+='</svg>';
   const blob=new Blob([svg],{type:'image/svg+xml'});
   const url=URL.createObjectURL(blob);download('doodle.svg',url);setTimeout(()=>URL.revokeObjectURL(url),4000);
+});
+document.querySelector('#copyBtn').addEventListener('click',async()=>{
+  const btn=document.querySelector('#copyBtn');
+  try{
+    const w=LOGICAL_W*2,h=logicalH()*2,off=document.createElement('canvas');off.width=w;off.height=h;
+    render(off.getContext('2d'),w,h);
+    const blob=await new Promise(r=>off.toBlob(r,'image/png'));
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);
+  }catch(e){alert('Copy is not available in this browser. Use Download PNG instead.')}
 });
 window.addEventListener('resize',fitCanvas);
 fitCanvas();
