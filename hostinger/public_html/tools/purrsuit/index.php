@@ -57,7 +57,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 <div class="stat-row"><div class="stat-card"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card"><b id="statWon">$0</b><span>won</span></div><div class="stat-card"><b id="statCount">0</b><span>contacts</span></div></div>
 <div class="add-import-grid">
 <section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Company<input name="company" type="text" maxlength="191" placeholder="Acme Inc"></label><label>Title<input name="title" type="text" maxlength="191" placeholder="Head of Growth"></label><label>Email<input name="email" type="email" maxlength="191" placeholder="jordan@acme.co"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Purrsuit</button><p id="addError" class="error"></p></form></section>
-<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>name</b> (required), company, title, email, where you met, deal value, stage (new, talking, quoted, won, lost), follow up (YYYY-MM-DD), notes. Names that already exist get <b>updated</b> (free, empty cells keep their current values); new names get added at one action each, with notes saved to their timeline. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>name</b> (required), company, title, email, where you met, deal value, stage (new, talking, quoted, won, lost), follow up (YYYY-MM-DD), notes. Rows matching an existing <b>name + company</b> get <b>updated</b> (free, empty cells keep their current values); everything else gets added at one action each, with notes saved to their timeline. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
 </div>
 <section class="panel"><div class="yp-head"><h2>Your people</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div id="upgrade-slot"></div>
@@ -79,7 +79,7 @@ function renderFollowups(){
   const el=document.querySelector('#followupList');
   const items=[...DATA.followUpDue.map(c=>({...c,quiet:false})),...DATA.goneQuiet.map(c=>({...c,quiet:true}))];
   if(!items.length){el.innerHTML='<p class="lede">All clear. Nobody needs a nudge today. Go touch grass.</p>';return}
-  el.innerHTML=items.map(c=>`<div class="followup${c.quiet?' quiet':''}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}${c.quiet?'<span class="stage">gone quiet</span>':''}</div>${c.deal_value?`<p class="meta">${money(c.deal_value)} potential</p>`:''}<div class="draft">${esc(c.draft)}</div><div class="btnrow"><button type="button" class="button secondary" data-copy-draft="${c.id}">Copy message</button><button type="button" class="button secondary" data-open="${c.id}">Log follow-up</button></div></div>`).join('');
+  el.innerHTML=items.map(c=>`<div class="followup${c.quiet?' quiet':''}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}${c.quiet?'<span class="stage">gone quiet</span>':''}</div>${c.deal_value?`<p class="meta">${money(c.deal_value)} potential</p>`:''}<div class="draft">${esc(c.draft)}</div><div class="btnrow"><button type="button" class="button secondary" data-copy-draft="${c.id}">Copy message</button><button type="button" class="button secondary" data-open="${c.id}">Log follow-up</button><button type="button" class="button secondary" data-clear-followup="${c.id}">Clear</button></div></div>`).join('');
   bindCardButtons(el);
 }
 function contactCard(c){
@@ -103,6 +103,14 @@ function renderContacts(){
 }
 function bindCardButtons(root){
   root.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openDetail(parseInt(b.getAttribute('data-open'),10))));
+  root.querySelectorAll('[data-clear-followup]').forEach(b=>b.addEventListener('click',async()=>{
+    b.disabled=true;
+    const id=parseInt(b.getAttribute('data-clear-followup'),10);
+    const{response,data}=await apiCall({action:'update',id,follow_up_date:''});
+    b.disabled=false;
+    if(!response.ok){document.querySelector('#listError').textContent=data.error||'Clear failed.';return}
+    await refresh();
+  }));
   root.querySelectorAll('[data-del-card]').forEach(b=>b.addEventListener('click',async()=>{
     if(b.dataset.armed!=='1'){
       b.dataset.armed='1';b.dataset.orig=b.textContent;b.textContent='Tap again to delete';
