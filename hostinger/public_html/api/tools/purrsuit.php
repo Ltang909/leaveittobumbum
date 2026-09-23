@@ -313,12 +313,11 @@ if ($action === 'log') {
     if (!$stmt->fetch()) jsonResponse(['error' => 'Contact not found.'], 404);
     $stmt = $pdo->prepare('INSERT INTO rolodex_notes (contact_id, user_id, body) VALUES (?, ?, ?)');
     $stmt->execute([$id, $userId, $body]);
-    $nextFollowUp = null;
     if (array_key_exists('follow_up_date', $input)) {
+        // An explicit date (or an empty value to clear the reminder) wins;
+        // when the key is absent the existing date stays untouched.
         $nextFollowUp = rolodex_clean_date($input['follow_up_date']);
         if ($nextFollowUp === false) jsonResponse(['error' => 'Pick a valid follow-up date.'], 422);
-    }
-    if ($nextFollowUp !== null) {
         $stmt = $pdo->prepare('UPDATE rolodex_contacts SET follow_up_date = ?, last_touch_at = NOW() WHERE id = ? AND user_id = ?');
         $stmt->execute([$nextFollowUp, $id, $userId]);
     } else {
