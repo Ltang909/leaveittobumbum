@@ -10,7 +10,8 @@ const JOBTRACK_TERMINAL = ['accepted', 'rejected', 'withdrawn'];
 const JOBTRACK_ACTIVE = ['wishlist', 'applied', 'screening', 'interview', 'final', 'offer'];
 
 function ensureJobtrackSchema(): void {
-    db()->exec("CREATE TABLE IF NOT EXISTS jobtrack_contacts (
+    $pdo = db();
+    $pdo->exec("CREATE TABLE IF NOT EXISTS jobtrack_contacts (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
         company VARCHAR(191) NOT NULL,
@@ -25,13 +26,17 @@ function ensureJobtrackSchema(): void {
         date_applied DATE NULL,
         stage VARCHAR(16) NOT NULL DEFAULT 'wishlist',
         follow_up_date DATE NULL,
+        notes MEDIUMTEXT NOT NULL DEFAULT '',
         last_touch_at TIMESTAMP NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         KEY idx_user (user_id),
         KEY idx_user_followup (user_id, follow_up_date)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-    db()->exec("CREATE TABLE IF NOT EXISTS jobtrack_notes (
+    // Migration for tables created before the notes column existed.
+    $hasNotes = $pdo->query("SHOW COLUMNS FROM jobtrack_contacts LIKE 'notes'")->fetch();
+    if (!$hasNotes) $pdo->exec("ALTER TABLE jobtrack_contacts ADD COLUMN notes MEDIUMTEXT NOT NULL DEFAULT ''");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS jobtrack_notes (
         id INT AUTO_INCREMENT PRIMARY KEY,
         contact_id INT NOT NULL,
         user_id INT NOT NULL,
@@ -77,6 +82,7 @@ function jobtrack_public_contact(array $row): array {
         'date_applied' => $row['date_applied'],
         'stage' => $row['stage'],
         'follow_up_date' => $row['follow_up_date'],
+        'notes' => $row['notes'] ?? '',
         'last_touch_at' => $row['last_touch_at'],
         'created_at' => $row['created_at'],
     ];
@@ -187,13 +193,9 @@ if ($action === 'add') {
     if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
     $contact = null;
     if (empty($count['duplicate'])) {
-        $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, source, date_applied, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-        $stmt->execute([$userId, $company, $role, $contactName, $contactEmail, $jobUrl, $location, $salaryMin, $salaryMax, $source, $dateApplied, $stage, $followUp]);
+        $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+        $stmt->execute([$userId, $company, $role, $contactName, $contactEmail, $jobUrl, $location, $salaryMin, $salaryMax, $source, $dateApplied, $stage, $followUp, $notes]);
         $id = (int) $pdo->lastInsertId();
-        if ($notes !== '') {
-            $stmt = $pdo->prepare('INSERT INTO jobtrack_notes (contact_id, user_id, body) VALUES (?, ?, ?)');
-            $stmt->execute([$id, $userId, $notes]);
-        }
         $stmt = $pdo->prepare('SELECT * FROM jobtrack_contacts WHERE id = ?');
         $stmt->execute([$id]);
         $contact = jobtrack_public_contact($stmt->fetch());
@@ -274,15 +276,12 @@ if ($action === 'import') {
             if ($dateApplied !== null) { $sets[] = 'date_applied = ?'; $params[] = $dateApplied; }
             if ($stageValid) { $sets[] = 'stage = ?'; $params[] = $stage; if (in_array($stage, JOBTRACK_TERMINAL, true)) $sets[] = 'follow_up_date = NULL'; }
             if ($followUp !== null) { $sets[] = 'follow_up_date = ?'; $params[] = $followUp; }
+            if ($rec['notes'] !== '') { $sets[] = 'notes = ?'; $params[] = $rec['notes']; }
             if ($sets) {
                 $params[] = $existing['id'];
                 $params[] = $userId;
                 $stmt = $pdo->prepare('UPDATE jobtrack_contacts SET ' . implode(', ', $sets) . ' WHERE id = ? AND user_id = ?');
                 $stmt->execute($params);
-            }
-            if ($rec['notes'] !== '') {
-                $stmt = $pdo->prepare('INSERT INTO jobtrack_notes (contact_id, user_id, body) VALUES (?, ?, ?)');
-                $stmt->execute([$existing['id'], $userId, $rec['notes']]);
             }
             $updated++;
             continue;
@@ -290,13 +289,8 @@ if ($action === 'import') {
         $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'jobtrack', $batchKey . '-' . $rows);
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
-            $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, source, date_applied, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-            $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, $rec['source'], $dateApplied, $stageValid ? $stage : 'wishlist', $followUp]);
-            $newId = (int) $pdo->lastInsertId();
-            if ($rec['notes'] !== '') {
-                $stmt = $pdo->prepare('INSERT INTO jobtrack_notes (contact_id, user_id, body) VALUES (?, ?, ?)');
-                $stmt->execute([$newId, $userId, $rec['notes']]);
-            }
+            $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+            $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, $rec['source'], $dateApplied, $stageValid ? $stage : 'wishlist', $followUp, $rec['notes']]);
             $imported++;
         }
     }
@@ -309,16 +303,6 @@ if ($action === 'export') {
     $stmt = $pdo->prepare('SELECT * FROM jobtrack_contacts WHERE user_id = ? ORDER BY company ASC LIMIT 2000');
     $stmt->execute([$userId]);
     $contacts = $stmt->fetchAll();
-    $noteMap = [];
-    if ($contacts) {
-        $ids = array_map('intval', array_column($contacts, 'id'));
-        $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $stmt = $pdo->prepare("SELECT contact_id, body FROM jobtrack_notes WHERE user_id = ? AND contact_id IN ($placeholders) ORDER BY contact_id ASC, id ASC");
-        $stmt->execute(array_merge([$userId], $ids));
-        foreach ($stmt->fetchAll() as $n) {
-            $noteMap[(int) $n['contact_id']][] = $n['body'];
-        }
-    }
     $stream = fopen('php://memory', 'r+');
     fputcsv($stream, ['company', 'role', 'contact name', 'contact email', 'job url', 'location', 'salary min', 'salary max', 'where found', 'date applied', 'stage', 'follow up', 'notes']);
     foreach ($contacts as $row) {
@@ -335,7 +319,7 @@ if ($action === 'export') {
             $row['date_applied'] ?? '',
             $row['stage'],
             $row['follow_up_date'] ?? '',
-            isset($noteMap[(int) $row['id']]) ? implode(' | ', $noteMap[(int) $row['id']]) : '',
+            $row['notes'] ?? '',
         ]);
     }
     rewind($stream);
@@ -360,6 +344,12 @@ if ($action === 'update') {
         if ($followUp === false) jsonResponse(['error' => 'Pick a valid follow-up date.'], 422);
         $fields[] = 'follow_up_date = ?';
         $params[] = $followUp;
+    }
+    if (array_key_exists('notes', $input)) {
+        $notes = trim((string) $input['notes']);
+        if (mb_strlen($notes) > 5000) jsonResponse(['error' => 'Keep the notes under 5000 characters.'], 422);
+        $fields[] = 'notes = ?';
+        $params[] = $notes;
     }
     if (array_key_exists('company', $input)) {
         $company = trim((string) $input['company']);
@@ -458,6 +448,14 @@ if ($action === 'delete') {
     $stmt = $pdo->prepare('DELETE FROM jobtrack_contacts WHERE id = ? AND user_id = ?');
     $stmt->execute([$id, $userId]);
     if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Application not found.'], 404);
+    jsonResponse(['ok' => true]);
+}
+
+if ($action === 'delete_note') {
+    $noteId = (int) ($input['note_id'] ?? 0);
+    $stmt = $pdo->prepare('DELETE FROM jobtrack_notes WHERE id = ? AND user_id = ?');
+    $stmt->execute([$noteId, $userId]);
+    if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Note not found.'], 404);
     jsonResponse(['ok' => true]);
 }
 

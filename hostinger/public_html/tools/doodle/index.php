@@ -2,17 +2,19 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Doodle | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=4"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1,.lede{max-width:none}
 .doodle-layout{display:grid;gap:16px;margin-top:20px}
-.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.tool-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 10px}
-.tool-group .lbl{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;opacity:.6}
-.seg{display:flex;border:2px solid var(--ink);border-radius:10px;overflow:hidden}
-.seg button{border:0;background:#fff;padding:10px 14px;font:inherit;font-weight:800;cursor:pointer;min-height:44px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.tool-group{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.tool-group .lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.55;flex:none}
+.seg{display:flex;height:44px;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:#fff;flex:none}
+.seg button{border:0;background:transparent;margin:0;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;height:100%;display:flex;align-items:center;color:var(--ink)}
 .seg button.on{background:var(--ink);color:#fff}
-.swatch{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);cursor:pointer;padding:0}
+.swatch{width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);cursor:pointer;padding:0;margin:0;flex:none}
 .swatch.on{outline:3px solid var(--ink);outline-offset:2px}
-input[type=color].pick{width:44px;height:44px;border:2px solid var(--ink);border-radius:10px;padding:2px;background:#fff;cursor:pointer}
-input[type=range].size{width:140px;accent-color:var(--ink)}
-.iconbtn{border:2px solid var(--ink);border-radius:10px;background:#fff;padding:10px 14px;font:inherit;font-weight:800;cursor:pointer;min-height:44px}
+input[type=color].pick{width:36px;height:36px;border:2px solid var(--ink);border-radius:50%;padding:2px;background:#fff;cursor:pointer;margin:0;flex:none}
+.size-wrap{display:flex;align-items:center;gap:10px;height:44px;flex:none}
+.size-wrap b{min-width:2ch;text-align:right}
+input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
+.iconbtn{border:2px solid var(--ink);border-radius:12px;background:#fff;margin:0;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;height:44px;display:inline-flex;align-items:center;flex:none;color:var(--ink)}
 .iconbtn:disabled{opacity:.35;cursor:default}
 .iconbtn.danger{border-color:#e5484d;color:#e5484d}
 .canvas-wrap{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:10px;box-shadow:4px 4px 0 var(--ink)}
@@ -27,14 +29,14 @@ input[type=range].size{width:140px;accent-color:var(--ink)}
 <div class="toolbar">
 <div class="tool-group"><span class="lbl">Tool</span><div class="seg" role="group" aria-label="Pen or eraser"><button type="button" id="penBtn" class="on">Pen</button><button type="button" id="eraserBtn">Eraser</button></div></div>
 <div class="tool-group"><span class="lbl">Color</span><button type="button" class="swatch on" data-color="#1a1a1a" style="background:#1a1a1a" aria-label="Black"></button><button type="button" class="swatch" data-color="#e5484d" style="background:#e5484d" aria-label="Red"></button><button type="button" class="swatch" data-color="#2f9e5f" style="background:#2f9e5f" aria-label="Green"></button><button type="button" class="swatch" data-color="#2f6fed" style="background:#2f6fed" aria-label="Blue"></button><button type="button" class="swatch" data-color="#f5a623" style="background:#f5a623" aria-label="Orange"></button><button type="button" class="swatch" data-color="#8e4ec6" style="background:#8e4ec6" aria-label="Purple"></button><input type="color" class="pick" id="customColor" value="#1a1a1a" aria-label="Custom color"></div>
-<div class="tool-group"><span class="lbl">Size</span><input type="range" class="size" id="sizeRange" min="2" max="60" value="8"><b id="sizeVal">8</b></div>
+<div class="tool-group"><span class="lbl">Size</span><div class="size-wrap"><input type="range" class="size" id="sizeRange" min="2" max="60" value="8"><b id="sizeVal">8</b></div></div>
 <div class="tool-group"><span class="lbl">History</span><button type="button" class="iconbtn" id="undoBtn" disabled>Undo</button><button type="button" class="iconbtn" id="redoBtn" disabled>Redo</button><button type="button" class="iconbtn danger" id="clearBtn">Clear</button></div>
 <div class="tool-group"><span class="lbl">Paper</span><div class="seg" role="group" aria-label="Background"><button type="button" data-bg="transparent" class="on">Clear</button><button type="button" data-bg="#ffffff">White</button><button type="button" data-bg="#fdf6e3">Cream</button></div></div>
 <div class="tool-group"><span class="lbl">Shape</span><div class="seg" role="group" aria-label="Canvas shape"><button type="button" data-aspect="wide" class="on">Classic</button><button type="button" data-aspect="sig">Signature</button><button type="button" data-aspect="square">Square</button></div></div>
 </div>
+<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button><button type="button" class="button secondary" id="copyBtn">Copy</button></div>
 <div class="canvas-wrap"><canvas id="pad"></canvas></div>
 <p class="hint">Tip: pick Signature shape and Clear paper for a transparent signature you can drop onto any document.</p>
-<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button></div>
 </div>
 <div id="upgrade-slot"></div>
 <script>
@@ -52,30 +54,32 @@ function fitCanvas(){
   canvas.width=Math.round(cssW*dpr);canvas.height=Math.round(cssH*dpr);
   render(ctx,canvas.width,canvas.height);
 }
+function drawStroke(c,s,w,h){
+  const pts=s.pts;if(!pts.length)return;
+  c.globalCompositeOperation=s.eraser?'destination-out':'source-over';
+  c.lineCap='round';c.lineJoin='round';
+  const X=p=>p.x*w,Y=p=>p.y*h;
+  if(pts.length===1){const pw=s.size*(0.4+0.6*(pts[0].p||0.5))/LOGICAL_W*w;c.fillStyle=s.eraser?'#000':s.color;c.beginPath();c.arc(X(pts[0]),Y(pts[0]),pw/2,0,7);c.fill();return}
+  c.strokeStyle=s.eraser?'#000':s.color;
+  c.lineWidth=s.size*(0.4+0.6*(s.avgP||0.5))/LOGICAL_W*w;
+  c.beginPath();
+  c.moveTo(X(pts[0]),Y(pts[0]));
+  for(let i=1;i<pts.length-1;i++){const mx=(X(pts[i])+X(pts[i+1]))/2,my=(Y(pts[i])+Y(pts[i+1]))/2;c.quadraticCurveTo(X(pts[i]),Y(pts[i]),mx,my)}
+  const l=pts[pts.length-1];c.lineTo(X(l),Y(l));c.stroke();
+}
 function render(c,w,h){
   c.save();c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);
   if(bg!=='transparent'){c.fillStyle=bg;c.fillRect(0,0,w,h)}
-  c.lineCap='round';c.lineJoin='round';
-  for(const s of strokes){
-    c.globalCompositeOperation=s.eraser?'destination-out':'source-over';
-    c.strokeStyle=s.eraser?'#000':s.color;
-    const pts=s.pts;if(!pts.length)continue;
-    c.beginPath();
-    const X=p=>p.x*w,Y=p=>p.y*h;
-    if(pts.length===1){const pw=s.size*(0.4+0.6*(pts[0].p||0.5))/LOGICAL_W*w;c.fillStyle=s.eraser?'#000':s.color;c.beginPath();c.arc(X(pts[0]),Y(pts[0]),pw/2,0,7);c.fill();continue}
-    c.lineWidth=s.size*(0.4+0.6*(s.avgP||0.5))/LOGICAL_W*w;
-    c.moveTo(X(pts[0]),Y(pts[0]));
-    for(let i=1;i<pts.length-1;i++){const mx=(X(pts[i])+X(pts[i+1]))/2,my=(Y(pts[i])+Y(pts[i+1]))/2;c.quadraticCurveTo(X(pts[i]),Y(pts[i]),mx,my)}
-    const l=pts[pts.length-1];c.lineTo(X(l),Y(l));c.stroke();
-  }
+  for(const s of strokes)drawStroke(c,s,w,h);
+  if(drawing&&cur&&cur.pts.length)drawStroke(c,cur,w,h);
   c.restore();c.globalCompositeOperation='source-over';
 }
 function updateHistBtns(){document.querySelector('#undoBtn').disabled=!history.length;document.querySelector('#redoBtn').disabled=!redoHist.length}
 function pushHist(entry){history.push(entry);redoHist=[];updateHistBtns()}
 let drawing=false,cur=null;
 function pt(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height,p:e.pressure||0.5}}
-canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);drawing=true;cur={color,size,eraser,pts:[pt(e)],avgP:pt(e).p};redraw()});
-canvas.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const p=pt(e);cur.pts.push(p);cur.avgP=(cur.avgP*(cur.pts.length-1)+p.p)/cur.pts.length;redraw()});
+canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);drawing=true;const p0=pt(e);cur={color,size,eraser,pts:[p0],avgP:p0.p};redraw()});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];for(const ev of evs){const p=pt(ev);cur.pts.push(p);cur.avgP=(cur.avgP*(cur.pts.length-1)+p.p)/cur.pts.length}redraw()});
 function endStroke(){if(!drawing)return;drawing=false;if(cur.pts.length){strokes.push(cur);pushHist({t:'add',s:cur})}cur=null;redraw()}
 canvas.addEventListener('pointerup',endStroke);canvas.addEventListener('pointercancel',endStroke);
 function redraw(){render(ctx,canvas.width,canvas.height)}
@@ -109,6 +113,16 @@ document.querySelector('#svgBtn').addEventListener('click',()=>{
   svg+='</svg>';
   const blob=new Blob([svg],{type:'image/svg+xml'});
   const url=URL.createObjectURL(blob);download('doodle.svg',url);setTimeout(()=>URL.revokeObjectURL(url),4000);
+});
+document.querySelector('#copyBtn').addEventListener('click',async()=>{
+  const btn=document.querySelector('#copyBtn');
+  try{
+    const w=LOGICAL_W*2,h=logicalH()*2,off=document.createElement('canvas');off.width=w;off.height=h;
+    render(off.getContext('2d'),w,h);
+    const blob=await new Promise(r=>off.toBlob(r,'image/png'));
+    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);
+  }catch(e){alert('Copy is not available in this browser. Use Download PNG instead.')}
 });
 window.addEventListener('resize',fitCanvas);
 fitCanvas();
