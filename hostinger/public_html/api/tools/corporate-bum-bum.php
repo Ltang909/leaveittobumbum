@@ -40,6 +40,13 @@ function ensureJobtrackSchema(): void {
         KEY idx_contact (contact_id),
         KEY idx_user (user_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    db()->exec("CREATE TABLE IF NOT EXISTS jobtrack_general_notes (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        body MEDIUMTEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        KEY idx_user (user_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 }
 
 function jobtrack_idempotency(array $input): string {
@@ -458,6 +465,39 @@ if ($action === 'delete') {
     $stmt = $pdo->prepare('DELETE FROM jobtrack_contacts WHERE id = ? AND user_id = ?');
     $stmt->execute([$id, $userId]);
     if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Application not found.'], 404);
+    jsonResponse(['ok' => true]);
+}
+
+if ($action === 'delete_note') {
+    $noteId = (int) ($input['note_id'] ?? 0);
+    $stmt = $pdo->prepare('DELETE FROM jobtrack_notes WHERE id = ? AND user_id = ?');
+    $stmt->execute([$noteId, $userId]);
+    if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Note not found.'], 404);
+    jsonResponse(['ok' => true]);
+}
+
+if ($action === 'general_list') {
+    $stmt = $pdo->prepare('SELECT id, body, created_at FROM jobtrack_general_notes WHERE user_id = ? ORDER BY id DESC LIMIT 200');
+    $stmt->execute([$userId]);
+    $notes = [];
+    foreach ($stmt->fetchAll() as $n) $notes[] = ['id' => (int) $n['id'], 'body' => $n['body'], 'created_at' => $n['created_at']];
+    jsonResponse(['notes' => $notes]);
+}
+
+if ($action === 'general_add') {
+    $body = trim((string) ($input['body'] ?? ''));
+    if ($body === '') jsonResponse(['error' => 'Write the note first.'], 422);
+    if (mb_strlen($body) > 5000) jsonResponse(['error' => 'Keep the note under 5000 characters.'], 422);
+    $stmt = $pdo->prepare('INSERT INTO jobtrack_general_notes (user_id, body) VALUES (?, ?)');
+    $stmt->execute([$userId, $body]);
+    jsonResponse(['ok' => true, 'note_id' => (int) $pdo->lastInsertId()]);
+}
+
+if ($action === 'general_delete') {
+    $noteId = (int) ($input['note_id'] ?? 0);
+    $stmt = $pdo->prepare('DELETE FROM jobtrack_general_notes WHERE id = ? AND user_id = ?');
+    $stmt->execute([$noteId, $userId]);
+    if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Note not found.'], 404);
     jsonResponse(['ok' => true]);
 }
 
