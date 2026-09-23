@@ -66,7 +66,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .filters button.active { background:var(--ink); color:white; }
 .tool-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:17px; }
 .tool-card { min-height:350px; padding:23px; border:var(--line); border-radius:10px; display:flex; flex-direction:column; box-shadow:5px 5px 0 var(--ink); }
-.card-1 { background:var(--yellow); }.card-2 { background:#f7a9ca; }.card-3 { background:var(--mint); }.card-4 { background:#8eb5ff; }
+.card-1 { background:var(--yellow); }.card-2 { background:#f7a9ca; }.card-3 { background:var(--mint); }.card-4 { background:#8eb5ff; }.card-5 { background:#ffc59b; }.card-6 { background:#d6c9f5; }.card-7 { background:#b2e8dc; }.card-8 { background:#ffb3b3; }
 .tool-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
 .tool-icon { width:48px; height:48px; display:grid; place-items:center; background:white; border:var(--line); border-radius:50%; font-size:1.3rem; }
 .tool-tag { font-size:.7rem; font-weight:1000; text-transform:uppercase; letter-spacing:.1em; }

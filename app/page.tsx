@@ -136,7 +136,7 @@ export default function Home() {
 
       <section className="toolbox shell" id="toolbox">
         <div className="section-heading"><div><p className="kicker">Bum Bum’s toolbox</p><h2>Pick the thing you<br />don’t want to do.</h2></div><p>Every finished result uses one action. The shelf keeps growing, so poke around.</p></div>
-        <div className="tool-grid">{tools.slice(0, 8).map((tool, index) => <article className={`tool-card card-${(index % 4) + 1}`} key={tool.key}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span>{tool.mascot && <img className="tool-mascot" src={tool.mascot} alt="" aria-hidden="true" />}</div><h3>{tool.name}</h3><p>{tool.description}</p><button onClick={() => openTool(tool)}>{tool.cta} <Arrow /></button></article>)}</div>
+        <div className="tool-grid">{tools.slice(0, 8).map((tool, index) => <article className={`tool-card card-${(index % 8) + 1}`} key={tool.key}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span>{tool.mascot && <img className="tool-mascot" src={tool.mascot} alt="" aria-hidden="true" />}</div><h3>{tool.name}</h3><p>{tool.description}</p><button onClick={() => openTool(tool)}>{tool.cta} <Arrow /></button></article>)}</div>
         <div className="toolbox-more"><a className="button" href="/tools/">Browse the full toolbox <Arrow /></a></div>
       </section>
 

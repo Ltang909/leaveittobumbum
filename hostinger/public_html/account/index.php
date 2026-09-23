@@ -12,7 +12,7 @@
 .tool-card h3{margin:0 0 8px;font-size:30px;line-height:1.05}
 .tool-card p{margin:0 0 18px;line-height:1.5}
 .tool-cta{margin-top:auto;border-top:2px solid var(--line);padding-top:14px;font-weight:900;display:flex;justify-content:space-between;align-items:center}
-.tc-yellow{background:#ffd84d}.tc-pink{background:#ffb3d1}.tc-mint{background:#b9f2cf}.tc-blue{background:#b7d6ff}.tc-cream{background:#fffdf4}
+.tc-yellow{background:#ffd84d}.tc-pink{background:#ffb3d1}.tc-mint{background:#b9f2cf}.tc-blue{background:#b7d6ff}.tc-cream{background:#fffdf4}.tc-orange{background:#ffc59b}.tc-lavender{background:#d6c9f5}.tc-teal{background:#b2e8dc}.tc-rose{background:#ffb3b3}
 #tool-picker{margin-top:20px;border:2px dashed var(--line);border-radius:16px;padding:20px;background:#fff}
 .tool-pick{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
 .tool-pick label{display:inline-flex;align-items:center;gap:8px;font-weight:800;border:2px solid var(--line);border-radius:999px;padding:10px 16px;background:var(--cream);cursor:pointer;margin:0}
@@ -43,6 +43,7 @@ $DASHBOARD_TOOLS = [
   'cutline' => ['name' => 'Cutline', 'tag' => 'MONEY', 'icon' => '&#9986;', 'desc' => 'Every subscription you forgot about, in one place, with renewal nudges.', 'url' => '/tools/cutline/', 'cta' => 'Cut subscriptions'],
   'profit-peek' => ['name' => 'Profit Peek', 'tag' => 'MONEY', 'icon' => '$', 'desc' => 'Add the rough numbers and see if the job actually makes money.', 'url' => '/tools/profit-peek/', 'cta' => 'Check a job'],
   'purrsuit' => ['name' => 'Purrsuit', 'tag' => 'CLIENTS', 'icon' => '&#128100;', 'desc' => 'A tiny CRM that tells you who to follow up with today and what to say.', 'url' => '/tools/purrsuit/', 'cta' => 'Track every lead'],
+  'corporate-bum-bum' => ['name' => 'Corporate Bum Bum', 'tag' => 'CAREER', 'icon' => '&#128188;', 'desc' => 'A job application tracker that tells you who to follow up with today and what to say.', 'url' => '/tools/corporate-bum-bum/', 'cta' => 'Track applications'],
 ];
 $DASHBOARD_ORDER = array_keys($DASHBOARD_TOOLS);
 $selectedKeys = $DASHBOARD_ORDER;
@@ -73,7 +74,7 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <?php endforeach; ?>
 </div><button id="toolSave">Save</button><span id="toolMsg" class="error"></span></div>
 <div class="tool-cards">
-<?php $ci = 0; foreach ($selectedKeys as $key): $t = $DASHBOARD_TOOLS[$key]; $cc = 'tc-' . ['yellow', 'pink', 'mint', 'blue', 'cream'][$ci % 5]; $ci++; ?>
+<?php $ci = 0; foreach ($selectedKeys as $key): $t = $DASHBOARD_TOOLS[$key]; $cc = 'tc-' . ['yellow', 'pink', 'mint', 'blue', 'cream', 'orange', 'lavender', 'teal', 'rose'][$ci % 9]; $ci++; ?>
 <a class="tool-card <?= $cc ?>" href="<?= htmlspecialchars($t['url']) ?>" data-tool="<?= htmlspecialchars($key) ?>">
 <div class="tool-card-top"><span class="tool-icon"><?= $t['icon'] ?></span><span class="tool-tag"><?= htmlspecialchars($t['tag']) ?></span></div>
 <h3><?= htmlspecialchars($t['name']) ?></h3>

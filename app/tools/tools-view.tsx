@@ -61,7 +61,7 @@ export default function ToolsView() {
 
         <div className="tool-grid">
           {filtered.map((tool, index) => (
-            <article className={`tool-card card-${(index % 4) + 1}`} key={tool.key}>
+            <article className={`tool-card card-${(index % 8) + 1}`} key={tool.key}>
               <div className="tool-top">
                 <span className="tool-icon">{tool.icon}</span>
                 <span className="tool-tag">{tool.tag}</span>
