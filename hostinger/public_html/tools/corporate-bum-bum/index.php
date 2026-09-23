@@ -26,7 +26,7 @@ h1,.lede{max-width:none}
 #addForm textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit;background-color:#fff;min-height:70px}
 .add-import-grid{display:grid;gap:28px;margin-top:28px}
 .add-import-grid .panel{margin-top:0;margin-bottom:0}
-@media(min-width:760px){.add-import-grid{grid-template-columns:1fr 1fr;gap:16px}}
+#addForm input::placeholder,#addForm textarea::placeholder,.modal input::placeholder,.modal textarea::placeholder{color:#c9c2b2;opacity:1}
 .span-all{grid-column:1/-1}
 .yp-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px}
 .yp-head h2{margin:0!important}
