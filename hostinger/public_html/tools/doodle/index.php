@@ -10,7 +10,7 @@ h1,.lede{max-width:none}
 .seg button.on{background:var(--ink);color:#fff}
 .swatch{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);cursor:pointer;padding:0}
 .swatch.on{outline:3px solid var(--ink);outline-offset:2px}
-input[type=color].pick{width:44px;height:44px;border:2px solid var(--ink);border-radius:10px;padding:2px;background:#fff;cursor:pointer}
+input[type=color].pick{width:40px;height:40px;border:2px solid var(--ink);border-radius:50%;padding:2px;background:#fff;cursor:pointer}
 input[type=range].size{width:140px;accent-color:var(--ink)}
 .iconbtn{border:2px solid var(--ink);border-radius:10px;background:#fff;padding:10px 14px;font:inherit;font-weight:800;cursor:pointer;min-height:44px}
 .iconbtn:disabled{opacity:.35;cursor:default}
@@ -52,30 +52,32 @@ function fitCanvas(){
   canvas.width=Math.round(cssW*dpr);canvas.height=Math.round(cssH*dpr);
   render(ctx,canvas.width,canvas.height);
 }
+function drawStroke(c,s,w,h){
+  const pts=s.pts;if(!pts.length)return;
+  c.globalCompositeOperation=s.eraser?'destination-out':'source-over';
+  c.lineCap='round';c.lineJoin='round';
+  const X=p=>p.x*w,Y=p=>p.y*h;
+  if(pts.length===1){const pw=s.size*(0.4+0.6*(pts[0].p||0.5))/LOGICAL_W*w;c.fillStyle=s.eraser?'#000':s.color;c.beginPath();c.arc(X(pts[0]),Y(pts[0]),pw/2,0,7);c.fill();return}
+  c.strokeStyle=s.eraser?'#000':s.color;
+  c.lineWidth=s.size*(0.4+0.6*(s.avgP||0.5))/LOGICAL_W*w;
+  c.beginPath();
+  c.moveTo(X(pts[0]),Y(pts[0]));
+  for(let i=1;i<pts.length-1;i++){const mx=(X(pts[i])+X(pts[i+1]))/2,my=(Y(pts[i])+Y(pts[i+1]))/2;c.quadraticCurveTo(X(pts[i]),Y(pts[i]),mx,my)}
+  const l=pts[pts.length-1];c.lineTo(X(l),Y(l));c.stroke();
+}
 function render(c,w,h){
   c.save();c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);
   if(bg!=='transparent'){c.fillStyle=bg;c.fillRect(0,0,w,h)}
-  c.lineCap='round';c.lineJoin='round';
-  for(const s of strokes){
-    c.globalCompositeOperation=s.eraser?'destination-out':'source-over';
-    c.strokeStyle=s.eraser?'#000':s.color;
-    const pts=s.pts;if(!pts.length)continue;
-    c.beginPath();
-    const X=p=>p.x*w,Y=p=>p.y*h;
-    if(pts.length===1){const pw=s.size*(0.4+0.6*(pts[0].p||0.5))/LOGICAL_W*w;c.fillStyle=s.eraser?'#000':s.color;c.beginPath();c.arc(X(pts[0]),Y(pts[0]),pw/2,0,7);c.fill();continue}
-    c.lineWidth=s.size*(0.4+0.6*(s.avgP||0.5))/LOGICAL_W*w;
-    c.moveTo(X(pts[0]),Y(pts[0]));
-    for(let i=1;i<pts.length-1;i++){const mx=(X(pts[i])+X(pts[i+1]))/2,my=(Y(pts[i])+Y(pts[i+1]))/2;c.quadraticCurveTo(X(pts[i]),Y(pts[i]),mx,my)}
-    const l=pts[pts.length-1];c.lineTo(X(l),Y(l));c.stroke();
-  }
+  for(const s of strokes)drawStroke(c,s,w,h);
+  if(drawing&&cur&&cur.pts.length)drawStroke(c,cur,w,h);
   c.restore();c.globalCompositeOperation='source-over';
 }
 function updateHistBtns(){document.querySelector('#undoBtn').disabled=!history.length;document.querySelector('#redoBtn').disabled=!redoHist.length}
 function pushHist(entry){history.push(entry);redoHist=[];updateHistBtns()}
 let drawing=false,cur=null;
 function pt(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height,p:e.pressure||0.5}}
-canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);drawing=true;cur={color,size,eraser,pts:[pt(e)],avgP:pt(e).p};redraw()});
-canvas.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const p=pt(e);cur.pts.push(p);cur.avgP=(cur.avgP*(cur.pts.length-1)+p.p)/cur.pts.length;redraw()});
+canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);drawing=true;const p0=pt(e);cur={color,size,eraser,pts:[p0],avgP:p0.p};redraw()});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];for(const ev of evs){const p=pt(ev);cur.pts.push(p);cur.avgP=(cur.avgP*(cur.pts.length-1)+p.p)/cur.pts.length}redraw()});
 function endStroke(){if(!drawing)return;drawing=false;if(cur.pts.length){strokes.push(cur);pushHist({t:'add',s:cur})}cur=null;redraw()}
 canvas.addEventListener('pointerup',endStroke);canvas.addEventListener('pointercancel',endStroke);
 function redraw(){render(ctx,canvas.width,canvas.height)}

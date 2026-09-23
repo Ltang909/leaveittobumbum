@@ -22,8 +22,6 @@ h1,.lede{max-width:none}
 .timeline .note-row>span{flex:1;min-width:0}
 .note-del{flex:none;border:2px solid var(--line);background:#fff;border-radius:8px;padding:4px 10px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit}
 .note-del:hover{border-color:#e5484d;color:#e5484d}
-#gnForm textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit;background-color:#fff;min-height:70px}
-#gnForm textarea::placeholder{color:#c9c2b2;opacity:1}
 .followup{border:2px solid var(--ink);border-radius:14px;background:#fff;padding:14px;margin-bottom:10px;box-shadow:4px 4px 0 var(--yellow)}
 .followup .draft{background:var(--cream);border:2px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;font-size:14px;white-space:pre-wrap}
 .followup .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -63,10 +61,9 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 <div class="stat-row"><div class="stat-card"><b id="statActive">0</b><span>active applications</span></div><div class="stat-card"><b id="statInterviews">0</b><span>in interviews</span></div><div class="stat-card"><b id="statOffers">0</b><span>offers</span></div></div>
 <div class="add-import-grid">
 <section class="panel"><h2 style="margin-top:0">Add an application</h2><form id="addForm"><div class="nudge-grid"><label>Company<input name="company" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Role<input name="role" type="text" maxlength="191" required placeholder="Senior Growth Manager"></label><label>Contact name<input name="contact_name" type="text" maxlength="191" placeholder="Maya Chen"></label><label>Contact email<input name="contact_email" type="email" maxlength="191" placeholder="maya@acme.co"></label><label>Job posting URL<input name="job_url" type="url" maxlength="500" placeholder="https://acme.co/jobs/123"></label><label>Location<input name="location" type="text" maxlength="191" placeholder="Remote (US)"></label><label>Salary min<input name="salary_min" type="number" min="0" step="1" placeholder="120000"></label><label>Salary max<input name="salary_max" type="number" min="0" step="1" placeholder="140000"></label><label>Where you found it<input name="source" type="text" maxlength="191" placeholder="nanoglobals"></label><label>Date applied<input name="date_applied" type="date"></label><label>Stage<select name="stage"><option value="wishlist">Wishlist</option><option value="applied">Applied</option><option value="screening">Screening</option><option value="interview">Interview</option><option value="final">Final round</option><option value="offer">Offer</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Corporate Bum Bum</button><p id="addError" class="error"></p></form></section>
-<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>company</b> (required), role, contact name, contact email, job url, location, salary min, salary max, where found, date applied (YYYY-MM-DD), stage (wishlist, applied, screening, interview, final, offer, accepted, rejected, withdrawn), follow up (YYYY-MM-DD), notes. Rows matching an existing <b>company + role</b> get <b>updated</b> (free, empty cells keep their current values, imported notes are appended to the timeline); everything else gets added at one action each, with notes saved to their timeline. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>company</b> (required), role, contact name, contact email, job url, location, salary min, salary max, where found, date applied (YYYY-MM-DD), stage (wishlist, applied, screening, interview, final, offer, accepted, rejected, withdrawn), follow up (YYYY-MM-DD), notes. Rows matching an existing <b>company + role</b> get <b>updated</b> (free, empty cells keep their current values); everything else gets added at one action each. The notes column fills each record's notes field. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
 </div>
 <section class="panel"><div class="yp-head"><h2>Your applications</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
-<section class="panel" style="margin-top:28px"><h2 style="margin-top:0">General notes</h2><p class="lede">A scratchpad for the job hunt. Anything that is not about one specific application lives here.</p><form id="gnForm"><label>New note<textarea id="gnBody" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Add note</button></div><p id="gnError" class="error"></p></form><ul class="timeline" id="gnList"><li>Loading...</li></ul></section>
 <div id="upgrade-slot"></div>
 <div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
 <style>.nudge-grid{display:grid;gap:12px}@media(min-width:760px){.nudge-grid{grid-template-columns:1fr 1fr}}</style>
@@ -178,6 +175,7 @@ async function openDetail(id){
     <label>Salary max<input data-f="salary_max" type="number" min="0" step="1" value="${c.salary_max??''}"></label>
     <label>Date applied<input data-f="date_applied" type="date" value="${esc(c.date_applied||'')}"></label>
     <label>Follow up on<input data-f="follow_up_date" type="date" value="${esc(c.follow_up_date||'')}"></label>
+    <label>Notes<textarea data-f="notes" maxlength="5000" placeholder="Anything worth remembering...">${esc(c.notes||'')}</textarea></label>
     <div class="btnrow"><button type="button" class="button secondary" data-save="${id}">Save changes</button><button type="button" class="button secondary" data-del="${id}">Delete</button></div>
     <h3 style="margin:14px 0 4px">Log an interaction</h3>
     <label>What happened<textarea data-f="log_body" placeholder="Had the screening call, they want to move me to the hiring manager round..."></textarea></label>
@@ -187,7 +185,7 @@ async function openDetail(id){
     <ul class="timeline">${data.notes.length?data.notes.map(n=>`<li><div class="note-row"><span>${esc(n.body)}</span><button type="button" class="note-del" data-del-note="${n.id}">Delete</button></div><span class="when">${esc(n.created_at)}</span></li>`).join(''):'<li>No interactions logged yet.</li>'}</ul>
     <p class="error" data-err></p>`;
   body.querySelector('[data-save]').addEventListener('click',async()=>{
-    const payload={action:'update',id,stage:body.querySelector('[data-f=stage]').value,company:body.querySelector('[data-f=company]').value,role:body.querySelector('[data-f=role]').value,contact_name:body.querySelector('[data-f=contact_name]').value,contact_email:body.querySelector('[data-f=contact_email]').value,job_url:body.querySelector('[data-f=job_url]').value,location:body.querySelector('[data-f=location]').value,salary_min:body.querySelector('[data-f=salary_min]').value,salary_max:body.querySelector('[data-f=salary_max]').value,date_applied:body.querySelector('[data-f=date_applied]').value,follow_up_date:body.querySelector('[data-f=follow_up_date]').value};
+    const payload={action:'update',id,stage:body.querySelector('[data-f=stage]').value,company:body.querySelector('[data-f=company]').value,role:body.querySelector('[data-f=role]').value,contact_name:body.querySelector('[data-f=contact_name]').value,contact_email:body.querySelector('[data-f=contact_email]').value,job_url:body.querySelector('[data-f=job_url]').value,location:body.querySelector('[data-f=location]').value,salary_min:body.querySelector('[data-f=salary_min]').value,salary_max:body.querySelector('[data-f=salary_max]').value,date_applied:body.querySelector('[data-f=date_applied]').value,follow_up_date:body.querySelector('[data-f=follow_up_date]').value,notes:body.querySelector('[data-f=notes]').value};
     const r=await apiCall(payload);
     if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Save failed.';return}
     bbTrack('jobtrack_updated',{tool:TOOL_KEY});await refresh();openDetail(id);
@@ -227,31 +225,6 @@ document.querySelector('#modalOverlay').addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&!document.querySelector('#modalOverlay').classList.contains('hidden'))closeModal();
 });
-async function loadGeneralNotes(){
-  const{response,data}=await apiCall({action:'general_list'});
-  const el=document.querySelector('#gnList');
-  if(!response.ok){el.innerHTML=`<li class="error">${esc(data.error||'Could not load.')}</li>`;return}
-  el.innerHTML=data.notes.length?data.notes.map(n=>`<li><div class="note-row"><span>${esc(n.body)}</span><button type="button" class="note-del" data-gn-del="${n.id}">Delete</button></div><span class="when">${esc(n.created_at)}</span></li>`).join(''):'<li>No general notes yet.</li>';
-  el.querySelectorAll('[data-gn-del]').forEach(b=>b.addEventListener('click',async()=>{
-    if(!confirm('Delete this note?'))return;
-    const r=await apiCall({action:'general_delete',note_id:parseInt(b.getAttribute('data-gn-del'),10)});
-    if(!r.response.ok){document.querySelector('#gnError').textContent=r.data.error||'Delete failed.';return}
-    loadGeneralNotes();
-  }));
-}
-document.querySelector('#gnForm').addEventListener('submit',async e=>{
-  e.preventDefault();
-  const body=document.querySelector('#gnBody').value.trim();
-  const errEl=document.querySelector('#gnError');errEl.textContent='';
-  if(!body){errEl.textContent='Write the note first.';return}
-  const btn=e.target.querySelector('button');btn.disabled=true;
-  const r=await apiCall({action:'general_add',body});
-  btn.disabled=false;
-  if(!r.response.ok){errEl.textContent=r.data.error||'Add failed.';return}
-  document.querySelector('#gnBody').value='';
-  bbTrack('jobtrack_general_note',{tool:TOOL_KEY});
-  loadGeneralNotes();
-});
 async function refresh(){
   const{response,data}=await apiCall({action:'list'});
   if(!response.ok){document.querySelector('#contactList').innerHTML=`<p class="error">${esc(data.error||'Could not load.')}</p>`;return}
@@ -259,7 +232,7 @@ async function refresh(){
   document.querySelector('#statActive').textContent=data.contacts.filter(c=>ACTIVE_STAGES.includes(c.stage)).length;
   document.querySelector('#statInterviews').textContent=data.contacts.filter(c=>['screening','interview','final'].includes(c.stage)).length;
   document.querySelector('#statOffers').textContent=data.contacts.filter(c=>c.stage==='offer'||c.stage==='accepted').length;
-  renderFollowups();renderContacts();loadGeneralNotes();
+  renderFollowups();renderContacts();
 }const addForm=document.querySelector('#addForm');let attempt=crypto.randomUUID();
 addForm.addEventListener('submit',async e=>{
   e.preventDefault();
