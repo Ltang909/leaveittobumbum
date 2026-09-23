@@ -6,15 +6,15 @@ h1,.lede{max-width:none}
 .tool-group{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 12px}
 .tool-group .lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.55;flex:none}
 .seg{display:flex;height:44px;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:#fff;flex:none}
-.seg button{border:0;background:transparent;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;height:100%;display:flex;align-items:center;color:var(--ink)}
+.seg button{border:0;background:transparent;margin:0;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;height:100%;display:flex;align-items:center;color:var(--ink)}
 .seg button.on{background:var(--ink);color:#fff}
-.swatch{width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);cursor:pointer;padding:0;flex:none}
+.swatch{width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);cursor:pointer;padding:0;margin:0;flex:none}
 .swatch.on{outline:3px solid var(--ink);outline-offset:2px}
-input[type=color].pick{width:36px;height:36px;border:2px solid var(--ink);border-radius:50%;padding:2px;background:#fff;cursor:pointer;flex:none}
+input[type=color].pick{width:36px;height:36px;border:2px solid var(--ink);border-radius:50%;padding:2px;background:#fff;cursor:pointer;margin:0;flex:none}
 .size-wrap{display:flex;align-items:center;gap:10px;height:44px;flex:none}
 .size-wrap b{min-width:2ch;text-align:right}
 input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
-.iconbtn{border:2px solid var(--ink);border-radius:12px;background:#fff;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;height:44px;display:inline-flex;align-items:center;flex:none;color:var(--ink)}
+.iconbtn{border:2px solid var(--ink);border-radius:12px;background:#fff;margin:0;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;height:44px;display:inline-flex;align-items:center;flex:none;color:var(--ink)}
 .iconbtn:disabled{opacity:.35;cursor:default}
 .iconbtn.danger{border-color:#e5484d;color:#e5484d}
 .canvas-wrap{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:10px;box-shadow:4px 4px 0 var(--ink)}
