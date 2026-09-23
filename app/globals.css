@@ -34,7 +34,7 @@ h1 { margin:0; font-size:clamp(2rem,5.2vw,4.5rem); font-weight:650; }
 h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .lede { max-width:610px; font-size:1.25rem; line-height:1.55; margin:30px 0; }
 .hero-actions { display:flex; align-items:center; gap:28px; }
-.text-button { border:0; border-bottom:2px solid var(--ink); padding:7px 1px; background:transparent; font-weight:900; cursor:pointer; }
+.text-button { border:0; border-bottom:2px solid var(--ink); padding:7px 1px; background:transparent; font-weight:900; cursor:pointer; color:var(--ink); }
 .fine { font-size:.8rem; font-weight:700; opacity:.68; margin-top:18px; }
 .hero-portrait { min-height:520px; position:relative; display:grid; place-items:center; }
 .portrait-burst { position:absolute; width:92%; aspect-ratio:1; background:var(--yellow); clip-path:polygon(50% 0,59% 15%,74% 6%,77% 23%,96% 22%,86% 39%,100% 49%,84% 59%,94% 77%,75% 76%,72% 96%,57% 83%,48% 100%,39% 83%,21% 94%,21% 75%,1% 75%,14% 57%,0 48%,17% 38%,6% 21%,26% 22%,28% 4%,42% 16%); transform:rotate(7deg); }
@@ -72,7 +72,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .tool-tag { font-size:.7rem; font-weight:1000; text-transform:uppercase; letter-spacing:.1em; }
 .tool-card h3 { font-family:var(--font-display),serif; font-size:1.7rem; margin:35px 0 8px; }
 .tool-card p { margin:0; }
-.tool-card button { border:0; border-top:1.5px solid var(--ink); background:transparent; margin-top:auto; padding:15px 0 0; display:flex; justify-content:space-between; font-weight:1000; cursor:pointer; }
+.tool-card button { border:0; border-top:1.5px solid var(--ink); background:transparent; margin-top:auto; padding:15px 0 0; display:flex; justify-content:space-between; font-weight:1000; cursor:pointer; color:var(--ink); }
 .toolbox-more { margin-top:28px; }
 .request-strip { width:100%; margin-top:27px; border:var(--line); border-radius:9px; background:white; padding:20px 25px; display:flex; align-items:center; justify-content:space-between; text-align:left; cursor:pointer; box-shadow:5px 5px 0 var(--orange); }
 .request-strip span:first-child { display:flex; flex-direction:column; }.request-strip small { font-size:.86rem; margin-top:2px; }.request-strip span:last-child { font-weight:1000; }
