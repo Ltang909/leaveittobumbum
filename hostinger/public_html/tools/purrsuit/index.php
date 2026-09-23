@@ -118,6 +118,7 @@ function bindCardButtons(root){
     if(errEl)errEl.textContent='';
     bbTrack('purrsuit_deleted',{tool:TOOL_KEY});
     await refresh();
+    document.querySelector('#csvResult').textContent='';
   }));
   root.querySelectorAll('[data-copy-draft]').forEach(b=>b.addEventListener('click',async()=>{
     const c=DATA.contacts.find(x=>x.id===parseInt(b.getAttribute('data-copy-draft'),10))||DATA.followUpDue.find(x=>x.id===parseInt(b.getAttribute('data-copy-draft'),10))||DATA.goneQuiet.find(x=>x.id===parseInt(b.getAttribute('data-copy-draft'),10));
@@ -162,6 +163,7 @@ async function openDetail(id){
     const r=await apiCall({action:'delete',id});
     if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Delete failed.';return}
     closeModal();await refresh();
+    document.querySelector('#csvResult').textContent='';
   });
   body.querySelector('[data-log]').addEventListener('click',async()=>{
     const noteBody=body.querySelector('[data-f=log_body]').value.trim();
