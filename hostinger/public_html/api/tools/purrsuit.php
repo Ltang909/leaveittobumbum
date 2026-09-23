@@ -233,8 +233,8 @@ if ($action === 'import') {
         $followUp = $rec['follow_up_date'] === '' ? null : rolodex_clean_date($rec['follow_up_date']);
         if ($followUp === false) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: invalid follow-up date (use YYYY-MM-DD)."; continue; }
         // Match existing contact by name (case-insensitive). Empty cells leave existing values alone.
-        $stmt = $pdo->prepare('SELECT id FROM rolodex_contacts WHERE user_id = ? AND LOWER(name) = LOWER(?) LIMIT 1');
-        $stmt->execute([$userId, $rec['name']]);
+        $stmt = $pdo->prepare('SELECT id FROM rolodex_contacts WHERE user_id = ? AND LOWER(name) = LOWER(?) AND LOWER(company) = LOWER(?) LIMIT 1');
+        $stmt->execute([$userId, $rec['name'], $rec['company']]);
         $existing = $stmt->fetch();
         if ($existing) {
             $sets = [];
@@ -374,7 +374,9 @@ if ($action === 'log') {
         $stmt = $pdo->prepare('UPDATE rolodex_contacts SET follow_up_date = ?, last_touch_at = NOW() WHERE id = ? AND user_id = ?');
         $stmt->execute([$nextFollowUp, $id, $userId]);
     } else {
-        $stmt = $pdo->prepare('UPDATE rolodex_contacts SET last_touch_at = NOW() WHERE id = ? AND user_id = ?');
+        // No new date given: the reminder that prompted this log is handled,
+        // so clear it if it was already due. A future date stays untouched.
+        $stmt = $pdo->prepare('UPDATE rolodex_contacts SET last_touch_at = NOW(), follow_up_date = CASE WHEN follow_up_date IS NOT NULL AND follow_up_date <= CURDATE() THEN NULL ELSE follow_up_date END WHERE id = ? AND user_id = ?');
         $stmt->execute([$id, $userId]);
     }
     jsonResponse(['ok' => true, 'note_id' => (int) $pdo->lastInsertId()]);

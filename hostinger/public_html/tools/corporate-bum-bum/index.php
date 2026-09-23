@@ -1,5 +1,5 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor(billingUser($user)) : null; ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Purrsuit | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=4"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Corporate Bum Bum | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=4"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1,.lede{max-width:none}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer}
@@ -7,8 +7,8 @@ h1,.lede{max-width:none}
 .contact{border:2px solid var(--line);border-radius:14px;background:#fff;padding:14px;margin-bottom:10px}
 .contact .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .contact .top b{font-size:17px}
-.stage{font-size:12px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:2px 10px;text-transform:capitalize}
-.stage.new{background:#8eb5ff}.stage.talking{background:var(--yellow)}.stage.quoted{background:#ff6b35;color:#fff}.stage.won{background:#2f9e5f;color:#fff}.stage.lost{background:#e5484d;color:#fff}
+.stage{font-size:12px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:2px 10px}
+.stage.wishlist{background:#d8d3c8}.stage.applied{background:#8eb5ff}.stage.screening{background:#c3a6f2}.stage.interview{background:#ffd84d}.stage.final{background:#f7a9ca}.stage.offer{background:#83d6b2}.stage.accepted{background:#17150f;color:#fff}.stage.rejected{background:#e5484d;color:#fff}.stage.withdrawn{background:#8a8578;color:#fff}
 .meta{font-size:13px;opacity:.8;margin:6px 0 0}
 .detail{margin-top:12px;border-top:2px dashed var(--line);padding-top:12px}
 .detail label{display:block;margin:8px 0}
@@ -26,7 +26,7 @@ h1,.lede{max-width:none}
 #addForm textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit;background-color:#fff;min-height:70px}
 .add-import-grid{display:grid;gap:28px;margin-top:28px}
 .add-import-grid .panel{margin-top:0;margin-bottom:0}
-@media(min-width:760px){.add-import-grid{grid-template-columns:1fr 1fr;gap:16px}}
+#addForm input::placeholder,#addForm textarea::placeholder,.modal input::placeholder,.modal textarea::placeholder{color:#c9c2b2;opacity:1}
 .span-all{grid-column:1/-1}
 .yp-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px}
 .yp-head h2{margin:0!important}
@@ -49,55 +49,65 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .stat-card{flex:1;min-width:140px;border:2px solid var(--line);border-radius:14px;background:#fff;padding:12px;text-align:center}
 .stat-card b{font-size:22px;display:block}
 .stat-card span{font-size:12px;font-weight:700;opacity:.75}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purrsuit"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-wink-blep.png" alt="Bum Bum winking"><h1>Never let a lead go cold.</h1><p class="lede">Purrsuit is a tiny CRM for people who hate CRMs. Add the humans, move them down the pipeline, and every morning Purrsuit tells you exactly who to follow up with and what to say. Adding a contact uses one action. Everything else is free.</p>
-<?php if (!$user): ?><section class="panel"><h2>Sign in to use Purrsuit</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section><?php else: ?>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Corporate Bum Bum"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum looking professional"><h1>Your job hunt, in a suit.</h1><p class="lede">Corporate Bum Bum is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
+<?php if (!$user): ?><section class="panel"><h2>Sign in to use Corporate Bum Bum</h2><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
-<div class="stat-row"><div class="stat-card"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card"><b id="statWon">$0</b><span>won</span></div><div class="stat-card"><b id="statCount">0</b><span>contacts</span></div></div>
+<div class="stat-row"><div class="stat-card"><b id="statActive">0</b><span>active applications</span></div><div class="stat-card"><b id="statInterviews">0</b><span>in interviews</span></div><div class="stat-card"><b id="statOffers">0</b><span>offers</span></div></div>
 <div class="add-import-grid">
-<section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Company<input name="company" type="text" maxlength="191" placeholder="Acme Inc"></label><label>Title<input name="title" type="text" maxlength="191" placeholder="Head of Growth"></label><label>Email<input name="email" type="email" maxlength="191" placeholder="jordan@acme.co"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Purrsuit</button><p id="addError" class="error"></p></form></section>
-<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>name</b> (required), company, title, email, where you met, deal value, stage (new, talking, quoted, won, lost), follow up (YYYY-MM-DD), notes. Rows matching an existing <b>name + company</b> get <b>updated</b> (free, empty cells keep their current values); everything else gets added at one action each, with notes saved to their timeline. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Add an application</h2><form id="addForm"><div class="nudge-grid"><label>Company<input name="company" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Role<input name="role" type="text" maxlength="191" required placeholder="Senior Growth Manager"></label><label>Contact name<input name="contact_name" type="text" maxlength="191" placeholder="Maya Chen"></label><label>Contact email<input name="contact_email" type="email" maxlength="191" placeholder="maya@acme.co"></label><label>Job posting URL<input name="job_url" type="url" maxlength="500" placeholder="https://acme.co/jobs/123"></label><label>Location<input name="location" type="text" maxlength="191" placeholder="Remote (US)"></label><label>Salary min<input name="salary_min" type="number" min="0" step="1" placeholder="120000"></label><label>Salary max<input name="salary_max" type="number" min="0" step="1" placeholder="140000"></label><label>Where you found it<input name="source" type="text" maxlength="191" placeholder="nanoglobals"></label><label>Date applied<input name="date_applied" type="date"></label><label>Stage<select name="stage"><option value="wishlist">Wishlist</option><option value="applied">Applied</option><option value="screening">Screening</option><option value="interview">Interview</option><option value="final">Final round</option><option value="offer">Offer</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Corporate Bum Bum</button><p id="addError" class="error"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>company</b> (required), role, contact name, contact email, job url, location, salary min, salary max, where found, date applied (YYYY-MM-DD), stage (wishlist, applied, screening, interview, final, offer, accepted, rejected, withdrawn), follow up (YYYY-MM-DD), notes. Rows matching an existing <b>company + role</b> get <b>updated</b> (free, empty cells keep their current values, imported notes are appended to the timeline); everything else gets added at one action each, with notes saved to their timeline. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
 </div>
-<section class="panel"><div class="yp-head"><h2>Your people</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
+<section class="panel"><div class="yp-head"><h2>Your applications</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div id="upgrade-slot"></div>
 <div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
 <style>.nudge-grid{display:grid;gap:12px}@media(min-width:760px){.nudge-grid{grid-template-columns:1fr 1fr}}</style>
 <script>
-const TOOL_KEY='purrsuit';
+const TOOL_KEY='corporate-bum-bum';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
-const STAGES=['new','talking','quoted','won','lost'];
+const STAGES=['wishlist','applied','screening','interview','final','offer','accepted','rejected','withdrawn'];
+const STAGE_LABELS={wishlist:'Wishlist',applied:'Applied',screening:'Screening',interview:'Interview',final:'Final round',offer:'Offer',accepted:'Accepted',rejected:'Rejected',withdrawn:'Withdrawn'};
+const ACTIVE_STAGES=['wishlist','applied','screening','interview','final','offer'];
 let DATA={contacts:[],followUpDue:[],goneQuiet:[]};
 let FILTER='all';
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
 function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function money(n){return new Intl.NumberFormat(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n||0)}
-async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/purrsuit.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
-function stageBadge(s){return `<span class="stage ${esc(s)}">${esc(s)}</span>`}
+function salaryRange(c){
+  const lo=c.salary_min,hi=c.salary_max;
+  if(lo==null&&hi==null)return '';
+  if(lo!=null&&hi!=null)return money(lo)+' - '+money(hi);
+  return money(lo!=null?lo:hi);
+}
+function stageLabel(s){return STAGE_LABELS[s]||s}
+function stageBadge(s){return `<span class="stage ${esc(s)}">${esc(stageLabel(s))}</span>`}
+function appTitle(c){return c.role?`${c.role} at ${c.company}`:c.company}
+async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/corporate-bum-bum.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
 function renderFollowups(){
   const el=document.querySelector('#followupList');
   const items=[...DATA.followUpDue.map(c=>({...c,quiet:false})),...DATA.goneQuiet.map(c=>({...c,quiet:true}))];
   if(!items.length){el.innerHTML='<p class="lede">All clear. Nobody needs a nudge today. Go touch grass.</p>';return}
-  el.innerHTML=items.map(c=>`<div class="followup${c.quiet?' quiet':''}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}${c.quiet?'<span class="stage">gone quiet</span>':''}</div>${c.deal_value?`<p class="meta">${money(c.deal_value)} potential</p>`:''}<div class="draft">${esc(c.draft)}</div><div class="btnrow"><button type="button" class="button secondary" data-copy-draft="${c.id}">Copy message</button><button type="button" class="button secondary" data-open="${c.id}">Log follow-up</button><button type="button" class="button secondary" data-clear-followup="${c.id}">Clear</button></div></div>`).join('');
+  el.innerHTML=items.map(c=>`<div class="followup${c.quiet?' quiet':''}"><div class="top"><b>${esc(appTitle(c))}</b>${stageBadge(c.stage)}${c.quiet?'<span class="stage">gone quiet</span>':''}</div>${salaryRange(c)?`<p class="meta">${salaryRange(c)}</p>`:''}<div class="draft">${esc(c.draft)}</div><div class="btnrow"><button type="button" class="button secondary" data-copy-draft="${c.id}">Copy message</button><button type="button" class="button secondary" data-open="${c.id}">Log follow-up</button><button type="button" class="button secondary" data-clear-followup="${c.id}">Clear</button></div></div>`).join('');
   bindCardButtons(el);
 }
 function contactCard(c){
   const parts=[];
-  if(c.company)parts.push(esc(c.company));
-  if(c.title)parts.push(esc(c.title));
-  if(c.deal_value)parts.push(money(c.deal_value));
-  if(c.contact_info)parts.push(esc(c.contact_info));
-  if(c.source)parts.push('met '+esc(c.source));
+  if(c.location)parts.push(esc(c.location));
+  const sr=salaryRange(c);if(sr)parts.push(sr);
+  if(c.contact_name)parts.push(esc(c.contact_name));
+  if(c.source)parts.push('found on '+esc(c.source));
+  if(c.date_applied)parts.push('applied '+esc(c.date_applied));
   if(c.follow_up_date)parts.push('follow up '+esc(c.follow_up_date));
-  return `<div class="contact" data-id="${c.id}"><div class="top"><b>${esc(c.name)}</b>${stageBadge(c.stage)}<span style="flex:1"></span><button type="button" class="button secondary" data-open="${c.id}">Open</button><button type="button" class="button secondary" data-del-card="${c.id}">Delete</button></div>${parts.length?`<p class="meta">${parts.join(' · ')}</p>`:''}</div>`;
+  return `<div class="contact" data-id="${c.id}"><div class="top"><b>${esc(appTitle(c))}</b>${stageBadge(c.stage)}<span style="flex:1"></span><button type="button" class="button secondary" data-open="${c.id}">Open</button><button type="button" class="button secondary" data-del-card="${c.id}">Delete</button></div>${parts.length?`<p class="meta">${parts.join(' · ')}</p>`:''}</div>`;
 }
 function renderContacts(){
   const el=document.querySelector('#contactList');
   const list=DATA.contacts.filter(c=>FILTER==='all'||c.stage===FILTER);
-  document.querySelector('#stageChips').innerHTML=['all',...STAGES].map(s=>`<button type="button" class="chip${FILTER===s?' on':''}" data-filter="${s}">${s==='all'?'All':s} (${s==='all'?DATA.contacts.length:(DATA.counts[s]||0)})</button>`).join('');
+  document.querySelector('#stageChips').innerHTML=['all',...STAGES].map(s=>`<button type="button" class="chip${FILTER===s?' on':''}" data-filter="${s}">${s==='all'?'All':stageLabel(s)} (${s==='all'?DATA.contacts.length:(DATA.counts[s]||0)})</button>`).join('');
   document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{FILTER=b.getAttribute('data-filter');renderContacts();}));
-  if(!list.length){el.innerHTML='<p class="lede">Nobody here yet. Add your first person above.</p>';return}
+  if(!list.length){el.innerHTML='<p class="lede">Nothing here yet. Add your first application above.</p>';return}
   el.innerHTML=list.map(contactCard).join('');
   bindCardButtons(el);
 }
@@ -124,7 +134,7 @@ function bindCardButtons(root){
     const errEl=document.querySelector('#listError');
     if(!response.ok){b.dataset.armed='';b.textContent=b.dataset.orig||'Delete';if(errEl)errEl.textContent=data.error||'Delete failed.';return}
     if(errEl)errEl.textContent='';
-    bbTrack('purrsuit_deleted',{tool:TOOL_KEY});
+    bbTrack('jobtrack_deleted',{tool:TOOL_KEY});
     await refresh();
     document.querySelector('#csvResult').textContent='';
   }));
@@ -133,7 +143,7 @@ function bindCardButtons(root){
     if(!c||!c.draft)return;
     try{await navigator.clipboard.writeText(c.draft);b.textContent='Copied!'}catch(_){b.textContent='Copy failed'}
     setTimeout(()=>{b.textContent='Copy message'},2000);
-    bbTrack('purrsuit_draft_copied',{tool:TOOL_KEY});
+    bbTrack('jobtrack_draft_copied',{tool:TOOL_KEY});
   }));
 }
 async function openDetail(id){
@@ -145,29 +155,38 @@ async function openDetail(id){
   const{response,data}=await apiCall({action:'get',id});
   if(!response.ok){body.innerHTML=`<p class="error">${esc(data.error||'Could not load.')}</p>`;return}
   const c=data.contact;
+  const sr=salaryRange(c);
   body.innerHTML=`
-    <h2>${esc(c.name)}</h2>
-    <p class="lede">${c.company?esc(c.company)+' · ':''}${c.title?esc(c.title)+' · ':''}${c.contact_info?esc(c.contact_info)+' · ':''}${stageBadge(c.stage)}</p>
-    <label>Stage<select data-f="stage">${STAGES.map(s=>`<option value="${s}"${c.stage===s?' selected':''}>${s}</option>`).join('')}</select></label>
-    <label>Title<input data-f="title" type="text" maxlength="191" value="${esc(c.title||'')}" placeholder="Head of Growth"></label>
-    <label>Deal value<input data-f="deal_value" type="number" min="0" step="0.01" value="${c.deal_value??''}" placeholder="0"></label>
+    <h2>${esc(appTitle(c))}</h2>
+    <p class="lede">${c.location?esc(c.location)+' · ':''}${sr?sr+' · ':''}${c.contact_name?esc(c.contact_name)+' · ':''}${stageBadge(c.stage)}</p>
+    ${c.job_url?`<p><a href="${esc(c.job_url)}" target="_blank" rel="noopener">View job posting</a></p>`:''}
+    <label>Stage<select data-f="stage">${STAGES.map(s=>`<option value="${s}"${c.stage===s?' selected':''}>${stageLabel(s)}</option>`).join('')}</select></label>
+    <label>Company<input data-f="company" type="text" maxlength="191" value="${esc(c.company||'')}" placeholder="Acme Inc"></label>
+    <label>Role<input data-f="role" type="text" maxlength="191" value="${esc(c.role||'')}" placeholder="Senior Growth Manager"></label>
+    <label>Contact name<input data-f="contact_name" type="text" maxlength="191" value="${esc(c.contact_name||'')}" placeholder="Maya Chen"></label>
+    <label>Contact email<input data-f="contact_email" type="email" maxlength="191" value="${esc(c.contact_email||'')}" placeholder="maya@acme.co"></label>
+    <label>Job posting URL<input data-f="job_url" type="url" maxlength="500" value="${esc(c.job_url||'')}"></label>
+    <label>Location<input data-f="location" type="text" maxlength="191" value="${esc(c.location||'')}" placeholder="Remote (US)"></label>
+    <label>Salary min<input data-f="salary_min" type="number" min="0" step="1" value="${c.salary_min??''}"></label>
+    <label>Salary max<input data-f="salary_max" type="number" min="0" step="1" value="${c.salary_max??''}"></label>
+    <label>Date applied<input data-f="date_applied" type="date" value="${esc(c.date_applied||'')}"></label>
     <label>Follow up on<input data-f="follow_up_date" type="date" value="${esc(c.follow_up_date||'')}"></label>
     <div class="btnrow"><button type="button" class="button secondary" data-save="${id}">Save changes</button><button type="button" class="button secondary" data-del="${id}">Delete</button></div>
     <h3 style="margin:14px 0 4px">Log an interaction</h3>
-    <label>What happened<textarea data-f="log_body" placeholder="Had a great call, they want a proposal by Friday..."></textarea></label>
+    <label>What happened<textarea data-f="log_body" placeholder="Had the screening call, they want to move me to the hiring manager round..."></textarea></label>
     <label>Next follow-up<input data-f="log_next" type="date" value="${esc(c.follow_up_date||'')}"><span class="meta">Leave empty to clear the reminder.</span></label>
     <div class="btnrow"><button type="button" class="button secondary" data-log="${id}">Log it</button></div>
     <h3 style="margin:14px 0 4px">Timeline</h3>
     <ul class="timeline">${data.notes.length?data.notes.map(n=>`<li>${esc(n.body)}<br><span class="when">${esc(n.created_at)}</span></li>`).join(''):'<li>No interactions logged yet.</li>'}</ul>
     <p class="error" data-err></p>`;
   body.querySelector('[data-save]').addEventListener('click',async()=>{
-    const payload={action:'update',id,stage:body.querySelector('[data-f=stage]').value,title:body.querySelector('[data-f=title]').value,deal_value:body.querySelector('[data-f=deal_value]').value,follow_up_date:body.querySelector('[data-f=follow_up_date]').value};
+    const payload={action:'update',id,stage:body.querySelector('[data-f=stage]').value,company:body.querySelector('[data-f=company]').value,role:body.querySelector('[data-f=role]').value,contact_name:body.querySelector('[data-f=contact_name]').value,contact_email:body.querySelector('[data-f=contact_email]').value,job_url:body.querySelector('[data-f=job_url]').value,location:body.querySelector('[data-f=location]').value,salary_min:body.querySelector('[data-f=salary_min]').value,salary_max:body.querySelector('[data-f=salary_max]').value,date_applied:body.querySelector('[data-f=date_applied]').value,follow_up_date:body.querySelector('[data-f=follow_up_date]').value};
     const r=await apiCall(payload);
     if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Save failed.';return}
-    bbTrack('purrsuit_updated',{tool:TOOL_KEY});await refresh();openDetail(id);
+    bbTrack('jobtrack_updated',{tool:TOOL_KEY});await refresh();openDetail(id);
   });
   body.querySelector('[data-del]').addEventListener('click',async()=>{
-    if(!confirm('Delete '+c.name+' and their whole timeline?'))return;
+    if(!confirm('Delete this application and its whole timeline?'))return;
     const r=await apiCall({action:'delete',id});
     if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Delete failed.';return}
     closeModal();await refresh();
@@ -181,7 +200,7 @@ async function openDetail(id){
     if(nextVal!==(c.follow_up_date||''))payload.follow_up_date=nextVal;
     const r=await apiCall(payload);
     if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Log failed.';return}
-    bbTrack('purrsuit_logged',{tool:TOOL_KEY});await refresh();openDetail(id);
+    bbTrack('jobtrack_logged',{tool:TOOL_KEY});await refresh();openDetail(id);
   });
 }
 function closeModal(){
@@ -199,11 +218,9 @@ async function refresh(){
   const{response,data}=await apiCall({action:'list'});
   if(!response.ok){document.querySelector('#contactList').innerHTML=`<p class="error">${esc(data.error||'Could not load.')}</p>`;return}
   DATA=data;
-  const pipe=data.contacts.filter(c=>['new','talking','quoted'].includes(c.stage)).reduce((s,c)=>s+(c.deal_value||0),0);
-  const won=data.contacts.filter(c=>c.stage==='won').reduce((s,c)=>s+(c.deal_value||0),0);
-  document.querySelector('#statPipeline').textContent=money(pipe);
-  document.querySelector('#statWon').textContent=money(won);
-  document.querySelector('#statCount').textContent=data.contacts.length;
+  document.querySelector('#statActive').textContent=data.contacts.filter(c=>ACTIVE_STAGES.includes(c.stage)).length;
+  document.querySelector('#statInterviews').textContent=data.contacts.filter(c=>['screening','interview','final'].includes(c.stage)).length;
+  document.querySelector('#statOffers').textContent=data.contacts.filter(c=>c.stage==='offer'||c.stage==='accepted').length;
   renderFollowups();renderContacts();
 }
 const addForm=document.querySelector('#addForm');let attempt=crypto.randomUUID();
@@ -231,15 +248,15 @@ document.querySelector('#csvDownload').addEventListener('click',async e=>{
   btn.disabled=false;
   if(!response.ok||!data.csv){document.querySelector('#csvError').textContent=data.error||'Download failed.';return}
   const blob=new Blob([data.csv],{type:'text/csv'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=data.filename||'purrsuit-export.csv';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=data.filename||'corporate-bum-bum-export.csv';a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
-  bbTrack('purrsuit_exported',{tool:TOOL_KEY});
+  bbTrack('jobtrack_exported',{tool:TOOL_KEY});
 });
 const csvForm=document.querySelector('#csvForm');
 document.querySelector('#tplLink').addEventListener('click',e=>{
   e.preventDefault();
-  const blob=new Blob(['name,company,title,email,where you met,deal value,stage,follow up,notes\nJordan Lee,Acme Inc,Head of Growth,jordan@acme.co,Indie Hackers meetup,2500,talking,2026-10-01,"Met at the mixer, wants a proposal by Friday"\nPriya Shah,Buildly,Product Growth Lead,priya@buildly.co,Twitter DM,800,new,,\n'],{type:'text/csv'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='purrsuit-template.csv';a.click();
+  const blob=new Blob(['company,role,contact name,contact email,job url,location,salary min,salary max,where found,date applied,stage,follow up,notes\nAcme Inc,Senior Growth Manager,Maya Chen,maya@acme.co,https://acme.co/jobs/123,Remote (US),120000,140000,nanoglobals,2026-09-23,applied,2026-09-30,"Applied via the careers page, recruiter reached out on LinkedIn"\nBuildly,Product Growth Lead,,,,Remote,100000,120000,LinkedIn,,wishlist,,\n'],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='corporate-bum-bum-template.csv';a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 });
 csvForm.addEventListener('submit',async e=>{
@@ -262,7 +279,7 @@ csvForm.addEventListener('submit',async e=>{
   }
   if(!response.ok){errEl.textContent=data.error||'Import failed.';return}
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-  bbTrack('purrsuit_imported',{tool:TOOL_KEY,imported:data.imported});
+  bbTrack('jobtrack_imported',{tool:TOOL_KEY,imported:data.imported});
   document.querySelector('#usage').textContent=data.usage.remaining+' actions remaining this month.';
   let msg=`Added ${data.imported} new, updated ${data.updated}.`;
   if(data.skipped)msg+=` Skipped ${data.skipped}.`;
