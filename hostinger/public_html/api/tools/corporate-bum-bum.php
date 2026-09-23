@@ -24,7 +24,7 @@ function ensureJobtrackSchema(): void {
         salary_max DECIMAL(12,2) NULL,
         source VARCHAR(191) NOT NULL DEFAULT '',
         date_applied DATE NULL,
-        stage VARCHAR(16) NOT NULL DEFAULT 'wishlist',
+        stage VARCHAR(16) NOT NULL DEFAULT 'applied',
         follow_up_date DATE NULL,
         notes MEDIUMTEXT NOT NULL DEFAULT '',
         last_touch_at TIMESTAMP NULL,
@@ -176,7 +176,7 @@ if ($action === 'add') {
     $salaryMax = jobtrack_clean_salary($input['salary_max'] ?? null);
     $source = trim((string) ($input['source'] ?? ''));
     $dateApplied = jobtrack_clean_date($input['date_applied'] ?? null);
-    $stage = (string) ($input['stage'] ?? 'wishlist');
+    $stage = (string) ($input['stage'] ?? 'applied');
     $followUp = jobtrack_clean_date($input['follow_up_date'] ?? null);
     $notes = trim((string) ($input['notes'] ?? ''));
     if ($company === '') jsonResponse(['error' => 'Give the application a company.'], 422);
@@ -290,7 +290,7 @@ if ($action === 'import') {
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
             $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-            $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, $rec['source'], $dateApplied, $stageValid ? $stage : 'wishlist', $followUp, $rec['notes']]);
+            $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, $rec['source'], $dateApplied, $stageValid ? $stage : 'applied', $followUp, $rec['notes']]);
             $imported++;
         }
     }
