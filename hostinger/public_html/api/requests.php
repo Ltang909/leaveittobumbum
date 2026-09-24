@@ -32,10 +32,13 @@ $title = trim((string) ($input['title'] ?? ''));
 $details = trim((string) ($input['details'] ?? ''));
 if ($title === '' || mb_strlen($title) > 180) jsonResponse(['error' => 'Give the request a short name.'], 422);
 if ($details === '' || mb_strlen($details) > 5000) jsonResponse(['error' => 'Describe the task and what done looks like.'], 422);
-$period = periodKey($bill);
+$monthStart = periodKey($bill) . '-01 00:00:00';
 try {
-    $open = db()->prepare("SELECT id FROM custom_requests WHERE user_id = ? AND status = 'open' COLLATE utf8mb4_unicode_ci AND DATE_FORMAT(requested_at, '%Y-%m') = ? LIMIT 1");
-    $open->execute([$billId, $period]);
+    // NOTE: compare requested_at as a datetime range, never via
+    // DATE_FORMAT(requested_at, ...) = ?. DATE_FORMAT() on a column returns
+    // utf8mb4_general_ci here, which clashes with the connection collation.
+    $open = db()->prepare("SELECT id FROM custom_requests WHERE user_id = ? AND status = 'open' COLLATE utf8mb4_unicode_ci AND requested_at >= ? LIMIT 1");
+    $open->execute([$billId, $monthStart]);
     if ($open->fetch()) jsonResponse(['error' => 'One request per month. The current one is still in progress.'], 409);
     $stmt = db()->prepare('INSERT INTO custom_requests (user_id, title, details, deadline_at) VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 36 HOUR))');
     $stmt->execute([$billId, $title, $details]);
