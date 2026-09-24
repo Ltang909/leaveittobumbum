@@ -45,19 +45,24 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 .draft-box{border:1px solid #d9cdae}
 .modal-close{font-weight:700}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Invoice Chaser"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum in a bowtie, ready to collect"><h1>Get paid without the awkward.</h1><p class="lede">Invoice Chaser tracks who owes you what, writes the chase email in the right tone for how overdue it is, and emails you a reminder digest so nothing slips. Adding an invoice uses one action. Everything else is free.</p>
+.chaching{text-align:center;padding:32px 20px}
+.chaching img{width:110px;height:auto}
+.chaching-amount{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:clamp(2.5rem,9vw,4rem);margin:6px 0;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Invoice Chaser"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum in a bowtie, ready to collect"><h1>Get paid without the awkward.</h1><p class="lede">Invoice Chaser tracks who owes you what — and it can be the bad cop so you don't have to. Flip any chase email to send as <b>Bum Bum, your billing assistant</b>, and Bum Bum learns how each client actually pays, so it knows when to nudge and when to sit tight. Adding an invoice uses one action. Everything else is free.</p>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to chase invoices</h2><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <div class="stat-row">
   <div class="stat-card"><b id="statOutstanding">–</b><span>outstanding</span><small id="statOutstandingBy"></small></div>
   <div class="stat-card"><b id="statOverdue">–</b><span>overdue</span><small id="statOverdueBy"></small></div>
-  <div class="stat-card"><b id="statOpen">0</b><span>open invoices</span><small id="statPaid"></small></div>
+  <div class="stat-card"><b id="statRecovered">–</b><span>recovered this month</span><small id="statRecoveredBy"></small></div>
 </div>
 <section class="panel"><div class="yp-head" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:0">Your chase list</h2><button type="button" class="button" id="remindBtn">Email me the chase list</button></div><p class="lede" style="margin-top:8px">One email with everything overdue and upcoming, sent to <?= htmlspecialchars($user['email'] ?? '') ?>. Uses one action; repeat sends on the same day are free.</p><p id="remindMsg" class="lede"></p><div class="chips" id="filterChips"></div><div id="invoiceList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <section class="panel"><h2 style="margin-top:0">Add an invoice</h2><form id="addForm"><div class="form-grid"><label>Client name<input name="client_name" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Amount<input name="amount" type="number" min="0.01" step="0.01" required placeholder="1200.00"></label><label>Currency<select name="currency"><option value="USD">USD ($)</option><option value="CAD">CAD (CA$)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option></select></label><label>Invoice # (optional)<input name="invoice_no" type="text" maxlength="64" placeholder="INV-2026-014"></label><label>Due date<input name="due_date" type="date" required></label><label>Notes (optional)<textarea name="notes" maxlength="2000" placeholder="Net 30, sent Sep 1..."></textarea></label></div><button class="button" style="margin-top:12px">Add invoice</button><p id="addError" class="error"></p></form></section>
 <div id="upgrade-slot"></div>
 <div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
+<div class="modal-overlay hidden" id="chachingOverlay"><div class="modal chaching" role="dialog" aria-modal="true"><img src="/bum/cat-bowtie.png" alt="Bum Bum celebrating"><div class="chaching-amount" id="chachingAmount"></div><p class="lede" id="chachingSub"></p><button type="button" class="button" id="chachingClose">Nice.</button></div></div>
 <script>
 const TOOL_KEY='invoice-chaser';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
@@ -83,7 +88,11 @@ function bucket(inv){
 function invoiceCard(inv){
   const parts=[];
   if(inv.invoice_no)parts.push('invoice '+esc(inv.invoice_no));
-  if(inv.days_overdue>0)parts.push(`was due ${esc(inv.due_date)}`);
+  if(inv.status==='open'&&inv.days_overdue>0)parts.push(`was due ${esc(inv.due_date)}`);
+  if(inv.intel&&inv.intel.count>=1){
+    const avg=inv.intel.avg_late;
+    parts.push(avg<=0?'usually pays on time':`usually pays ~${avg} days late`);
+  }
   if(inv.notes)parts.push(esc(inv.notes));
   return `<div class="invoice"><div class="top"><b>${esc(inv.client_name)}</b><span class="amount">${esc(inv.amount_display)}</span>${badge(inv)}<span style="flex:1"></span>`
     +(inv.status==='open'
@@ -115,18 +124,28 @@ function renderStats(){
   const od=open.filter(i=>i.days_overdue>0).length;
   document.querySelector('#statOverdue').textContent=od? (totO===1?fmtCur(byCurOver):od+' invoices') : 'None';
   document.querySelector('#statOverdueBy').textContent=totO>1?fmtCur(byCurOver):'';
-  document.querySelector('#statOpen').textContent=open.length;
-  const paid=DATA.invoices.filter(i=>i.status==='paid').length;
-  document.querySelector('#statPaid').textContent=paid?paid+' paid, nice':'';
+  const rec=DATA.stats.recovered||{};
+  const recKeys=Object.keys(rec).sort();
+  const recAmounts={};recKeys.forEach(c=>recAmounts[c]=rec[c].total);
+  const recCount=recKeys.reduce((s,c)=>s+rec[c].count,0);
+  document.querySelector('#statRecovered').textContent=recCount?(recKeys.length===1?fmtCur(recAmounts):recCount+' invoices'):'$0.00';
+  document.querySelector('#statRecoveredBy').textContent=recKeys.length>1?fmtCur(recAmounts):(recCount?open.length+' open · '+DATA.invoices.filter(i=>i.status==='paid').length+' paid':'');
 }
 function bindButtons(root){
   root.querySelectorAll('[data-draft]').forEach(b=>b.addEventListener('click',()=>openDraft(parseInt(b.getAttribute('data-draft'),10))));
   root.querySelectorAll('[data-paid]').forEach(b=>b.addEventListener('click',async()=>{
+    const id=parseInt(b.getAttribute('data-paid'),10);
+    const inv=DATA.invoices.find(x=>x.id===id);
     b.disabled=true;
-    const{response,data}=await apiCall({action:'update',id:parseInt(b.getAttribute('data-paid'),10),status:'paid'});
+    const{response,data}=await apiCall({action:'update',id,status:'paid'});
     b.disabled=false;
     if(!response.ok){document.querySelector('#listError').textContent=data.error||'Update failed.';return}
-    bbTrack('chaser_paid',{tool:TOOL_KEY});await refresh();
+    bbTrack('chaser_paid',{tool:TOOL_KEY});
+    document.querySelector('#chachingAmount').textContent='+'+(inv?inv.amount_display:'');
+    document.querySelector('#chachingSub').textContent=inv?`${inv.client_name} paid up. That's real money back in your pocket.`:'Paid! Get that money.';
+    document.querySelector('#chachingOverlay').classList.remove('hidden');
+    document.body.style.overflow='hidden';
+    await refresh();
   }));
   root.querySelectorAll('[data-reopen]').forEach(b=>b.addEventListener('click',async()=>{
     b.disabled=true;
@@ -145,17 +164,26 @@ function bindButtons(root){
     bbTrack('chaser_deleted',{tool:TOOL_KEY});await refresh();
   }));
 }
+let DRAFT_VOICE='me';
 async function openDraft(id){
-  const inv=DATA.invoices.find(x=>x.id===id);
   const overlay=document.querySelector('#modalOverlay'),body=document.querySelector('#modalBody');
   overlay.classList.remove('hidden');document.body.style.overflow='hidden';
+  DRAFT_VOICE='me';
   body.innerHTML='<p class="lede">Writing your chase email...</p>';
-  const{response,data}=await apiCall({action:'draft',id});
+  await loadDraft(id);
+}
+async function loadDraft(id){
+  const inv=DATA.invoices.find(x=>x.id===id);
+  const body=document.querySelector('#modalBody');
+  const{response,data}=await apiCall({action:'draft',id,voice:DRAFT_VOICE});
   if(!response.ok){body.innerHTML=`<p class="error">${esc(data.error||'Could not load.')}</p>`;return}
   const tone=inv.days_overdue<0?'Heads-up':inv.days_overdue<=14?'Gentle nudge':inv.days_overdue<=30?'Firm follow-up':'Final notice';
   body.innerHTML=`<h2>Chase draft</h2><p class="lede">${esc(inv.client_name)} · ${esc(inv.amount_display)} · <b>${tone}</b> (${inv.days_overdue<0?'not due yet':inv.days_overdue===0?'due today':inv.days_overdue+' days overdue'})</p>`
+    +`<div class="chips"><button type="button" class="chip${DRAFT_VOICE==='me'?' on':''}" data-voice="me">Send as me</button><button type="button" class="chip${DRAFT_VOICE==='assistant'?' on':''}" data-voice="assistant">Send as Bum Bum, my billing assistant</button></div>`
+    +`<p class="meta" style="margin:2px 0 10px">Bum Bum's take: ${esc(data.take)}</p>`
     +`<div class="draft-subject">Subject: ${esc(data.subject)}</div><div class="draft-box">${esc(data.body)}</div>`
     +`<div class="btnrow"><button type="button" class="button secondary" id="copySubject">Copy subject</button><button type="button" class="button secondary" id="copyBody">Copy email</button></div><p class="error" id="draftErr"></p>`;
+  body.querySelectorAll('[data-voice]').forEach(ch=>ch.addEventListener('click',()=>{DRAFT_VOICE=ch.getAttribute('data-voice');loadDraft(id);}));
   const copy=(text,btn,okLabel)=>{
     btn.addEventListener('click',async()=>{
       try{await navigator.clipboard.writeText(text);btn.textContent=okLabel;}catch(_){btn.textContent='Copy failed'}
@@ -165,12 +193,15 @@ async function openDraft(id){
   };
   copy(data.subject,body.querySelector('#copySubject'),'Subject copied!');
   copy(data.body,body.querySelector('#copyBody'),'Email copied!');
-  bbTrack('chaser_draft_viewed',{tool:TOOL_KEY});
+  bbTrack('chaser_draft_viewed',{tool:TOOL_KEY,voice:DRAFT_VOICE});
 }
 function closeModal(){document.querySelector('#modalOverlay').classList.add('hidden');document.body.style.overflow='';}
 document.querySelector('#modalClose').addEventListener('click',closeModal);
 document.querySelector('#modalOverlay').addEventListener('click',e=>{if(e.target.id==='modalOverlay')closeModal()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.querySelector('#modalOverlay').classList.contains('hidden'))closeModal()});
+function closeChaching(){document.querySelector('#chachingOverlay').classList.add('hidden');document.body.style.overflow='';}
+document.querySelector('#chachingClose').addEventListener('click',closeChaching);
+document.querySelector('#chachingOverlay').addEventListener('click',e=>{if(e.target.id==='chachingOverlay')closeChaching()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!document.querySelector('#chachingOverlay').classList.contains('hidden'))closeChaching();else if(!document.querySelector('#modalOverlay').classList.contains('hidden'))closeModal()}});
 async function refresh(){
   const{response,data}=await apiCall({action:'list'});
   if(!response.ok){document.querySelector('#invoiceList').innerHTML=`<p class="error">${esc(data.error||'Could not load.')}</p>`;return}

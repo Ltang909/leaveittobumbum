@@ -75,27 +75,74 @@ function chaser_public_invoice(array $row): array {
     ];
 }
 
-function chaser_draft(array $inv): array {
+function chaser_draft(array $inv, string $voice = 'me'): array {
     $client = $inv['client_name'];
     $amount = $inv['amount_display'];
     $ref = $inv['invoice_no'] !== '' ? " (invoice {$inv['invoice_no']})" : '';
     $due = $inv['due_date'];
     $days = $inv['days_overdue'];
+    $dayWord = $days === 1 ? 'day' : 'days';
+
+    if ($voice === 'assistant') {
+        // Bum Bum as the billing assistant: the client never hears awkward-you.
+        if ($days < 0) {
+            $subject = "Upcoming payment: {$amount} due {$due}";
+            $body = "Hi {$client},\n\nI'm Bum Bum — I handle the billing side of things. Just a friendly note that {$amount}{$ref} is due on {$due}.\n\nIf you need anything to get it processed on time, reply here and I'll sort it.\n\nThanks!\nBum Bum";
+        } elseif ($days <= 14) {
+            $subject = "Friendly nudge: {$amount} was due {$due}";
+            $body = "Hi {$client},\n\nI'm Bum Bum — I look after billing. Noticed {$amount}{$ref} was due on {$due} ({$days} {$dayWord} ago) and it hasn't come through yet.\n\nCould you let me know when to expect it? Happy to resend the invoice if it's gone walkabout.\n\nThanks!\nBum Bum";
+        } elseif ($days <= 30) {
+            $subject = "Following up: {$amount} overdue";
+            $body = "Hi {$client},\n\nBum Bum here, on the billing side. {$amount}{$ref} was due on {$due} — that's {$days} {$dayWord} overdue now.\n\nPlease let me know the status and when payment will land. If there's a problem with the invoice itself, tell me now and we'll sort it out.\n\nThanks,\nBum Bum";
+        } else {
+            $subject = "Final notice: {$amount}, {$days} {$dayWord} overdue";
+            $body = "Hi {$client},\n\nThis is Bum Bum with a final notice: {$amount}{$ref} is {$days} {$dayWord} overdue (due {$due}).\n\nI need this resolved this week. Please confirm payment timing today, or flag what's blocking it.\n\nRegards,\nBum Bum";
+        }
+        return ['subject' => $subject, 'body' => $body];
+    }
 
     if ($days < 0) {
         $subject = "Heads-up: {$amount} due {$due}";
         $body = "Hi {$client},\n\nQuick heads-up that {$amount}{$ref} is due on {$due}.\n\nLet me know if you need anything from me to get it processed on time.\n\nThanks!";
     } elseif ($days <= 14) {
         $subject = "Gentle nudge: {$amount} was due {$due}";
-        $body = "Hi {$client},\n\nHope you're well! Just floating this to the top of your inbox: {$amount}{$ref} was due on {$due} ({$days} day" . ($days === 1 ? '' : 's') . " ago). Totally get how these slip through the cracks.\n\nCould you let me know when I can expect it? Happy to resend the invoice if helpful.\n\nThanks!";
+        $body = "Hi {$client},\n\nHope you're well! Just floating this to the top of your inbox: {$amount}{$ref} was due on {$due} ({$days} {$dayWord} ago). Totally get how these slip through the cracks.\n\nCould you let me know when I can expect it? Happy to resend the invoice if helpful.\n\nThanks!";
     } elseif ($days <= 30) {
         $subject = "Following up: {$amount} overdue{$ref}";
-        $body = "Hi {$client},\n\nFollowing up on {$amount}{$ref}, which was due on {$due} ({$days} days ago). I haven't seen it come through yet.\n\nPlease let me know the status and when I can expect payment. If there's an issue with the invoice itself, I'd rather hear about it now so we can sort it out.\n\nThanks!";
+        $body = "Hi {$client},\n\nFollowing up on {$amount}{$ref}, which was due on {$due} ({$days} {$dayWord} ago). I haven't seen it come through yet.\n\nPlease let me know the status and when I can expect payment. If there's an issue with the invoice itself, I'd rather hear about it now so we can sort it out.\n\nThanks!";
     } else {
-        $subject = "Final notice: {$amount} is {$days} days overdue";
-        $body = "Hi {$client},\n\nThis is a final notice regarding {$amount}{$ref}, due on {$due} ({$days} days overdue).\n\nI need this resolved this week. Please confirm payment timing by end of day, or let me know right away if something is blocking it.\n\nThanks!";
+        $subject = "Final notice: {$amount} is {$days} {$dayWord} overdue";
+        $body = "Hi {$client},\n\nThis is a final notice regarding {$amount}{$ref}, due on {$due} ({$days} {$dayWord} overdue).\n\nI need this resolved this week. Please confirm payment timing by end of day, or let me know right away if something is blocking it.\n\nThanks!";
     }
     return ['subject' => $subject, 'body' => $body];
+}
+
+function chaser_intel_map(PDO $pdo, int $userId): array {
+    $stmt = $pdo->prepare("SELECT LOWER(TRIM(client_name)) AS k, MAX(client_name) AS name, COUNT(*) AS n, AVG(DATEDIFF(paid_at, due_date)) AS avg_late FROM chaser_invoices WHERE user_id = ? AND status = 'paid' AND paid_at IS NOT NULL GROUP BY k");
+    $stmt->execute([$userId]);
+    $map = [];
+    foreach ($stmt->fetchAll() as $r) {
+        $map[$r['k']] = ['name' => $r['name'], 'count' => (int) $r['n'], 'avg_late' => round((float) $r['avg_late'])];
+    }
+    return $map;
+}
+
+function chaser_take(array $inv, ?array $intel): string {
+    $days = $inv['days_overdue'];
+    $client = $inv['client_name'];
+    if ($intel && $intel['count'] >= 2) {
+        $avg = (int) $intel['avg_late'];
+        $habit = $avg <= 0 ? 'usually pays on time' : "usually pays ~{$avg} days late";
+        if ($days <= 0) return "{$intel['name']} {$habit} — nothing to worry about yet.";
+        if ($days <= max($avg, 7)) return "{$intel['name']} {$habit}, so this looks normal. A gentle nudge is plenty.";
+        return "{$intel['name']} {$habit} — this one's unusually late. Time to be firm.";
+    }
+    if ($intel) {
+        return "Only one paid invoice from {$intel['name']} so far — starting gentle is the smart move.";
+    }
+    if ($days <= 0) return "No payment history for {$client} yet — a heads-up before it's due is perfect.";
+    if ($days <= 14) return "No payment history for {$client} yet — starting with a gentle nudge.";
+    return "No payment history for {$client} yet, and it's been {$days} days — don't be shy about this one.";
 }
 
 requirePost();
@@ -111,6 +158,7 @@ $action = (string) ($input['action'] ?? 'list');
 if ($action === 'list') {
     $stmt = $pdo->prepare("SELECT * FROM chaser_invoices WHERE user_id = ? ORDER BY (status = 'open') DESC, due_date ASC, id DESC LIMIT 500");
     $stmt->execute([$userId]);
+    $intelMap = chaser_intel_map($pdo, $userId);
     $invoices = [];
     $outstanding = 0.0;
     $overdue = 0.0;
@@ -118,6 +166,8 @@ if ($action === 'list') {
     $countOverdue = 0;
     foreach ($stmt->fetchAll() as $row) {
         $inv = chaser_public_invoice($row);
+        $key = mb_strtolower(trim($inv['client_name']));
+        $inv['intel'] = $intelMap[$key] ?? null;
         $invoices[] = $inv;
         if ($inv['status'] === 'open') {
             $countOpen++;
@@ -128,6 +178,12 @@ if ($action === 'list') {
             }
         }
     }
+    $recStmt = $pdo->prepare("SELECT currency, COALESCE(SUM(amount), 0) AS total, COUNT(*) AS n FROM chaser_invoices WHERE user_id = ? AND status = 'paid' AND paid_at >= DATE_FORMAT(CURDATE(), '%Y-%m-01') GROUP BY currency");
+    $recStmt->execute([$userId]);
+    $recovered = [];
+    foreach ($recStmt->fetchAll() as $r) {
+        $recovered[$r['currency']] = ['total' => round((float) $r['total'], 2), 'count' => (int) $r['n']];
+    }
     jsonResponse([
         'invoices' => $invoices,
         'stats' => [
@@ -135,6 +191,7 @@ if ($action === 'list') {
             'overdue' => round($overdue, 2),
             'open' => $countOpen,
             'overdue_count' => $countOverdue,
+            'recovered' => $recovered,
         ],
         'today' => date('Y-m-d'),
         'currencies' => CHASER_CURRENCIES,
@@ -143,12 +200,21 @@ if ($action === 'list') {
 
 if ($action === 'draft') {
     $id = (int) ($input['id'] ?? 0);
+    $voice = (string) ($input['voice'] ?? 'me');
+    if (!in_array($voice, ['me', 'assistant'], true)) $voice = 'me';
     $stmt = $pdo->prepare('SELECT * FROM chaser_invoices WHERE id = ? AND user_id = ?');
     $stmt->execute([$id, $userId]);
     $row = $stmt->fetch();
     if (!$row) jsonResponse(['error' => 'Invoice not found.'], 404);
     if ($row['status'] !== 'open') jsonResponse(['error' => 'This invoice is already paid. Nice.'], 422);
-    jsonResponse(chaser_draft(chaser_public_invoice($row)));
+    $inv = chaser_public_invoice($row);
+    $intelMap = chaser_intel_map($pdo, $userId);
+    $key = mb_strtolower(trim($inv['client_name']));
+    $intel = $intelMap[$key] ?? null;
+    $draft = chaser_draft($inv, $voice);
+    $draft['take'] = chaser_take($inv, $intel);
+    $draft['voice'] = $voice;
+    jsonResponse($draft);
 }
 
 if ($action === 'add') {
@@ -291,6 +357,22 @@ if ($action === 'remind') {
     if ($upcomingLines) {
         $lines[] = 'UPCOMING (' . count($upcomingLines) . '):';
         $lines = array_merge($lines, $upcomingLines);
+        $lines[] = '';
+    }
+    // Your #1 chase, copy/paste ready: the most overdue open invoice.
+    $top = null;
+    foreach ($rows as $row) {
+        $inv = chaser_public_invoice($row);
+        if ($inv['days_overdue'] > 0) { $top = $inv; break; }
+    }
+    if ($top) {
+        $d = chaser_draft($top, 'me');
+        $lines[] = 'YOUR #1 CHASE (copy/paste ready):';
+        $lines[] = 'Subject: ' . $d['subject'];
+        $lines[] = '';
+        $lines[] = $d['body'];
+        $lines[] = '';
+        $lines[] = 'Want it to come from your billing assistant instead? Open Invoice Chaser and flip the voice toggle.';
         $lines[] = '';
     }
     $lines[] = 'Open Invoice Chaser to copy a chase draft for any of these:';
