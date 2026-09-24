@@ -44,7 +44,7 @@ details.raw pre{background:#fdf8ef;border:1px solid #e7dcc3;border-radius:10px;p
 .shell .button:active{box-shadow:none;transform:translateY(2px)}
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Reader"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum with reading glasses, squinting at a receipt"><h1>Receipts in, spreadsheets out.</h1><p class="lede">Snap a photo of any receipt. Bum Bum reads it <b>right in your browser</b>, pulls out the vendor, date, line items, tax, and total, and hands you a clean table you can fix up and export. Your photos never leave your device. One action per scan, exports are free.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Reader"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum with reading glasses, squinting at a receipt"><h1>Receipts in, spreadsheets out.</h1><p class="lede">Snap a photo of any receipt. Bum Bum reads it <b>right in your browser</b>, pulls out the vendor, date, line items, tax, and total, and hands you a clean table you can fix up and export. Your photos never leave your device; only the typed-up numbers are saved, in your account. One action per scan. Saving and exports are free.</p>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to read receipts</h2><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
@@ -97,7 +97,7 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 
 <section class="panel">
 <h2>Receipt log</h2>
-<div id="logList"><p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. Scans you save live here, only in this browser.</p></div>
+<div id="logList"><p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. After a scan, hit &ldquo;Save to log&rdquo; and it will live here, in your account.</p></div>
 </section>
 <?php endif; ?>
 </main>
@@ -353,35 +353,42 @@ document.querySelector('#dlCsvBtn').addEventListener('click',()=>{
   bbTrack('receipt_export',{how:'download'});
 });
 
-/* Browser-local log. Receipts never touch our servers. */
-const LOG_KEY='bb_receipt_log_v1';
-function readLog(){try{return JSON.parse(localStorage.getItem(LOG_KEY))||[]}catch(e){return[]}}
-function writeLog(l){try{localStorage.setItem(LOG_KEY,JSON.stringify(l))}catch(e){}}
-function renderLog(){
+/* Server-backed receipt log. Only structured data is stored; photos never leave this device. */
+async function fetchLogs(){
+  const{response,data}=await apiCall({action:'list'});
+  if(!response.ok){document.querySelector('#logList').innerHTML='<p class="error">Could not load your receipt log.</p>';return}
+  renderLog(data.logs||[]);
+}
+function renderLog(log){
   const list=document.querySelector('#logList');
-  const log=readLog();
-  if(!log.length){list.innerHTML='<p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. Scans you save live here, only in this browser.</p>';return}
+  if(!log.length){list.innerHTML='<p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. After a scan, hit &ldquo;Save to log&rdquo; and it will live here, in your account.</p>';return}
   list.innerHTML='';
   log.forEach(entry=>{
     const row=document.createElement('div');row.className='log-row';
-    row.innerHTML='<div><b>'+esc(entry.vendor||'Unnamed receipt')+'</b><div class="meta">'+esc(entry.date||'no date')+' · '+entry.items.length+' lines · '+esc(entry.currency)+' '+esc(entry.total||'?.??')+'</div></div><div class="spacer"></div>';
+    const totalTxt=entry.total?entry.currency+' '+entry.total:'no total';
+    row.innerHTML='<div><b>'+esc(entry.vendor||'Unnamed receipt')+'</b><div class="meta">'+esc(entry.date||'no date')+' · '+entry.items.length+' lines · '+esc(totalTxt)+'</div></div><div class="spacer"></div>';
     const load=document.createElement('button');load.type='button';load.className='mini';load.textContent='Load';
     load.addEventListener('click',()=>{showResult(entry,'');bbTrack('receipt_log_load',{id:entry.id})});
     const del=document.createElement('button');del.type='button';del.className='mini';del.textContent='Delete';
-    del.addEventListener('click',()=>{writeLog(readLog().filter(x=>x.id!==entry.id));renderLog()});
+    del.addEventListener('click',async()=>{
+      if(!confirm('Delete this receipt from your log?'))return;
+      const{response}=await apiCall({action:'delete',id:entry.id});
+      if(response.ok)fetchLogs();
+    });
     row.appendChild(load);row.appendChild(del);
     list.appendChild(row);
   });
 }
-document.querySelector('#saveLogBtn').addEventListener('click',()=>{
+document.querySelector('#saveLogBtn').addEventListener('click',async()=>{
   const d=collectForm();
   if(!d.items.length&&!d.total){document.querySelector('#copyNote').textContent='Nothing to save yet.';return}
-  const log=readLog();
-  log.unshift({id:crypto.randomUUID(),ts:Date.now(),...d});
-  writeLog(log.slice(0,100));
-  renderLog();
-  document.querySelector('#copyNote').textContent='Saved to your log (this browser only).';
+  const btn=document.querySelector('#saveLogBtn');btn.disabled=true;
+  const{response,data}=await apiCall({action:'save',vendor:d.vendor,date:d.date,currency:d.currency,items:d.items,subtotal:d.subtotal,tax:d.tax,taxLabel:d.taxLabel,total:d.total});
+  btn.disabled=false;
+  if(!response.ok){document.querySelector('#copyNote').textContent=data.error||'Could not save. Try again?';return}
+  document.querySelector('#copyNote').textContent='Saved to your receipt log.';
   bbTrack('receipt_saved',{items:d.items.length});
+  fetchLogs();
 });
-renderLog();
+fetchLogs();
 </script></main></body></html>
