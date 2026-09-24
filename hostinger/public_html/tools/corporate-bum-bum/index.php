@@ -59,6 +59,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .stat-card b{font-size:22px;display:block}
 .stat-card span{font-size:12px;font-weight:700;opacity:.75}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Corporate Bum Bum"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum looking professional"><h1>Your job hunt, in a suit.</h1><p class="lede">Corporate Bum Bum is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
+<?php $demo = 'corporate-bum-bum'; require dirname(__DIR__, 2) . '/includes/tool-demo.php'; ?>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to use Corporate Bum Bum</h2><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>

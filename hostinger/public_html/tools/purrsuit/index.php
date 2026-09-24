@@ -50,6 +50,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .stat-card b{font-size:22px;display:block}
 .stat-card span{font-size:12px;font-weight:700;opacity:.75}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purrsuit"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-wink-blep.png" alt="Bum Bum winking"><h1>Never let a lead go cold.</h1><p class="lede">Purrsuit is a tiny CRM for people who hate CRMs. Add the humans, move them down the pipeline, and every morning Purrsuit tells you exactly who to follow up with and what to say. Adding a contact uses one action. Everything else is free.</p>
+<?php $demo = 'purrsuit'; require dirname(__DIR__, 2) . '/includes/tool-demo.php'; ?>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to use Purrsuit</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>

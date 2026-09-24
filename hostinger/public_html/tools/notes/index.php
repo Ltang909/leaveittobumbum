@@ -11,6 +11,7 @@ h1,.lede{max-width:none}
 #notesActions button:disabled{opacity:.45;cursor:not-allowed}
 select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Bum Bum Notes"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum in work mode"><h1>Talk it out. We'll write it down.</h1><p class="lede">Hit record and talk it out. Your words appear as you speak, and when you stop your transcript is saved to your private library, ready to copy or download. Your recording stays in your browser so you can listen back right away, or download the audio to keep it. On iPhone your audio is sent to our server for transcription and never stored. One finished note uses one action.</p>
+<?php $demo = 'notes'; require dirname(__DIR__, 2) . '/includes/tool-demo.php'; ?>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to use Bum Bum Notes</h2><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php $out = ($usage['remaining'] ?? 0) <= 0; ?>
