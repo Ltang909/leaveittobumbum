@@ -23,4 +23,5 @@ echo json_encode([
     'bootstrap_mtime' => @filemtime($bs),
     'bootstrap_cached_mtime' => $cachedTs,
     'opcache_enabled' => $ocEnabled,
+    'file_has_revert' => strpos((string) @file_get_contents($bs), 'ltang9090@gmail.com') === false,
 ]);
