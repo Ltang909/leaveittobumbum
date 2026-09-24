@@ -23,4 +23,10 @@ return [
     ],
     'cron_secret' => 'replace_me', // shared secret for /api/cron-check-requests.php
     'groq_api_key' => 'replace_me', // server-side Groq key for Notes transcription on iPhone (free: https://console.groq.com/keys)
+    // OAuth sign-in ("Continue with Google / LinkedIn"). The account page
+    // shows each button only when its id + secret are both set.
+    'google_client_id' => 'replace_me', // Google Cloud Console -> APIs & Services -> Credentials
+    'google_client_secret' => 'replace_me',
+    'linkedin_client_id' => 'replace_me', // LinkedIn Developers -> your app -> Auth tab
+    'linkedin_client_secret' => 'replace_me',
 ];
