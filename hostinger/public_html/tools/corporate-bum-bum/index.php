@@ -67,6 +67,25 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .stat-card{flex:1;min-width:140px;border:2px solid var(--line);border-radius:14px;background:#fff;padding:12px;text-align:center}
 .stat-card b{font-size:22px;display:block}
 .stat-card span{font-size:12px;font-weight:700;opacity:.75}
+/* ---- Soft UI pass: easier on the eyes ---- */
+.bbm-grid,.bbm-add,.modal,.follow-item{color:#38332a}
+.bbm-card,.bbm-add,.stat-card,.follow-item,.follow-draft,.modal,.modal-close{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
+.bbm-card h3{font-weight:700}
+.stage{border:1px solid #d9cdae;font-weight:700}
+.star{border:1px solid #e2d7bf}
+.fld label{font-weight:600}
+.fld input,.fld select,.fld textarea,.modal input,.modal select,.modal textarea{border:1px solid #ddd1b8;font-weight:500;border-radius:10px}
+.fld input:focus,.fld select:focus,.fld textarea:focus,.modal input:focus,.modal select:focus,.modal textarea:focus{border-color:#b3a37e;box-shadow:0 0 0 3px rgba(179,163,126,.18);outline:none}
+.btn{border:1px solid #2f2a22;box-shadow:0 2px 0 #2f2a22;font-weight:700}
+.btn:active{box-shadow:none;transform:translateY(2px)}
+.btn.ghost{border:1px solid #ddd1b8;box-shadow:none}
+.btn.danger{border:1px solid #b3402e}
+.filterbar select,.filterbar .search{border:1px solid #ddd1b8;font-weight:600}
+.chip{border:1px solid #ddd1b8;font-weight:600}
+.chip[aria-pressed="true"]{border-color:#2f2a22}
+.fld input[type=checkbox]{accent-color:#8a7a55}
+.modal h3{font-weight:700}
+.modal-close{font-weight:700}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Corporate Bum Bum"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum looking professional"><h1>Your job hunt, in a suit.</h1><p class="lede">Corporate Bum Bum is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to use Corporate Bum Bum</h2><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
