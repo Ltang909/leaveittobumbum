@@ -60,6 +60,10 @@ export default function ThirtySixHours() {
             <a className="button" href="/checkout/?plan=operator">Go Operator <span aria-hidden="true">↗</span></a>
           </div>
         </div>
+        <div className="prose">
+          <h2>Third option: build it yourself</h2>
+          <p>Allowed and respected. But before you open a blank repo at 11pm, <a href="/build-vs-buy/"><strong>read the honest build-vs-buy math</strong></a>.</p>
+        </div>
         <div className="prose" style={{ paddingBottom: 110 }}>
           <h2>Questions, probably answered</h2>
           <details><summary>Does the request have to be my idea? <span>+</span></summary><p>Nope. Describe the pain however you like &mdash; &ldquo;I hate doing X every week&rdquo; is a perfectly good brief. We&rsquo;ll shape it into something buildable.</p></details>
