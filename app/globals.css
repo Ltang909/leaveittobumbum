@@ -221,6 +221,26 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .promise-compare .button { margin-top:6px; }
 @media (max-width:900px){.promise-steps{grid-template-columns:1fr 1fr}}
 @media (max-width:600px){.promise-steps,.promise-compare{grid-template-columns:1fr}.promise-callout{padding:34px 24px}}
+.diy-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin:36px 0; padding:0; }
+.diy-list li { list-style:none; background:#fff; border:var(--line); border-radius:16px; padding:20px 22px; font-size:.96rem; line-height:1.55; box-shadow:4px 4px 0 var(--yellow); }
+.diy-list li b { display:block; font-family:var(--font-display),serif; font-size:1.08rem; margin-bottom:6px; }
+.calc-card { background:var(--ink); color:var(--cream); border-radius:22px; padding:48px; margin:64px 0; box-shadow:6px 6px 0 var(--orange); }
+.calc-card h2 { color:var(--yellow); margin-top:0; }
+.calc-card p { line-height:1.6; }
+.calc-slider-label { display:block; font-weight:900; font-size:1.1rem; margin:28px 0 12px; }
+.calc-slider-label strong { color:var(--yellow); }
+.calc-slider { width:100%; accent-color:var(--yellow); height:32px; cursor:pointer; }
+.calc-results { display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:stretch; margin:30px 0; }
+.calc-result { background:rgba(255,255,255,.06); border:2px solid rgba(255,249,233,.25); border-radius:16px; padding:22px; text-align:center; }
+.calc-result b { display:block; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; opacity:.75; margin-bottom:8px; }
+.calc-number { display:block; font-family:var(--font-display),serif; font-size:clamp(2rem,4vw,3rem); font-weight:900; color:var(--cream); }
+.calc-result small { display:block; margin-top:10px; font-size:.85rem; opacity:.7; line-height:1.5; }
+.calc-winner { border-color:var(--yellow); background:rgba(255,216,77,.08); }
+.calc-winner .calc-number { color:var(--yellow); }
+.calc-vs { align-self:center; font-family:var(--font-display),serif; font-style:italic; font-size:1.3rem; opacity:.6; }
+.calc-punchline { font-size:1.15rem; margin-bottom:0; }
+.calc-punchline strong { color:var(--yellow); }
+@media (max-width:600px){.calc-card{padding:34px 24px}.calc-results{grid-template-columns:1fr}.calc-vs{text-align:center}}
 .page-404 { text-align:center; padding:90px 0; }
 .page-404 .sticker { width:230px; transform:rotate(-4deg); margin-bottom:10px; }
 .page-404 .button { margin:6px; }
