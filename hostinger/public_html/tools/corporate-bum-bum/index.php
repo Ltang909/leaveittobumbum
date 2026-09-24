@@ -2,17 +2,24 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Corporate Bum Bum | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=5"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
-.chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer}
+.chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer;font-family:inherit}
 .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.filterbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;align-items:center}
+.filterbar select{margin:0;padding:6px 38px 6px 14px;border:2px solid var(--line);border-radius:999px;font-weight:800;font-size:14px;line-height:1.5;background-color:#fff;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;font-family:inherit}
+.filterbar .chip{margin:0;line-height:1.5}
 .contact{border:2px solid var(--line);border-radius:14px;background:#fff;padding:14px;margin-bottom:10px}
 .contact .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .contact .top b{font-size:17px}
-.card-status{margin-bottom:10px}
+.card-status{margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card-status .spacer{flex:1}
+.starbtn{border:2px solid var(--line);background:#fff;border-radius:999px;width:34px;height:34px;font-size:17px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;flex:none;font-family:inherit}
+.starbtn.lit{border-color:#e8a100;background:#ffe9a8}
+.heldtag{font-size:12px;font-weight:800;color:#1d7a3a;white-space:nowrap}
 .card-title{display:block;font-size:17px;margin:0 0 8px}
 .card-actions{display:flex;gap:8px;margin-top:12px}
 .card-actions .button{flex:1;margin-top:0}
 .stage{font-size:12px;font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:2px 10px}
-.stage.wishlist{background:#d8d3c8}.stage.applied{background:#8eb5ff}.stage.screening{background:#c3a6f2}.stage.interview{background:#ffd84d}.stage.final{background:#f7a9ca}.stage.offer{background:#83d6b2}.stage.accepted{background:#17150f;color:#fff}.stage.rejected{background:#e5484d;color:#fff}.stage.withdrawn{background:#8a8578;color:#fff}
+.stage.new{background:#d8d3c8}.stage.applied{background:#8eb5ff}.stage.screening{background:#c3a6f2}.stage.interview_booked{background:#ffd84d}.stage.waiting_next{background:#f7a9ca}.stage.offer{background:#83d6b2}.stage.accepted{background:#17150f;color:#fff}.stage.rejected{background:#e5484d;color:#fff}.stage.withdrawn{background:#8a8578;color:#fff}
 .meta{font-size:13px;opacity:.8;margin:6px 0 0}
 a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important}
 .detail{margin-top:12px;border-top:2px dashed var(--line);padding-top:12px}
@@ -64,10 +71,10 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
 <div class="stat-row"><div class="stat-card"><b id="statActive">0</b><span>active applications</span></div><div class="stat-card"><b id="statInterviews">0</b><span>in interviews</span></div><div class="stat-card"><b id="statOffers">0</b><span>offers</span></div></div>
-<section class="panel"><div class="yp-head"><h2>Your applications</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
+<section class="panel"><div class="yp-head"><h2>Your applications</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="filterbar"><select id="stageFilter" aria-label="Filter by stage"></select><button type="button" class="chip" id="starFilter" aria-pressed="false">★ Starred</button><button type="button" class="chip" id="heldFilter" aria-pressed="false">✓ Interview held</button></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div class="add-import-grid">
-<section class="panel"><h2 style="margin-top:0">Add an application</h2><form id="addForm"><div class="nudge-grid"><label>Company<input name="company" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Role<input name="role" type="text" maxlength="191" required placeholder="Senior Growth Manager"></label><label>Contact name<input name="contact_name" type="text" maxlength="191" placeholder="Maya Chen"></label><label>Contact email<input name="contact_email" type="email" maxlength="191" placeholder="maya@acme.co"></label><label>Job posting URL<input name="job_url" type="url" maxlength="500" placeholder="https://acme.co/jobs/123"></label><label>Location<input name="location" type="text" maxlength="191" placeholder="Remote (US)"></label><label>Salary min<input name="salary_min" type="number" min="0" step="1" placeholder="120000"></label><label>Salary max<input name="salary_max" type="number" min="0" step="1" placeholder="140000"></label><label>Currency<select name="currency"><option value="CAD" selected>CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></label><label>Where you found it<input name="source" type="text" maxlength="191" placeholder="nanoglobals"></label><label>Date applied<input name="date_applied" type="date"></label><label>Stage<select name="stage"><option value="wishlist">Wishlist</option><option value="applied" selected>Applied</option><option value="screening">Screening</option><option value="interview">Interview</option><option value="final">Final round</option><option value="offer">Offer</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Corporate Bum Bum</button><p id="addError" class="error"></p></form></section>
-<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>company</b> (required), role, contact name, contact email, job url, location, salary min, salary max, currency (CAD, USD, EUR, GBP — defaults to CAD), where found, date applied (YYYY-MM-DD), stage (wishlist, applied, screening, interview, final, offer, accepted, rejected, withdrawn), follow up (YYYY-MM-DD), notes. Rows matching an existing <b>company + role</b> get <b>updated</b> (free, empty cells keep their current values); everything else gets added at one action each. The notes column fills each record's notes field. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Add an application</h2><form id="addForm"><div class="nudge-grid"><label>Company<input name="company" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Role<input name="role" type="text" maxlength="191" required placeholder="Senior Growth Manager"></label><label>Contact name<input name="contact_name" type="text" maxlength="191" placeholder="Maya Chen"></label><label>Contact email<input name="contact_email" type="email" maxlength="191" placeholder="maya@acme.co"></label><label>Job posting URL<input name="job_url" type="url" maxlength="500" placeholder="https://acme.co/jobs/123"></label><label>Location<input name="location" type="text" maxlength="191" placeholder="Remote (US)"></label><label>Salary min<input name="salary_min" type="number" min="0" step="1" placeholder="120000"></label><label>Salary max<input name="salary_max" type="number" min="0" step="1" placeholder="140000"></label><label>Currency<select name="currency"><option value="CAD" selected>CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></label><label>Where you found it<input name="source" type="text" maxlength="191" placeholder="nanoglobals"></label><label>Date applied<input name="date_applied" type="date"></label><label>Stage<select name="stage"><option value="new" selected>New</option><option value="applied">Applied</option><option value="screening">Screening</option><option value="interview_booked">Interview booked</option><option value="waiting_next">Waiting for next step</option><option value="offer">Offer</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Corporate Bum Bum</button><p id="addError" class="error"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>company</b> (required), role, contact name, contact email, job url, location, salary min, salary max, currency (CAD, USD, EUR, GBP — defaults to CAD), where found, date applied (YYYY-MM-DD), stage (new, applied, screening, interview_booked, waiting_next, offer, accepted, rejected, withdrawn), follow up (YYYY-MM-DD), notes, starred (1/yes), interview held (1/yes). Rows matching an existing <b>company + role</b> get <b>updated</b> (free, empty cells keep their current values); everything else gets added at one action each. The notes column fills each record's notes field. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
 </div>
 <div id="upgrade-slot"></div>
 <div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
@@ -75,11 +82,11 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 <script>
 const TOOL_KEY='corporate-bum-bum';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
-const STAGES=['wishlist','applied','screening','interview','final','offer','accepted','rejected','withdrawn'];
-const STAGE_LABELS={wishlist:'Wishlist',applied:'Applied',screening:'Screening',interview:'Interview',final:'Final round',offer:'Offer',accepted:'Accepted',rejected:'Rejected',withdrawn:'Withdrawn'};
-const ACTIVE_STAGES=['wishlist','applied','screening','interview','final','offer'];
+const STAGES=['new','applied','screening','interview_booked','waiting_next','offer','accepted','rejected','withdrawn'];
+const STAGE_LABELS={new:'New',applied:'Applied',screening:'Screening',interview_booked:'Interview booked',waiting_next:'Waiting for next step',offer:'Offer',accepted:'Accepted',rejected:'Rejected',withdrawn:'Withdrawn'};
+const ACTIVE_STAGES=['new','applied','screening','interview_booked','waiting_next','offer'];
 let DATA={contacts:[],followUpDue:[],goneQuiet:[]};
-let FILTER='all';
+let FILTER_STAGE='all',FILTER_STAR=false,FILTER_HELD=false;
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
 function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -111,19 +118,38 @@ function contactCard(c){
   if(c.source)parts.push('found on '+esc(c.source));
   if(c.date_applied)parts.push('applied '+esc(c.date_applied));
   if(c.follow_up_date)parts.push('follow up '+esc(c.follow_up_date));
-  return `<div class="contact" data-id="${c.id}"><div class="card-status">${stageBadge(c.stage)}</div><b class="card-title">${esc(appTitle(c))}</b>${parts.length?`<p class="meta">${parts.join(' · ')}</p>`:''}<div class="card-actions"><button type="button" class="button secondary" data-open="${c.id}">Open</button><button type="button" class="button secondary" data-del-card="${c.id}">Delete</button></div></div>`;
+  return `<div class="contact" data-id="${c.id}"><div class="card-status">${stageBadge(c.stage)}${c.interview_held?'<span class="heldtag">✓ interview held</span>':''}<span class="spacer"></span><button type="button" class="starbtn${c.starred?' lit':''}" data-star="${c.id}" aria-label="Toggle favorite" title="Favorite">${c.starred?'★':'☆'}</button></div><b class="card-title">${esc(appTitle(c))}</b>${parts.length?`<p class="meta">${parts.join(' · ')}</p>`:''}<div class="card-actions"><button type="button" class="button secondary" data-open="${c.id}">Open</button><button type="button" class="button secondary" data-del-card="${c.id}">Delete</button></div></div>`;
 }
 function renderContacts(){
   const el=document.querySelector('#contactList');
-  const list=DATA.contacts.filter(c=>FILTER==='all'||c.stage===FILTER);
-  document.querySelector('#stageChips').innerHTML=['all',...STAGES].map(s=>`<button type="button" class="chip${FILTER===s?' on':''}" data-filter="${s}">${s==='all'?'All':stageLabel(s)} (${s==='all'?DATA.contacts.length:(DATA.counts[s]||0)})</button>`).join('');
-  document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{FILTER=b.getAttribute('data-filter');renderContacts();}));
+  const list=DATA.contacts.filter(c=>(FILTER_STAGE==='all'||c.stage===FILTER_STAGE)&&(!FILTER_STAR||c.starred)&&(!FILTER_HELD||c.interview_held));
+  const sel=document.querySelector('#stageFilter');
+  sel.innerHTML=`<option value="all">All stages (${DATA.contacts.length})</option>`+STAGES.map(s=>`<option value="${s}"${FILTER_STAGE===s?' selected':''}>${stageLabel(s)} (${DATA.counts[s]||0})</option>`).join('');
+  const starBtn=document.querySelector('#starFilter');
+  starBtn.classList.toggle('on',FILTER_STAR);
+  starBtn.setAttribute('aria-pressed',FILTER_STAR?'true':'false');
+  const heldBtn=document.querySelector('#heldFilter');
+  heldBtn.classList.toggle('on',FILTER_HELD);
+  heldBtn.setAttribute('aria-pressed',FILTER_HELD?'true':'false');
   if(!list.length){el.innerHTML='<p class="lede">Nothing here yet. Add your first application above.</p>';return}
   el.innerHTML=list.map(contactCard).join('');
   bindCardButtons(el);
 }
+document.querySelector('#stageFilter').addEventListener('change',e=>{FILTER_STAGE=e.target.value;renderContacts();});
+document.querySelector('#starFilter').addEventListener('click',()=>{FILTER_STAR=!FILTER_STAR;renderContacts();});
+document.querySelector('#heldFilter').addEventListener('click',()=>{FILTER_HELD=!FILTER_HELD;renderContacts();});
 function bindCardButtons(root){
   root.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openDetail(parseInt(b.getAttribute('data-open'),10))));
+  root.querySelectorAll('[data-star]').forEach(b=>b.addEventListener('click',async()=>{
+    const id=parseInt(b.getAttribute('data-star'),10);
+    const lit=b.classList.contains('lit');
+    b.disabled=true;
+    const{response,data}=await apiCall({action:'update',id,starred:lit?0:1});
+    b.disabled=false;
+    if(!response.ok){document.querySelector('#listError').textContent=data.error||'Favorite failed.';return}
+    bbTrack('jobtrack_starred',{tool:TOOL_KEY});
+    await refresh();
+  }));
   root.querySelectorAll('[data-clear-followup]').forEach(b=>b.addEventListener('click',async()=>{
     b.disabled=true;
     const id=parseInt(b.getAttribute('data-clear-followup'),10);
@@ -172,6 +198,8 @@ async function openDetail(id){
     <p class="lede">${c.location?esc(c.location)+' · ':''}${sr?sr+' · ':''}${c.contact_name?esc(c.contact_name)+' · ':''}${stageBadge(c.stage)}</p>
     ${c.job_url?`<p><a href="${esc(c.job_url)}" target="_blank" rel="noopener">View job posting</a></p>`:''}
     <label>Stage<select data-f="stage">${STAGES.map(s=>`<option value="${s}"${c.stage===s?' selected':''}>${stageLabel(s)}</option>`).join('')}</select></label>
+    <label style="display:flex;align-items:center;gap:10px;font-weight:800;cursor:pointer"><input type="checkbox" data-f="starred"${c.starred?' checked':''} style="width:22px;height:22px;flex:none"> ★ Favorite</label>
+    <label style="display:flex;align-items:center;gap:10px;font-weight:800;cursor:pointer"><input type="checkbox" data-f="interview_held"${c.interview_held?' checked':''} style="width:22px;height:22px;flex:none"> ✓ Interview held</label>
     <label>Company<input data-f="company" type="text" maxlength="191" value="${esc(c.company||'')}" placeholder="Acme Inc"></label>
     <label>Role<input data-f="role" type="text" maxlength="191" value="${esc(c.role||'')}" placeholder="Senior Growth Manager"></label>
     <label>Contact name<input data-f="contact_name" type="text" maxlength="191" value="${esc(c.contact_name||'')}" placeholder="Maya Chen"></label>
@@ -194,7 +222,7 @@ async function openDetail(id){
     <ul class="timeline">${data.notes.length?data.notes.map(n=>`<li><div class="note-row"><span>${esc(n.body)}</span><button type="button" class="note-del" data-del-note="${n.id}">Delete</button></div><span class="when">${esc(n.created_at)}</span></li>`).join(''):'<li>No interactions logged yet.</li>'}</ul>
     <p class="error" data-err></p>`;
   body.querySelector('[data-save]').addEventListener('click',async()=>{
-    const payload={action:'update',id,stage:body.querySelector('[data-f=stage]').value,company:body.querySelector('[data-f=company]').value,role:body.querySelector('[data-f=role]').value,contact_name:body.querySelector('[data-f=contact_name]').value,contact_email:body.querySelector('[data-f=contact_email]').value,job_url:body.querySelector('[data-f=job_url]').value,location:body.querySelector('[data-f=location]').value,source:body.querySelector('[data-f=source]').value,salary_min:body.querySelector('[data-f=salary_min]').value,salary_max:body.querySelector('[data-f=salary_max]').value,currency:body.querySelector('[data-f=currency]').value,date_applied:body.querySelector('[data-f=date_applied]').value,follow_up_date:body.querySelector('[data-f=follow_up_date]').value,notes:body.querySelector('[data-f=notes]').value};
+    const payload={action:'update',id,stage:body.querySelector('[data-f=stage]').value,starred:body.querySelector('[data-f=starred]').checked?1:0,interview_held:body.querySelector('[data-f=interview_held]').checked?1:0,company:body.querySelector('[data-f=company]').value,role:body.querySelector('[data-f=role]').value,contact_name:body.querySelector('[data-f=contact_name]').value,contact_email:body.querySelector('[data-f=contact_email]').value,job_url:body.querySelector('[data-f=job_url]').value,location:body.querySelector('[data-f=location]').value,source:body.querySelector('[data-f=source]').value,salary_min:body.querySelector('[data-f=salary_min]').value,salary_max:body.querySelector('[data-f=salary_max]').value,currency:body.querySelector('[data-f=currency]').value,date_applied:body.querySelector('[data-f=date_applied]').value,follow_up_date:body.querySelector('[data-f=follow_up_date]').value,notes:body.querySelector('[data-f=notes]').value};
     const r=await apiCall(payload);
     if(!r.response.ok){body.querySelector('[data-err]').textContent=r.data.error||'Save failed.';return}
     bbTrack('jobtrack_updated',{tool:TOOL_KEY});await refresh();openDetail(id);
@@ -239,7 +267,7 @@ async function refresh(){
   if(!response.ok){document.querySelector('#contactList').innerHTML=`<p class="error">${esc(data.error||'Could not load.')}</p>`;return}
   DATA=data;
   document.querySelector('#statActive').textContent=data.contacts.filter(c=>ACTIVE_STAGES.includes(c.stage)).length;
-  document.querySelector('#statInterviews').textContent=data.contacts.filter(c=>['screening','interview','final'].includes(c.stage)).length;
+  document.querySelector('#statInterviews').textContent=data.contacts.filter(c=>['screening','interview_booked','waiting_next'].includes(c.stage)).length;
   document.querySelector('#statOffers').textContent=data.contacts.filter(c=>c.stage==='offer'||c.stage==='accepted').length;
   renderFollowups();renderContacts();
 }const addForm=document.querySelector('#addForm');let attempt=crypto.randomUUID();
@@ -274,7 +302,7 @@ document.querySelector('#csvDownload').addEventListener('click',async e=>{
 const csvForm=document.querySelector('#csvForm');
 document.querySelector('#tplLink').addEventListener('click',e=>{
   e.preventDefault();
-  const blob=new Blob(['company,role,contact name,contact email,job url,location,salary min,salary max,currency,where found,date applied,stage,follow up,notes\nAcme Inc,Senior Growth Manager,Maya Chen,maya@acme.co,https://acme.co/jobs/123,Remote (US),120000,140000,CAD,nanoglobals,2026-09-23,applied,2026-09-30,"Applied via the careers page, recruiter reached out on LinkedIn"\nBuildly,Product Growth Lead,,,,Remote,100000,120000,CAD,LinkedIn,,wishlist,,\n'],{type:'text/csv'});
+  const blob=new Blob(['company,role,contact name,contact email,job url,location,salary min,salary max,currency,where found,date applied,stage,follow up,notes\nAcme Inc,Senior Growth Manager,Maya Chen,maya@acme.co,https://acme.co/jobs/123,Remote (US),120000,140000,CAD,nanoglobals,2026-09-23,applied,2026-09-30,"Applied via the careers page, recruiter reached out on LinkedIn"\nBuildly,Product Growth Lead,,,,Remote,100000,120000,CAD,LinkedIn,,new,,\n'],{type:'text/csv'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='corporate-bum-bum-template.csv';a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 });
