@@ -75,9 +75,9 @@
       "name": "Receipt Reader",
       "tag": "Money",
       "icon": "📸",
-      "description": "Snap a photo of any receipt. Bum Bum reads it in your browser and hands you vendor, date, line items, tax, and total as a clean table you can export.",
+      "description": "Snap photos of up to 10 receipts at once. Bum Bum reads them in your browser and hands you vendor, date, line items, tax, and total as clean editable tables. Photos never leave your device.",
       "url": "/tools/receipt-reader/",
-      "cta": "Read a receipt",
+      "cta": "Read receipts",
       "mascot": "/bum/cat-glasses.png"
     }
   ]
