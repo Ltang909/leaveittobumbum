@@ -83,8 +83,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 </section>
 
 <section class="panel">
-<h2>Receipt log</h2>
-<div id="logList"><p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. After a scan, hit &ldquo;Save to log&rdquo; and it will live here, in your account.</p></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h2 style="margin:0">Receipt log</h2><button type="button" class="mini hidden" id="dlAllCsv">Download CSV</button></div>
+<div id="logList" style="margin-top:10px"><p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. After a scan, hit &ldquo;Save to log&rdquo; and it will live here, in your account.</p></div>
 </section>
 <?php endif; ?>
 </main>
@@ -394,32 +394,35 @@ function itemRow(name,amount){
   return tr;
 }
 function csvCell(s){s=String(s??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
-function buildCsv(d){
-  const L=[];
-  L.push(['Receipt from '+d.vendor,d.date,d.currency].map(csvCell).join(','));
-  L.push(['Item','Amount'].map(csvCell).join(','));
-  d.items.forEach(it=>L.push([csvCell(it.name),csvCell(it.amount)].join(',')));
-  if(d.subtotal)L.push(['Subtotal',d.subtotal].map(csvCell).join(','));
-  if(d.tax)L.push([d.taxLabel||'Tax',d.tax].map(csvCell).join(','));
-  if(d.total)L.push(['Total',d.total].map(csvCell).join(','));
-  return L.join('\n');
-}
-
-function downloadCsv(d){
-  const blob=new Blob([buildCsv(d)],{type:'text/csv'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='receipt-'+(d.vendor||'scan').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-'+(d.date||'undated')+'.csv';
-  document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
-}
-
 /* Server-backed receipt log. Only structured data is stored; photos never leave this device. */
+let cachedLogs=[];
 async function fetchLogs(){
   const{response,data}=await apiCall({action:'list'});
   if(!response.ok){document.querySelector('#logList').innerHTML='<p class="error">Could not load your receipt log.</p>';return}
-  renderLog(data.logs||[]);
+  cachedLogs=data.logs||[];
+  document.querySelector('#dlAllCsv').classList.toggle('hidden',!cachedLogs.length);
+  renderLog(cachedLogs);
 }
+function buildAllCsv(logs){
+  const L=[['Vendor','Date','Currency','Item','Amount','Subtotal','Tax','Total'].map(csvCell).join(',')];
+  logs.forEach(e=>{
+    const head=[e.vendor||'',e.date||'',e.currency||''];
+    const sums=[e.subtotal||'',e.tax||'',e.total||''];
+    if(e.items.length)e.items.forEach(it=>L.push([...head,it.name,it.amount,...sums].map(csvCell).join(',')));
+    else L.push([...head,'','',...sums].map(csvCell).join(','));
+  });
+  return L.join(String.fromCharCode(10));
+}
+document.querySelector('#dlAllCsv').addEventListener('click',()=>{
+  if(!cachedLogs.length)return;
+  const blob=new Blob([buildAllCsv(cachedLogs)],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='receipt-log-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  bbTrack('receipt_export',{how:'log_all'});
+});
 function renderLog(log){
   const list=document.querySelector('#logList');
   if(!log.length){list.innerHTML='<p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. After a scan, hit &ldquo;Save to log&rdquo; and it will live here, in your account.</p>';return}
@@ -436,9 +439,7 @@ function renderLog(log){
       const{response}=await apiCall({action:'delete',id:entry.id});
       if(response.ok)fetchLogs();
     });
-    const csv=document.createElement('button');csv.type='button';csv.className='mini';csv.textContent='CSV';
-    csv.addEventListener('click',()=>{downloadCsv(entry);bbTrack('receipt_export',{how:'log_row'})});
-    row.appendChild(load);row.appendChild(csv);row.appendChild(del);
+    row.appendChild(load);row.appendChild(del);
     list.appendChild(row);
   });
 }
