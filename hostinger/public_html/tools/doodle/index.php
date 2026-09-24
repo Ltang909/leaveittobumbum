@@ -1,6 +1,6 @@
-<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Doodle | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=4"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
-h1,.lede{max-width:none}
+<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor(billingUser($user)) : null; ?>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Doodle | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=5"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .doodle-layout{display:grid;gap:16px;margin-top:20px}
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
 .tool-group{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 12px}
@@ -24,7 +24,7 @@ input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
 .export-row .button{min-height:48px}
 .hint{font-size:13px;opacity:.7;margin:0}
 @media(max-width:560px){.tool-group{width:100%;justify-content:flex-start}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Doodle"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum ready to doodle"><h1>A tiny canvas for big ideas.</h1><p class="lede">Doodle is a pocket sketchpad. Draw with a finger, stylus, or mouse, then export a crisp PNG or SVG. Handy for signatures, diagrams, and masterpieces. Free forever, no account needed, nothing leaves your browser.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Doodle"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum ready to doodle"><h1>A tiny canvas for big ideas.</h1><p class="lede">Doodle is a pocket sketchpad. Draw with a finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Saving or copying your doodle uses one action.</p>
 <div class="doodle-layout">
 <div class="toolbar">
 <div class="tool-group"><span class="lbl">Tool</span><div class="seg" role="group" aria-label="Pen or eraser"><button type="button" id="penBtn" class="on">Pen</button><button type="button" id="eraserBtn">Eraser</button></div></div>
@@ -34,7 +34,7 @@ input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
 <div class="tool-group"><span class="lbl">Paper</span><div class="seg" role="group" aria-label="Background"><button type="button" data-bg="transparent" class="on">Clear</button><button type="button" data-bg="#ffffff">White</button><button type="button" data-bg="#fdf6e3">Cream</button></div></div>
 <div class="tool-group"><span class="lbl">Shape</span><div class="seg" role="group" aria-label="Canvas shape"><button type="button" data-aspect="wide" class="on">Classic</button><button type="button" data-aspect="sig">Signature</button><button type="button" data-aspect="square">Square</button></div></div>
 </div>
-<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button><button type="button" class="button secondary" id="copyBtn">Copy</button></div>
+<div class="export-row"><?php if (!$user): ?><a class="button" href="/account/?next=<?= urlencode('/tools/doodle/') ?>">Sign in to save your doodle</a><span class="hint" style="margin:0">Saving or copying uses one action.</span><?php else: ?><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button><button type="button" class="button secondary" id="copyBtn">Copy</button><span class="hint" style="margin:0">1 action per save.</span><?php endif; ?></div>
 <div class="canvas-wrap"><canvas id="pad"></canvas></div>
 <p class="hint">Tip: pick Signature shape and Clear paper for a transparent signature you can drop onto any document.</p>
 </div>
@@ -94,13 +94,30 @@ document.querySelector('#clearBtn').addEventListener('click',()=>{if(!strokes.le
 document.querySelectorAll('[data-bg]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-bg]').forEach(x=>x.classList.remove('on'));b.classList.add('on');bg=b.dataset.bg;redraw()}));
 document.querySelectorAll('[data-aspect]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-aspect]').forEach(x=>x.classList.remove('on'));b.classList.add('on');aspect=b.dataset.aspect;fitCanvas()}));
 function download(name,url){const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}
-document.querySelector('#pngBtn').addEventListener('click',()=>{
+async function spendDoodleAction(){
+  try{
+    const s=await fetch('/api/session.php').then(r=>r.json());
+    const key='doodle-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);
+    const res=await fetch('/api/tools/doodle.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:s.csrf,idempotencyKey:key})});
+    const data=await res.json().catch(()=>({}));
+    if(res.status===402){
+      document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">Saving a doodle uses one action. Helper gives you 1,500 actions for $12/month.</p><p><a class="button" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" href="/account/">See your usage</a></p></div>';
+      return false;
+    }
+    if(!res.ok){alert(data.error||'Could not save. Try again.');return false}
+    if(data&&data.usage)document.dispatchEvent(new CustomEvent('bb:usage',{detail:data.usage}));
+    return true;
+  }catch(e){alert('Could not reach Bum Bum. Check your connection and try again.');return false}
+}
+const pngBtn=document.querySelector('#pngBtn');if(pngBtn)pngBtn.addEventListener('click',async()=>{
+  if(!await spendDoodleAction())return;
   const w=LOGICAL_W*2,h=logicalH()*2,off=document.createElement('canvas');off.width=w;off.height=h;
   render(off.getContext('2d'),w,h);
   download('doodle.png',off.toDataURL('image/png'));
 });
 function escXml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-document.querySelector('#svgBtn').addEventListener('click',()=>{
+const svgBtn=document.querySelector('#svgBtn');if(svgBtn)svgBtn.addEventListener('click',async()=>{
+  if(!await spendDoodleAction())return;
   const w=LOGICAL_W,h=logicalH();
   const d=s=>'M'+s.pts.map(p=>(p.x*w).toFixed(1)+' '+(p.y*h).toFixed(1)).join(' L');
   const sw=s=>(s.size*(0.4+0.6*(s.avgP||0.5))).toFixed(1);
@@ -114,8 +131,9 @@ document.querySelector('#svgBtn').addEventListener('click',()=>{
   const blob=new Blob([svg],{type:'image/svg+xml'});
   const url=URL.createObjectURL(blob);download('doodle.svg',url);setTimeout(()=>URL.revokeObjectURL(url),4000);
 });
-document.querySelector('#copyBtn').addEventListener('click',async()=>{
-  const btn=document.querySelector('#copyBtn');
+const copyBtn=document.querySelector('#copyBtn');if(copyBtn)copyBtn.addEventListener('click',async()=>{
+  const btn=copyBtn;
+  if(!await spendDoodleAction())return;
   try{
     const w=LOGICAL_W*2,h=logicalH()*2,off=document.createElement('canvas');off.width=w;off.height=h;
     render(off.getContext('2d'),w,h);

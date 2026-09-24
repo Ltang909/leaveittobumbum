@@ -18,8 +18,8 @@ $shMeter = !empty($showMeter);
    response carries fresh usage, so the header balance updates without reload. */
 (function(){
   function paint(u){
-    if(!u||typeof u.remaining==='undefined'||typeof u.limit==='undefined')return;
-    var label=u.remaining+' of '+u.limit+' actions left';
+    if(!u||typeof u.unlimited==='undefined'&&typeof u.remaining==='undefined')return;
+    var label=u.unlimited?'Unlimited actions':u.remaining+' of '+u.limit+' actions left';
     document.querySelectorAll('.usage-pill').forEach(function(el){el.textContent=label;});
   }
   document.addEventListener('bb:usage',function(e){paint(e.detail);});

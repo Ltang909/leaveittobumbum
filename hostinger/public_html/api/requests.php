@@ -2,18 +2,37 @@
 // Custom tool requests (Operator plan). GET lists the billing account's
 // requests, POST submits a new one against the billing account's monthly slot.
 // Team members draw on the team owner's Operator perk and shared allowance.
+// Every Operator request is also mirrored into the public community queue,
+// flagged as an operator request, so everyone can follow along.
 require __DIR__ . '/_bootstrap.php';
 $user = requireUser();
 $bill = billingUser($user);
 $billId = (int) $bill['id'];
+ensureCustomRequestTables();
+
+// Stored datetimes are UTC; the browser parses bare "YYYY-MM-DD HH:MM:SS"
+// as local time, which skews countdowns by the UTC offset. Emit ISO 8601.
+function isoUtc(?string $dt): ?string {
+    if (!$dt) return null;
+    try { return (new DateTime((string) $dt, new DateTimeZone('UTC')))->format('c'); }
+    catch (Throwable $e) { return (string) $dt; }
+}
+function requestRow(array $r): array {
+    foreach (['requested_at', 'deadline_at', 'delivered_at'] as $k) {
+        if (array_key_exists($k, $r)) $r[$k] = isoUtc($r[$k]);
+    }
+    return $r;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $stmt = db()->prepare('SELECT id, title, status, requested_at, deadline_at, delivered_at FROM custom_requests WHERE user_id = ? ORDER BY requested_at DESC LIMIT 20');
         $stmt->execute([$billId]);
-        jsonResponse($stmt->fetchAll());
+        jsonResponse(array_map('requestRow', $stmt->fetchAll()));
     } catch (PDOException $error) {
-        jsonResponse(['error' => 'Requests are not set up yet.'], 503);
+        error_log('Request list failed: ' . $error->getMessage());
+        $detail = isAdmin($user) ? ' Admin detail: ' . $error->getMessage() : '';
+        jsonResponse(['error' => 'Requests are not set up yet.' . $detail], 503);
     }
 }
 
@@ -27,18 +46,31 @@ $title = trim((string) ($input['title'] ?? ''));
 $details = trim((string) ($input['details'] ?? ''));
 if ($title === '' || mb_strlen($title) > 180) jsonResponse(['error' => 'Give the request a short name.'], 422);
 if ($details === '' || mb_strlen($details) > 5000) jsonResponse(['error' => 'Describe the task and what done looks like.'], 422);
-$period = periodKey($bill);
+$monthStart = periodKey($bill) . '-01 00:00:00';
 try {
-    $open = db()->prepare("SELECT id FROM custom_requests WHERE user_id = ? AND status = 'open' AND DATE_FORMAT(requested_at, '%Y-%m') = ? LIMIT 1");
-    $open->execute([$billId, $period]);
+    // NOTE: compare requested_at as a datetime range, never via
+    // DATE_FORMAT(requested_at, ...) = ?. DATE_FORMAT() on a column returns
+    // utf8mb4_general_ci here, which clashes with the connection collation.
+    $open = db()->prepare("SELECT id FROM custom_requests WHERE user_id = ? AND status = 'open' COLLATE utf8mb4_unicode_ci AND requested_at >= ? LIMIT 1");
+    $open->execute([$billId, $monthStart]);
     if ($open->fetch()) jsonResponse(['error' => 'One request per month. The current one is still in progress.'], 409);
     $stmt = db()->prepare('INSERT INTO custom_requests (user_id, title, details, deadline_at) VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 36 HOUR))');
     $stmt->execute([$billId, $title, $details]);
     $id = (int) db()->lastInsertId();
+    // Mirror into the public community queue with the operator flag. This is
+    // best-effort: a mirror failure must never block the real request.
+    try {
+        ensureToolRequestTables();
+        $mirror = db()->prepare('INSERT INTO tool_requests (name, email, problem, outcome, status, is_operator) VALUES (?, ?, ?, ?, ?, 1)');
+        $mirror->execute(['', (string) ($user['email'] ?? ''), $title, $details, 'requested']);
+    } catch (Throwable $mirrorError) {
+        error_log('Operator queue mirror failed: ' . $mirrorError->getMessage());
+    }
     $row = db()->prepare('SELECT id, title, status, requested_at, deadline_at FROM custom_requests WHERE id = ?');
     $row->execute([$id]);
-    jsonResponse(['request' => $row->fetch()], 201);
+    jsonResponse(['request' => requestRow($row->fetch())], 201);
 } catch (PDOException $error) {
     error_log('Request submit failed: ' . $error->getMessage());
-    jsonResponse(['error' => 'Requests are not set up yet.'], 503);
+    $detail = isAdmin($user) ? ' Admin detail: ' . $error->getMessage() : '';
+    jsonResponse(['error' => 'Requests are not set up yet.' . $detail], 503);
 }

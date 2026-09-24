@@ -71,6 +71,108 @@ function requireCsrf(array $input): void {
     if (!hash_equals(csrfToken(), (string) ($input['csrf'] ?? ''))) jsonResponse(['error' => 'Please refresh and try again.'], 403);
 }
 
+// Admin: full access, including unlimited actions and managing the community
+// request queue. Email-based so no DB migration is needed; override with
+// 'admin_emails' => [...] in the server config.
+function adminEmails(): array {
+    try {
+        $cfg = config()['admin_emails'] ?? null;
+        if (is_array($cfg) && $cfg) return array_values(array_unique(array_map('strtolower', array_map('trim', $cfg))));
+    } catch (Throwable $e) {}
+    return ['hello@leaveittobumbum.com'];
+}
+
+function isAdmin(?array $user): bool {
+    if (!$user || empty($user['email'])) return false;
+    return in_array(strtolower(trim((string) $user['email'])), adminEmails(), true);
+}
+
+function requireAdmin(?array $user): array {
+    if (!isAdmin($user)) jsonResponse(['error' => 'Not allowed.'], 403);
+    return $user;
+}
+
+// Community tool-request queue tables. Called lazily so the endpoints work
+// even if the tables were never created by hand.
+function ensureToolRequestTables(): void {
+    db()->exec("CREATE TABLE IF NOT EXISTS tool_requests (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(120) NOT NULL DEFAULT '',
+        email VARCHAR(190) NOT NULL DEFAULT '',
+        problem TEXT NOT NULL,
+        outcome TEXT NOT NULL,
+        status ENUM('requested','planned','building','shipped','completed','cancelled') NOT NULL DEFAULT 'requested',
+        votes INT NOT NULL DEFAULT 0,
+        is_operator TINYINT(1) NOT NULL DEFAULT 0,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        KEY idx_status_votes (status, votes)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    db()->exec("CREATE TABLE IF NOT EXISTS tool_request_votes (
+        request_id INT UNSIGNED NOT NULL,
+        voter_key VARCHAR(80) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (request_id, voter_key)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    try {
+        // Tables created before completed/cancelled existed get the wider enum.
+        $col = db()->query("SHOW COLUMNS FROM tool_requests LIKE 'status'")->fetch();
+        if ($col && strpos((string) $col['Type'], "'completed'") === false) {
+            db()->exec("ALTER TABLE tool_requests MODIFY status ENUM('requested','planned','building','shipped','completed','cancelled') NOT NULL DEFAULT 'requested'");
+        }
+        // Older tables lack the operator flag.
+        $op = db()->query("SHOW COLUMNS FROM tool_requests LIKE 'is_operator'")->fetch();
+        if (!$op) db()->exec("ALTER TABLE tool_requests ADD COLUMN is_operator TINYINT(1) NOT NULL DEFAULT 0");
+        // Same collation normalization as custom_requests: connection is
+        // utf8mb4_unicode_ci, older tables may be utf8mb4_general_ci.
+        db()->exec('ALTER TABLE tool_requests CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+        db()->exec('ALTER TABLE tool_request_votes CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+    } catch (Throwable $e) { error_log('tool_requests migration failed: ' . $e->getMessage()); }
+}
+
+// Operator custom-request tables (36-hour guarantee). Self-healing: creates
+// the table and backfills any columns an older schema is missing, so the
+// account-page form works even if the table was created by hand long ago.
+function ensureCustomRequestTables(): void {
+    db()->exec("CREATE TABLE IF NOT EXISTS custom_requests (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        user_id INT UNSIGNED NOT NULL,
+        title VARCHAR(180) NOT NULL,
+        details TEXT NOT NULL,
+        status ENUM('open','delivered','overdue_credited') NOT NULL DEFAULT 'open',
+        requested_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        deadline_at DATETIME NOT NULL,
+        delivered_at DATETIME NULL,
+        credit_owed TINYINT(1) NOT NULL DEFAULT 0,
+        stripe_credit_id VARCHAR(80) NULL,
+        INDEX idx_user (user_id),
+        INDEX idx_status_deadline (status, deadline_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $want = [
+        'user_id' => 'INT UNSIGNED NOT NULL',
+        'title' => 'VARCHAR(180) NOT NULL',
+        'details' => 'TEXT NOT NULL',
+        'status' => "ENUM('open','delivered','overdue_credited') NOT NULL DEFAULT 'open'",
+        'requested_at' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'deadline_at' => 'DATETIME NOT NULL',
+        'delivered_at' => 'DATETIME NULL',
+        'credit_owed' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'stripe_credit_id' => 'VARCHAR(80) NULL',
+    ];
+    try {
+        $have = [];
+        foreach (db()->query('SHOW COLUMNS FROM custom_requests')->fetchAll() as $c) $have[$c['Field']] = true;
+        foreach ($want as $col => $def) {
+            if (!isset($have[$col])) db()->exec("ALTER TABLE custom_requests ADD COLUMN $col $def");
+        }
+    } catch (Throwable $e) { error_log('custom_requests heal failed: ' . $e->getMessage()); }
+    // Old tables were created with utf8mb4_general_ci while the connection
+    // uses utf8mb4_unicode_ci, so string comparisons (e.g. status = 'open')
+    // fail with "Illegal mix of collations". Normalize once.
+    try {
+        db()->exec('ALTER TABLE custom_requests CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+    } catch (Throwable $e) { error_log('custom_requests collation fix failed: ' . $e->getMessage()); }
+}
+
 function currentUser(): ?array {
     startSecureSession();
     if (empty($_SESSION['user_id'])) return null;
@@ -138,6 +240,12 @@ function teamSeats(int $ownerId, string $plan): array {
 
 function usageFor(array $user): array {
     $period = periodKey($user);
+    if (isAdmin($user)) {
+        $stmt = db()->prepare('SELECT used_actions FROM usage_periods WHERE user_id = ? AND period_key = ?');
+        $stmt->execute([$user['id'], $period]);
+        $used = (int) ($stmt->fetchColumn() ?: 0);
+        return ['period' => $period, 'used' => $used, 'limit' => 0, 'remaining' => 0, 'unlimited' => true];
+    }
     $limit = PLAN_LIMITS[$user['plan']] ?? PLAN_LIMITS['free'];
     $stmt = db()->prepare('SELECT used_actions FROM usage_periods WHERE user_id = ? AND period_key = ?');
     $stmt->execute([$user['id'], $period]);
@@ -148,27 +256,39 @@ function usageFor(array $user): array {
 function consumeAction(int $userId, string $plan, string $period, string $tool, string $idempotency): array {
     $limit = PLAN_LIMITS[$plan] ?? PLAN_LIMITS['free'];
     $pdo = db();
+    // Admins never run out of actions. Usage is still recorded so the
+    // activity history stays accurate; only the limit check is skipped.
+    $unlimited = false;
+    try {
+        $emailStmt = $pdo->prepare('SELECT email FROM users WHERE id = ?');
+        $emailStmt->execute([$userId]);
+        $unlimited = isAdmin(['email' => (string) $emailStmt->fetchColumn()]);
+    } catch (Throwable $e) { $unlimited = false; }
     $pdo->beginTransaction();
     try {
         $existing = $pdo->prepare('SELECT id FROM action_ledger WHERE user_id = ? AND idempotency_key = ?');
         $existing->execute([$userId, $idempotency]);
         if ($existing->fetch()) {
             $pdo->commit();
-            return ['counted' => false, 'duplicate' => true];
+            $dup = ['counted' => false, 'duplicate' => true];
+            if ($unlimited) $dup['unlimited'] = true;
+            return $dup;
         }
         $upsert = $pdo->prepare('INSERT INTO usage_periods (user_id, period_key, used_actions, included_actions) VALUES (?, ?, 0, ?) ON DUPLICATE KEY UPDATE included_actions = VALUES(included_actions)');
         $upsert->execute([$userId, $period, $limit]);
         $lock = $pdo->prepare('SELECT used_actions FROM usage_periods WHERE user_id = ? AND period_key = ? FOR UPDATE');
         $lock->execute([$userId, $period]);
         $used = (int) $lock->fetchColumn();
-        if ($used >= $limit) {
+        if (!$unlimited && $used >= $limit) {
             $pdo->rollBack();
             return ['counted' => false, 'limit_reached' => true, 'used' => $used, 'limit' => $limit];
         }
         $pdo->prepare('INSERT INTO action_ledger (user_id, period_key, tool_key, idempotency_key) VALUES (?, ?, ?, ?)')->execute([$userId, $period, $tool, $idempotency]);
         $pdo->prepare('UPDATE usage_periods SET used_actions = used_actions + 1 WHERE user_id = ? AND period_key = ?')->execute([$userId, $period]);
         $pdo->commit();
-        return ['counted' => true, 'used' => $used + 1, 'limit' => $limit];
+        $out = ['counted' => true, 'used' => $used + 1, 'limit' => $limit];
+        if ($unlimited) { $out['limit'] = 0; $out['remaining'] = 0; $out['unlimited'] = true; }
+        return $out;
     } catch (Throwable $error) {
         if ($pdo->inTransaction()) $pdo->rollBack();
         throw $error;

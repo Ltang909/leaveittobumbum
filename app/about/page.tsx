@@ -24,16 +24,6 @@ export default function About() {
           <p>Big software makes a big promise and then hands you homework. A tiny tool makes one small promise and keeps it: one click, one useful result. If a missing tool is slowing you down, it shouldn&apos;t become a six-month project &mdash; it should become someone else&apos;s Tuesday afternoon.</p>
           <h2>Who is Bum Bum?</h2>
           <p>Bum Bum is a cat, and the chief tiny-tool operator around here. Every tool we ship has to pass Bum Bum&apos;s one-question review: <em>&ldquo;Would this save a real busy person real time, today?&rdquo;</em> If not, it doesn&apos;t ship.</p>
-          <div className="mascot-row">
-            <figure><img src="/bum-bum-character.png" alt="Bum Bum, illustrated portrait" /><figcaption>The official portrait</figcaption></figure>
-            <figure><img src="/bum-bum-funny.png" alt="Bum Bum making a funny face" /><figcaption>After the third espresso</figcaption></figure>
-          </div>
-          <h3>The many moods of Bum Bum</h3>
-          <div className="moods">
-            {[["cat-curious", "Default"], ["cat-wink-blep", "Wink"], ["cat-licking", "Blep"], ["cat-sunglasses", "Cool"], ["cat-excited-v2", "Excited"], ["cat-bowtie", "Judging"], ["cat-peeking", "Peek"], ["cat-sleepy-v2", "Sleepy"]].map(([file, label]) => (
-              <figure key={file}><img src={`/bum/${file}.png`} alt={`Bum Bum: ${label}`} /><figcaption>{label}</figcaption></figure>
-            ))}
-          </div>
           <h2>The Operator promise</h2>
           <p>Operator members can request one scoped custom tool a month, and Bum Bum ships it within 36 hours of agreed scope &mdash; or the next month is on us. A missing tool should not become a six-month project.</p>
           <h2>Say hello</h2>

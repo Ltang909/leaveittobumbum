@@ -14,7 +14,7 @@ $checked = 0;
 $credited = 0;
 $errors = [];
 try {
-    $rows = db()->query("SELECT r.id, r.user_id, u.plan, u.stripe_customer_id FROM custom_requests r JOIN users u ON u.id = r.user_id WHERE r.status = 'open' AND r.deadline_at < NOW()")->fetchAll();
+    $rows = db()->query("SELECT r.id, r.user_id, u.plan, u.stripe_customer_id FROM custom_requests r JOIN users u ON u.id = r.user_id WHERE r.status = 'open' COLLATE utf8mb4_unicode_ci AND r.deadline_at < NOW()")->fetchAll();
 } catch (PDOException $error) {
     jsonResponse(['error' => 'Requests query failed: ' . $error->getMessage()], 503);
 }
