@@ -15,6 +15,7 @@ function ensureChaserSchema(): void {
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
         client_name VARCHAR(191) NOT NULL,
+        client_email VARCHAR(191) NOT NULL DEFAULT '',
         amount DECIMAL(12,2) NOT NULL,
         currency CHAR(3) NOT NULL DEFAULT 'USD',
         invoice_no VARCHAR(64) NOT NULL DEFAULT '',
@@ -23,11 +24,22 @@ function ensureChaserSchema(): void {
         status VARCHAR(16) NOT NULL DEFAULT 'open',
         paid_at TIMESTAMP NULL,
         reminded_at TIMESTAMP NULL,
+        last_chase_sent_at TIMESTAMP NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         KEY idx_user (user_id),
         KEY idx_user_status_due (user_id, status, due_date)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    // Migrations for tables created before these columns existed.
+    foreach ([
+        'client_email' => "ADD COLUMN client_email VARCHAR(191) NOT NULL DEFAULT '' AFTER client_name",
+        'last_chase_sent_at' => 'ADD COLUMN last_chase_sent_at TIMESTAMP NULL AFTER reminded_at',
+    ] as $col => $ddl) {
+        try {
+            $has = db()->query("SHOW COLUMNS FROM chaser_invoices LIKE '{$col}'")->fetch();
+            if (!$has) db()->exec("ALTER TABLE chaser_invoices {$ddl}");
+        } catch (Throwable $e) { /* column check is best-effort; writes are validated below */ }
+    }
 }
 
 function chaser_idempotency(array $input): string {
@@ -62,6 +74,7 @@ function chaser_public_invoice(array $row): array {
     return [
         'id' => (int) $row['id'],
         'client_name' => $row['client_name'],
+        'client_email' => $row['client_email'] ?? '',
         'amount' => (float) $row['amount'],
         'currency' => $row['currency'],
         'amount_display' => chaser_money($row['amount'], $row['currency']),
@@ -71,6 +84,7 @@ function chaser_public_invoice(array $row): array {
         'status' => $row['status'],
         'days_overdue' => $days,
         'paid_at' => $row['paid_at'],
+        'last_chase_sent_at' => $row['last_chase_sent_at'] ?? null,
         'created_at' => $row['created_at'],
     ];
 }
@@ -87,13 +101,13 @@ function chaser_draft(array $inv, string $voice = 'me'): array {
         // Bum Bum as the billing assistant: the client never hears awkward-you.
         if ($days < 0) {
             $subject = "Upcoming payment: {$amount} due {$due}";
-            $body = "Hi {$client},\n\nI'm Bum Bum — I handle the billing side of things. Just a friendly note that {$amount}{$ref} is due on {$due}.\n\nIf you need anything to get it processed on time, reply here and I'll sort it.\n\nThanks!\nBum Bum";
+            $body = "Hi {$client},\n\nI'm Bum Bum, I handle the billing side of things. Just a friendly note that {$amount}{$ref} is due on {$due}.\n\nIf you need anything to get it processed on time, reply here and I'll sort it.\n\nThanks!\nBum Bum";
         } elseif ($days <= 14) {
             $subject = "Friendly nudge: {$amount} was due {$due}";
-            $body = "Hi {$client},\n\nI'm Bum Bum — I look after billing. Noticed {$amount}{$ref} was due on {$due} ({$days} {$dayWord} ago) and it hasn't come through yet.\n\nCould you let me know when to expect it? Happy to resend the invoice if it's gone walkabout.\n\nThanks!\nBum Bum";
+            $body = "Hi {$client},\n\nI'm Bum Bum, I look after billing. Noticed {$amount}{$ref} was due on {$due} ({$days} {$dayWord} ago) and it hasn't come through yet.\n\nCould you let me know when to expect it? Happy to resend the invoice if it's gone walkabout.\n\nThanks!\nBum Bum";
         } elseif ($days <= 30) {
             $subject = "Following up: {$amount} overdue";
-            $body = "Hi {$client},\n\nBum Bum here, on the billing side. {$amount}{$ref} was due on {$due} — that's {$days} {$dayWord} overdue now.\n\nPlease let me know the status and when payment will land. If there's a problem with the invoice itself, tell me now and we'll sort it out.\n\nThanks,\nBum Bum";
+            $body = "Hi {$client},\n\nBum Bum here, on the billing side. {$amount}{$ref} was due on {$due}, that's {$days} {$dayWord} overdue now.\n\nPlease let me know the status and when payment will land. If there's a problem with the invoice itself, tell me now and we'll sort it out.\n\nThanks,\nBum Bum";
         } else {
             $subject = "Final notice: {$amount}, {$days} {$dayWord} overdue";
             $body = "Hi {$client},\n\nThis is Bum Bum with a final notice: {$amount}{$ref} is {$days} {$dayWord} overdue (due {$due}).\n\nI need this resolved this week. Please confirm payment timing today, or flag what's blocking it.\n\nRegards,\nBum Bum";
@@ -133,16 +147,16 @@ function chaser_take(array $inv, ?array $intel): string {
     if ($intel && $intel['count'] >= 2) {
         $avg = (int) $intel['avg_late'];
         $habit = $avg <= 0 ? 'usually pays on time' : "usually pays ~{$avg} days late";
-        if ($days <= 0) return "{$intel['name']} {$habit} — nothing to worry about yet.";
+        if ($days <= 0) return "{$intel['name']} {$habit}, nothing to worry about yet.";
         if ($days <= max($avg, 7)) return "{$intel['name']} {$habit}, so this looks normal. A gentle nudge is plenty.";
-        return "{$intel['name']} {$habit} — this one's unusually late. Time to be firm.";
+        return "{$intel['name']} {$habit}. This one's unusually late. Time to be firm.";
     }
     if ($intel) {
-        return "Only one paid invoice from {$intel['name']} so far — starting gentle is the smart move.";
+        return "Only one paid invoice from {$intel['name']} so far, starting gentle is the smart move.";
     }
-    if ($days <= 0) return "No payment history for {$client} yet — a heads-up before it's due is perfect.";
-    if ($days <= 14) return "No payment history for {$client} yet — starting with a gentle nudge.";
-    return "No payment history for {$client} yet, and it's been {$days} days — don't be shy about this one.";
+    if ($days <= 0) return "No payment history for {$client} yet. A heads-up before it's due is perfect.";
+    if ($days <= 14) return "No payment history for {$client} yet, starting with a gentle nudge.";
+    return "No payment history for {$client} yet, and it's been {$days} days. Don't be shy about this one.";
 }
 
 requirePost();
@@ -217,8 +231,49 @@ if ($action === 'draft') {
     jsonResponse($draft);
 }
 
+if ($action === 'send') {
+    $id = (int) ($input['id'] ?? 0);
+    $voice = (string) ($input['voice'] ?? 'me');
+    if (!in_array($voice, ['me', 'assistant'], true)) $voice = 'me';
+    $stmt = $pdo->prepare('SELECT * FROM chaser_invoices WHERE id = ? AND user_id = ?');
+    $stmt->execute([$id, $userId]);
+    $row = $stmt->fetch();
+    if (!$row) jsonResponse(['error' => 'Invoice not found.'], 404);
+    if ($row['status'] !== 'open') jsonResponse(['error' => 'This invoice is already paid. Nice.'], 422);
+    $clientEmail = trim((string) ($row['client_email'] ?? ''));
+    if (!filter_var($clientEmail, FILTER_VALIDATE_EMAIL)) {
+        jsonResponse(['error' => 'Add the client email address first, then Bum Bum can send it.'], 422);
+    }
+    if (!bb_mail_configured()) {
+        jsonResponse(['error' => 'Email sending is not set up on this server yet.'], 503);
+    }
+    // Already chased today? Report success without charging or re-sending.
+    $todayStart = date('Y-m-d 00:00:00');
+    if (!empty($row['last_chase_sent_at']) && $row['last_chase_sent_at'] >= $todayStart) {
+        jsonResponse(['ok' => true, 'sent_to' => $clientEmail, 'voice' => $voice, 'duplicate' => true, 'usage' => usageFor($bill)]);
+    }
+    // One charged send per invoice per day; the day key keeps a retry after a
+    // failed send free, while last_chase_sent_at gates the actual email.
+    $dayKey = 'chaser-send-' . $id . '-' . date('Y-m-d');
+    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'invoice-chaser', $dayKey);
+    if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+
+    $inv = chaser_public_invoice($row);
+    $draft = chaser_draft($inv, $voice);
+    $body = $draft['body'] . "\n\n--\nSent via Bum Bum";
+    $replyTo = trim((string) ($user['email'] ?? ''));
+    [$sent, $mailError] = bb_send_mail($clientEmail, $draft['subject'], $body, $replyTo);
+    if (!$sent) {
+        jsonResponse(['error' => 'The email could not be sent right now. Try again in a bit.'], 502);
+    }
+    $stmt = $pdo->prepare('UPDATE chaser_invoices SET last_chase_sent_at = NOW() WHERE id = ? AND user_id = ?');
+    $stmt->execute([$id, $userId]);
+    jsonResponse(['ok' => true, 'sent_to' => $clientEmail, 'voice' => $voice, 'duplicate' => false, 'usage' => usageFor($bill)]);
+}
+
 if ($action === 'add') {
     $client = trim((string) ($input['client_name'] ?? ''));
+    $clientEmail = trim((string) ($input['client_email'] ?? ''));
     $amountRaw = trim((string) ($input['amount'] ?? ''));
     $currency = strtoupper(trim((string) ($input['currency'] ?? 'USD')));
     $invoiceNo = trim((string) ($input['invoice_no'] ?? ''));
@@ -226,6 +281,7 @@ if ($action === 'add') {
     $notes = trim((string) ($input['notes'] ?? ''));
     if ($client === '') jsonResponse(['error' => 'Who owes you? Give the client a name.'], 422);
     if (mb_strlen($client) > 191) jsonResponse(['error' => 'Keep the client name under 191 characters.'], 422);
+    if ($clientEmail !== '' && !filter_var($clientEmail, FILTER_VALIDATE_EMAIL)) jsonResponse(['error' => 'That client email does not look valid.'], 422);
     $amount = filter_var($amountRaw, FILTER_VALIDATE_FLOAT);
     if ($amount === false || $amount <= 0 || $amount > 100000000) jsonResponse(['error' => 'Enter an amount greater than zero.'], 422);
     if (!in_array($currency, CHASER_CURRENCIES, true)) jsonResponse(['error' => 'Pick a valid currency.'], 422);
@@ -238,8 +294,8 @@ if ($action === 'add') {
     if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
     $invoice = null;
     if (empty($count['duplicate'])) {
-        $stmt = $pdo->prepare('INSERT INTO chaser_invoices (user_id, client_name, amount, currency, invoice_no, due_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$userId, $client, $amount, $currency, $invoiceNo, $dueDate, $notes === '' ? null : $notes]);
+        $stmt = $pdo->prepare('INSERT INTO chaser_invoices (user_id, client_name, client_email, amount, currency, invoice_no, due_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$userId, $client, $clientEmail, $amount, $currency, $invoiceNo, $dueDate, $notes === '' ? null : $notes]);
         $id = (int) $pdo->lastInsertId();
         $stmt = $pdo->prepare('SELECT * FROM chaser_invoices WHERE id = ?');
         $stmt->execute([$id]);
@@ -264,6 +320,13 @@ if ($action === 'update') {
         if ($client === '' || mb_strlen($client) > 191) jsonResponse(['error' => 'Give the client a valid name.'], 422);
         $fields[] = 'client_name = ?';
         $params[] = $client;
+    }
+    if (array_key_exists('client_email', $input)) {
+        $clientEmail = trim((string) $input['client_email']);
+        if ($clientEmail !== '' && !filter_var($clientEmail, FILTER_VALIDATE_EMAIL)) jsonResponse(['error' => 'That client email does not look valid.'], 422);
+        if (mb_strlen($clientEmail) > 191) jsonResponse(['error' => 'Keep the client email under 191 characters.'], 422);
+        $fields[] = 'client_email = ?';
+        $params[] = $clientEmail;
     }
     if (array_key_exists('amount', $input)) {
         $amount = filter_var(trim((string) $input['amount']), FILTER_VALIDATE_FLOAT);
@@ -345,8 +408,8 @@ if ($action === 'remind') {
     }
     $nOverdue = count($overdueLines);
     $subject = $nOverdue > 0
-        ? "Bum Bum: {$nOverdue} overdue invoice" . ($nOverdue === 1 ? '' : 's') . ' — your chase list is ready'
-        : 'Bum Bum: your upcoming invoices — chase list inside';
+        ? "Bum Bum: {$nOverdue} overdue invoice" . ($nOverdue === 1 ? '' : 's') . : your chase list is ready'
+        : 'Bum Bum: your upcoming invoices: chase list inside';
     $appUrl = rtrim((string) (config()['app_url'] ?? ''), '/');
     $lines = ["Hey! Your chase list from Bum Bum:", ''];
     if ($overdueLines) {

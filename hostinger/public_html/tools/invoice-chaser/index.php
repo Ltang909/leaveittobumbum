@@ -45,11 +45,13 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 .draft-box{border:1px solid #d9cdae}
 .modal-close{font-weight:700}
+.tell-bum input{margin-top:6px}
+.nl-confirm{background:#fdf8ef;border:1px solid #e7dcc3;border-radius:12px;padding:12px 14px;margin-top:10px}
 .chaching{text-align:center;padding:32px 20px}
 .chaching img{width:110px;height:auto}
 .chaching-amount{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:clamp(2.5rem,9vw,4rem);margin:6px 0;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Invoice Chaser"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum in a bowtie, ready to collect"><h1>Get paid without the awkward.</h1><p class="lede">Invoice Chaser tracks who owes you what — and it can be the bad cop so you don't have to. Flip any chase email to send as <b>Bum Bum, your billing assistant</b>, and Bum Bum learns how each client actually pays, so it knows when to nudge and when to sit tight. Adding an invoice uses one action. Everything else is free.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Invoice Chaser"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum in a bowtie, ready to collect"><h1>Get paid without the awkward.</h1><p class="lede">Just tell Bum Bum who owes you what, in plain English. Bum Bum writes the chase email in the right tone, sends it <b>as your billing assistant</b> in one tap, and learns how each client actually pays so it knows when to nudge and when to sit tight. Adding an invoice or sending a chase uses one action. Everything else is free.</p>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to chase invoices</h2><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
@@ -59,7 +61,10 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
   <div class="stat-card"><b id="statRecovered">–</b><span>recovered this month</span><small id="statRecoveredBy"></small></div>
 </div>
 <section class="panel"><div class="yp-head" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:0">Your chase list</h2><button type="button" class="button" id="remindBtn">Email me the chase list</button></div><p class="lede" style="margin-top:8px">One email with everything overdue and upcoming, sent to <?= htmlspecialchars($user['email'] ?? '') ?>. Uses one action; repeat sends on the same day are free.</p><p id="remindMsg" class="lede"></p><div class="chips" id="filterChips"></div><div id="invoiceList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
-<section class="panel"><h2 style="margin-top:0">Add an invoice</h2><form id="addForm"><div class="form-grid"><label>Client name<input name="client_name" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Amount<input name="amount" type="number" min="0.01" step="0.01" required placeholder="1200.00"></label><label>Currency<select name="currency"><option value="USD">USD ($)</option><option value="CAD">CAD (CA$)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option></select></label><label>Invoice # (optional)<input name="invoice_no" type="text" maxlength="64" placeholder="INV-2026-014"></label><label>Due date<input name="due_date" type="date" required></label><label>Notes (optional)<textarea name="notes" maxlength="2000" placeholder="Net 30, sent Sep 1..."></textarea></label></div><button class="button" style="margin-top:12px">Add invoice</button><p id="addError" class="error"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Add an invoice</h2>
+<div class="tell-bum"><label style="font-weight:600">Just tell Bum Bum<input id="nlInput" type="text" maxlength="300" placeholder="Acme owes me $1,200, due Oct 1, invoice #42"></label><div class="btnrow"><button type="button" class="button secondary" id="nlGo">Translate it</button></div><div id="nlResult" style="margin-top:10px"></div></div>
+<hr style="border:none;border-top:1px dashed #d9cdae;margin:18px 0">
+<form id="addForm"><div class="form-grid"><label>Client name<input name="client_name" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Client email (for one-tap sending)<input name="client_email" type="email" maxlength="191" placeholder="billing@acme.co"></label><label>Amount<input name="amount" type="number" min="0.01" step="0.01" required placeholder="1200.00"></label><label>Currency<select name="currency"><option value="USD">USD ($)</option><option value="CAD">CAD (CA$)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option></select></label><label>Invoice # (optional)<input name="invoice_no" type="text" maxlength="64" placeholder="INV-2026-014"></label><label>Due date<input name="due_date" type="date" required></label><label class="span-all">Notes (optional)<textarea name="notes" maxlength="2000" placeholder="Net 30, sent Sep 1..."></textarea></label></div><button class="button" style="margin-top:12px">Add invoice</button><p id="addError" class="error"></p></form></section>
 <div id="upgrade-slot"></div>
 <div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
 <div class="modal-overlay hidden" id="chachingOverlay"><div class="modal chaching" role="dialog" aria-modal="true"><img src="/bum/cat-bowtie.png" alt="Bum Bum celebrating"><div class="chaching-amount" id="chachingAmount"></div><p class="lede" id="chachingSub"></p><button type="button" class="button" id="chachingClose">Nice.</button></div></div>
@@ -89,6 +94,7 @@ function invoiceCard(inv){
   const parts=[];
   if(inv.invoice_no)parts.push('invoice '+esc(inv.invoice_no));
   if(inv.status==='open'&&inv.days_overdue>0)parts.push(`was due ${esc(inv.due_date)}`);
+  if(inv.last_chase_sent_at)parts.push(`chased ${esc(inv.last_chase_sent_at.slice(0,10))}`);
   if(inv.intel&&inv.intel.count>=1){
     const avg=inv.intel.avg_late;
     parts.push(avg<=0?'usually pays on time':`usually pays ~${avg} days late`);
@@ -182,7 +188,38 @@ async function loadDraft(id){
     +`<div class="chips"><button type="button" class="chip${DRAFT_VOICE==='me'?' on':''}" data-voice="me">Send as me</button><button type="button" class="chip${DRAFT_VOICE==='assistant'?' on':''}" data-voice="assistant">Send as Bum Bum, my billing assistant</button></div>`
     +`<p class="meta" style="margin:2px 0 10px">Bum Bum's take: ${esc(data.take)}</p>`
     +`<div class="draft-subject">Subject: ${esc(data.subject)}</div><div class="draft-box">${esc(data.body)}</div>`
-    +`<div class="btnrow"><button type="button" class="button secondary" id="copySubject">Copy subject</button><button type="button" class="button secondary" id="copyBody">Copy email</button></div><p class="error" id="draftErr"></p>`;
+    +`<div class="btnrow"><button type="button" class="button secondary" id="copySubject">Copy subject</button><button type="button" class="button secondary" id="copyBody">Copy email</button></div>`
+    +`<div id="sendZone" style="margin-top:14px"></div><p class="error" id="draftErr"></p>`;
+  const sendZone=body.querySelector('#sendZone');
+  const renderSendZone=()=>{
+    const fresh=DATA.invoices.find(x=>x.id===id);
+    if(fresh.client_email){
+      sendZone.innerHTML=`<button type="button" class="button" id="sendChase">Send it via Bum Bum</button><p class="meta" style="margin:6px 0 0">Sends to ${esc(fresh.client_email)} from Bum Bum. Replies go to your email. One action.</p><p class="lede" id="sendMsg" style="margin:6px 0 0"></p>`;
+      const btn=sendZone.querySelector('#sendChase');
+      btn.addEventListener('click',async()=>{
+        if(!btn.dataset.armed){btn.dataset.armed='1';btn.textContent=`Tap again to send to ${fresh.client_email}`;return}
+        btn.disabled=true;btn.textContent='Sending...';
+        const r=await apiCall({action:'send',id,voice:DRAFT_VOICE});
+        btn.disabled=false;
+        const msg=sendZone.querySelector('#sendMsg');
+        if(!r.response.ok){body.querySelector('#draftErr').textContent=r.data.error||'Send failed.';btn.textContent='Send it via Bum Bum';delete btn.dataset.armed;return}
+        msg.textContent=r.data.duplicate?`Already chased today. Bum Bum is on it.`:`Sent to ${r.data.sent_to}. Bum Bum is on it.`;
+        msg.style.color='#2f7d3a';btn.style.display='none';
+        bbTrack('chaser_sent',{tool:TOOL_KEY,voice:DRAFT_VOICE});
+        refresh();
+      });
+    }else{
+      sendZone.innerHTML=`<label style="font-weight:600">Client email, so Bum Bum can send it<input id="clientEmailInline" type="email" maxlength="191" placeholder="billing@client.co"></label><div class="btnrow"><button type="button" class="button secondary" id="saveClientEmail">Save email</button></div>`;
+      sendZone.querySelector('#saveClientEmail').addEventListener('click',async()=>{
+        const em=sendZone.querySelector('#clientEmailInline').value.trim();
+        if(!em){body.querySelector('#draftErr').textContent='Type the client email first.';return}
+        const r=await apiCall({action:'update',id,client_email:em});
+        if(!r.response.ok){body.querySelector('#draftErr').textContent=r.data.error||'Could not save.';return}
+        await refresh();loadDraft(id);
+      });
+    }
+  };
+  renderSendZone();
   body.querySelectorAll('[data-voice]').forEach(ch=>ch.addEventListener('click',()=>{DRAFT_VOICE=ch.getAttribute('data-voice');loadDraft(id);}));
   const copy=(text,btn,okLabel)=>{
     btn.addEventListener('click',async()=>{
@@ -222,6 +259,76 @@ document.querySelector('#remindBtn').addEventListener('click',async e=>{
   msg.textContent=`Sent to ${data.sent_to}${data.duplicate?' (already sent today, no extra charge)':''}. Go get that money.`;
   bbTrack('chaser_reminded',{tool:TOOL_KEY,overdue:data.overdue});
 });
+function nlFmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function parseDueDate(text){
+  const t=' '+text.toLowerCase()+' ';
+  const today=new Date();today.setHours(0,0,0,0);
+  const plus=n=>{const d=new Date(today);d.setDate(d.getDate()+n);return nlFmt(d)};
+  if(/\btoday\b/.test(t))return nlFmt(today);
+  if(/\btomorrow\b/.test(t))return plus(1);
+  let m=t.match(/\bin (\d+) days?\b/);if(m)return plus(parseInt(m[1],10));
+  m=t.match(/\bin (\d+) weeks?\b/);if(m)return plus(parseInt(m[1],10)*7);
+  const days={sunday:0,monday:1,tuesday:2,wednesday:3,thursday:4,friday:5,saturday:6};
+  m=t.match(/\b(?:next )?(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b/);
+  if(m){const want=days[m[1]];let diff=(want-today.getDay()+7)%7;if(diff===0)diff=7;return plus(diff)}
+  const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+  m=t.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]* (\d{1,2})(?:st|nd|rd|th)?\b/);
+  if(m){const mo=months[m[1].slice(0,3)];let d=new Date(today.getFullYear(),mo-1,parseInt(m[2],10));if(d<today)d.setFullYear(d.getFullYear()+1);return nlFmt(d)}
+  m=t.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);if(m)return `${m[1]}-${m[2]}-${m[3]}`;
+  m=t.match(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/);
+  if(m){let y=m[3]?parseInt(m[3],10):today.getFullYear();if(y<100)y+=2000;let d=new Date(y,parseInt(m[1],10)-1,parseInt(m[2],10));if(!m[3]&&d<today)d.setFullYear(d.getFullYear()+1);return nlFmt(d)}
+  return '';
+}
+function cleanClient(s){
+  return (s||'').replace(/^[\s,;:\-]+/,'').replace(/[\s,;:\-]+$/,'').replace(/^((the|my|client)\s+)+/i,'').replace(/\s+(for|on|at)$/i,'').trim().slice(0,191);
+}
+function parseInvoiceText(raw){
+  const text=(raw||'').trim();
+  const out={client_name:'',amount:'',currency:'USD',invoice_no:'',due_date:'',notes:''};
+  if(!text)return out;
+  if(/(C\$|\bCAD\b)/i.test(text))out.currency='CAD';
+  else if(/(€|\bEUR\b)/i.test(text))out.currency='EUR';
+  else if(/(£|\bGBP\b)/i.test(text))out.currency='GBP';
+  let m=text.match(/(?:\$|C\$|€|£)\s*([\d,]+(?:\.\d{1,2})?)/);
+  if(!m)m=text.match(/([\d,]+(?:\.\d{1,2})?)\s*(?:dollars|bucks)/i);
+  if(m)out.amount=m[1].replace(/,/g,'');
+  m=text.match(/invoice\s*(?:#|no\.?|number)?\s*([A-Za-z0-9][\w\-]*)/i);
+  if(m&&!/^(was|is|for|due|of|to)$/i.test(m[1]))out.invoice_no=m[1];
+  out.due_date=parseDueDate(text);
+  m=text.match(/(.+?)\s+owes?\s+me/i);
+  if(m)out.client_name=cleanClient(m[1]);
+  if(!out.client_name){
+    m=text.match(/(?:owed by|invoice (?:to|for)|bill)\s+([A-Za-z][\w&.'\- ]+?)(?=\s+(?:owes|owed|\$|\d|due|invoice|for|#)|$)/i);
+    if(m)out.client_name=cleanClient(m[1]);
+  }
+  return out;
+}
+let NL_PARSED=null;
+function nlTranslate(){
+  const raw=document.querySelector('#nlInput').value;
+  const zone=document.querySelector('#nlResult');
+  const p=parseInvoiceText(raw);
+  if(!p.client_name&&!p.amount){zone.innerHTML=`<p class="error" style="margin:0">Hmm, I could not quite catch that. Try: <i>Acme owes me $1,200, due Oct 1, invoice #42</i></p>`;NL_PARSED=null;return}
+  NL_PARSED=p;
+  const bits=[p.client_name||'(no client caught)',p.amount?('$'+Number(p.amount).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+p.currency):'(no amount caught)',p.due_date?('due '+p.due_date):'(no due date caught)'];
+  if(p.invoice_no)bits.push('invoice '+p.invoice_no);
+  zone.innerHTML=`<div class="nl-confirm"><b>Bum Bum heard:</b> ${esc(bits.join(' · '))}<div class="btnrow"><button type="button" class="button" id="nlAdd">Add it</button><button type="button" class="button secondary" id="nlTweak">Tweak in the form</button></div></div>`;
+  zone.querySelector('#nlAdd').addEventListener('click',async()=>{
+    const{response,data}=await apiCall({action:'add',client_name:p.client_name,client_email:'',amount:p.amount,currency:p.currency,invoice_no:p.invoice_no,due_date:p.due_date,notes:'',idempotencyKey:(crypto.randomUUID?crypto.randomUUID():'nl-'+Date.now())});
+    if(!response.ok){zone.innerHTML=`<p class="error" style="margin:0">${esc(data.error||'Could not add.')}</p>`;return}
+    document.querySelector('#nlInput').value='';zone.innerHTML='';
+    bbTrack('chaser_added',{tool:TOOL_KEY,via:'tell_bum_bum'});
+    await refresh();
+  });
+  zone.querySelector('#nlTweak').addEventListener('click',()=>{
+    const f=document.querySelector('#addForm');
+    f.client_name.value=p.client_name;f.amount.value=p.amount;f.currency.value=p.currency;f.invoice_no.value=p.invoice_no;f.due_date.value=p.due_date;
+    f.client_name.focus();f.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+}
+document.querySelector('#nlGo').addEventListener('click',nlTranslate);
+document.querySelector('#nlInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nlTranslate()}});
+
 const addForm=document.querySelector('#addForm');let attempt=crypto.randomUUID();
 addForm.addEventListener('submit',async e=>{
   e.preventDefault();
