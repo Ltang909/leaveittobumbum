@@ -408,7 +408,7 @@ if ($action === 'remind') {
     }
     $nOverdue = count($overdueLines);
     $subject = $nOverdue > 0
-        ? "Bum Bum: {$nOverdue} overdue invoice" . ($nOverdue === 1 ? '' : 's') . : your chase list is ready'
+        ? "Bum Bum: {$nOverdue} overdue invoice" . ($nOverdue === 1 ? '' : 's') . ': your chase list is ready'
         : 'Bum Bum: your upcoming invoices: chase list inside';
     $appUrl = rtrim((string) (config()['app_url'] ?? ''), '/');
     $lines = ["Hey! Your chase list from Bum Bum:", ''];
