@@ -40,8 +40,18 @@ function db(): PDO {
 
 function startSecureSession(): void {
     if (session_status() === PHP_SESSION_ACTIVE) return;
-    session_set_cookie_params(['httponly' => true, 'secure' => true, 'samesite' => 'Lax', 'path' => '/']);
+    // Persistent login: 30-day session cookie + matching server-side
+    // lifetime so users stay logged in across browser restarts.
+    $persist = 30 * 24 * 3600;
+    ini_set('session.gc_maxlifetime', (string) $persist);
+    session_set_cookie_params(['lifetime' => $persist, 'httponly' => true, 'secure' => true, 'samesite' => 'Lax', 'path' => '/']);
     session_start();
+    // PHP only sends the session cookie for new/regenerated sessions, so
+    // re-send it here to upgrade resumed sessions to the persistent expiry
+    // without forcing everyone to log in again.
+    if (!headers_sent()) {
+        setcookie(session_name(), session_id(), ['expires' => time() + $persist, 'httponly' => true, 'secure' => true, 'samesite' => 'Lax', 'path' => '/']);
+    }
 }
 
 function jsonResponse(array $payload, int $status = 200): never {
