@@ -14,11 +14,15 @@ $socials = [
   </div>
   <nav class="footer-links" aria-label="Company">
     <b>Bum Bum</b>
-    <a href="/about/">About</a><a href="/team/">Team</a><a href="/docs/">Docs</a>
+    <a href="/about/">About</a>
+    <a href="/team/">Team</a>
+    <a href="/docs/">Docs</a>
   </nav>
   <nav class="footer-links" aria-label="Legal">
     <b>Fine print</b>
-    <a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="mailto:hello@leaveittobumbum.com">Contact</a>
+    <a href="/privacy/">Privacy</a>
+    <a href="/terms/">Terms</a>
+    <a href="mailto:hello@leaveittobumbum.com">Contact</a>
   </nav>
   <div class="footer-bottom">
     <p>© <?= date('Y') ?> Leave It to Bum Bum</p>
