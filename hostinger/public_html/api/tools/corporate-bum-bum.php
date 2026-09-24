@@ -5,10 +5,12 @@
 // logging are free so the follow-up loop stays frictionless.
 require dirname(__DIR__) . '/_bootstrap.php';
 
-const JOBTRACK_STAGES = ['wishlist', 'applied', 'screening', 'interview', 'final', 'offer', 'accepted', 'rejected', 'withdrawn'];
+const JOBTRACK_STAGES = ['new', 'applied', 'screening', 'interview_booked', 'waiting_next', 'offer', 'accepted', 'rejected', 'withdrawn'];
 const JOBTRACK_CURRENCIES = ['CAD', 'USD', 'EUR', 'GBP'];
 const JOBTRACK_TERMINAL = ['accepted', 'rejected', 'withdrawn'];
-const JOBTRACK_ACTIVE = ['wishlist', 'applied', 'screening', 'interview', 'final', 'offer'];
+const JOBTRACK_ACTIVE = ['new', 'applied', 'screening', 'interview_booked', 'waiting_next', 'offer'];
+// Retired stage values map onto the new pipeline (Sep 2026 filter rework).
+const JOBTRACK_LEGACY_STAGES = ['wishlist' => 'new', 'interview' => 'interview_booked', 'final' => 'waiting_next'];
 
 function ensureJobtrackSchema(): void {
     $pdo = db();
@@ -45,6 +47,16 @@ function ensureJobtrackSchema(): void {
         $pdo->exec("ALTER TABLE jobtrack_contacts ADD COLUMN currency VARCHAR(3) NULL");
         $pdo->exec("UPDATE jobtrack_contacts SET currency = 'CAD' WHERE currency IS NULL");
     }
+    // Migration for the Sep 2026 filter rework: favorites star + interview-held
+    // checkbox, and renamed pipeline stages. Safe to re-run (no-ops after first run).
+    $hasStarred = $pdo->query("SHOW COLUMNS FROM jobtrack_contacts LIKE 'starred'")->fetch();
+    if (!$hasStarred) $pdo->exec("ALTER TABLE jobtrack_contacts ADD COLUMN starred TINYINT(1) NOT NULL DEFAULT 0");
+    $hasHeld = $pdo->query("SHOW COLUMNS FROM jobtrack_contacts LIKE 'interview_held'")->fetch();
+    if (!$hasHeld) $pdo->exec("ALTER TABLE jobtrack_contacts ADD COLUMN interview_held TINYINT(1) NOT NULL DEFAULT 0");
+    foreach (JOBTRACK_LEGACY_STAGES as $old => $new) {
+        $stmt = $pdo->prepare('UPDATE jobtrack_contacts SET stage = ? WHERE stage = ?');
+        $stmt->execute([$new, $old]);
+    }
     $pdo->exec("CREATE TABLE IF NOT EXISTS jobtrack_notes (
         id INT AUTO_INCREMENT PRIMARY KEY,
         contact_id INT NOT NULL,
@@ -73,6 +85,18 @@ function jobtrack_clean_currency($v) {
     return in_array($v, JOBTRACK_CURRENCIES, true) ? $v : 'CAD';
 }
 
+function jobtrack_clean_flag($v) {
+    $v = strtolower(trim((string) ($v ?? '')));
+    if ($v === '') return null;
+    return in_array($v, ['1', 'yes', 'y', 'true'], true) ? 1 : 0;
+}
+
+function jobtrack_clean_stage($v) {
+    $v = strtolower(trim((string) ($v ?? '')));
+    if (isset(JOBTRACK_LEGACY_STAGES[$v])) $v = JOBTRACK_LEGACY_STAGES[$v];
+    return $v;
+}
+
 function jobtrack_clean_salary($v) {
     $v = trim((string) ($v ?? ''));
     if ($v === '') return null;
@@ -98,6 +122,8 @@ function jobtrack_public_contact(array $row): array {
         'stage' => $row['stage'],
         'follow_up_date' => $row['follow_up_date'],
         'notes' => $row['notes'] ?? '',
+        'starred' => !empty($row['starred']),
+        'interview_held' => !empty($row['interview_held']),
         'last_touch_at' => $row['last_touch_at'],
         'created_at' => $row['created_at'],
     ];
@@ -113,14 +139,14 @@ function jobtrack_draft(array $c): string {
     $role = trim($c['role']) !== '' ? 'the ' . trim($c['role']) . ' role' : 'the role';
     $co = trim($c['company']);
     switch ($c['stage']) {
-        case 'wishlist':
+        case 'new':
             return "{$greet} I came across {$role} at {$co} and it looks like a strong match for my background. Would you be open to a quick chat about what you are looking for?";
         case 'applied':
             return "{$greet} I just applied for {$role} at {$co} and wanted to put a face to the application. Happy to share anything helpful as you review candidates.";
         case 'screening':
             return "{$greet} thanks for the great screening conversation about {$role}. I am excited about {$co} and the team. Let me know if there is anything else I can share.";
-        case 'interview':
-        case 'final':
+        case 'interview_booked':
+        case 'waiting_next':
             return "{$greet} thank you for taking the time to speak with me about {$role}. I really enjoyed our conversation and I am excited about the possibility of joining {$co}.";
         case 'offer':
             return "{$greet} thank you so much for the offer for {$role}. I am thrilled about {$co}. I would love to discuss a couple of details before I sign.";
@@ -152,7 +178,7 @@ if ($action === 'list') {
         if ($c['follow_up_date'] !== null && $c['follow_up_date'] <= $today) {
             $c['draft'] = jobtrack_draft($c);
             $due[] = $c;
-        } elseif (($c['follow_up_date'] === null) && in_array($c['stage'], ['applied', 'screening', 'interview', 'final', 'offer'], true)) {
+        } elseif (($c['follow_up_date'] === null) && in_array($c['stage'], ['applied', 'screening', 'interview_booked', 'waiting_next', 'offer'], true)) {
             $touch = $c['last_touch_at'] ?? $c['created_at'];
             if ($touch && (time() - strtotime($touch)) > 14 * 86400) {
                 $c['draft'] = jobtrack_draft($c);
@@ -192,9 +218,11 @@ if ($action === 'add') {
     $currency = jobtrack_clean_currency($input['currency'] ?? 'CAD');
     $source = trim((string) ($input['source'] ?? ''));
     $dateApplied = jobtrack_clean_date($input['date_applied'] ?? null);
-    $stage = (string) ($input['stage'] ?? 'applied');
+    $stage = jobtrack_clean_stage($input['stage'] ?? 'applied');
     $followUp = jobtrack_clean_date($input['follow_up_date'] ?? null);
     $notes = trim((string) ($input['notes'] ?? ''));
+    $starred = !empty($input['starred']) ? 1 : 0;
+    $interviewHeld = !empty($input['interview_held']) ? 1 : 0;
     if ($company === '') jsonResponse(['error' => 'Give the application a company.'], 422);
     if (mb_strlen($company) > 191 || mb_strlen($role) > 191 || mb_strlen($contactName) > 191 || mb_strlen($contactEmail) > 191 || mb_strlen($location) > 191 || mb_strlen($source) > 191) jsonResponse(['error' => 'Keep company, role, contact, location and source under 191 characters each.'], 422);
     if (mb_strlen($jobUrl) > 500) jsonResponse(['error' => 'That job URL is too long.'], 422);
@@ -209,8 +237,8 @@ if ($action === 'add') {
     if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
     $contact = null;
     if (empty($count['duplicate'])) {
-        $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-        $stmt->execute([$userId, $company, $role, $contactName, $contactEmail, $jobUrl, $location, $salaryMin, $salaryMax, $currency, $source, $dateApplied, $stage, $followUp, $notes]);
+        $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, starred, interview_held, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+        $stmt->execute([$userId, $company, $role, $contactName, $contactEmail, $jobUrl, $location, $salaryMin, $salaryMax, $currency, $source, $dateApplied, $stage, $followUp, $notes, $starred, $interviewHeld]);
         $id = (int) $pdo->lastInsertId();
         $stmt = $pdo->prepare('SELECT * FROM jobtrack_contacts WHERE id = ?');
         $stmt->execute([$id]);
@@ -242,6 +270,8 @@ if ($action === 'import') {
         'stage' => 'stage',
         'follow up' => 'follow_up_date', 'follow_up_date' => 'follow_up_date', 'followup' => 'follow_up_date', 'follow up date' => 'follow_up_date',
         'notes' => 'notes', 'note' => 'notes',
+        'starred' => 'starred', 'star' => 'starred', 'favorite' => 'starred', 'favourite' => 'starred',
+        'interview held' => 'interview_held', 'interview_held' => 'interview_held',
     ];
     $header = fgetcsv($stream);
     if (!$header) jsonResponse(['error' => 'Could not read the CSV header row.'], 422);
@@ -250,7 +280,7 @@ if ($action === 'import') {
         $k = strtolower(trim((string) $h));
         $cols[] = $aliases[$k] ?? null;
     }
-    if (!in_array('company', $cols, true)) jsonResponse(['error' => 'The CSV needs a "company" column.', 'hint' => 'Columns: company, role, contact name, contact email, job url, location, salary min, salary max, where found, date applied, stage, follow up, notes'], 422);
+    if (!in_array('company', $cols, true)) jsonResponse(['error' => 'The CSV needs a "company" column.', 'hint' => 'Columns: company, role, contact name, contact email, job url, location, salary min, salary max, currency, where found, date applied, stage, follow up, notes, starred, interview held'], 422);
     $imported = 0;
     $updated = 0;
     $skipped = 0;
@@ -259,7 +289,7 @@ if ($action === 'import') {
     $limitHit = false;
     while (($row = fgetcsv($stream)) !== false && $rows < 200) {
         $rows++;
-        $rec = ['company' => '', 'role' => '', 'contact_name' => '', 'contact_email' => '', 'job_url' => '', 'location' => '', 'salary_min' => '', 'salary_max' => '', 'currency' => '', 'source' => '', 'date_applied' => '', 'stage' => '', 'follow_up_date' => '', 'notes' => ''];
+        $rec = ['company' => '', 'role' => '', 'contact_name' => '', 'contact_email' => '', 'job_url' => '', 'location' => '', 'salary_min' => '', 'salary_max' => '', 'currency' => '', 'source' => '', 'date_applied' => '', 'stage' => '', 'follow_up_date' => '', 'notes' => '', 'starred' => '', 'interview_held' => ''];
         foreach ($cols as $i => $field) {
             if ($field === null) continue;
             $rec[$field] = trim((string) ($row[$i] ?? ''));
@@ -267,8 +297,10 @@ if ($action === 'import') {
         if ($rec['company'] === '' || mb_strlen($rec['company']) > 191) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: missing or too-long company."; continue; }
         if (mb_strlen($rec['role']) > 191 || mb_strlen($rec['contact_name']) > 191 || mb_strlen($rec['contact_email']) > 191 || mb_strlen($rec['location']) > 191 || mb_strlen($rec['source']) > 191) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: a text field is too long."; continue; }
         if (mb_strlen($rec['notes']) > 5000) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: notes too long (5000 max)."; continue; }
-        $stage = strtolower($rec['stage']);
+        $stage = jobtrack_clean_stage($rec['stage']);
         $stageValid = in_array($stage, JOBTRACK_STAGES, true);
+        $starred = jobtrack_clean_flag($rec['starred']);
+        $interviewHeld = jobtrack_clean_flag($rec['interview_held']);
         $salaryMin = $rec['salary_min'] === '' ? null : jobtrack_clean_salary($rec['salary_min']);
         $salaryMax = $rec['salary_max'] === '' ? null : jobtrack_clean_salary($rec['salary_max']);
         if ($salaryMin === false || $salaryMax === false) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: invalid salary."; continue; }
@@ -295,6 +327,8 @@ if ($action === 'import') {
             if ($stageValid) { $sets[] = 'stage = ?'; $params[] = $stage; if (in_array($stage, JOBTRACK_TERMINAL, true)) $sets[] = 'follow_up_date = NULL'; }
             if ($followUp !== null) { $sets[] = 'follow_up_date = ?'; $params[] = $followUp; }
             if ($rec['notes'] !== '') { $sets[] = 'notes = ?'; $params[] = $rec['notes']; }
+            if ($starred !== null) { $sets[] = 'starred = ?'; $params[] = $starred; }
+            if ($interviewHeld !== null) { $sets[] = 'interview_held = ?'; $params[] = $interviewHeld; }
             if ($sets) {
                 $params[] = $existing['id'];
                 $params[] = $userId;
@@ -307,8 +341,8 @@ if ($action === 'import') {
         $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'corporate-bum-bum', $batchKey . '-' . $rows);
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
-            $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-            $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, jobtrack_clean_currency($rec['currency']), $rec['source'], $dateApplied, $stageValid ? $stage : 'applied', $followUp, $rec['notes']]);
+            $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, starred, interview_held, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+            $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, jobtrack_clean_currency($rec['currency']), $rec['source'], $dateApplied, $stageValid ? $stage : 'applied', $followUp, $rec['notes'], $starred ?? 0, $interviewHeld ?? 0]);
             $imported++;
         }
     }
@@ -322,7 +356,7 @@ if ($action === 'export') {
     $stmt->execute([$userId]);
     $contacts = $stmt->fetchAll();
     $stream = fopen('php://memory', 'r+');
-    fputcsv($stream, ['company', 'role', 'contact name', 'contact email', 'job url', 'location', 'salary min', 'salary max', 'currency', 'where found', 'date applied', 'stage', 'follow up', 'notes']);
+    fputcsv($stream, ['company', 'role', 'contact name', 'contact email', 'job url', 'location', 'salary min', 'salary max', 'currency', 'where found', 'date applied', 'stage', 'follow up', 'notes', 'starred', 'interview held']);
     foreach ($contacts as $row) {
         fputcsv($stream, [
             $row['company'],
@@ -339,6 +373,8 @@ if ($action === 'export') {
             $row['stage'],
             $row['follow_up_date'] ?? '',
             $row['notes'] ?? '',
+            !empty($row['starred']) ? '1' : '',
+            !empty($row['interview_held']) ? '1' : '',
         ]);
     }
     rewind($stream);
@@ -352,11 +388,19 @@ if ($action === 'update') {
     $fields = [];
     $params = [];
     if (array_key_exists('stage', $input)) {
-        $stage = (string) $input['stage'];
+        $stage = jobtrack_clean_stage($input['stage']);
         if (!in_array($stage, JOBTRACK_STAGES, true)) jsonResponse(['error' => 'Pick a valid stage.'], 422);
         $fields[] = 'stage = ?';
         $params[] = $stage;
         if (in_array($stage, JOBTRACK_TERMINAL, true)) { $fields[] = 'follow_up_date = NULL'; }
+    }
+    if (array_key_exists('starred', $input)) {
+        $fields[] = 'starred = ?';
+        $params[] = !empty($input['starred']) ? 1 : 0;
+    }
+    if (array_key_exists('interview_held', $input)) {
+        $fields[] = 'interview_held = ?';
+        $params[] = !empty($input['interview_held']) ? 1 : 0;
     }
     if (array_key_exists('follow_up_date', $input)) {
         $followUp = jobtrack_clean_date($input['follow_up_date']);
