@@ -10,11 +10,25 @@ $bill = billingUser($user);
 $billId = (int) $bill['id'];
 ensureCustomRequestTables();
 
+// Stored datetimes are UTC; the browser parses bare "YYYY-MM-DD HH:MM:SS"
+// as local time, which skews countdowns by the UTC offset. Emit ISO 8601.
+function isoUtc(?string $dt): ?string {
+    if (!$dt) return null;
+    try { return (new DateTime((string) $dt, new DateTimeZone('UTC')))->format('c'); }
+    catch (Throwable $e) { return (string) $dt; }
+}
+function requestRow(array $r): array {
+    foreach (['requested_at', 'deadline_at', 'delivered_at'] as $k) {
+        if (array_key_exists($k, $r)) $r[$k] = isoUtc($r[$k]);
+    }
+    return $r;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $stmt = db()->prepare('SELECT id, title, status, requested_at, deadline_at, delivered_at FROM custom_requests WHERE user_id = ? ORDER BY requested_at DESC LIMIT 20');
         $stmt->execute([$billId]);
-        jsonResponse($stmt->fetchAll());
+        jsonResponse(array_map('requestRow', $stmt->fetchAll()));
     } catch (PDOException $error) {
         error_log('Request list failed: ' . $error->getMessage());
         $detail = isAdmin($user) ? ' Admin detail: ' . $error->getMessage() : '';
@@ -54,7 +68,7 @@ try {
     }
     $row = db()->prepare('SELECT id, title, status, requested_at, deadline_at FROM custom_requests WHERE id = ?');
     $row->execute([$id]);
-    jsonResponse(['request' => $row->fetch()], 201);
+    jsonResponse(['request' => requestRow($row->fetch())], 201);
 } catch (PDOException $error) {
     error_log('Request submit failed: ' . $error->getMessage());
     $detail = isAdmin($user) ? ' Admin detail: ' . $error->getMessage() : '';

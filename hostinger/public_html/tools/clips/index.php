@@ -19,7 +19,7 @@
 <?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
-<?php if ($usage && $usage['remaining'] <= 0): ?>
+<?php if ($usage && empty($usage['unlimited']) && $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>
 <?php else: ?>
 <section class="panel hidden" id="no-screen">
@@ -369,7 +369,7 @@ if(!screenOK){
       }
       attempt=crypto.randomUUID();
       bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-      usageLine.textContent=data.usage.remaining+' actions remaining this month.';
+      usageLine.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
     }catch(err){usageLine.textContent='We could not count this one, but your clip is still yours. Download away.'}
   }
   const probeVideo=document.createElement('video');

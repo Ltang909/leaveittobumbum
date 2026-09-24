@@ -221,7 +221,7 @@ addForm.addEventListener('submit',async e=>{
   }
   attempt=crypto.randomUUID();
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-  document.querySelector('#usage').textContent=data.usage.remaining+' actions remaining this month.';
+  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
   addForm.reset();await refresh();
 });
 document.querySelector('#csvDownload').addEventListener('click',async e=>{
@@ -255,7 +255,7 @@ csvForm.addEventListener('submit',async e=>{
   if(response.status===402){
     bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
     errEl.textContent=data.error||'Out of actions.';
-    document.querySelector('#usage').textContent=data.usage.remaining+' actions remaining this month.';
+    document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
     document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
     document.querySelectorAll('#upgrade-slot [data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:'limit',tool:TOOL_KEY})));
     await refresh();return;
@@ -263,7 +263,7 @@ csvForm.addEventListener('submit',async e=>{
   if(!response.ok){errEl.textContent=data.error||'Import failed.';return}
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
   bbTrack('purrsuit_imported',{tool:TOOL_KEY,imported:data.imported});
-  document.querySelector('#usage').textContent=data.usage.remaining+' actions remaining this month.';
+  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
   let msg=`Added ${data.imported} new, updated ${data.updated}.`;
   if(data.skipped)msg+=` Skipped ${data.skipped}.`;
   if(data.errors&&data.errors.length)msg+='\n'+data.errors.join('\n');
