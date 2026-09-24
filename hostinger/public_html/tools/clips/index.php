@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no">
 <title>Bum Bum Clips | Leave It to Bum Bum</title>
-<link rel="stylesheet" href="/app.css?v=4"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"><style>h1,.lede{max-width:none}</style>
+<link rel="stylesheet" href="/app.css?v=5"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1,.lede{max-width:none}</style>
 <?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?>
 </head>
 <body>

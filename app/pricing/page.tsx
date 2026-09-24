@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
+import { PlanCta } from "../components/plan-ctas";
 
 export const metadata: Metadata = {
   title: "Pricing | Leave It to Bum Bum",
-  description: "One shared meter. Every completed result uses one action — pay for useful work, not a maze of limits.",
+  description: "One shared meter. Every completed result uses one action. Pay for useful work, not a maze of limits.",
 };
 
 const plans = [
-  { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["4 active tools", "1 workspace", "Community request queue"], cta: "Start free", href: "/tools/" },
-  { name: "Helper", price: "$12", note: "per month", credits: "1,500 actions each month", features: ["All current tools", "3 team members", "Email support", "$6 per extra 1,000 actions"], cta: "Choose Helper", href: "/checkout/?plan=helper" },
-  { name: "Operator", price: "$49", note: "per month", credits: "6,000 actions each month", features: ["Everything in Helper", "10 team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", href: "/checkout/?plan=operator", featured: true },
+  { id: "free", name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["4 active tools", "1 workspace", "Community request queue"], cta: "Start free", href: "/tools/" },
+  { id: "helper", name: "Helper", price: "$12", note: "per month", credits: "1,500 actions each month", features: ["All current tools", "3 team members", "Email support", "$6 per extra 1,000 actions"], cta: "Choose Helper", href: "/checkout/?plan=helper" },
+  { id: "operator", name: "Operator", price: "$49", note: "per month", credits: "6,000 actions each month", features: ["Everything in Helper", "10 team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", href: "/checkout/?plan=operator", featured: true },
 ];
 
 export default function Pricing() {
@@ -30,7 +31,7 @@ export default function Pricing() {
               <div className="price">{plan.price}<small>{plan.note}</small></div>
               <p className="credits">{plan.credits}</p>
               <ul>{plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul>
-              <a className={plan.featured ? "button" : "button outline"} href={plan.href}>{plan.cta} <span aria-hidden="true">↗</span></a>
+              <PlanCta plan={plan.id} label={plan.cta} href={plan.href} featured={plan.featured} />
             </article>
           ))}
         </div>
