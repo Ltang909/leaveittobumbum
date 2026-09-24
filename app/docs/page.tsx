@@ -35,7 +35,7 @@ export default function Docs() {
           <p>There are two lanes. Pick the one that fits your urgency.</p>
           <ul>
             <li><strong>Community queue: free.</strong> Your request joins the <a href="/requests/"><strong>public queue</strong></a> where everyone can upvote it. We build the most-wanted tools as fast as we can. No timeline promise, no cost.</li>
-            <li><strong>Operator: $49/mo.</strong> One scoped request every month, built within 36 hours of agreed scope, or your next month is free. <a href="/36-hours/"><strong>Read the full promise</strong></a>.</li>
+            <li><strong>Operator: $49/mo.</strong> One scoped request every month, built within 36 hours of agreed scope, or your next month is free. Operator requests also appear in the <a href="/requests/"><strong>public queue</strong></a> with an operator badge so everyone can follow along. <a href="/36-hours/"><strong>Read the full promise</strong></a>.</li>
           </ul>
           <p>To request: hit <strong>Request a tool</strong> anywhere on the site. If you&rsquo;re not signed in, we&rsquo;ll nudge you to peek at the toolbox first (your task might already be solved) and create a free account.</p>
 

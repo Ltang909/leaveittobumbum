@@ -2,10 +2,13 @@
 // Custom tool requests (Operator plan). GET lists the billing account's
 // requests, POST submits a new one against the billing account's monthly slot.
 // Team members draw on the team owner's Operator perk and shared allowance.
+// Every Operator request is also mirrored into the public community queue,
+// flagged as an operator request, so everyone can follow along.
 require __DIR__ . '/_bootstrap.php';
 $user = requireUser();
 $bill = billingUser($user);
 $billId = (int) $bill['id'];
+ensureCustomRequestTables();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
@@ -35,6 +38,15 @@ try {
     $stmt = db()->prepare('INSERT INTO custom_requests (user_id, title, details, deadline_at) VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 36 HOUR))');
     $stmt->execute([$billId, $title, $details]);
     $id = (int) db()->lastInsertId();
+    // Mirror into the public community queue with the operator flag. This is
+    // best-effort: a mirror failure must never block the real request.
+    try {
+        ensureToolRequestTables();
+        $mirror = db()->prepare('INSERT INTO tool_requests (name, email, problem, outcome, status, is_operator) VALUES (?, ?, ?, ?, ?, 1)');
+        $mirror->execute(['', (string) ($user['email'] ?? ''), $title, $details, 'requested']);
+    } catch (Throwable $mirrorError) {
+        error_log('Operator queue mirror failed: ' . $mirrorError->getMessage());
+    }
     $row = db()->prepare('SELECT id, title, status, requested_at, deadline_at FROM custom_requests WHERE id = ?');
     $row->execute([$id]);
     jsonResponse(['request' => $row->fetch()], 201);

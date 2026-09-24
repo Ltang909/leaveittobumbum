@@ -181,6 +181,9 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .st-cancelled { background:#e5e0d2; color:#8a8474; }
 .admin-status { display:flex; align-items:center; gap:10px; margin-top:14px; padding-top:12px; border-top:2px dashed var(--ink); font-size:.8rem; font-weight:900; text-transform:uppercase; letter-spacing:.08em; }
 .admin-status select { font:inherit; text-transform:none; letter-spacing:0; padding:8px 10px; border:2px solid var(--ink); border-radius:10px; background:#fff; cursor:pointer; }
+.queue-operator { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:14px 0 0; padding-top:12px; border-top:2px dashed var(--ink); }
+.operator-badge { font-size:.72rem; font-weight:1000; letter-spacing:.1em; text-transform:uppercase; padding:6px 12px; border:2px solid var(--ink); border-radius:999px; background:var(--orange); color:#fff; box-shadow:3px 3px 0 var(--ink); }
+.queue-opened { font-size:.82rem; font-weight:700; opacity:.75; }
 .vote-btn { border:2px solid var(--ink); background:var(--cream); border-radius:999px; padding:8px 16px; font-weight:1000; cursor:pointer; font-family:inherit; font-size:.95rem; }
 .vote-btn:hover:not(:disabled) { background:var(--lime); }
 .vote-btn.voted { background:var(--lime); cursor:default; }

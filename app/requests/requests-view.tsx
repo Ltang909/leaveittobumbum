@@ -11,6 +11,7 @@ type ToolRequest = {
   outcome: string;
   status: RequestStatus;
   votes: number;
+  is_operator: number;
   created_at: string;
 };
 
@@ -121,6 +122,12 @@ export default function RequestsView() {
               </div>
               <p className="queue-problem">{r.problem}</p>
               <p className="queue-outcome"><strong>Done looks like:</strong> {r.outcome}</p>
+              {r.is_operator ? (
+                <p className="queue-operator">
+                  <span className="operator-badge">Operator request · 36-hour build</span>
+                  <span className="queue-opened">Opened {new Date(r.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                </p>
+              ) : null}
               {isAdmin && (
                 <label className="admin-status">
                   Status

@@ -92,6 +92,77 @@ function requireAdmin(?array $user): array {
     return $user;
 }
 
+// Community tool-request queue tables. Called lazily so the endpoints work
+// even if the tables were never created by hand.
+function ensureToolRequestTables(): void {
+    db()->exec("CREATE TABLE IF NOT EXISTS tool_requests (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(120) NOT NULL DEFAULT '',
+        email VARCHAR(190) NOT NULL DEFAULT '',
+        problem TEXT NOT NULL,
+        outcome TEXT NOT NULL,
+        status ENUM('requested','planned','building','shipped','completed','cancelled') NOT NULL DEFAULT 'requested',
+        votes INT NOT NULL DEFAULT 0,
+        is_operator TINYINT(1) NOT NULL DEFAULT 0,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        KEY idx_status_votes (status, votes)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    db()->exec("CREATE TABLE IF NOT EXISTS tool_request_votes (
+        request_id INT UNSIGNED NOT NULL,
+        voter_key VARCHAR(80) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (request_id, voter_key)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    try {
+        // Tables created before completed/cancelled existed get the wider enum.
+        $col = db()->query("SHOW COLUMNS FROM tool_requests LIKE 'status'")->fetch();
+        if ($col && strpos((string) $col['Type'], "'completed'") === false) {
+            db()->exec("ALTER TABLE tool_requests MODIFY status ENUM('requested','planned','building','shipped','completed','cancelled') NOT NULL DEFAULT 'requested'");
+        }
+        // Older tables lack the operator flag.
+        $op = db()->query("SHOW COLUMNS FROM tool_requests LIKE 'is_operator'")->fetch();
+        if (!$op) db()->exec("ALTER TABLE tool_requests ADD COLUMN is_operator TINYINT(1) NOT NULL DEFAULT 0");
+    } catch (Throwable $e) { error_log('tool_requests migration failed: ' . $e->getMessage()); }
+}
+
+// Operator custom-request tables (36-hour guarantee). Self-healing: creates
+// the table and backfills any columns an older schema is missing, so the
+// account-page form works even if the table was created by hand long ago.
+function ensureCustomRequestTables(): void {
+    db()->exec("CREATE TABLE IF NOT EXISTS custom_requests (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        user_id INT UNSIGNED NOT NULL,
+        title VARCHAR(180) NOT NULL,
+        details TEXT NOT NULL,
+        status ENUM('open','delivered','overdue_credited') NOT NULL DEFAULT 'open',
+        requested_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        deadline_at DATETIME NOT NULL,
+        delivered_at DATETIME NULL,
+        credit_owed TINYINT(1) NOT NULL DEFAULT 0,
+        stripe_credit_id VARCHAR(80) NULL,
+        INDEX idx_user (user_id),
+        INDEX idx_status_deadline (status, deadline_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $want = [
+        'user_id' => 'INT UNSIGNED NOT NULL',
+        'title' => 'VARCHAR(180) NOT NULL',
+        'details' => 'TEXT NOT NULL',
+        'status' => "ENUM('open','delivered','overdue_credited') NOT NULL DEFAULT 'open'",
+        'requested_at' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'deadline_at' => 'DATETIME NOT NULL',
+        'delivered_at' => 'DATETIME NULL',
+        'credit_owed' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'stripe_credit_id' => 'VARCHAR(80) NULL',
+    ];
+    try {
+        $have = [];
+        foreach (db()->query('SHOW COLUMNS FROM custom_requests')->fetchAll() as $c) $have[$c['Field']] = true;
+        foreach ($want as $col => $def) {
+            if (!isset($have[$col])) db()->exec("ALTER TABLE custom_requests ADD COLUMN $col $def");
+        }
+    } catch (Throwable $e) { error_log('custom_requests heal failed: ' . $e->getMessage()); }
+}
+
 function currentUser(): ?array {
     startSecureSession();
     if (empty($_SESSION['user_id'])) return null;

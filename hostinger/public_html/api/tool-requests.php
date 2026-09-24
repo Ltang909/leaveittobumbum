@@ -6,37 +6,10 @@
 // server config). Needs 'resend' => ['api_key' => 're_...'] in the config.
 require __DIR__ . '/_bootstrap.php';
 
-function ensureToolRequestTables(): void {
-    db()->exec("CREATE TABLE IF NOT EXISTS tool_requests (
-        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(120) NOT NULL DEFAULT '',
-        email VARCHAR(190) NOT NULL DEFAULT '',
-        problem TEXT NOT NULL,
-        outcome TEXT NOT NULL,
-        status ENUM('requested','planned','building','shipped','completed','cancelled') NOT NULL DEFAULT 'requested',
-        votes INT NOT NULL DEFAULT 0,
-        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        KEY idx_status_votes (status, votes)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-    db()->exec("CREATE TABLE IF NOT EXISTS tool_request_votes (
-        request_id INT UNSIGNED NOT NULL,
-        voter_key VARCHAR(80) NOT NULL,
-        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (request_id, voter_key)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-    // Tables created before completed/cancelled existed get the wider enum.
-    try {
-        $col = db()->query("SHOW COLUMNS FROM tool_requests LIKE 'status'")->fetch();
-        if ($col && strpos((string) $col['Type'], "'completed'") === false) {
-            db()->exec("ALTER TABLE tool_requests MODIFY status ENUM('requested','planned','building','shipped','completed','cancelled') NOT NULL DEFAULT 'requested'");
-        }
-    } catch (Throwable $e) { error_log('tool_requests status enum migration failed: ' . $e->getMessage()); }
-}
-
 // Public queue: anyone can read the anonymized list of requested tools.
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' && ($_GET['action'] ?? '') === 'list') {
     ensureToolRequestTables();
-    $rows = db()->query("SELECT id, problem, outcome, status, votes, created_at FROM tool_requests ORDER BY votes DESC, created_at DESC LIMIT 200")->fetchAll();
+    $rows = db()->query("SELECT id, problem, outcome, status, votes, is_operator, created_at FROM tool_requests ORDER BY votes DESC, created_at DESC LIMIT 200")->fetchAll();
     jsonResponse(['requests' => $rows ?: []]);
 }
 
