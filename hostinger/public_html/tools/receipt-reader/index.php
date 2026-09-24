@@ -44,53 +44,42 @@ details.raw pre{background:#fdf8ef;border:1px solid #e7dcc3;border-radius:10px;p
 .shell .button:active{box-shadow:none;transform:translateY(2px)}
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Reader"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum with reading glasses, squinting at a receipt"><h1>Receipts in, spreadsheets out.</h1><p class="lede">Snap a photo of any receipt. Bum Bum reads it <b>right in your browser</b>, pulls out the vendor, date, line items, tax, and total, and hands you a clean table you can fix up and export. Your photos never leave your device; only the typed-up numbers are saved, in your account. One action per scan. Saving and exports are free.</p>
+.queue-item{display:flex;gap:12px;align-items:center;border:1px solid #e2d7bf;border-radius:12px;background:#fff;padding:8px 12px;margin-top:8px}
+.queue-item img{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid #e7dcc3}
+.queue-item .meta{font-size:13px;opacity:.75}
+.receipt-card{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);border-radius:14px;background:#fff;padding:16px;margin-bottom:14px}
+.receipt-card .card-head{font-size:16px;margin-bottom:4px}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Reader"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum with reading glasses, squinting at a receipt"><h1>Receipts in, spreadsheets out.</h1><p class="lede">Snap photos of your receipts. Bum Bum reads them <b>right in your browser</b>, several at a time,, pulls out the vendor, date, line items, tax, and total, and hands you a clean table you can fix up and export. Your photos never leave your device; only the typed-up numbers are saved, in your account. One action per receipt scanned. Saving and exports are free.</p>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to read receipts</h2><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
-<h2>Snap or upload a receipt</h2>
-<div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Choose a receipt photo">
+<h2>Snap or upload receipts</h2>
+<div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Choose receipt photos">
 <p style="font-size:40px;margin:0">📸</p>
-<p><b>Drop a receipt photo here</b>, or pick one below.</p>
-<p class="meta" style="font-size:13px;opacity:.75">Tip: flat surface, good light, receipt filling the frame.</p>
+<p><b>Drop receipt photos here</b>, or pick them below. Several at once works.</p>
+<p class="meta" style="font-size:13px;opacity:.75">Tip: flat surface, good light, each receipt filling the frame. Up to 10 at a time.</p>
 </div>
-<input type="file" id="fileGallery" accept="image/*" class="hidden">
+<input type="file" id="fileGallery" accept="image/*" multiple class="hidden">
 <input type="file" id="fileCamera" accept="image/*" capture="environment" class="hidden">
 <div class="btnrow">
-<button type="button" class="button secondary" id="btnGallery">Upload image</button>
+<button type="button" class="button secondary" id="btnGallery">Upload images</button>
 <button type="button" class="button secondary" id="btnCamera">Use camera</button>
 </div>
-<img id="preview" class="hidden" alt="Receipt preview">
-<div class="btnrow"><button type="button" class="button hidden" id="scanBtn">Read this receipt</button></div>
-<div class="progress-wrap hidden" id="progressWrap"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Warming up...</p></div>
-<p id="scanError" class="error"></p>
+<div id="queueList"></div>
+<div class="btnrow"><button type="button" class="button hidden" id="processBtn">Read receipts</button></div>
+<div class="progress-wrap hidden" id="batchProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Warming up...</p></div>
+<p id="batchError" class="error"></p>
 </section>
 
-<section class="panel hidden" id="resultPanel">
+<section class="panel hidden" id="resultsPanel">
 <h2>Here is what Bum Bum read</h2>
-<div class="read-note">Bum Bum's best read, not gospel. Fix anything it misread, then export.</div>
-<div class="top-fields">
-<label>Vendor<input id="fVendor" type="text" maxlength="120" placeholder="Store name"></label>
-<label>Date<input id="fDate" type="date"></label>
+<div id="saveAllWrap" class="btnrow hidden" style="margin-top:0;margin-bottom:14px">
+<button type="button" class="button" id="saveAllBtn">Save to log</button>
+<button type="button" class="button secondary" id="newBatchBtn">New batch</button>
 </div>
-<table class="items-table" id="itemsTable">
-<thead><tr><th>Item</th><th>Amount</th><th></th></tr></thead>
-<tbody id="itemsBody"></tbody>
-</table>
-<div class="btnrow"><button type="button" class="mini" id="addRowBtn">+ Add line</button></div>
-<div class="totals-grid">
-<label>Subtotal<input id="fSubtotal" type="text" inputmode="decimal" placeholder="0.00"></label>
-<label><span id="taxLabel">Tax</span><input id="fTax" type="text" inputmode="decimal" placeholder="0.00"></label>
-<label>Total<input id="fTotal" type="text" inputmode="decimal" placeholder="0.00"></label>
-</div>
-<div class="btnrow">
-<button type="button" class="button" id="saveLogBtn">Save to log</button>
-<button type="button" class="button secondary" id="newScanBtn">New scan</button>
-</div>
-<p id="copyNote" class="meta" style="font-size:13px"></p>
-<details class="raw"><summary>Raw OCR text</summary><pre id="rawText"></pre></details>
+<div id="cardsWrap"></div>
 </section>
 
 <section class="panel">
@@ -101,20 +90,26 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 </main>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/receipt-reader.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
-bbTrack('tool_opened',{tool:'receipt-reader'});
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/receipt-reader.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}bbTrack('tool_opened',{tool:'receipt-reader'});
 
 const dropzone=document.querySelector('#dropzone');
 const fileGallery=document.querySelector('#fileGallery');
 const fileCamera=document.querySelector('#fileCamera');
-const preview=document.querySelector('#preview');
-const scanBtn=document.querySelector('#scanBtn');
-const progressWrap=document.querySelector('#progressWrap');
+const queueList=document.querySelector('#queueList');
+const processBtn=document.querySelector('#processBtn');
+const batchError=document.querySelector('#batchError');
+const batchProgress=document.querySelector('#batchProgress');
 const barFill=document.querySelector('#barFill');
 const progText=document.querySelector('#progText');
-const scanError=document.querySelector('#scanError');
-let currentDataUrl='';
+const resultsPanel=document.querySelector('#resultsPanel');
+const cardsWrap=document.querySelector('#cardsWrap');
+const saveAllWrap=document.querySelector('#saveAllWrap');
+const saveAllBtn=document.querySelector('#saveAllBtn');
+
+const MAX_BATCH=10;
+let queue=[];
+let batchRunning=false;
+let cardCount=0;
 
 document.querySelector('#btnGallery').addEventListener('click',()=>fileGallery.click());
 document.querySelector('#btnCamera').addEventListener('click',()=>fileCamera.click());
@@ -122,17 +117,169 @@ dropzone.addEventListener('click',()=>fileGallery.click());
 dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileGallery.click()}});
 dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('over')});
 dropzone.addEventListener('dragleave',()=>dropzone.classList.remove('over'));
-dropzone.addEventListener('drop',e=>{e.preventDefault();dropzone.classList.remove('over');const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)loadFile(f)});
-fileGallery.addEventListener('change',()=>{if(fileGallery.files[0])loadFile(fileGallery.files[0]);fileGallery.value=''});
-fileCamera.addEventListener('change',()=>{if(fileCamera.files[0])loadFile(fileCamera.files[0]);fileCamera.value=''});
+dropzone.addEventListener('drop',e=>{e.preventDefault();dropzone.classList.remove('over');loadFiles(e.dataTransfer.files)});
+fileGallery.addEventListener('change',()=>{loadFiles(fileGallery.files);fileGallery.value=''});
+fileCamera.addEventListener('change',()=>{loadFiles(fileCamera.files);fileCamera.value=''});
 
-function loadFile(file){
-  scanError.textContent='';
-  if(!file.type.startsWith('image/')){scanError.textContent='That does not look like an image. Try a JPG or PNG photo.';return}
-  const reader=new FileReader();
-  reader.onload=()=>{currentDataUrl=reader.result;preview.src=currentDataUrl;preview.classList.remove('hidden');scanBtn.classList.remove('hidden');document.querySelector('#resultPanel').classList.add('hidden')};
-  reader.readAsDataURL(file);
+function loadFiles(fileList){
+  batchError.textContent='';
+  const imgs=[...fileList].filter(f=>f.type.startsWith('image/'));
+  if(!imgs.length){batchError.textContent='No images in that selection. Try JPG or PNG photos.';return}
+  const readOne=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res('');r.readAsDataURL(f)});
+  (async()=>{
+    for(const f of imgs){
+      if(queue.length>=MAX_BATCH)break;
+      const dataUrl=await readOne(f);
+      if(dataUrl)queue.push({id:crypto.randomUUID(),dataUrl,name:f.name||'receipt',status:'queued'});
+    }
+    if(queue.length>=MAX_BATCH)batchError.textContent='Bum Bum reads up to '+MAX_BATCH+' receipts at a time. The first '+MAX_BATCH+' are queued.';
+    renderQueue();
+  })();
 }
+
+function renderQueue(){
+  queueList.innerHTML='';
+  queue.forEach(q=>{
+    const div=document.createElement('div');div.className='queue-item';
+    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?'Could not read it':q.status==='blocked'?'Waiting on actions':'Queued';
+    div.innerHTML='<img src="'+q.dataUrl+'" alt=""><div><b>'+esc(q.name)+'</b><div class="meta">'+label+'</div></div>';
+    queueList.appendChild(div);
+  });
+  const pending=queue.filter(q=>q.status==='queued');
+  processBtn.classList.toggle('hidden',!pending.length||batchRunning);
+  processBtn.textContent=pending.length>1?'Read '+pending.length+' receipts ('+pending.length+' actions)':'Read this receipt (1 action)';
+}
+
+processBtn.addEventListener('click',async()=>{
+  if(batchRunning)return;
+  batchRunning=true;batchError.textContent='';
+  renderQueue();
+  batchProgress.classList.remove('hidden');
+  barFill.style.width='5%';
+  let worker=null;
+  try{
+    progText.textContent='Loading the reader (first scan downloads it, about 15 MB)...';
+    worker=await Tesseract.createWorker('eng',1,{logger:()=>{}});
+    const todo=queue.filter(q=>q.status==='queued');
+    let done=0,blocked=false;
+    for(const q of todo){
+      q.status='reading';renderQueue();
+      progText.textContent='Reading receipt '+(done+1)+' of '+todo.length+'...';
+      try{
+        const canvas=await preprocess(q.dataUrl);
+        const{data:{text}}=await worker.recognize(canvas);
+        if(!text||text.replace(/\s/g,'').length<10)throw new Error('empty');
+        const{response,data}=await apiCall({action:'scan',idempotencyKey:q.id});
+        if(response.status===402)throw new Error('actions');
+        if(!response.ok)throw new Error(data.error||'metering failed');
+        addCard(parseReceiptText(text),text,q.name);
+        q.status='done';
+        bbTrack('scan_done',{batch:true});
+      }catch(e){
+        q.status=e.message==='actions'?'blocked':e.message==='empty'?'error':'error';
+        if(e.message==='actions')blocked=true;
+      }
+      done++;
+      barFill.style.width=(5+done/todo.length*90)+'%';
+      renderQueue();
+      if(blocked)break;
+    }
+    if(blocked){
+      queue.forEach(q=>{if(q.status==='queued')q.status='blocked'});
+      batchError.textContent='Out of actions for this month. The receipts above were read; the rest are waiting.';
+      renderQueue();
+    }
+    barFill.style.width='100%';
+    progText.textContent='Done.';
+  }catch(e){
+    batchError.textContent='Something went wrong reading those photos. Try again?';
+  }finally{
+    if(worker){try{await worker.terminate()}catch(e){}}
+    batchRunning=false;
+    renderQueue();
+    setTimeout(()=>batchProgress.classList.add('hidden'),800);
+  }
+});
+
+function addCard(p,rawText,fileName){
+  cardCount++;
+  resultsPanel.classList.remove('hidden');
+  const card=document.createElement('div');
+  card.className='receipt-card';
+  card.dataset.currency=p.currency;
+  card.innerHTML=
+    '<div class="card-head"><b>Receipt '+cardCount+(p.vendor?' &middot; '+esc(p.vendor):'')+'</b></div>'+
+    '<div class="read-note">Bum Bum\'s best read, not gospel. Fix anything it misread, then save.</div>'+
+    '<div class="top-fields"><label>Vendor<input class="fVendor" type="text" maxlength="120" value="'+esc(p.vendor)+'" placeholder="Store name"></label>'+
+    '<label>Date<input class="fDate" type="date" value="'+esc(p.date)+'"></label></div>'+
+    '<table class="items-table"><thead><tr><th>Item</th><th>Amount</th><th></th></tr></thead><tbody class="itemsBody"></tbody></table>'+
+    '<div class="btnrow"><button type="button" class="mini addRow">+ Add line</button></div>'+
+    '<div class="totals-grid"><label>Subtotal<input class="fSubtotal" type="text" inputmode="decimal" placeholder="0.00" value="'+esc(p.subtotal)+'"></label>'+
+    '<label><span class="taxLabel">'+esc(p.taxLabel)+'</span><input class="fTax" type="text" inputmode="decimal" placeholder="0.00" value="'+esc(p.tax)+'"></label>'+
+    '<label>Total<input class="fTotal" type="text" inputmode="decimal" placeholder="0.00" value="'+esc(p.total)+'"></label></div>'+
+    '<div class="btnrow"><button type="button" class="button saveOne">Save to log</button><button type="button" class="mini removeCard">Remove</button></div>'+
+    '<p class="card-note meta" style="font-size:13px"></p>'+
+    '<details class="raw"><summary>Raw OCR text</summary><pre class="rawText"></pre></details>';
+  const body=card.querySelector('.itemsBody');
+  p.items.forEach(it=>body.appendChild(itemRow(it.name,it.amount)));
+  card.querySelector('.rawText').textContent=rawText;
+  card.querySelector('.addRow').addEventListener('click',()=>body.appendChild(itemRow('','')));
+  card.querySelector('.removeCard').addEventListener('click',()=>{card.remove();updateSaveAll()});
+  card.querySelector('.saveOne').addEventListener('click',()=>saveCard(card));
+  cardsWrap.appendChild(card);
+  updateSaveAll();
+  if(cardsWrap.children.length===1)resultsPanel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function collectCard(card){
+  const v=sel=>card.querySelector(sel).value;
+  const items=[];
+  card.querySelectorAll('.itemsBody tr').forEach(tr=>{
+    const ins=tr.querySelectorAll('input');
+    const name=ins[0].value.trim(),amount=ins[1].value.trim().replace(/[^0-9.]/g,'');
+    if(name||amount)items.push({name:name||'(unnamed)',amount:amount||'0.00'});
+  });
+  return{vendor:v('.fVendor').trim(),date:v('.fDate'),currency:card.dataset.currency||'USD',items,
+    subtotal:v('.fSubtotal').trim().replace(/[^0-9.]/g,''),tax:v('.fTax').trim().replace(/[^0-9.]/g,''),
+    taxLabel:card.querySelector('.taxLabel').textContent,total:v('.fTotal').trim().replace(/[^0-9.]/g,'')};
+}
+
+async function saveCard(card){
+  const note=card.querySelector('.card-note');
+  const d=collectCard(card);
+  if(!d.items.length&&!d.total){note.textContent='Nothing to save yet.';return false}
+  const btn=card.querySelector('.saveOne');btn.disabled=true;
+  const{response,data}=await apiCall({action:'save',vendor:d.vendor,date:d.date,currency:d.currency,items:d.items,subtotal:d.subtotal,tax:d.tax,taxLabel:d.taxLabel,total:d.total});
+  btn.disabled=false;
+  if(!response.ok){note.textContent=data.error||'Could not save. Try again?';return false}
+  card.dataset.saved='1';
+  btn.disabled=true;btn.textContent='Saved';
+  note.textContent='Saved to your receipt log.';
+  bbTrack('receipt_saved',{items:d.items.length});
+  fetchLogs();
+  updateSaveAll();
+  return true;
+}
+
+function updateSaveAll(){
+  const unsaved=[...cardsWrap.children].filter(c=>!c.dataset.saved);
+  saveAllWrap.classList.toggle('hidden',!unsaved.length);
+  saveAllBtn.textContent=unsaved.length>1?'Save all '+unsaved.length+' to log':'Save to log';
+}
+saveAllBtn.addEventListener('click',async()=>{
+  saveAllBtn.disabled=true;
+  for(const card of[...cardsWrap.children]){
+    if(!card.dataset.saved)await saveCard(card);
+  }
+  saveAllBtn.disabled=false;
+});
+document.querySelector('#newBatchBtn').addEventListener('click',()=>{
+  queue=[];cardCount=0;cardsWrap.innerHTML='';
+  queueList.innerHTML='';batchError.textContent='';
+  resultsPanel.classList.add('hidden');
+  renderQueue();
+  document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'});
+});
 
 function preprocess(dataUrl){
   return new Promise((resolve,reject)=>{
@@ -158,42 +305,6 @@ function preprocess(dataUrl){
     img.src=dataUrl;
   });
 }
-
-scanBtn.addEventListener('click',async()=>{
-  if(!currentDataUrl)return;
-  scanError.textContent='';
-  scanBtn.disabled=true;
-  progressWrap.classList.remove('hidden');
-  barFill.style.width='4%';
-  progText.textContent='Getting the photo ready...';
-  try{
-    const canvas=await preprocess(currentDataUrl);
-    barFill.style.width='10%';
-    progText.textContent='Loading the reader (first scan downloads it, about 15 MB)...';
-    const worker=await Tesseract.createWorker('eng',1,{logger:m=>{
-      if(m.status==='recognizing text'){barFill.style.width=(10+m.progress*85)+'%';progText.textContent='Reading your receipt... '+Math.round(m.progress*100)+'%'}
-      else{progText.textContent=m.status.charAt(0).toUpperCase()+m.status.slice(1)+'...';if(m.progress)barFill.style.width=(10+m.progress*10)+'%'}
-    }});
-    const{data:{text}}=await worker.recognize(canvas);
-    await worker.terminate();
-    barFill.style.width='100%';
-    if(!text||text.replace(/\s/g,'').length<10)throw new Error('empty');
-    // Meter the scan now that the read succeeded. OCR itself runs on-device and is free.
-    const attempt=crypto.randomUUID();
-    const{response,data}=await apiCall({action:'scan',idempotencyKey:attempt});
-    if(response.status===402){scanError.textContent='You are out of actions for this month. Upgrade to keep scanning receipts.';bbTrack('scan_blocked',{reason:'no_actions'});return}
-    if(!response.ok)throw new Error(data.error||'Could not start the scan.');
-    const parsed=parseReceiptText(text);
-    showResult(parsed,text);
-    bbTrack('scan_done',{items:parsed.items.length,has_total:!!parsed.total});
-  }catch(e){
-    scanError.textContent=e.message==='empty'?'Bum Bum could not read much from that photo. Try better light, or a flatter angle.':'Something went wrong reading that photo. Try again?';
-  }finally{
-    scanBtn.disabled=false;
-    setTimeout(()=>progressWrap.classList.add('hidden'),600);
-  }
-});
-
 /* ---------- Receipt parsing: Bum Bum's best read ---------- */
 function parseReceiptText(text){
   const rawLines=text.split('\n').map(l=>l.replace(/\s+/g,' ').trim()).filter(l=>l.length>1);
@@ -276,52 +387,12 @@ function parseReceiptText(text){
   return out;
 }
 
-/* ---------- Results, editing, export, log ---------- */
-const resultPanel=document.querySelector('#resultPanel');
-const itemsBody=document.querySelector('#itemsBody');
-const fVendor=document.querySelector('#fVendor'),fDate=document.querySelector('#fDate');
-const fSubtotal=document.querySelector('#fSubtotal'),fTax=document.querySelector('#fTax'),fTotal=document.querySelector('#fTotal');
-const taxLabel=document.querySelector('#taxLabel');
-let scanCurrency='USD';
-
 function itemRow(name,amount){
   const tr=document.createElement('tr');
   tr.innerHTML='<td><input type="text" maxlength="60" value="'+esc(name)+'" aria-label="Item name"></td><td class="amt"><input type="text" inputmode="decimal" value="'+esc(amount)+'" aria-label="Item amount"></td><td class="del"><button type="button" class="row-del" aria-label="Remove line">×</button></td>';
   tr.querySelector('.row-del').addEventListener('click',()=>tr.remove());
   return tr;
 }
-
-function showResult(p,rawText){
-  scanCurrency=p.currency;
-  fVendor.value=p.vendor;fDate.value=p.date;
-  fSubtotal.value=p.subtotal;fTax.value=p.tax;fTotal.value=p.total;
-  taxLabel.textContent=p.taxLabel;
-  itemsBody.innerHTML='';
-  p.items.forEach(it=>itemsBody.appendChild(itemRow(it.name,it.amount)));
-  document.querySelector('#rawText').textContent=rawText;
-  resultPanel.classList.remove('hidden');
-  resultPanel.scrollIntoView({behavior:'smooth',block:'start'});
-  document.querySelector('#copyNote').textContent='';
-}
-
-document.querySelector('#addRowBtn').addEventListener('click',()=>itemsBody.appendChild(itemRow('','')));
-document.querySelector('#newScanBtn').addEventListener('click',()=>{
-  resultPanel.classList.add('hidden');
-  preview.classList.add('hidden');scanBtn.classList.add('hidden');
-  currentDataUrl='';document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'});
-});
-
-function collectForm(){
-  const items=[];
-  itemsBody.querySelectorAll('tr').forEach(tr=>{
-    const ins=tr.querySelectorAll('input');
-    const name=ins[0].value.trim(),amount=ins[1].value.trim().replace(/[^0-9.]/g,'');
-    if(name||amount)items.push({name:name||'(unnamed)',amount:amount||'0.00'});
-  });
-  return{vendor:fVendor.value.trim(),date:fDate.value,currency:scanCurrency,items,
-    subtotal:fSubtotal.value.trim().replace(/[^0-9.]/g,''),tax:fTax.value.trim().replace(/[^0-9.]/g,''),taxLabel:taxLabel.textContent,total:fTotal.value.trim().replace(/[^0-9.]/g,'')};
-}
-
 function csvCell(s){s=String(s??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
 function buildCsv(d){
   const L=[];
@@ -358,7 +429,7 @@ function renderLog(log){
     const totalTxt=entry.total?entry.currency+' '+entry.total:'no total';
     row.innerHTML='<div><b>'+esc(entry.vendor||'Unnamed receipt')+'</b><div class="meta">'+esc(entry.date||'no date')+' · '+entry.items.length+' lines · '+esc(totalTxt)+'</div></div><div class="spacer"></div>';
     const load=document.createElement('button');load.type='button';load.className='mini';load.textContent='Load';
-    load.addEventListener('click',()=>{showResult(entry,'');bbTrack('receipt_log_load',{id:entry.id})});
+    load.addEventListener('click',()=>{addCard(entry,'');bbTrack('receipt_log_load',{id:entry.id})});
     const del=document.createElement('button');del.type='button';del.className='mini';del.textContent='Delete';
     del.addEventListener('click',async()=>{
       if(!confirm('Delete this receipt from your log?'))return;
@@ -371,16 +442,5 @@ function renderLog(log){
     list.appendChild(row);
   });
 }
-document.querySelector('#saveLogBtn').addEventListener('click',async()=>{
-  const d=collectForm();
-  if(!d.items.length&&!d.total){document.querySelector('#copyNote').textContent='Nothing to save yet.';return}
-  const btn=document.querySelector('#saveLogBtn');btn.disabled=true;
-  const{response,data}=await apiCall({action:'save',vendor:d.vendor,date:d.date,currency:d.currency,items:d.items,subtotal:d.subtotal,tax:d.tax,taxLabel:d.taxLabel,total:d.total});
-  btn.disabled=false;
-  if(!response.ok){document.querySelector('#copyNote').textContent=data.error||'Could not save. Try again?';return}
-  document.querySelector('#copyNote').textContent='Saved to your receipt log.';
-  bbTrack('receipt_saved',{items:d.items.length});
-  fetchLogs();
-});
 fetchLogs();
 </script></main></body></html>
