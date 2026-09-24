@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AuthCta } from "./auth-cta";
 
-type Usage = { remaining: number; limit: number };
+type Usage = { remaining: number; limit: number; unlimited?: boolean };
 
 function ActionsPill() {
   const [usage, setUsage] = useState<Usage | null>(null);
@@ -12,18 +12,26 @@ function ActionsPill() {
     fetch("/api/usage.php", { credentials: "same-origin" })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (d && d.usage && typeof d.usage.remaining === "number") setUsage(d.usage);
+        if (d && d.usage && (d.usage.unlimited || typeof d.usage.remaining === "number")) setUsage(d.usage);
       })
       .catch(() => {});
     const onUsage = (e: Event) => {
       const u = (e as CustomEvent).detail as Usage | undefined;
-      if (u && typeof u.remaining === "number" && typeof u.limit === "number") setUsage(u);
+      if (u && (u.unlimited || (typeof u.remaining === "number" && typeof u.limit === "number"))) setUsage(u);
     };
     document.addEventListener("bb:usage", onUsage);
     return () => document.removeEventListener("bb:usage", onUsage);
   }, []);
 
-  if (!usage || !(usage.limit > 0)) return null;
+  if (!usage) return null;
+  if (usage.unlimited) {
+    return (
+      <a className="usage-pill" href="/account/">
+        Unlimited actions
+      </a>
+    );
+  }
+  if (!(usage.limit > 0)) return null;
   return (
     <a className="usage-pill" href="/account/">
       {usage.remaining} of {usage.limit} actions left

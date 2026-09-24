@@ -3,32 +3,42 @@
 import { useEffect, useState } from "react";
 import { useRequestTool } from "../components/request-tool";
 
+type RequestStatus = "requested" | "planned" | "building" | "shipped" | "completed" | "cancelled";
+
 type ToolRequest = {
   id: number;
   problem: string;
   outcome: string;
-  status: "requested" | "planned" | "building" | "shipped";
+  status: RequestStatus;
   votes: number;
   created_at: string;
 };
 
-const STATUS_LABEL: Record<ToolRequest["status"], string> = {
+const STATUS_LABEL: Record<RequestStatus, string> = {
   requested: "Requested",
   planned: "Planned",
   building: "Building",
   shipped: "Shipped",
+  completed: "Completed",
+  cancelled: "Cancelled",
 };
 
-const STATUS_CLASS: Record<ToolRequest["status"], string> = {
+const STATUS_CLASS: Record<RequestStatus, string> = {
   requested: "st-requested",
   planned: "st-planned",
   building: "st-building",
   shipped: "st-shipped",
+  completed: "st-shipped",
+  cancelled: "st-cancelled",
 };
+
+const ALL_STATUSES: RequestStatus[] = ["requested", "planned", "building", "shipped", "completed", "cancelled"];
 
 export default function RequestsView() {
   const [requests, setRequests] = useState<ToolRequest[] | null>(null);
   const [voted, setVoted] = useState<Set<number>>(new Set());
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [csrf, setCsrf] = useState("");
   const { openRequest, requestModal } = useRequestTool();
 
   useEffect(() => {
@@ -36,6 +46,13 @@ export default function RequestsView() {
       .then((r) => r.json())
       .then((d) => setRequests(Array.isArray(d.requests) ? d.requests : []))
       .catch(() => setRequests([]));
+    fetch("/api/session.php", { credentials: "same-origin" })
+      .then((r) => r.json())
+      .then((s) => {
+        if (s && s.is_admin) setIsAdmin(true);
+        if (s && s.csrf) setCsrf(String(s.csrf));
+      })
+      .catch(() => {});
     try {
       const saved = JSON.parse(localStorage.getItem("bb-voted") || "[]");
       if (Array.isArray(saved)) setVoted(new Set(saved));
@@ -55,6 +72,20 @@ export default function RequestsView() {
       const next = new Set(voted).add(id);
       setVoted(next);
       try { localStorage.setItem("bb-voted", JSON.stringify([...next])); } catch { /* private mode */ }
+    }
+  }
+
+  async function setStatus(id: number, status: RequestStatus) {
+    const res = await fetch("/api/tool-requests.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "set_status", request_id: id, status, csrf }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.status) {
+      setRequests((rs) => (rs || []).map((r) => (r.id === id ? { ...r, status: data.status as RequestStatus } : r)));
+    } else {
+      alert(data.error || "Could not update the status.");
     }
   }
 
@@ -90,6 +121,16 @@ export default function RequestsView() {
               </div>
               <p className="queue-problem">{r.problem}</p>
               <p className="queue-outcome"><strong>Done looks like:</strong> {r.outcome}</p>
+              {isAdmin && (
+                <label className="admin-status">
+                  Status
+                  <select value={r.status} onChange={(e) => setStatus(r.id, e.target.value as RequestStatus)}>
+                    {ALL_STATUSES.map((s) => (
+                      <option key={s} value={s}>{STATUS_LABEL[s]}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
             </article>
           ))}
         </div>

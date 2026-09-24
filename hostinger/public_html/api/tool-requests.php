@@ -13,7 +13,7 @@ function ensureToolRequestTables(): void {
         email VARCHAR(190) NOT NULL DEFAULT '',
         problem TEXT NOT NULL,
         outcome TEXT NOT NULL,
-        status ENUM('requested','planned','building','shipped') NOT NULL DEFAULT 'requested',
+        status ENUM('requested','planned','building','shipped','completed','cancelled') NOT NULL DEFAULT 'requested',
         votes INT NOT NULL DEFAULT 0,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         KEY idx_status_votes (status, votes)
@@ -24,6 +24,13 @@ function ensureToolRequestTables(): void {
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (request_id, voter_key)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    // Tables created before completed/cancelled existed get the wider enum.
+    try {
+        $col = db()->query("SHOW COLUMNS FROM tool_requests LIKE 'status'")->fetch();
+        if ($col && strpos((string) $col['Type'], "'completed'") === false) {
+            db()->exec("ALTER TABLE tool_requests MODIFY status ENUM('requested','planned','building','shipped','completed','cancelled') NOT NULL DEFAULT 'requested'");
+        }
+    } catch (Throwable $e) { error_log('tool_requests status enum migration failed: ' . $e->getMessage()); }
 }
 
 // Public queue: anyone can read the anonymized list of requested tools.
@@ -56,6 +63,21 @@ if (($input['action'] ?? '') === 'vote') {
     }
     $votes = (int) db()->query('SELECT votes FROM tool_requests WHERE id = ' . $requestId)->fetchColumn();
     jsonResponse(['ok' => true, 'votes' => $votes]);
+}
+
+// Admin only: change a request's status (requested, planned, building,
+// shipped, completed, cancelled).
+if (($input['action'] ?? '') === 'set_status') {
+    requireAdmin(currentUser());
+    requireCsrf($input);
+    $requestId = (int) ($input['request_id'] ?? 0);
+    $status = (string) ($input['status'] ?? '');
+    $allowed = ['requested', 'planned', 'building', 'shipped', 'completed', 'cancelled'];
+    if ($requestId <= 0 || !in_array($status, $allowed, true)) jsonResponse(['error' => 'Pick a valid status.'], 422);
+    $stmt = db()->prepare('UPDATE tool_requests SET status = ? WHERE id = ?');
+    $stmt->execute([$status, $requestId]);
+    if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Request not found.'], 404);
+    jsonResponse(['ok' => true, 'status' => $status]);
 }
 
 // Honeypot: bots that fill the hidden field get a fake success.

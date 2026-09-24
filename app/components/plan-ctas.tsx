@@ -20,11 +20,22 @@ type PlanCtaProps = {
  */
 export function PlanCta({ plan, label, href, featured }: PlanCtaProps) {
   const [current, setCurrent] = useState<string | null>(null);
+  const [renewal, setRenewal] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/session.php", { credentials: "same-origin" })
       .then((r) => r.json())
-      .then((s) => setCurrent(s && s.authenticated ? String(s.user?.plan || "free") : "guest"))
+      .then((s) => {
+        const p = s && s.authenticated ? String(s.user?.plan || "free") : "guest";
+        setCurrent(p);
+        const end = s && s.authenticated ? s.user?.period_end : null;
+        if (p !== "free" && p !== "guest" && end) {
+          const d = new Date(String(end).replace(" ", "T") + "Z");
+          if (!isNaN(d.getTime())) {
+            setRenewal(d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Toronto" }));
+          }
+        }
+      })
       .catch(() => setCurrent("guest"));
   }, []);
 
@@ -55,8 +66,15 @@ export function PlanCta({ plan, label, href, featured }: PlanCtaProps) {
 
   if (current === plan) {
     return (
-      <span className={className} aria-disabled="true" style={{ opacity: 0.55, cursor: "default" }}>
-        You&rsquo;re on this plan
+      <span style={{ display: "block" }}>
+        <span className={className} aria-disabled="true" style={{ opacity: 0.55, cursor: "default" }}>
+          You&rsquo;re on this plan
+        </span>
+        {renewal && plan !== "free" && (
+          <span style={{ display: "block", marginTop: 8, fontSize: ".85rem", opacity: 0.75 }}>
+            Renews {renewal}
+          </span>
+        )}
       </span>
     );
   }

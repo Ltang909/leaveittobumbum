@@ -71,6 +71,27 @@ function requireCsrf(array $input): void {
     if (!hash_equals(csrfToken(), (string) ($input['csrf'] ?? ''))) jsonResponse(['error' => 'Please refresh and try again.'], 403);
 }
 
+// Admin: full access, including unlimited actions and managing the community
+// request queue. Email-based so no DB migration is needed; override with
+// 'admin_emails' => [...] in the server config.
+function adminEmails(): array {
+    try {
+        $cfg = config()['admin_emails'] ?? null;
+        if (is_array($cfg) && $cfg) return array_values(array_unique(array_map('strtolower', array_map('trim', $cfg))));
+    } catch (Throwable $e) {}
+    return ['hello@leaveittobumbum.com'];
+}
+
+function isAdmin(?array $user): bool {
+    if (!$user || empty($user['email'])) return false;
+    return in_array(strtolower(trim((string) $user['email'])), adminEmails(), true);
+}
+
+function requireAdmin(?array $user): array {
+    if (!isAdmin($user)) jsonResponse(['error' => 'Not allowed.'], 403);
+    return $user;
+}
+
 function currentUser(): ?array {
     startSecureSession();
     if (empty($_SESSION['user_id'])) return null;
@@ -138,6 +159,12 @@ function teamSeats(int $ownerId, string $plan): array {
 
 function usageFor(array $user): array {
     $period = periodKey($user);
+    if (isAdmin($user)) {
+        $stmt = db()->prepare('SELECT used_actions FROM usage_periods WHERE user_id = ? AND period_key = ?');
+        $stmt->execute([$user['id'], $period]);
+        $used = (int) ($stmt->fetchColumn() ?: 0);
+        return ['period' => $period, 'used' => $used, 'limit' => 0, 'remaining' => 0, 'unlimited' => true];
+    }
     $limit = PLAN_LIMITS[$user['plan']] ?? PLAN_LIMITS['free'];
     $stmt = db()->prepare('SELECT used_actions FROM usage_periods WHERE user_id = ? AND period_key = ?');
     $stmt->execute([$user['id'], $period]);
@@ -148,27 +175,39 @@ function usageFor(array $user): array {
 function consumeAction(int $userId, string $plan, string $period, string $tool, string $idempotency): array {
     $limit = PLAN_LIMITS[$plan] ?? PLAN_LIMITS['free'];
     $pdo = db();
+    // Admins never run out of actions. Usage is still recorded so the
+    // activity history stays accurate; only the limit check is skipped.
+    $unlimited = false;
+    try {
+        $emailStmt = $pdo->prepare('SELECT email FROM users WHERE id = ?');
+        $emailStmt->execute([$userId]);
+        $unlimited = isAdmin(['email' => (string) $emailStmt->fetchColumn()]);
+    } catch (Throwable $e) { $unlimited = false; }
     $pdo->beginTransaction();
     try {
         $existing = $pdo->prepare('SELECT id FROM action_ledger WHERE user_id = ? AND idempotency_key = ?');
         $existing->execute([$userId, $idempotency]);
         if ($existing->fetch()) {
             $pdo->commit();
-            return ['counted' => false, 'duplicate' => true];
+            $dup = ['counted' => false, 'duplicate' => true];
+            if ($unlimited) $dup['unlimited'] = true;
+            return $dup;
         }
         $upsert = $pdo->prepare('INSERT INTO usage_periods (user_id, period_key, used_actions, included_actions) VALUES (?, ?, 0, ?) ON DUPLICATE KEY UPDATE included_actions = VALUES(included_actions)');
         $upsert->execute([$userId, $period, $limit]);
         $lock = $pdo->prepare('SELECT used_actions FROM usage_periods WHERE user_id = ? AND period_key = ? FOR UPDATE');
         $lock->execute([$userId, $period]);
         $used = (int) $lock->fetchColumn();
-        if ($used >= $limit) {
+        if (!$unlimited && $used >= $limit) {
             $pdo->rollBack();
             return ['counted' => false, 'limit_reached' => true, 'used' => $used, 'limit' => $limit];
         }
         $pdo->prepare('INSERT INTO action_ledger (user_id, period_key, tool_key, idempotency_key) VALUES (?, ?, ?, ?)')->execute([$userId, $period, $tool, $idempotency]);
         $pdo->prepare('UPDATE usage_periods SET used_actions = used_actions + 1 WHERE user_id = ? AND period_key = ?')->execute([$userId, $period]);
         $pdo->commit();
-        return ['counted' => true, 'used' => $used + 1, 'limit' => $limit];
+        $out = ['counted' => true, 'used' => $used + 1, 'limit' => $limit];
+        if ($unlimited) { $out['limit'] = 0; $out['remaining'] = 0; $out['unlimited'] = true; }
+        return $out;
     } catch (Throwable $error) {
         if ($pdo->inTransaction()) $pdo->rollBack();
         throw $error;

@@ -87,13 +87,14 @@ function RequestToolModal({ open, prefill, onClose }: { open: boolean; prefill: 
           <>
             <p className="kicker">Request a tool</p>
             <h2 id="request-title">What do you wish would just do itself?</h2>
+            <p className="queue-first">First, <a href="/requests/">check the community queue</a>. Your tool might already be requested, and upvotes decide what gets built first.</p>
             <form onSubmit={submitRequest}>
               <label>Your name<input name="name" required autoFocus /></label>
               <label>Work email<input name="email" type="email" required defaultValue={session?.user?.email ?? ""} /></label>
               <label>The annoying task<textarea name="problem" required placeholder="Every Friday I copy..." rows={4} key={prefill} defaultValue={prefill} /></label>
               <label>What would “done” look like?<textarea name="outcome" required placeholder="I want to click once and get..." rows={3} /></label>
               <label className="public-consent"><input type="checkbox" required /> I get it: my request goes into the public community queue. My task and “done” description will be visible to everyone; my name and email stay private.</label>
-              <input name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+              <input name="website" style={{ display: "none" }} tabIndex={-1} autoComplete="off" aria-hidden="true" />
               <button className="button" disabled={state === "sending"}>{state === "sending" ? "Sending…" : "Send to Bum Bum"} <span aria-hidden="true">↗</span></button>
               {state === "error" && <p className="form-error">That did not go through. Email hello@leaveittobumbum.com and we will pick it up.</p>}
             </form>
