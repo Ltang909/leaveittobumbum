@@ -122,6 +122,10 @@ function ensureToolRequestTables(): void {
         // Older tables lack the operator flag.
         $op = db()->query("SHOW COLUMNS FROM tool_requests LIKE 'is_operator'")->fetch();
         if (!$op) db()->exec("ALTER TABLE tool_requests ADD COLUMN is_operator TINYINT(1) NOT NULL DEFAULT 0");
+        // Same collation normalization as custom_requests: connection is
+        // utf8mb4_unicode_ci, older tables may be utf8mb4_general_ci.
+        db()->exec('ALTER TABLE tool_requests CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+        db()->exec('ALTER TABLE tool_request_votes CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
     } catch (Throwable $e) { error_log('tool_requests migration failed: ' . $e->getMessage()); }
 }
 
@@ -161,6 +165,12 @@ function ensureCustomRequestTables(): void {
             if (!isset($have[$col])) db()->exec("ALTER TABLE custom_requests ADD COLUMN $col $def");
         }
     } catch (Throwable $e) { error_log('custom_requests heal failed: ' . $e->getMessage()); }
+    // Old tables were created with utf8mb4_general_ci while the connection
+    // uses utf8mb4_unicode_ci, so string comparisons (e.g. status = 'open')
+    // fail with "Illegal mix of collations". Normalize once.
+    try {
+        db()->exec('ALTER TABLE custom_requests CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+    } catch (Throwable $e) { error_log('custom_requests collation fix failed: ' . $e->getMessage()); }
 }
 
 function currentUser(): ?array {
