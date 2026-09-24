@@ -79,7 +79,7 @@ function adminEmails(): array {
         $cfg = config()['admin_emails'] ?? null;
         if (is_array($cfg) && $cfg) return array_values(array_unique(array_map('strtolower', array_map('trim', $cfg))));
     } catch (Throwable $e) {}
-    return ['hello@leaveittobumbum.com'];
+    return ['hello@leaveittobumbum.com', 'ltang9090@gmail.com'];
 }
 
 function isAdmin(?array $user): bool {
