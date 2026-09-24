@@ -86,9 +86,7 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 <label>Total<input id="fTotal" type="text" inputmode="decimal" placeholder="0.00"></label>
 </div>
 <div class="btnrow">
-<button type="button" class="button secondary" id="copyCsvBtn">Copy CSV</button>
-<button type="button" class="button secondary" id="dlCsvBtn">Download CSV</button>
-<button type="button" class="button secondary" id="saveLogBtn">Save to log</button>
+<button type="button" class="button" id="saveLogBtn">Save to log</button>
 <button type="button" class="button secondary" id="newScanBtn">New scan</button>
 </div>
 <p id="copyNote" class="meta" style="font-size:13px"></p>
@@ -336,22 +334,14 @@ function buildCsv(d){
   return L.join('\n');
 }
 
-document.querySelector('#copyCsvBtn').addEventListener('click',async()=>{
-  const csv=buildCsv(collectForm());
-  try{await navigator.clipboard.writeText(csv);document.querySelector('#copyNote').textContent='Copied. Paste it into your spreadsheet.'}
-  catch(e){document.querySelector('#copyNote').textContent='Copy was blocked by the browser. Use Download CSV instead.'}
-  bbTrack('receipt_export',{how:'copy'});
-});
-document.querySelector('#dlCsvBtn').addEventListener('click',()=>{
-  const d=collectForm();
+function downloadCsv(d){
   const blob=new Blob([buildCsv(d)],{type:'text/csv'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download='receipt-'+(d.vendor||'scan').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-'+(d.date||'undated')+'.csv';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
-  bbTrack('receipt_export',{how:'download'});
-});
+}
 
 /* Server-backed receipt log. Only structured data is stored; photos never leave this device. */
 async function fetchLogs(){
@@ -375,7 +365,9 @@ function renderLog(log){
       const{response}=await apiCall({action:'delete',id:entry.id});
       if(response.ok)fetchLogs();
     });
-    row.appendChild(load);row.appendChild(del);
+    const csv=document.createElement('button');csv.type='button';csv.className='mini';csv.textContent='CSV';
+    csv.addEventListener('click',()=>{downloadCsv(entry);bbTrack('receipt_export',{how:'log_row'})});
+    row.appendChild(load);row.appendChild(csv);row.appendChild(del);
     list.appendChild(row);
   });
 }
