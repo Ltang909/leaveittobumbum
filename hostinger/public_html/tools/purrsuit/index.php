@@ -49,6 +49,23 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .stat-card{flex:1;min-width:140px;border:2px solid var(--line);border-radius:14px;background:#fff;padding:12px;text-align:center}
 .stat-card b{font-size:22px;display:block}
 .stat-card span{font-size:12px;font-weight:700;opacity:.75}
+/* ---- Soft UI pass: easier on the eyes ---- */
+.contact,.followup,.stat-card,.modal,.modal-close{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);color:#38332a}
+.followup .draft{border:1px solid #e2d7bf}
+.chip{border:1px solid #ddd1b8;font-weight:700}
+.chip.on{border-color:#2f2a22}
+.stage{border:1px solid #d9cdae;font-weight:700}
+.contact .top b{font-weight:700}
+.detail{border-top:1px dashed #d9cdae}
+.detail label,.modal label,#addForm label{font-weight:600}
+.detail input,.detail select,.detail textarea,#addForm input,#addForm select,#addForm textarea,input[type=date],.modal input,.modal select,.modal textarea{border:1px solid #ddd1b8;font-weight:500}
+.detail input:focus,.detail select:focus,.detail textarea:focus,#addForm input:focus,#addForm select:focus,#addForm textarea:focus,input[type=date]:focus,.modal input:focus,.modal select:focus,.modal textarea:focus{border-color:#b3a37e;box-shadow:0 0 0 3px rgba(179,163,126,.18);outline:none}
+.shell .button{box-shadow:0 2px 0 #2f2a22;font-weight:700}
+.shell .button:active{box-shadow:none;transform:translateY(2px)}
+.shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
+.timeline li{border-left:2px solid #d9cdae}
+.modal-close{font-weight:700}
+.quiet{box-shadow:0 2px 10px rgba(90,72,38,.08)}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purrsuit"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-wink-blep.png" alt="Bum Bum winking"><h1>Never let a lead go cold.</h1><p class="lede">Purrsuit is a tiny CRM for people who hate CRMs. Add the humans, move them down the pipeline, and every morning Purrsuit tells you exactly who to follow up with and what to say. Adding a contact uses one action. Everything else is free.</p>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to use Purrsuit</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
