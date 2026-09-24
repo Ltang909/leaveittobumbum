@@ -5,7 +5,8 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer;font-family:inherit}
 .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .filterbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;align-items:center}
-.filterbar select{padding:8px 38px 8px 14px;border:2px solid var(--line);border-radius:999px;font-weight:800;font-size:14px;background-color:#fff;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;font-family:inherit}
+.filterbar select{margin:0;padding:6px 38px 6px 14px;border:2px solid var(--line);border-radius:999px;font-weight:800;font-size:14px;line-height:1.5;background-color:#fff;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;font-family:inherit}
+.filterbar .chip{margin:0;line-height:1.5}
 .contact{border:2px solid var(--line);border-radius:14px;background:#fff;padding:14px;margin-bottom:10px}
 .contact .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .contact .top b{font-size:17px}
