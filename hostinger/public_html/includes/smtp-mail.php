@@ -12,7 +12,7 @@ function bb_mail_configured(): bool {
         && is_string($mail['user'] ?? null) && $mail['user'] !== '' && $mail['user'] !== 'replace_me';
 }
 
-function bb_send_mail(string $to, string $subject, string $body): array {
+function bb_send_mail(string $to, string $subject, string $body, string $replyTo = ''): array {
     $mail = config()['mail'] ?? [];
     $host = (string) ($mail['host'] ?? '');
     $port = (int) ($mail['port'] ?? 587);
@@ -29,6 +29,7 @@ function bb_send_mail(string $to, string $subject, string $body): array {
     }
     // Header-safe subject: strip CR/LF to block header injection.
     $subject = trim(preg_replace('/[\r\n]+/', ' ', $subject));
+    if ($replyTo !== '' && !filter_var($replyTo, FILTER_VALIDATE_EMAIL)) $replyTo = '';
 
     $fp = @stream_socket_client("tcp://{$host}:{$port}", $errno, $errstr, 15);
     if (!$fp) return [false, "connect failed: {$errstr} ({$errno})"];
@@ -78,6 +79,7 @@ function bb_send_mail(string $to, string $subject, string $body): array {
     $fromHeader = $fromName !== '' && $fromName !== 'replace_me' ? "{$fromName} <{$fromEmail}>" : $fromEmail;
     $headers = "From: {$fromHeader}\r\n"
         . "To: {$to}\r\n"
+        . ($replyTo !== '' ? "Reply-To: {$replyTo}\r\n" : "")
         . "Subject: {$subject}\r\n"
         . "Content-Type: text/plain; charset=UTF-8\r\n"
         . "MIME-Version: 1.0\r\n"
