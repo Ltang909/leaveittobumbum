@@ -173,6 +173,56 @@ function ensureCustomRequestTables(): void {
     } catch (Throwable $e) { error_log('custom_requests collation fix failed: ' . $e->getMessage()); }
 }
 
+// OAuth sign-in (Sign in with Google / LinkedIn). Columns are added lazily
+// so no manual migration is needed; both are nullable-unique (MySQL allows
+// many NULLs in a UNIQUE column).
+function ensureOAuthColumns(): void {
+    try {
+        $have = [];
+        foreach (db()->query('SHOW COLUMNS FROM users')->fetchAll() as $c) $have[$c['Field']] = true;
+        foreach (['oauth_google_sub', 'oauth_linkedin_sub'] as $col) {
+            if (!isset($have[$col])) db()->exec("ALTER TABLE users ADD COLUMN $col VARCHAR(64) NULL UNIQUE");
+        }
+    } catch (Throwable $e) { error_log('oauth columns heal failed: ' . $e->getMessage()); }
+}
+
+// Provider definitions for OAuth sign-in. Client id/secret live in the
+// server config (outside the repo): google_client_id, google_client_secret,
+// linkedin_client_id, linkedin_client_secret.
+function oauthProviders(): array {
+    $cfg = config();
+    $callback = rtrim((string) ($cfg['app_url'] ?? ''), '/') . '/api/auth/oauth-callback.php';
+    return [
+        'google' => [
+            'label' => 'Google',
+            'client_id' => (string) ($cfg['google_client_id'] ?? ''),
+            'client_secret' => (string) ($cfg['google_client_secret'] ?? ''),
+            'callback' => $callback,
+            'authorize' => 'https://accounts.google.com/o/oauth2/v2/auth',
+            'token' => 'https://oauth2.googleapis.com/token',
+            'userinfo' => 'https://www.googleapis.com/oauth2/v3/userinfo',
+            'scope' => 'openid email profile',
+            'extra_auth' => ['prompt' => 'select_account'],
+        ],
+        'linkedin' => [
+            'label' => 'LinkedIn',
+            'client_id' => (string) ($cfg['linkedin_client_id'] ?? ''),
+            'client_secret' => (string) ($cfg['linkedin_client_secret'] ?? ''),
+            'callback' => $callback,
+            'authorize' => 'https://www.linkedin.com/oauth/v2/authorization',
+            'token' => 'https://www.linkedin.com/oauth/v2/accessToken',
+            'userinfo' => 'https://api.linkedin.com/v2/userinfo',
+            'scope' => 'openid profile email',
+            'extra_auth' => [],
+        ],
+    ];
+}
+
+function oauthEnabled(string $provider): bool {
+    $p = oauthProviders()[$provider] ?? null;
+    return $p !== null && $p['client_id'] !== '' && $p['client_secret'] !== '';
+}
+
 function currentUser(): ?array {
     startSecureSession();
     if (empty($_SESSION['user_id'])) return null;
