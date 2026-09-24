@@ -34,7 +34,7 @@ if ($title === '' || mb_strlen($title) > 180) jsonResponse(['error' => 'Give the
 if ($details === '' || mb_strlen($details) > 5000) jsonResponse(['error' => 'Describe the task and what done looks like.'], 422);
 $period = periodKey($bill);
 try {
-    $open = db()->prepare("SELECT id FROM custom_requests WHERE user_id = ? AND status = 'open' AND DATE_FORMAT(requested_at, '%Y-%m') = ? LIMIT 1");
+    $open = db()->prepare("SELECT id FROM custom_requests WHERE user_id = ? AND status = 'open' COLLATE utf8mb4_unicode_ci AND DATE_FORMAT(requested_at, '%Y-%m') = ? LIMIT 1");
     $open->execute([$billId, $period]);
     if ($open->fetch()) jsonResponse(['error' => 'One request per month. The current one is still in progress.'], 409);
     $stmt = db()->prepare('INSERT INTO custom_requests (user_id, title, details, deadline_at) VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 36 HOUR))');
