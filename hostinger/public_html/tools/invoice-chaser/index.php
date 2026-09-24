@@ -45,8 +45,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 .draft-box{border:1px solid #d9cdae}
 .modal-close{font-weight:700}
-.tell-bum input{margin-top:6px}
-.nl-confirm{background:#fdf8ef;border:1px solid #e7dcc3;border-radius:12px;padding:12px 14px;margin-top:10px}
+
 .chaching{text-align:center;padding:32px 20px}
 .chaching img{width:110px;height:auto}
 .chaching-amount{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:clamp(2.5rem,9vw,4rem);margin:6px 0;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
@@ -61,10 +60,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
   <div class="stat-card"><b id="statRecovered">–</b><span>recovered this month</span><small id="statRecoveredBy"></small></div>
 </div>
 <section class="panel"><div class="yp-head" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 style="margin:0">Your chase list</h2><button type="button" class="button" id="remindBtn">Email me the chase list</button></div><p class="lede" style="margin-top:8px">One email with everything overdue and upcoming, sent to <?= htmlspecialchars($user['email'] ?? '') ?>. Uses one action; repeat sends on the same day are free.</p><p id="remindMsg" class="lede"></p><div class="chips" id="filterChips"></div><div id="invoiceList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
-<section class="panel"><h2 style="margin-top:0">Add an invoice</h2>
-<div class="tell-bum"><label style="font-weight:600">Just tell Bum Bum<input id="nlInput" type="text" maxlength="300" placeholder="Acme owes me $1,200, due Oct 1, invoice #42"></label><div class="btnrow"><button type="button" class="button secondary" id="nlGo">Translate it</button></div><div id="nlResult" style="margin-top:10px"></div></div>
-<hr style="border:none;border-top:1px dashed #d9cdae;margin:18px 0">
-<form id="addForm"><div class="form-grid"><label>Client name<input name="client_name" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Client email (for one-tap sending)<input name="client_email" type="email" maxlength="191" placeholder="billing@acme.co"></label><label>Amount<input name="amount" type="number" min="0.01" step="0.01" required placeholder="1200.00"></label><label>Currency<select name="currency"><option value="USD">USD ($)</option><option value="CAD">CAD (CA$)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option></select></label><label>Invoice # (optional)<input name="invoice_no" type="text" maxlength="64" placeholder="INV-2026-014"></label><label>Due date<input name="due_date" type="date" required></label><label class="span-all">Notes (optional)<textarea name="notes" maxlength="2000" placeholder="Net 30, sent Sep 1..."></textarea></label></div><button class="button" style="margin-top:12px">Add invoice</button><p id="addError" class="error"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Add an invoice</h2><form id="addForm"><div class="form-grid"><label>Client name<input name="client_name" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Client email (for one-tap sending)<input name="client_email" type="email" maxlength="191" placeholder="billing@acme.co"></label><label>Amount<input name="amount" type="number" min="0.01" step="0.01" required placeholder="1200.00"></label><label>Currency<select name="currency"><option value="USD">USD ($)</option><option value="CAD">CAD (CA$)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option></select></label><label>Invoice # (optional)<input name="invoice_no" type="text" maxlength="64" placeholder="INV-2026-014"></label><label>Due date<input name="due_date" type="date" required></label><label class="span-all">Notes (optional)<textarea name="notes" maxlength="2000" placeholder="Net 30, sent Sep 1..."></textarea></label></div><button class="button" style="margin-top:12px">Add invoice</button><p id="addError" class="error"></p></form></section>
 <div id="upgrade-slot"></div>
 <div class="modal-overlay hidden" id="modalOverlay"><div class="modal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose" aria-label="Close">×</button><div id="modalBody"></div></div></div>
 <div class="modal-overlay hidden" id="chachingOverlay"><div class="modal chaching" role="dialog" aria-modal="true"><img src="/bum/cat-bowtie.png" alt="Bum Bum celebrating"><div class="chaching-amount" id="chachingAmount"></div><p class="lede" id="chachingSub"></p><button type="button" class="button" id="chachingClose">Nice.</button></div></div>
@@ -259,75 +255,7 @@ document.querySelector('#remindBtn').addEventListener('click',async e=>{
   msg.textContent=`Sent to ${data.sent_to}${data.duplicate?' (already sent today, no extra charge)':''}. Go get that money.`;
   bbTrack('chaser_reminded',{tool:TOOL_KEY,overdue:data.overdue});
 });
-function nlFmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function parseDueDate(text){
-  const t=' '+text.toLowerCase()+' ';
-  const today=new Date();today.setHours(0,0,0,0);
-  const plus=n=>{const d=new Date(today);d.setDate(d.getDate()+n);return nlFmt(d)};
-  if(/\btoday\b/.test(t))return nlFmt(today);
-  if(/\btomorrow\b/.test(t))return plus(1);
-  let m=t.match(/\bin (\d+) days?\b/);if(m)return plus(parseInt(m[1],10));
-  m=t.match(/\bin (\d+) weeks?\b/);if(m)return plus(parseInt(m[1],10)*7);
-  const days={sunday:0,monday:1,tuesday:2,wednesday:3,thursday:4,friday:5,saturday:6};
-  m=t.match(/\b(?:next )?(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b/);
-  if(m){const want=days[m[1]];let diff=(want-today.getDay()+7)%7;if(diff===0)diff=7;return plus(diff)}
-  const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
-  m=t.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]* (\d{1,2})(?:st|nd|rd|th)?\b/);
-  if(m){const mo=months[m[1].slice(0,3)];let d=new Date(today.getFullYear(),mo-1,parseInt(m[2],10));if(d<today)d.setFullYear(d.getFullYear()+1);return nlFmt(d)}
-  m=t.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);if(m)return `${m[1]}-${m[2]}-${m[3]}`;
-  m=t.match(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/);
-  if(m){let y=m[3]?parseInt(m[3],10):today.getFullYear();if(y<100)y+=2000;let d=new Date(y,parseInt(m[1],10)-1,parseInt(m[2],10));if(!m[3]&&d<today)d.setFullYear(d.getFullYear()+1);return nlFmt(d)}
-  return '';
-}
-function cleanClient(s){
-  return (s||'').replace(/^[\s,;:\-]+/,'').replace(/[\s,;:\-]+$/,'').replace(/^((the|my|client)\s+)+/i,'').replace(/\s+(for|on|at)$/i,'').trim().slice(0,191);
-}
-function parseInvoiceText(raw){
-  const text=(raw||'').trim();
-  const out={client_name:'',amount:'',currency:'USD',invoice_no:'',due_date:'',notes:''};
-  if(!text)return out;
-  if(/(C\$|\bCAD\b)/i.test(text))out.currency='CAD';
-  else if(/(€|\bEUR\b)/i.test(text))out.currency='EUR';
-  else if(/(£|\bGBP\b)/i.test(text))out.currency='GBP';
-  let m=text.match(/(?:\$|C\$|€|£)\s*([\d,]+(?:\.\d{1,2})?)/);
-  if(!m)m=text.match(/([\d,]+(?:\.\d{1,2})?)\s*(?:dollars|bucks)/i);
-  if(m)out.amount=m[1].replace(/,/g,'');
-  m=text.match(/invoice\s*(?:#|no\.?|number)?\s*([A-Za-z0-9][\w\-]*)/i);
-  if(m&&!/^(was|is|for|due|of|to)$/i.test(m[1]))out.invoice_no=m[1];
-  out.due_date=parseDueDate(text);
-  m=text.match(/(.+?)\s+owes?\s+me/i);
-  if(m)out.client_name=cleanClient(m[1]);
-  if(!out.client_name){
-    m=text.match(/(?:owed by|invoice (?:to|for)|bill)\s+([A-Za-z][\w&.'\- ]+?)(?=\s+(?:owes|owed|\$|\d|due|invoice|for|#)|$)/i);
-    if(m)out.client_name=cleanClient(m[1]);
-  }
-  return out;
-}
-let NL_PARSED=null;
-function nlTranslate(){
-  const raw=document.querySelector('#nlInput').value;
-  const zone=document.querySelector('#nlResult');
-  const p=parseInvoiceText(raw);
-  if(!p.client_name&&!p.amount){zone.innerHTML=`<p class="error" style="margin:0">Hmm, I could not quite catch that. Try: <i>Acme owes me $1,200, due Oct 1, invoice #42</i></p>`;NL_PARSED=null;return}
-  NL_PARSED=p;
-  const bits=[p.client_name||'(no client caught)',p.amount?('$'+Number(p.amount).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+p.currency):'(no amount caught)',p.due_date?('due '+p.due_date):'(no due date caught)'];
-  if(p.invoice_no)bits.push('invoice '+p.invoice_no);
-  zone.innerHTML=`<div class="nl-confirm"><b>Bum Bum heard:</b> ${esc(bits.join(' · '))}<div class="btnrow"><button type="button" class="button" id="nlAdd">Add it</button><button type="button" class="button secondary" id="nlTweak">Tweak in the form</button></div></div>`;
-  zone.querySelector('#nlAdd').addEventListener('click',async()=>{
-    const{response,data}=await apiCall({action:'add',client_name:p.client_name,client_email:'',amount:p.amount,currency:p.currency,invoice_no:p.invoice_no,due_date:p.due_date,notes:'',idempotencyKey:(crypto.randomUUID?crypto.randomUUID():'nl-'+Date.now())});
-    if(!response.ok){zone.innerHTML=`<p class="error" style="margin:0">${esc(data.error||'Could not add.')}</p>`;return}
-    document.querySelector('#nlInput').value='';zone.innerHTML='';
-    bbTrack('chaser_added',{tool:TOOL_KEY,via:'tell_bum_bum'});
-    await refresh();
-  });
-  zone.querySelector('#nlTweak').addEventListener('click',()=>{
-    const f=document.querySelector('#addForm');
-    f.client_name.value=p.client_name;f.amount.value=p.amount;f.currency.value=p.currency;f.invoice_no.value=p.invoice_no;f.due_date.value=p.due_date;
-    f.client_name.focus();f.scrollIntoView({behavior:'smooth',block:'center'});
-  });
-}
-document.querySelector('#nlGo').addEventListener('click',nlTranslate);
-document.querySelector('#nlInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nlTranslate()}});
+
 
 const addForm=document.querySelector('#addForm');let attempt=crypto.randomUUID();
 addForm.addEventListener('submit',async e=>{
