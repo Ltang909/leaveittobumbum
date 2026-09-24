@@ -31,6 +31,14 @@ return [
     ],
     'cron_secret' => 'replace_me', // generate with: openssl rand -hex 24
     'groq_api_key' => 'replace_me', // server-side Groq key for Notes transcription on iPhone (free: https://console.groq.com/keys)
+    // OAuth sign-in ("Continue with Google / LinkedIn"). The account page
+    // shows each button only when its id + secret are both set. You can use
+    // the same Google/LinkedIn apps as production; just register both
+    // redirect URIs (prod + staging) in each console.
+    'google_client_id' => 'replace_me',
+    'google_client_secret' => 'replace_me',
+    'linkedin_client_id' => 'replace_me',
+    'linkedin_client_secret' => 'replace_me',
 
     // Optional: only needed if you want Cutline renewal reminder emails.
     // Uncomment and fill in to enable them.
