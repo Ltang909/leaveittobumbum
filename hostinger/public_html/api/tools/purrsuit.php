@@ -161,7 +161,7 @@ if ($action === 'add') {
         if ($dealValue === false || $dealValue < 0 || $dealValue > 100000000) jsonResponse(['error' => 'Enter a valid deal value of zero or more.'], 422);
     }
     $idempotency = rolodex_idempotency($input);
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'rolodex', $idempotency);
+    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'purrsuit', $idempotency);
     if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
     $contact = null;
     if (empty($count['duplicate'])) {
@@ -255,7 +255,7 @@ if ($action === 'import') {
             $updated++;
             continue;
         }
-        $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'rolodex', $batchKey . '-' . $rows);
+        $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'purrsuit', $batchKey . '-' . $rows);
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
             $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, company, title, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');

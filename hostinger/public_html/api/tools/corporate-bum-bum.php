@@ -205,7 +205,7 @@ if ($action === 'add') {
     if ($dateApplied === false) jsonResponse(['error' => 'Pick a valid applied date.'], 422);
     if ($salaryMin === false || $salaryMax === false) jsonResponse(['error' => 'Enter valid salary numbers.'], 422);
     $idempotency = jobtrack_idempotency($input);
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'jobtrack', $idempotency);
+    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'corporate-bum-bum', $idempotency);
     if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
     $contact = null;
     if (empty($count['duplicate'])) {
@@ -304,7 +304,7 @@ if ($action === 'import') {
             $updated++;
             continue;
         }
-        $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'jobtrack', $batchKey . '-' . $rows);
+        $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'corporate-bum-bum', $batchKey . '-' . $rows);
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
             $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
