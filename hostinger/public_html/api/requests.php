@@ -28,7 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $stmt = db()->prepare('SELECT id, title, status, requested_at, deadline_at, delivered_at FROM custom_requests WHERE user_id = ? ORDER BY requested_at DESC LIMIT 20');
         $stmt->execute([$billId]);
-        jsonResponse(array_map('requestRow', $stmt->fetchAll()));
+        $monthStart = periodKey($bill) . '-01 00:00:00';
+        $used = db()->prepare('SELECT id FROM custom_requests WHERE user_id = ? AND requested_at >= ? LIMIT 1');
+        $used->execute([$billId, $monthStart]);
+        jsonResponse(['requests' => array_map('requestRow', $stmt->fetchAll()), 'slot_used' => (bool) $used->fetch()]);
     } catch (PDOException $error) {
         error_log('Request list failed: ' . $error->getMessage());
         $detail = isAdmin($user) ? ' Admin detail: ' . $error->getMessage() : '';
@@ -54,6 +57,16 @@ try {
     $open = db()->prepare("SELECT id FROM custom_requests WHERE user_id = ? AND status = 'open' COLLATE utf8mb4_unicode_ci AND requested_at >= ? LIMIT 1");
     $open->execute([$billId, $monthStart]);
     if ($open->fetch()) jsonResponse(['error' => 'One request per month. The current one is still in progress.'], 409);
+    // Monthly slot already used (previous request delivered or credited):
+    // accept it into the community queue only, with no 36-hour promise.
+    $prior = db()->prepare('SELECT id FROM custom_requests WHERE user_id = ? AND requested_at >= ? LIMIT 1');
+    $prior->execute([$billId, $monthStart]);
+    if ($prior->fetch()) {
+        ensureToolRequestTables();
+        $queue = db()->prepare('INSERT INTO tool_requests (name, email, problem, outcome, status, is_operator) VALUES (?, ?, ?, ?, ?, 0)');
+        $queue->execute(['', (string) ($user['email'] ?? ''), $title, $details, 'requested']);
+        jsonResponse(['queued' => true, 'id' => (int) db()->lastInsertId()], 201);
+    }
     $stmt = db()->prepare('INSERT INTO custom_requests (user_id, title, details, deadline_at) VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 36 HOUR))');
     $stmt->execute([$billId, $title, $details]);
     $id = (int) db()->lastInsertId();
