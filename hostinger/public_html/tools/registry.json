@@ -79,6 +79,16 @@
       "url": "/tools/receipt-reader/",
       "cta": "Read receipts",
       "mascot": "/bum/cat-glasses.png"
+    },
+    {
+      "cta": "Find my gaps",
+      "description": "Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions.",
+      "icon": "🔍",
+      "key": "gap-scout",
+      "name": "Gap Scout",
+      "tag": "Career",
+      "url": "/tools/gap-scout/",
+      "mascot": "/bum/cat-curious.png"
     }
   ]
 }
