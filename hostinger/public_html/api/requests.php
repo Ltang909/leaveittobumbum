@@ -16,7 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt->execute([$billId]);
         jsonResponse($stmt->fetchAll());
     } catch (PDOException $error) {
-        jsonResponse(['error' => 'Requests are not set up yet.'], 503);
+        error_log('Request list failed: ' . $error->getMessage());
+        $detail = isAdmin($user) ? ' Admin detail: ' . $error->getMessage() : '';
+        jsonResponse(['error' => 'Requests are not set up yet.' . $detail], 503);
     }
 }
 
@@ -52,5 +54,6 @@ try {
     jsonResponse(['request' => $row->fetch()], 201);
 } catch (PDOException $error) {
     error_log('Request submit failed: ' . $error->getMessage());
-    jsonResponse(['error' => 'Requests are not set up yet.'], 503);
+    $detail = isAdmin($user) ? ' Admin detail: ' . $error->getMessage() : '';
+    jsonResponse(['error' => 'Requests are not set up yet.' . $detail], 503);
 }
