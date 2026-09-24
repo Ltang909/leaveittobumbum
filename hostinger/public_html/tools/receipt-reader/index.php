@@ -1,0 +1,387 @@
+<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor(billingUser($user)) : null; ?>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Receipt Reader | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
+.dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
+.dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
+.dropzone p{margin:6px 0}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#preview{max-width:100%;max-height:320px;border-radius:12px;border:1px solid #e2d7bf;margin-top:12px;display:block}
+.progress-wrap{margin-top:14px}
+.progress-bar{height:10px;border-radius:999px;background:#f0e8d4;overflow:hidden}
+#barFill{height:100%;width:0%;border-radius:999px;background:#2f2a22;transition:width .2s}
+#progText{font-size:13px;font-weight:700;margin:8px 0 0;opacity:.75}
+.error{color:#b3261e;font-weight:700}
+.hidden{display:none!important}
+.items-table{width:100%;border-collapse:collapse;margin-top:8px}
+.items-table th{text-align:left;font-size:12px;font-weight:800;opacity:.7;padding:6px 8px;border-bottom:1px solid #e7dcc3}
+.items-table td{padding:4px;border-bottom:1px solid #f2ecdc;vertical-align:middle}
+.items-table input{width:100%;padding:8px 10px;border:1px solid #ddd1b8;border-radius:8px;font:inherit;background:#fff}
+.items-table input:focus{border-color:#b3a37e;box-shadow:0 0 0 3px rgba(179,163,126,.18);outline:none}
+.items-table td.amt{width:110px}
+.items-table td.del{width:44px;text-align:center}
+.row-del{border:1px solid #ddd1b8;background:#fff;border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;line-height:1}
+.totals-grid{display:grid;gap:10px;margin-top:14px}
+@media(min-width:760px){.totals-grid{grid-template-columns:1fr 1fr 1fr}}
+.totals-grid label{font-weight:700;font-size:14px;display:block}
+.totals-grid input{width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;margin-top:4px}
+.totals-grid input:focus{border-color:#b3a37e;box-shadow:0 0 0 3px rgba(179,163,126,.18);outline:none}
+.top-fields{display:grid;gap:10px;margin:12px 0}
+@media(min-width:760px){.top-fields{grid-template-columns:1fr 1fr}}
+.top-fields label{font-weight:700;font-size:14px;display:block}
+.top-fields input{width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;margin-top:4px}
+.top-fields input:focus{border-color:#b3a37e;box-shadow:0 0 0 3px rgba(179,163,126,.18);outline:none}
+.log-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);border-radius:12px;background:#fff;padding:10px 12px;margin-bottom:8px}
+.log-row b{font-size:15px}
+.log-row .meta{font-size:13px;opacity:.75}
+.log-row .spacer{flex:1}
+.mini{border:1px solid #ddd1b8;background:#fff;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer}
+details.raw{margin-top:14px}
+details.raw summary{cursor:pointer;font-weight:700;font-size:14px}
+details.raw pre{background:#fdf8ef;border:1px solid #e7dcc3;border-radius:10px;padding:12px;font-size:12px;white-space:pre-wrap;max-height:240px;overflow-y:auto}
+.panel h2{margin-top:0}
+.read-note{background:#fdf8ef;border:1px solid #e7dcc3;border-radius:10px;padding:10px 14px;font-size:14px;margin:10px 0}
+.shell .button{box-shadow:0 2px 0 #2f2a22;font-weight:700}
+.shell .button:active{box-shadow:none;transform:translateY(2px)}
+.shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
+section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Reader"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum with reading glasses, squinting at a receipt"><h1>Receipts in, spreadsheets out.</h1><p class="lede">Snap a photo of any receipt. Bum Bum reads it <b>right in your browser</b>, pulls out the vendor, date, line items, tax, and total, and hands you a clean table you can fix up and export. Your photos never leave your device. One action per scan, exports are free.</p>
+<?php if (!$user): ?><section class="panel"><h2>Sign in to read receipts</h2><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Sign in or create an account</a></section><?php else: ?>
+<?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
+<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
+
+<section class="panel" id="uploadPanel">
+<h2>Snap or upload a receipt</h2>
+<div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Choose a receipt photo">
+<p style="font-size:40px;margin:0">📸</p>
+<p><b>Drop a receipt photo here</b>, or pick one below.</p>
+<p class="meta" style="font-size:13px;opacity:.75">Tip: flat surface, good light, receipt filling the frame.</p>
+</div>
+<input type="file" id="fileGallery" accept="image/*" class="hidden">
+<input type="file" id="fileCamera" accept="image/*" capture="environment" class="hidden">
+<div class="btnrow">
+<button type="button" class="button secondary" id="btnGallery">Upload image</button>
+<button type="button" class="button secondary" id="btnCamera">Use camera</button>
+</div>
+<img id="preview" class="hidden" alt="Receipt preview">
+<div class="btnrow"><button type="button" class="button hidden" id="scanBtn">Read this receipt</button></div>
+<div class="progress-wrap hidden" id="progressWrap"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Warming up...</p></div>
+<p id="scanError" class="error"></p>
+</section>
+
+<section class="panel hidden" id="resultPanel">
+<h2>Here is what Bum Bum read</h2>
+<div class="read-note">Bum Bum's best read, not gospel. Fix anything it misread, then export.</div>
+<div class="top-fields">
+<label>Vendor<input id="fVendor" type="text" maxlength="120" placeholder="Store name"></label>
+<label>Date<input id="fDate" type="date"></label>
+</div>
+<table class="items-table" id="itemsTable">
+<thead><tr><th>Item</th><th>Amount</th><th></th></tr></thead>
+<tbody id="itemsBody"></tbody>
+</table>
+<div class="btnrow"><button type="button" class="mini" id="addRowBtn">+ Add line</button></div>
+<div class="totals-grid">
+<label>Subtotal<input id="fSubtotal" type="text" inputmode="decimal" placeholder="0.00"></label>
+<label><span id="taxLabel">Tax</span><input id="fTax" type="text" inputmode="decimal" placeholder="0.00"></label>
+<label>Total<input id="fTotal" type="text" inputmode="decimal" placeholder="0.00"></label>
+</div>
+<div class="btnrow">
+<button type="button" class="button secondary" id="copyCsvBtn">Copy CSV</button>
+<button type="button" class="button secondary" id="dlCsvBtn">Download CSV</button>
+<button type="button" class="button secondary" id="saveLogBtn">Save to log</button>
+<button type="button" class="button secondary" id="newScanBtn">New scan</button>
+</div>
+<p id="copyNote" class="meta" style="font-size:13px"></p>
+<details class="raw"><summary>Raw OCR text</summary><pre id="rawText"></pre></details>
+</section>
+
+<section class="panel">
+<h2>Receipt log</h2>
+<div id="logList"><p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. Scans you save live here, only in this browser.</p></div>
+</section>
+<?php endif; ?>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/receipt-reader.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
+bbTrack('tool_opened',{tool:'receipt-reader'});
+
+const dropzone=document.querySelector('#dropzone');
+const fileGallery=document.querySelector('#fileGallery');
+const fileCamera=document.querySelector('#fileCamera');
+const preview=document.querySelector('#preview');
+const scanBtn=document.querySelector('#scanBtn');
+const progressWrap=document.querySelector('#progressWrap');
+const barFill=document.querySelector('#barFill');
+const progText=document.querySelector('#progText');
+const scanError=document.querySelector('#scanError');
+let currentDataUrl='';
+
+document.querySelector('#btnGallery').addEventListener('click',()=>fileGallery.click());
+document.querySelector('#btnCamera').addEventListener('click',()=>fileCamera.click());
+dropzone.addEventListener('click',()=>fileGallery.click());
+dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileGallery.click()}});
+dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('over')});
+dropzone.addEventListener('dragleave',()=>dropzone.classList.remove('over'));
+dropzone.addEventListener('drop',e=>{e.preventDefault();dropzone.classList.remove('over');const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)loadFile(f)});
+fileGallery.addEventListener('change',()=>{if(fileGallery.files[0])loadFile(fileGallery.files[0]);fileGallery.value=''});
+fileCamera.addEventListener('change',()=>{if(fileCamera.files[0])loadFile(fileCamera.files[0]);fileCamera.value=''});
+
+function loadFile(file){
+  scanError.textContent='';
+  if(!file.type.startsWith('image/')){scanError.textContent='That does not look like an image. Try a JPG or PNG photo.';return}
+  const reader=new FileReader();
+  reader.onload=()=>{currentDataUrl=reader.result;preview.src=currentDataUrl;preview.classList.remove('hidden');scanBtn.classList.remove('hidden');document.querySelector('#resultPanel').classList.add('hidden')};
+  reader.readAsDataURL(file);
+}
+
+function preprocess(dataUrl){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      const maxDim=2200;
+      let w=img.naturalWidth,h=img.naturalHeight;
+      const s=Math.min(1,maxDim/Math.max(w,h))*(Math.max(w,h)<1200?1.6:1);
+      w=Math.round(w*s);h=Math.round(h*s);
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      const ctx=c.getContext('2d',{willReadFrequently:true});
+      ctx.drawImage(img,0,0,w,h);
+      const d=ctx.getImageData(0,0,w,h),px=d.data;
+      for(let i=0;i<px.length;i+=4){
+        const g=0.299*px[i]+0.587*px[i+1]+0.114*px[i+2];
+        const cc=g<128?Math.max(0,(g-128)*1.5+128):Math.min(255,(g-128)*1.2+128);
+        px[i]=px[i+1]=px[i+2]=cc;
+      }
+      ctx.putImageData(d,0,0);
+      resolve(c);
+    };
+    img.onerror=reject;
+    img.src=dataUrl;
+  });
+}
+
+scanBtn.addEventListener('click',async()=>{
+  if(!currentDataUrl)return;
+  scanError.textContent='';
+  scanBtn.disabled=true;
+  progressWrap.classList.remove('hidden');
+  barFill.style.width='4%';
+  progText.textContent='Getting the photo ready...';
+  try{
+    const canvas=await preprocess(currentDataUrl);
+    barFill.style.width='10%';
+    progText.textContent='Loading the reader (first scan downloads it, about 15 MB)...';
+    const worker=await Tesseract.createWorker('eng',1,{logger:m=>{
+      if(m.status==='recognizing text'){barFill.style.width=(10+m.progress*85)+'%';progText.textContent='Reading your receipt... '+Math.round(m.progress*100)+'%'}
+      else{progText.textContent=m.status.charAt(0).toUpperCase()+m.status.slice(1)+'...';if(m.progress)barFill.style.width=(10+m.progress*10)+'%'}
+    }});
+    const{data:{text}}=await worker.recognize(canvas);
+    await worker.terminate();
+    barFill.style.width='100%';
+    if(!text||text.replace(/\s/g,'').length<10)throw new Error('empty');
+    // Meter the scan now that the read succeeded. OCR itself runs on-device and is free.
+    const attempt=crypto.randomUUID();
+    const{response,data}=await apiCall({action:'scan',idempotencyKey:attempt});
+    if(response.status===402){scanError.textContent='You are out of actions for this month. Upgrade to keep scanning receipts.';bbTrack('scan_blocked',{reason:'no_actions'});return}
+    if(!response.ok)throw new Error(data.error||'Could not start the scan.');
+    const parsed=parseReceiptText(text);
+    showResult(parsed,text);
+    bbTrack('scan_done',{items:parsed.items.length,has_total:!!parsed.total});
+  }catch(e){
+    scanError.textContent=e.message==='empty'?'Bum Bum could not read much from that photo. Try better light, or a flatter angle.':'Something went wrong reading that photo. Try again?';
+  }finally{
+    scanBtn.disabled=false;
+    setTimeout(()=>progressWrap.classList.add('hidden'),600);
+  }
+});
+
+/* ---------- Receipt parsing: Bum Bum's best read ---------- */
+function parseReceiptText(text){
+  const rawLines=text.split('\n').map(l=>l.replace(/\s+/g,' ').trim()).filter(l=>l.length>1);
+  const priceEnd=/(\d{1,3}(?:[,\s]\d{3})*\.\d{2})\s*$/;
+  const num=s=>parseFloat(String(s).replace(/[,\s]/g,''));
+  const out={vendor:'',date:'',currency:'USD',items:[],subtotal:'',tax:'',taxLabel:'Tax',total:''};
+
+  if(/£/.test(text))out.currency='GBP';
+  else if(/€/.test(text))out.currency='EUR';
+  else if(/\b(HST|GST|PST|TPS|TVQ|QST)\b/i.test(text))out.currency='CAD';
+
+  for(const l of rawLines.slice(0,6)){
+    if(/[a-zA-Z]{2,}/.test(l)&&!priceEnd.test(l)&&!/receipt|invoice|order|table|server|clerk|store\s*#|www\.|https?:/i.test(l)&&l.length<=60){
+      out.vendor=l.replace(/[*#]+/g,'').trim();break;
+    }
+  }
+
+  const months={jan:'01',feb:'02',mar:'03',apr:'04',may:'05',jun:'06',jul:'07',aug:'08',sep:'09',oct:'10',nov:'11',dec:'12'};
+  const pad=n=>String(n).padStart(2,'0');
+  for(const l of rawLines){
+    let m=l.match(/(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);
+    if(m){out.date=m[1]+'-'+pad(m[2])+'-'+pad(m[3]);break}
+    m=l.match(/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})/i);
+    if(m){out.date=m[3]+'-'+months[m[1].slice(0,3).toLowerCase()]+'-'+pad(m[2]);break}
+    m=l.match(/(\d{1,2})[\/.](\d{1,2})[\/.](\d{2,4})/);
+    if(m){
+      let a=+m[1],b=+m[2];const y=m[3].length===2?2000+ +m[3]:+m[3];
+      let mo=a>12?b:a,dy=a>12?a:b;
+      if(mo>=1&&mo<=12&&dy>=1&&dy<=31){out.date=y+'-'+pad(mo)+'-'+pad(dy);break}
+    }
+  }
+
+  const amtNear=re=>{
+    for(let i=rawLines.length-1;i>=0;i--){
+      if(re.test(rawLines[i])){
+        const mm=rawLines[i].match(/(\d[\d,]*\.\d{2})/);
+        if(mm)return num(mm[1]).toFixed(2);
+        for(let j=i+1;j<Math.min(i+3,rawLines.length);j++){
+          const pm=rawLines[j].match(priceEnd);
+          if(pm)return num(pm[1]).toFixed(2);
+        }
+      }
+    }
+    return'';
+  };
+  out.total=amtNear(/grand\s*total|amount\s*due|balance\s*due/i)||amtNear(/\btotal\b/i);
+  out.subtotal=amtNear(/sub\s*-?\s*total/i);
+  const taxSeen=[];
+  for(const l of rawLines){
+    const tm=l.match(/\b(HST|GST|PST|QST|TPS|TVQ|TAX|TVA)\b/i);
+    if(tm&&!/total/i.test(l)){
+      // The amount sits at the end of the line; a rate like 8.875% earlier in the line is not it.
+      const end=l.match(/(\d[\d,]*\.\d{2})\s*$/);
+      const all=[...l.matchAll(/(\d[\d,]*\.\d{2})/g)];
+      const mm=end||all[all.length-1];
+      if(mm)taxSeen.push({label:tm[1].toUpperCase(),amount:num(mm[1])});
+    }
+  }
+  if(taxSeen.length){
+    out.tax=taxSeen.reduce((s,t)=>s+t.amount,0).toFixed(2);
+    const labels=[...new Set(taxSeen.map(t=>t.label))];
+    out.taxLabel=labels.join(' + ');
+  }
+
+  const skipItem=/total|sub\s*total|balance|amount due|change|cash|tender|debit|credit|visa|mastercard|\bmc\b|amex|interac|tip|gratuity|discount|saving|coupon|\btax\b|hst|gst|pst|qst|tps|tvq|receipt|invoice|order|table|server|clerk|\btrans\b|auth|approval|\bref\b|store|www\.|https?:|phone|\btel\b|thank|you saved/i;
+  for(const l of rawLines){
+    const pm=l.match(priceEnd);
+    if(!pm)continue;
+    if(skipItem.test(l))continue;
+    const amount=num(pm[1]).toFixed(2);
+    let name=l.slice(0,l.length-pm[0].length).trim()
+      .replace(/^(\d+)\s*[xX@]\s*/,'')
+      .replace(/^\d+\s+(?=[A-Za-z])/,'') /* "2 Coke" -> "Coke"; "7-Eleven" keeps its 7 */
+      .replace(/\s*@\s*\d[\d.,]*\s*$/,'')
+      .replace(/[*#]+/g,'').trim();
+    if(name.length<2||/^[0-9\s.,-]+$/.test(name))continue;
+    if(name.length>60)name=name.slice(0,60);
+    out.items.push({name,amount});
+  }
+  return out;
+}
+
+/* ---------- Results, editing, export, log ---------- */
+const resultPanel=document.querySelector('#resultPanel');
+const itemsBody=document.querySelector('#itemsBody');
+const fVendor=document.querySelector('#fVendor'),fDate=document.querySelector('#fDate');
+const fSubtotal=document.querySelector('#fSubtotal'),fTax=document.querySelector('#fTax'),fTotal=document.querySelector('#fTotal');
+const taxLabel=document.querySelector('#taxLabel');
+let scanCurrency='USD';
+
+function itemRow(name,amount){
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td><input type="text" maxlength="60" value="'+esc(name)+'" aria-label="Item name"></td><td class="amt"><input type="text" inputmode="decimal" value="'+esc(amount)+'" aria-label="Item amount"></td><td class="del"><button type="button" class="row-del" aria-label="Remove line">×</button></td>';
+  tr.querySelector('.row-del').addEventListener('click',()=>tr.remove());
+  return tr;
+}
+
+function showResult(p,rawText){
+  scanCurrency=p.currency;
+  fVendor.value=p.vendor;fDate.value=p.date;
+  fSubtotal.value=p.subtotal;fTax.value=p.tax;fTotal.value=p.total;
+  taxLabel.textContent=p.taxLabel;
+  itemsBody.innerHTML='';
+  p.items.forEach(it=>itemsBody.appendChild(itemRow(it.name,it.amount)));
+  document.querySelector('#rawText').textContent=rawText;
+  resultPanel.classList.remove('hidden');
+  resultPanel.scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelector('#copyNote').textContent='';
+}
+
+document.querySelector('#addRowBtn').addEventListener('click',()=>itemsBody.appendChild(itemRow('','')));
+document.querySelector('#newScanBtn').addEventListener('click',()=>{
+  resultPanel.classList.add('hidden');
+  preview.classList.add('hidden');scanBtn.classList.add('hidden');
+  currentDataUrl='';document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'});
+});
+
+function collectForm(){
+  const items=[];
+  itemsBody.querySelectorAll('tr').forEach(tr=>{
+    const ins=tr.querySelectorAll('input');
+    const name=ins[0].value.trim(),amount=ins[1].value.trim().replace(/[^0-9.]/g,'');
+    if(name||amount)items.push({name:name||'(unnamed)',amount:amount||'0.00'});
+  });
+  return{vendor:fVendor.value.trim(),date:fDate.value,currency:scanCurrency,items,
+    subtotal:fSubtotal.value.trim().replace(/[^0-9.]/g,''),tax:fTax.value.trim().replace(/[^0-9.]/g,''),taxLabel:taxLabel.textContent,total:fTotal.value.trim().replace(/[^0-9.]/g,'')};
+}
+
+function csvCell(s){s=String(s??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
+function buildCsv(d){
+  const L=[];
+  L.push(['Receipt from '+d.vendor,d.date,d.currency].map(csvCell).join(','));
+  L.push(['Item','Amount'].map(csvCell).join(','));
+  d.items.forEach(it=>L.push([csvCell(it.name),csvCell(it.amount)].join(',')));
+  if(d.subtotal)L.push(['Subtotal',d.subtotal].map(csvCell).join(','));
+  if(d.tax)L.push([d.taxLabel||'Tax',d.tax].map(csvCell).join(','));
+  if(d.total)L.push(['Total',d.total].map(csvCell).join(','));
+  return L.join('\n');
+}
+
+document.querySelector('#copyCsvBtn').addEventListener('click',async()=>{
+  const csv=buildCsv(collectForm());
+  try{await navigator.clipboard.writeText(csv);document.querySelector('#copyNote').textContent='Copied. Paste it into your spreadsheet.'}
+  catch(e){document.querySelector('#copyNote').textContent='Copy was blocked by the browser. Use Download CSV instead.'}
+  bbTrack('receipt_export',{how:'copy'});
+});
+document.querySelector('#dlCsvBtn').addEventListener('click',()=>{
+  const d=collectForm();
+  const blob=new Blob([buildCsv(d)],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='receipt-'+(d.vendor||'scan').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-'+(d.date||'undated')+'.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  bbTrack('receipt_export',{how:'download'});
+});
+
+/* Browser-local log. Receipts never touch our servers. */
+const LOG_KEY='bb_receipt_log_v1';
+function readLog(){try{return JSON.parse(localStorage.getItem(LOG_KEY))||[]}catch(e){return[]}}
+function writeLog(l){try{localStorage.setItem(LOG_KEY,JSON.stringify(l))}catch(e){}}
+function renderLog(){
+  const list=document.querySelector('#logList');
+  const log=readLog();
+  if(!log.length){list.innerHTML='<p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. Scans you save live here, only in this browser.</p>';return}
+  list.innerHTML='';
+  log.forEach(entry=>{
+    const row=document.createElement('div');row.className='log-row';
+    row.innerHTML='<div><b>'+esc(entry.vendor||'Unnamed receipt')+'</b><div class="meta">'+esc(entry.date||'no date')+' · '+entry.items.length+' lines · '+esc(entry.currency)+' '+esc(entry.total||'?.??')+'</div></div><div class="spacer"></div>';
+    const load=document.createElement('button');load.type='button';load.className='mini';load.textContent='Load';
+    load.addEventListener('click',()=>{showResult(entry,'');bbTrack('receipt_log_load',{id:entry.id})});
+    const del=document.createElement('button');del.type='button';del.className='mini';del.textContent='Delete';
+    del.addEventListener('click',()=>{writeLog(readLog().filter(x=>x.id!==entry.id));renderLog()});
+    row.appendChild(load);row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+document.querySelector('#saveLogBtn').addEventListener('click',()=>{
+  const d=collectForm();
+  if(!d.items.length&&!d.total){document.querySelector('#copyNote').textContent='Nothing to save yet.';return}
+  const log=readLog();
+  log.unshift({id:crypto.randomUUID(),ts:Date.now(),...d});
+  writeLog(log.slice(0,100));
+  renderLog();
+  document.querySelector('#copyNote').textContent='Saved to your log (this browser only).';
+  bbTrack('receipt_saved',{items:d.items.length});
+});
+renderLog();
+</script></main></body></html>
