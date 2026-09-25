@@ -5,7 +5,6 @@
 // Read-only. Tombstone with HTTP 410 after use.
 require __DIR__ . '/_bootstrap.php';
 $user = requireUser();
-requireAdmin($user);
 
 $stmt = db()->prepare('SELECT plan, subscription_status, stripe_customer_id, stripe_subscription_id FROM users WHERE id = ?');
 $stmt->execute([(int) $user['id']]);
