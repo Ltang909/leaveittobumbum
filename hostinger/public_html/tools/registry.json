@@ -89,6 +89,26 @@
       "tag": "Career",
       "url": "/tools/gap-scout/",
       "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "video-trimmer",
+      "name": "Video Trimmer",
+      "tag": "Video",
+      "icon": "🎬",
+      "description": "Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser. Your video never leaves your device.",
+      "url": "/tools/video-trimmer/",
+      "cta": "Trim a video",
+      "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "image-converter",
+      "name": "Image Converter",
+      "tag": "Files",
+      "icon": "🖼️",
+      "description": "WebP to PNG, JPG to WebP, whatever to whatever. Bum Bum converts your images right in your browser and hands them back in the format you wanted.",
+      "url": "/tools/image-converter/",
+      "cta": "Convert images",
+      "mascot": "/bum/cat-curious.png"
     }
   ]
 }
