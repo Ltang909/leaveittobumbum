@@ -74,7 +74,17 @@ const startText=document.querySelector('#startText'),endText=document.querySelec
 const previewBtn=document.querySelector('#previewBtn'),trimBtn=document.querySelector('#trimBtn'),newBtn=document.querySelector('#newBtn');
 const trimProgress=document.querySelector('#trimProgress'),barFill=document.querySelector('#barFill'),progText=document.querySelector('#progText'),trimError=document.querySelector('#trimError');
 const resultCard=document.querySelector('#resultCard'),resultVideo=document.querySelector('#resultVideo'),dlLink=document.querySelector('#dlLink');
-let duration=0,objectUrl=null,resultUrl=null,ffmpeg=null,trimKey=0;
+let duration=0,objectUrl=null,resultUrl=null,ffmpeg=null,trimKey=0,ffLogs=[];
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('script-load:'+src));document.head.appendChild(s)})}
+async function fetchFile(file){return new Uint8Array(await file.arrayBuffer())}
+async function getFFmpeg(onStage){
+  if(ffmpeg)return ffmpeg;
+  if(!window.FFmpegWASM){onStage&&onStage('engine');await loadScript('https://unpkg.com/@ffmpeg/ffmpeg@0.12.15/dist/umd/ffmpeg.js')}
+  const{FFmpeg}=window.FFmpegWASM;ffmpeg=new FFmpeg();
+  ffmpeg.on('log',({message})=>{ffLogs.push(String(message));if(ffLogs.length>40)ffLogs.shift()});
+  onStage&&onStage('core');await ffmpeg.load({coreURL:'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js'});
+  return ffmpeg;
+}
 
 function fmt(s){s=Math.max(0,s);const m=Math.floor(s/60),sec=(s%60);return m+':'+(sec<10?'0':'')+sec.toFixed(1)}
 function parse(v){v=String(v).trim();if(!v)return NaN;if(v.includes(':')){const parts=v.split(':');if(parts.length!==2)return NaN;const m=parseFloat(parts[0]),s=parseFloat(parts[1]);if(isNaN(m)||isNaN(s)||s<0||s>=60)return NaN;return m*60+s}const n=parseFloat(v);return isNaN(n)?NaN:n}
@@ -106,36 +116,34 @@ endRange.addEventListener('input',()=>{endText.value=fmt(parseFloat(endRange.val
 previewBtn.addEventListener('click',()=>{const[a,b]=clampTimes();preview.currentTime=a;preview.play();const stop=()=>{if(preview.currentTime>=b){preview.pause();preview.removeEventListener('timeupdate',stop)}};preview.addEventListener('timeupdate',stop)});
 newBtn.addEventListener('click',()=>{trimPanel.classList.add('hidden');document.querySelector('#uploadPanel').classList.remove('hidden');resultCard.classList.add('hidden');if(resultUrl){URL.revokeObjectURL(resultUrl);resultUrl=null}});
 
-function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('load'));document.head.appendChild(s)})}
-async function getFFmpeg(){
-  if(ffmpeg)return ffmpeg;
-  if(!window.FFmpegWASM)await loadScript('https://unpkg.com/@ffmpeg/ffmpeg@0.12.15/dist/umd/ffmpeg.js');
-  if(!window.FFmpegUtil)await loadScript('https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/util.js');
-  const{FFmpeg}=window.FFmpegWASM;ffmpeg=new FFmpeg();
-  await ffmpeg.load({coreURL:'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js'});
-  return ffmpeg;
-}
 trimBtn.addEventListener('click',async()=>{
   trimError.textContent='';const[a,b]=clampTimes();
   if(b-a<0.2){trimError.textContent='Make the selection at least a blink long.';return}
   const f=preview._file;if(!f){trimError.textContent='Pick a video first.';return}
   trimBtn.disabled=true;trimProgress.classList.remove('hidden');barFill.style.width='2%';
+  let step='starting';
   try{
-    progText.textContent='Checking your actions...';
+    step='quota';progText.textContent='Checking your actions...';
+    const st=await apiCall({action:'status'});
+    if(st.response.ok&&st.data.usage&&Number(st.data.usage.remaining)<=0)throw new Error('actions');
+    step='engine';progText.textContent='Loading the trimmer (first trim downloads it, about 30 MB)...';barFill.style.width='8%';
+    const ff=await getFFmpeg(s=>{step=s});
+    step='reading';barFill.style.width='18%';progText.textContent='Reading your video...';ffLogs.length=0;
+    ff.on('progress',({progress})=>{barFill.style.width=(18+Math.min(1,progress||0)*72)+'%';progText.textContent='Snipping... '+Math.round((progress||0)*100)+'%'});
+    await ff.writeFile('input',await fetchFile(f));
+    step='trimming';
+    const dur=(b-a).toFixed(2);
+    const code=await ff.exec(['-i','input','-ss',a.toFixed(2),'-t',dur,'-c:v','libx264','-preset','veryfast','-crf','23','-c:a','aac','-movflags','faststart','output.mp4']);
+    if(code!==0)throw new Error('encode-exit-'+code);
+    step='saving';
+    const out=await ff.readFile('output.mp4');
+    try{await ff.deleteFile('input');await ff.deleteFile('output.mp4')}catch(e){}
+    step='metering';progText.textContent='Almost done...';barFill.style.width='94%';
     const key='trim-'+Date.now().toString(36)+'-'+(++trimKey);
     const{response,data}=await apiCall({action:'trim',idempotencyKey:key});
     if(response.status===402)throw new Error('actions');
     if(!response.ok)throw new Error(data.error||'metering failed');
-    progText.textContent='Loading the trimmer (first trim downloads it, about 30 MB)...';barFill.style.width='8%';
-    const ff=await getFFmpeg();const{fetchFile}=window.FFmpegUtil;
-    barFill.style.width='18%';progText.textContent='Snipping...';
-    ff.on('progress',({progress})=>{barFill.style.width=(18+Math.min(1,progress||0)*78)+'%';progText.textContent='Snipping... '+Math.round((progress||0)*100)+'%'});
-    await ff.writeFile('input',await fetchFile(f));
-    const dur=(b-a).toFixed(2);
-    await ff.exec(['-i','input','-ss',a.toFixed(2),'-t',dur,'-c:v','libx264','-preset','veryfast','-crf','23','-c:a','aac','-movflags','faststart','output.mp4']);
-    const out=await ff.readFile('output.mp4');
-    try{await ff.deleteFile('input');await ff.deleteFile('output.mp4')}catch(e){}
-    const blob=new Blob([out.buffer],{type:'video/mp4'});
+    const blob=new Blob([out],{type:'video/mp4'});
     if(resultUrl)URL.revokeObjectURL(resultUrl);
     resultUrl=URL.createObjectURL(blob);resultVideo.src=resultUrl;
     const base=(f.name||'video').replace(/\.[^.]+$/,'');
@@ -144,8 +152,12 @@ trimBtn.addEventListener('click',async()=>{
     bbTrack('trim_done',{seconds:Math.round(b-a)});
     resultCard.scrollIntoView({behavior:'smooth',block:'center'});
   }catch(e){
-    if(e.message==='actions'||String(e.message).includes('load')){trimError.textContent=e.message==='actions'?'Out of actions for this month.':'The trimmer failed to load. Check your connection and try again.'}
-    else trimError.textContent='The trim did not work on that file. Try an MP4?';
+    console.warn('trim failed at step '+step+': '+(e&&e.message),ffLogs.slice(-6));
+    if(e.message==='actions')trimError.textContent='Out of actions for this month.';
+    else if(step==='engine'||step==='core'||String(e.message).indexOf('script-load:')===0)trimError.textContent='The trimmer engine failed to load. Check your connection and try again.';
+    else if(step==='reading')trimError.textContent='Bum Bum could not read that file. Try an MP4?';
+    else if(step==='trimming')trimError.textContent='The snip failed on that video. It might be an unusual format or too large for this device. Try an MP4, or a shorter clip?';
+    else trimError.textContent='Something went wrong finishing the trim. Try again?';
   }finally{trimBtn.disabled=false;setTimeout(()=>trimProgress.classList.add('hidden'),900)}
 });
 </script></main></body></html>

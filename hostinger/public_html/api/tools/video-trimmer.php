@@ -9,6 +9,9 @@ requireCsrf($input);
 $user = requireUser();
 $bill = billingUser($user);
 $action = (string) ($input['action'] ?? '');
+if ($action === 'status') {
+    jsonResponse(['ok' => true, 'usage' => usageFor($bill)]);
+}
 if ($action === 'trim') {
     $key = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($input['idempotencyKey'] ?? ''));
     if (strlen($key) < 16 || strlen($key) > 128) {
