@@ -91,18 +91,21 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <?php try { $renewDt = new DateTime((string) $bill['period_end'], new DateTimeZone('UTC')); $renewDt->setTimezone($toronto); $renewal = $renewDt->format('F j, Y'); } catch (Throwable $e) { $renewal = ''; } ?>
 <?php if ($renewal !== ''): ?><p class="lede" style="margin-top:10px"><b><?= ucfirst(htmlspecialchars($bill['plan'])) ?></b> <?= in_array($bill['subscription_status'], ['active','trialing','past_due'], true) ? 'renews' : 'ends' ?> <?= $renewal ?>.</p><?php endif; ?>
 <?php endif; ?>
+<?php if (!$isMember && in_array($bill['plan'] ?? '', ['helper', 'operator'], true) && in_array($bill['subscription_status'] ?? '', ['active', 'trialing', 'past_due'], true)): ?>
+<p style="margin-top:12px"><?php if (($bill['plan'] ?? '') === 'helper'): ?><button class="button secondary switch-plan" data-plan="operator">Switch to Operator · $49/mo</button><?php else: ?><button class="button secondary switch-plan" data-plan="helper">Switch to Helper · $12/mo</button><?php endif; ?></p>
+<?php endif; ?>
 <button id="billing">Manage billing</button><button id="logout" class="button secondary">Sign out</button><p id="message" class="error"></p><p><img src="/bum/cat-butt-v2.png" alt="Bum Bum walking away" class="sticker" style="width:104px;transform:rotate(5deg)"> <span class="lede">BRB…</span></p></section></div>
 <section class="panel" id="team"><h2 style="margin-top:0">Team</h2><div id="team-body"><p class="lede">Waking Bum Bum up…</p></div></section>
 <?php if ($isMember): ?>
 <section class="panel" id="upgrade"><h2>On a team</h2><p class="lede">You are drawing from <?= htmlspecialchars((string) $bill['team_owner_email']) ?>'s shared action bucket. Upgrades and plan changes happen on their account, not yours.</p></section>
 <?php elseif ($user['plan'] === 'free'): ?>
 <section class="panel" id="upgrade"><h2><?= $lowUsage ? 'Almost out of free actions.' : 'Need more than 75 actions a month?' ?></h2><p class="lede"><?= $lowUsage ? 'You are getting real work done. Keep the momentum with more actions every month.' : 'Your free workspace resets every month. Paid plans give you room to grow.' ?></p><div class="plan-cards"><div class="panel tc-mint"><h2>Helper</h2><p><b>$12</b>/month</p><ul><li>1,500 actions every month</li><li>Every tool in the toolbox</li><li>Cancel anytime</li></ul><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper</a></div><div class="panel tc-yellow"><h2>Operator</h2><p><b>$49</b>/month</p><ul><li>6,000 actions every month</li><li>One custom tool built for you each month</li><li>Delivered in 36 hours or your next month is free</li></ul><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator</a></div></div></section>
-<?php elseif ($user['plan'] === 'helper'): ?>
-<section class="panel" id="upgrade-helper"><h2>Want a tool built just for you?</h2><p class="lede">Operator adds 6,000 actions a month plus one custom tool request. Describe the annoying task, get a working tool in 36 hours, or your next month is free.</p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></section>
+<?php elseif ($user['plan'] === 'helper' && !$isMember): ?>
+<section class="panel" id="upgrade-helper"><h2>Want a tool built just for you?</h2><p class="lede">Operator adds 6,000 actions a month plus one custom tool request. Describe the annoying task, get a working tool in 36 hours, or your next month is free.</p><button class="button switch-plan" data-plan="operator">Switch to Operator, $49/mo</button></section>
 <?php endif; ?>
 <section class="panel" id="requests"><h2>Custom tool requests</h2>
 <?php if ($isOperator): ?><p class="lede">One request per month. Delivered within 36 hours or your next month is free.</p><div id="req-list"></div><form id="req-form"><label>Give it a name</label><input name="title" maxlength="180" required placeholder="e.g. Invoice chaser"><label>What annoying task should it handle? What does done look like?</label><textarea name="details" maxlength="5000" required></textarea><button>Send request</button><p id="req-error" class="error"></p></form><p class="lede" style="font-size:15px">Operator requests also appear in the public <a href="/requests/">community queue</a> so everyone can follow along.</p>
-<?php else: ?><p class="lede">Operator includes one custom tool request every month. Describe the annoying task, get a working tool in 36 hours, or your next month is free.</p><a class="button" data-plan="operator" data-context="requests" href="/checkout/?plan=operator">Get Operator, $49/mo</a> <a class="button secondary" href="/requests/">Add to the free community queue</a><p class="lede" style="font-size:15px;margin-top:14px">Not in a rush? <a href="/requests/">See what&rsquo;s already requested</a> and upvote the tools you want built.</p><?php endif; ?>
+<?php else: ?><p class="lede">Operator includes one custom tool request every month. Describe the annoying task, get a working tool in 36 hours, or your next month is free.</p><?php if (($user['plan'] ?? '') === 'helper' && !$isMember): ?><button class="button switch-plan" data-plan="operator" data-context="requests">Switch to Operator, $49/mo</button><?php else: ?><a class="button" data-plan="operator" data-context="requests" href="/checkout/?plan=operator">Get Operator, $49/mo</a><?php endif; ?> <a class="button secondary" href="/requests/">Add to the free community queue</a><p class="lede" style="font-size:15px;margin-top:14px">Not in a rush? <a href="/requests/">See what&rsquo;s already requested</a> and upvote the tools you want built.</p><?php endif; ?>
 </section>
 <?php $TOOL_KEY_ALIASES = ['rolodex' => 'purrsuit', 'jobtrack' => 'corporate-bum-bum']; ?>
 <section class="panel" id="activity"><h2 style="margin-top:0">Recent activity</h2>
@@ -116,6 +119,24 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 async function session(){return fetch('/api/session.php').then(r=>r.json())}
 document.querySelector('#billing').onclick=async()=>{const s=await session();const response=await fetch('/api/portal.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:s.csrf})});const data=await response.json();if(response.ok)location.href=data.url;else document.querySelector('#message').textContent=data.error};
 document.querySelector('#logout').onclick=async()=>{const s=await session();await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout',csrf:s.csrf})});location.reload()};
+document.querySelectorAll('.switch-plan').forEach(btn=>btn.addEventListener('click',async()=>{
+  const to=btn.dataset.plan==='operator'?'operator':'helper';
+  const name=to==='operator'?'Operator':'Helper';
+  const detail=to==='operator'
+    ?'Prorated: you pay only the difference for the rest of this billing period, then $49/mo.'
+    :'Prorated: unused Operator time becomes credit on your account, then $12/mo.';
+  if(!confirm('Switch to '+name+' now?\n\n'+detail))return;
+  btn.disabled=true;
+  try{
+    const s=await session();
+    const res=await fetch('/api/plan-change.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:s.csrf,plan:to})});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(data.error||'The switch did not go through.');
+    bbTrack('plan_changed',{to:to,context:btn.dataset.context||'account'});
+    alert(data.message||('Switched to '+name+'.'));
+    location.reload();
+  }catch(err){btn.disabled=false;alert(err.message);}
+}));
 async function loadTeam(){const box=document.querySelector('#team-body');if(!box)return;try{const s=await session();const res=await fetch('/api/team.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'list',csrf:s.csrf})});const t=await res.json();if(!res.ok)throw new Error(t.error||'Could not load team.');const esc=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 if(t.role==='member'){box.innerHTML=`<p class="lede" style="margin:0"><img src="/bum/cat-yellow-hoodie.png" alt="Bum Bum in a hoodie" class="sticker" style="width:88px;vertical-align:middle;margin-right:10px">You're on <b>${esc(t.owner_email)}</b>'s team. Every action you complete draws from the shared bucket above.</p><p style="margin-top:14px"><button id="leaveTeam" class="button secondary">Leave team</button></p>`;const lv=box.querySelector('#leaveTeam');if(lv)lv.onclick=async()=>{if(lv.dataset.armed!=='1'){lv.dataset.armed='1';lv.dataset.orig=lv.textContent;lv.textContent='Click again to leave';setTimeout(()=>{if(lv.isConnected&&lv.dataset.armed==='1'){lv.dataset.armed='';lv.textContent=lv.dataset.orig}},8000);return}lv.disabled=true;const s2=await session();const r=await fetch('/api/team.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'leave',csrf:s2.csrf})});if(!r.ok){const d=await r.json().catch(()=>({error:'Could not leave the team.'}));lv.disabled=false;lv.dataset.armed='';lv.textContent=lv.dataset.orig||'Leave team';const p=document.createElement('p');p.className='error';p.textContent=d.error||'Could not leave the team.';lv.after(p);return}location.reload()};return}
 const seats=t.seats;let html=`<p class="lede" style="margin-top:0">${seats.limit===0?`Your free plan is a solo act. <a href="/pricing/">Helper</a> adds 3 team members, Operator adds 10.`:`<b>${seats.used} of ${seats.limit}</b> seats filled. Everyone shares your action bucket.`}</p>`;
