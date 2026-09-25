@@ -148,31 +148,42 @@ function ensureCustomRequestTables(): void {
         user_id INT UNSIGNED NOT NULL,
         title VARCHAR(180) NOT NULL,
         details TEXT NOT NULL,
-        status ENUM('open','delivered','overdue_credited') NOT NULL DEFAULT 'open',
+        status ENUM('open','delivered','overdue_credited','cancelled') NOT NULL DEFAULT 'open',
         requested_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         deadline_at DATETIME NOT NULL,
         delivered_at DATETIME NULL,
         credit_owed TINYINT(1) NOT NULL DEFAULT 0,
         stripe_credit_id VARCHAR(80) NULL,
+        queue_id INT UNSIGNED NULL,
         INDEX idx_user (user_id),
-        INDEX idx_status_deadline (status, deadline_at)
+        INDEX idx_status_deadline (status, deadline_at),
+        INDEX idx_queue (queue_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
     $want = [
         'user_id' => 'INT UNSIGNED NOT NULL',
         'title' => 'VARCHAR(180) NOT NULL',
         'details' => 'TEXT NOT NULL',
-        'status' => "ENUM('open','delivered','overdue_credited') NOT NULL DEFAULT 'open'",
         'requested_at' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
         'deadline_at' => 'DATETIME NOT NULL',
         'delivered_at' => 'DATETIME NULL',
         'credit_owed' => 'TINYINT(1) NOT NULL DEFAULT 0',
         'stripe_credit_id' => 'VARCHAR(80) NULL',
+        'queue_id' => 'INT UNSIGNED NULL',
     ];
     try {
         $have = [];
-        foreach (db()->query('SHOW COLUMNS FROM custom_requests')->fetchAll() as $c) $have[$c['Field']] = true;
+        foreach (db()->query('SHOW COLUMNS FROM custom_requests')->fetchAll() as $c) $have[$c['Field']] = $c['Type'];
         foreach ($want as $col => $def) {
             if (!isset($have[$col])) db()->exec("ALTER TABLE custom_requests ADD COLUMN $col $def");
+        }
+        // Widen the status enum on older tables so admin cancellations have
+        // somewhere to land. ADD COLUMN above never touches existing columns.
+        if (isset($have['status']) && strpos((string) $have['status'], "'cancelled'") === false) {
+            db()->exec("ALTER TABLE custom_requests MODIFY status ENUM('open','delivered','overdue_credited','cancelled') NOT NULL DEFAULT 'open'");
+        }
+        if (!isset($have['queue_id'])) {
+            try { db()->exec('ALTER TABLE custom_requests ADD INDEX idx_queue (queue_id)'); }
+            catch (Throwable $e) { error_log('custom_requests queue index failed: ' . $e->getMessage()); }
         }
     } catch (Throwable $e) { error_log('custom_requests heal failed: ' . $e->getMessage()); }
     // Old tables were created with utf8mb4_general_ci while the connection
@@ -181,6 +192,96 @@ function ensureCustomRequestTables(): void {
     try {
         db()->exec('ALTER TABLE custom_requests CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
     } catch (Throwable $e) { error_log('custom_requests collation fix failed: ' . $e->getMessage()); }
+    backfillCustomRequestQueueLinks();
+}
+
+// One-time (and ongoing, for rows whose mirror insert failed) linking of
+// Operator custom_requests to their mirrored community-queue rows. Matches
+// on title + a tight timestamp window; the mirror is inserted in the same
+// HTTP request as the custom request, so created_at ≈ requested_at. Also
+// applies any already-terminal queue status the admin set before the link
+// existed (no emails here — only fresh admin actions notify).
+function backfillCustomRequestQueueLinks(): void {
+    try {
+        $unlinked = db()->query('SELECT id, title, requested_at FROM custom_requests WHERE queue_id IS NULL')->fetchAll();
+        if (!$unlinked) return;
+        ensureToolRequestTables();
+        $mirrors = db()->query('SELECT id, problem, created_at, status FROM tool_requests WHERE is_operator = 1')->fetchAll();
+        if (!$mirrors) return;
+        $used = [];
+        foreach (db()->query('SELECT queue_id FROM custom_requests WHERE queue_id IS NOT NULL')->fetchAll(PDO::FETCH_COLUMN) as $qid) {
+            $used[(int) $qid] = true;
+        }
+        $link = db()->prepare('UPDATE custom_requests SET queue_id = ? WHERE id = ?');
+        foreach ($unlinked as $cr) {
+            $best = null;
+            $bestDiff = 7200;
+            foreach ($mirrors as $m) {
+                if (isset($used[(int) $m['id']])) continue;
+                if (trim((string) $m['problem']) !== trim((string) $cr['title'])) continue;
+                $diff = abs(strtotime((string) $m['created_at']) - strtotime((string) $cr['requested_at']));
+                if ($diff <= $bestDiff) { $best = $m; $bestDiff = $diff; }
+            }
+            if (!$best) continue;
+            $link->execute([(int) $best['id'], (int) $cr['id']]);
+            $used[(int) $best['id']] = true;
+            propagateQueueStatus((int) $best['id'], (string) $best['status']);
+        }
+    } catch (Throwable $e) { error_log('custom_requests queue backfill failed: ' . $e->getMessage()); }
+}
+
+// Maps a community-queue admin status onto the linked Operator custom
+// request. Only transitions out of 'open' (a credited or delivered request
+// keeps its terminal state). Returns the custom_requests id that changed.
+function propagateQueueStatus(int $queueId, string $queueStatus): ?int {
+    $map = ['shipped' => 'delivered', 'completed' => 'delivered', 'cancelled' => 'cancelled'];
+    if (!isset($map[$queueStatus])) return null;
+    try {
+        $row = db()->prepare('SELECT id, status FROM custom_requests WHERE queue_id = ? LIMIT 1');
+        $row->execute([$queueId]);
+        $cr = $row->fetch();
+        if (!$cr || $cr['status'] !== 'open') return null;
+        $new = $map[$queueStatus];
+        // Explicit COLLATE: older tables may still be utf8mb4_general_ci on
+        // a unicode_ci connection (see note in ensureCustomRequestTables).
+        $upd = db()->prepare("UPDATE custom_requests SET status = ?, delivered_at = CASE WHEN ? = 'delivered' THEN NOW() ELSE delivered_at END WHERE id = ? AND status = 'open' COLLATE utf8mb4_unicode_ci");
+        $upd->execute([$new, $new, (int) $cr['id']]);
+        return $upd->rowCount() > 0 ? (int) $cr['id'] : null;
+    } catch (Throwable $e) { error_log('propagateQueueStatus failed: ' . $e->getMessage()); return null; }
+}
+
+// Best-effort transactional email via Resend. Needs 'resend' => ['api_key']
+// in the server config; without it the send is skipped and logged.
+// A failed or skipped send never throws — callers treat mail as notify-only.
+function bbSendEmail(string $to, string $subject, string $text, ?string $from = null): bool {
+    try { $cfg = config(); } catch (Throwable $e) { $cfg = []; }
+    $apiKey = $cfg['resend']['api_key'] ?? $cfg['resend_api_key'] ?? null;
+    if (!$apiKey || !filter_var($to, FILTER_VALIDATE_EMAIL)) {
+        error_log('bbSendEmail skipped: ' . (!$apiKey ? 'no Resend API key in server config' : 'invalid recipient'));
+        return false;
+    }
+    $ch = curl_init('https://api.resend.com/emails');
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $apiKey, 'Content-Type: application/json'],
+        CURLOPT_POSTFIELDS => json_encode([
+            'from' => $from ?: 'Bum Bum <hello@leaveittobumbum.com>',
+            'to' => [$to],
+            'subject' => $subject,
+            'text' => $text,
+        ]),
+    ]);
+    $resp = curl_exec($ch);
+    $code = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+    $curlErr = curl_error($ch);
+    curl_close($ch);
+    if ($resp === false || $code < 200 || $code >= 300) {
+        error_log('bbSendEmail failed: ' . ($curlErr ?: $code . ' ' . substr((string) $resp, 0, 200)));
+        return false;
+    }
+    return true;
 }
 
 // OAuth sign-in (Sign in with Google / LinkedIn). Columns are added lazily

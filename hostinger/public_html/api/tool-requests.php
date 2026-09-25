@@ -50,6 +50,27 @@ if (($input['action'] ?? '') === 'set_status') {
     $stmt = db()->prepare('UPDATE tool_requests SET status = ? WHERE id = ?');
     $stmt->execute([$status, $requestId]);
     if ($stmt->rowCount() === 0) jsonResponse(['error' => 'Request not found.'], 404);
+    // Operator requests are mirrored from custom_requests: propagate the
+    // admin status back so the account page reflects what was marked, and
+    // notify the customer. Best-effort — mail must never break the update.
+    try {
+        ensureCustomRequestTables();
+        $linked = db()->prepare('SELECT cr.id, cr.title, u.email FROM custom_requests cr JOIN users u ON u.id = cr.user_id WHERE cr.queue_id = ? LIMIT 1');
+        $linked->execute([$requestId]);
+        if ($lr = $linked->fetch()) {
+            propagateQueueStatus($requestId, $status);
+            $nice = ['requested' => 'received', 'planned' => 'planned', 'building' => 'being built', 'shipped' => 'shipped', 'completed' => 'completed', 'cancelled' => 'cancelled'][$status] ?? $status;
+            $title = (string) $lr['title'];
+            $done = $status === 'completed' || $status === 'shipped';
+            bbSendEmail(
+                (string) $lr['email'],
+                ($done ? 'Your tool is ready: ' : 'Update on your tool request: ') . mb_substr($title, 0, 80),
+                "Hi!\n\nQuick update from Bum Bum HQ on your custom tool request \"{$title}\":\n\nStatus: {$nice}.\n"
+                . ($done ? "\nIt's ready — take it for a spin from your account page.\n" : ($status === 'cancelled' ? "\nWe had to cancel this one. Reply if you want to talk it through — we'll make it right.\n" : "\nWe'll ping you again when the status changes.\n"))
+                . "\nFollow along any time: https://leaveittobumbum.com/account/\n\n— Bum Bum"
+            );
+        }
+    } catch (Throwable $e) { error_log('set_status operator sync failed: ' . $e->getMessage()); }
     jsonResponse(['ok' => true, 'status' => $status]);
 }
 

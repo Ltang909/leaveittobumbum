@@ -26,7 +26,8 @@ function requestRow(array $r): array {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        $stmt = db()->prepare('SELECT id, title, status, requested_at, deadline_at, delivered_at FROM custom_requests WHERE user_id = ? ORDER BY requested_at DESC LIMIT 20');
+        ensureToolRequestTables();
+        $stmt = db()->prepare('SELECT cr.id, cr.title, cr.status, cr.requested_at, cr.deadline_at, cr.delivered_at, tr.status AS queue_status FROM custom_requests cr LEFT JOIN tool_requests tr ON tr.id = cr.queue_id WHERE cr.user_id = ? ORDER BY cr.requested_at DESC LIMIT 20');
         $stmt->execute([$billId]);
         $monthStart = periodKey($bill) . '-01 00:00:00';
         $used = db()->prepare('SELECT id FROM custom_requests WHERE user_id = ? AND requested_at >= ? LIMIT 1');
@@ -76,6 +77,12 @@ try {
         ensureToolRequestTables();
         $mirror = db()->prepare('INSERT INTO tool_requests (name, email, problem, outcome, status, is_operator) VALUES (?, ?, ?, ?, ?, 1)');
         $mirror->execute(['', (string) ($user['email'] ?? ''), $title, $details, 'requested']);
+        // Link the mirror to the custom request so admin queue statuses can
+        // propagate back to the account page.
+        $queueId = (int) db()->lastInsertId();
+        if ($queueId > 0) {
+            db()->prepare('UPDATE custom_requests SET queue_id = ? WHERE id = ?')->execute([$queueId, $id]);
+        }
     } catch (Throwable $mirrorError) {
         error_log('Operator queue mirror failed: ' . $mirrorError->getMessage());
     }
