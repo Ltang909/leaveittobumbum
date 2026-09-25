@@ -20,6 +20,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .hidden{display:none!important}
 .conv-item{display:flex;gap:12px;align-items:center;border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);border-radius:12px;background:#fff;padding:10px 12px;margin-top:10px;flex-wrap:wrap}
 .conv-item img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid #e7dcc3;background:#f7f2e7}
+.conv-item .thumb{display:inline-block;line-height:0;border-radius:8px;cursor:zoom-in}
 .conv-item .meta{font-size:13px;opacity:.75}
 .conv-item .grow{flex:1;min-width:160px}
 .conv-item .dl{border:1px solid #ddd1b8;background:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none;color:inherit;display:inline-block}
@@ -100,7 +101,8 @@ convertBtn.addEventListener('click',async()=>{
       const blob=await convertOne(img,mime,quality);
       const url=URL.createObjectURL(blob);
       const base=(f.name||'image').replace(/\.[^.]+$/,'');
-      row.innerHTML='<img alt=""><div class="grow"><b>'+esc(base+'.'+ext)+'</b><br><span class="meta">'+esc(f.name)+' &rarr; '+(blob.size/1024).toFixed(0)+' KB</span></div>';
+      row.innerHTML='<a class="thumb" target="_blank" rel="noopener" title="Open full-size preview"><img alt="Converted image preview"></a><div class="grow"><b>'+esc(base+'.'+ext)+'</b><br><span class="meta">'+esc(f.name)+' &rarr; '+(blob.size/1024).toFixed(0)+' KB</span></div>';
+      const thumb=row.querySelector('.thumb');thumb.href=url;thumb.querySelector('img').src=url;
       const a=document.createElement('a');a.className='dl';a.href=url;a.download=base+'.'+ext;a.textContent='Download';
       row.appendChild(a);resultList.appendChild(row);
       bbTrack('convert_done',{from:f.type,to:mime});
