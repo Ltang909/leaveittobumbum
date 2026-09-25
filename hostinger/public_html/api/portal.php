@@ -13,6 +13,5 @@ try {
     jsonResponse(['url' => $session['url']]);
 } catch (Throwable $error) {
     error_log($error->getMessage());
-    // TEMPORARY debug: surface Stripe's real error so we can diagnose the portal failure. Revert after.
-    jsonResponse(['error' => 'Portal debug: ' . $error->getMessage()], 502);
+    jsonResponse(['error' => 'Billing management is unavailable right now.'], 502);
 }
