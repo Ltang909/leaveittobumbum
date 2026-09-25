@@ -20,6 +20,15 @@ function validStripeSignature(string $payload, string $header, string $secret): 
 if (!validStripeSignature($raw, $signature, $secret)) jsonResponse(['error' => 'Invalid signature.'], 400);
 $event = json_decode($raw, true);
 if (!is_array($event) || empty($event['id'])) jsonResponse(['error' => 'Invalid event.'], 400);
+// Guard: staging shares the production DB. Ignore events whose live/test mode
+// does not match this server's Stripe keys, so a test-mode checkout can never
+// overwrite live billing IDs (or vice versa).
+$keyLive = str_starts_with((string) (config()['stripe']['secret_key'] ?? ''), 'sk_live_');
+$eventLive = !empty($event['livemode']);
+if ($eventLive !== $keyLive) {
+    error_log('webhook ignored mode mismatch: type=' . $event['type'] . ' id=' . $event['id'] . ' event_mode=' . ($eventLive ? 'live' : 'test') . ' key_mode=' . ($keyLive ? 'live' : 'test'));
+    jsonResponse(['received' => true, 'ignored' => 'mode_mismatch']);
+}
 $pdo = db();
 try {
     $pdo->prepare('INSERT INTO webhook_events (stripe_event_id, event_type) VALUES (?, ?)')->execute([$event['id'], $event['type']]);
