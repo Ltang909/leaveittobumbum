@@ -25,8 +25,8 @@ export default function Docs() {
 
           <h2>Plans</h2>
           <ul>
-            <li><strong>Poke around: $0.</strong> 75 actions a month, 4 active tools, 1 workspace, and the community request queue. No card needed.</li>
-            <li><strong>Helper: $12/mo.</strong> 1,500 actions a month, all current tools, 3 team members, email support, plus $6 per extra 1,000 actions if you run dry.</li>
+            <li><strong>Poke around: $0.</strong> 75 actions a month, all current tools, 1 workspace, and the community request queue. No card needed.</li>
+            <li><strong>Helper: $12/mo.</strong> 1,500 actions a month, everything in Poke around, 3 team members, email support, plus $6 per extra 1,000 actions if you run dry.</li>
             <li><strong>Operator: $49/mo.</strong> Everything in Helper, 6,000 actions a month, 10 team members, and one scoped tool request each month with the 36-hour guarantee.</li>
           </ul>
           <p>Upgrades apply immediately; downgrades take effect at the next billing date. Pause or cancel anytime from your account page. No contracts, no cancellation maze. <a href="/pricing/"><strong>See pricing</strong></a>.</p>
