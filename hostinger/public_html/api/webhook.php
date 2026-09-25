@@ -23,7 +23,7 @@ if (!is_array($event) || empty($event['id'])) jsonResponse(['error' => 'Invalid 
 // Guard: staging shares the production DB. Ignore events whose live/test mode
 // does not match this server's Stripe keys, so a test-mode checkout can never
 // overwrite live billing IDs (or vice versa).
-$keyLive = str_starts_with((string) (config()['stripe']['secret_key'] ?? ''), 'sk_live_');
+$keyLive = (bool) preg_match('/^(sk|rk)_live_/', (string) (config()['stripe']['secret_key'] ?? ''));
 $eventLive = !empty($event['livemode']);
 if ($eventLive !== $keyLive) {
     error_log('webhook ignored mode mismatch: type=' . $event['type'] . ' id=' . $event['id'] . ' event_mode=' . ($eventLive ? 'live' : 'test') . ' key_mode=' . ($keyLive ? 'live' : 'test'));
