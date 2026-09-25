@@ -77,6 +77,31 @@
     return pick(cands);
   }
 
+  // Pick a horizontal perch with no text under her face: sample candidate
+  // spots with caretRangeFromPoint and take the first one clear of text.
+  // Runs while her wrap is display:none, so she never samples herself.
+  function overText(x, y) {
+    try {
+      var range = null;
+      if (document.caretRangeFromPoint) range = document.caretRangeFromPoint(x, y);
+      if (!range) return false;
+      var node = range.startContainer;
+      return !!node && node.nodeType === 3 && /\S/.test(node.textContent || '');
+    } catch (e) { return false; }
+  }
+  function findClearX(anchor, cropH) {
+    var r = anchor.getBoundingClientRect();
+    var y = r.top - cropH * 0.5;
+    var ratios = [0.85, 0.7, 0.15, 0.3, 0.5, 0.6, 0.4];
+    for (var i = 0; i < ratios.length; i++) {
+      var cx = r.left + r.width * ratios[i];
+      if (y < 0 || y > window.innerHeight) return ratios[i];
+      var blocked = overText(cx - 45, y) || overText(cx, y) || overText(cx + 45, y);
+      if (!blocked) return ratios[i];
+    }
+    return 0.85;
+  }
+
   function start() {
     var anchor;
     try { anchor = findAnchor(); } catch (e) { anchor = null; }
@@ -110,8 +135,10 @@
     if (img.complete && img.naturalWidth) sizeCrop();
     else { img.addEventListener('load', sizeCrop); setTimeout(sizeCrop, 1500); }
 
-    // Lock her horizontal perch per pageview; track the anchor vertically.
-    var xRatio = 0.15 + Math.random() * 0.55;
+    // Lock her horizontal perch per pageview (sampled for whitespace BEFORE
+    // she exists in the DOM); track the anchor vertically.
+    var xRatio = 0.5;
+    try { xRatio = findClearX(anchor, cropH); } catch (e) {}
     var raf = 0;
     function place() {
       raf = 0;
@@ -124,7 +151,8 @@
       var x = r.left + r.width * xRatio - 75;
       x = Math.max(8, Math.min(window.innerWidth - 158, x));
       wrap.style.left = x + 'px';
-      wrap.style.top = (r.top - cropH + 14) + 'px';
+      // Perched in the whitespace gap above the element, chin resting on its edge.
+      wrap.style.top = (r.top - cropH + 6) + 'px';
     }
     function schedule() { if (!raf) raf = requestAnimationFrame(place); }
     window.addEventListener('scroll', schedule, { passive: true });
