@@ -1,1 +1,114 @@
-{"tools":[{"cta":"Record a clip","description":"Record your screen right in your browser. Download the clip, keep it forever.","icon":"◉","key":"clips","name":"Bum Bum Clips","tag":"Video","url":"/tools/clips/","mascot":"/bum/cat-sunglasses.png"},{"cta":"Record a note","description":"Talk it out and get a live transcript you can copy or download.","icon":"♪","key":"notes","name":"Bum Bum Notes","tag":"Voice","url":"/tools/notes/","mascot":"/bum/cat-laptop.png"},{"cta":"Track subscriptions","description":"Every subscription you forgot about, in one place, with renewal reminders.","icon":"✂","key":"cutline","name":"Cutline","tag":"Money","url":"/tools/cutline/","mascot":"/bum/cat-bowtie.png"},{"cta":"Track every lead","description":"A tiny CRM that tells you who to follow up with today and what to say.","icon":"📇","key":"purrsuit","name":"Purrsuit","tag":"Clients","url":"/tools/purrsuit/","mascot":"/bum/cat-wink-blep.png"},{"cta":"Track applications","description":"A job application tracker that tells you who to follow up with today and what to say.","icon":"💼","key":"corporate-bum-bum","name":"Corporate Bum Bum","tag":"Career","url":"/tools/corporate-bum-bum/","mascot":"/bum/cat-glasses.png"},{"key":"doodle","name":"Doodle","tag":"Draw","icon":"✏️","description":"A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.","url":"/tools/doodle/","cta":"Start doodling","mascot":"/bum/cat-paws-up.png"},{"cta":"Read receipts","description":"Snap photos of up to 10 receipts at once. Bum Bum reads them in your browser and hands you vendor, date, line items, tax, and total as clean editable tables.","icon":"📸","key":"receipt-reader","name":"Receipt Reader","tag":"Money","url":"/tools/receipt-reader/","mascot":"/bum/cat-glasses.png"},{"cta":"Chase invoices","description":"Track who owes you what. Bum Bum can chase as your billing assistant, learns when each client usually pays, and emails you a reminder digest.","icon":"🧾","key":"invoice-chaser","name":"Invoice Chaser","tag":"Money","url":"/tools/invoice-chaser/","mascot":"/bum/cat-bowtie.png"},{"cta":"Find my gaps","description":"Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions.","icon":"🔍","key":"gap-scout","name":"Gap Scout","tag":"Career","url":"/tools/gap-scout/","mascot":"/bum/cat-curious.png"}]}
+{
+  "tools": [
+    {
+      "cta": "Record a clip",
+      "description": "Record your screen right in your browser. Download the clip, keep it forever.",
+      "icon": "◉",
+      "key": "clips",
+      "name": "Bum Bum Clips",
+      "tag": "Video",
+      "url": "/tools/clips/",
+      "mascot": "/bum/cat-sunglasses.png"
+    },
+    {
+      "cta": "Record a note",
+      "description": "Talk it out and get a live transcript you can copy or download.",
+      "icon": "♪",
+      "key": "notes",
+      "name": "Bum Bum Notes",
+      "tag": "Voice",
+      "url": "/tools/notes/",
+      "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "cta": "Track subscriptions",
+      "description": "Every subscription you forgot about, in one place, with renewal reminders.",
+      "icon": "✂",
+      "key": "cutline",
+      "name": "Cutline",
+      "tag": "Money",
+      "url": "/tools/cutline/",
+      "mascot": "/bum/cat-bowtie.png"
+    },
+    {
+      "cta": "Track every lead",
+      "description": "A tiny CRM that tells you who to follow up with today and what to say.",
+      "icon": "📇",
+      "key": "purrsuit",
+      "name": "Purrsuit",
+      "tag": "Clients",
+      "url": "/tools/purrsuit/",
+      "mascot": "/bum/cat-wink-blep.png"
+    },
+    {
+      "cta": "Track applications",
+      "description": "A job application tracker that tells you who to follow up with today and what to say.",
+      "icon": "💼",
+      "key": "corporate-bum-bum",
+      "name": "Corporate Bum Bum",
+      "tag": "Career",
+      "url": "/tools/corporate-bum-bum/",
+      "mascot": "/bum/cat-glasses.png"
+    },
+    {
+      "key": "doodle",
+      "name": "Doodle",
+      "tag": "Draw",
+      "icon": "✏️",
+      "description": "A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.",
+      "url": "/tools/doodle/",
+      "cta": "Start doodling",
+      "mascot": "/bum/cat-paws-up.png"
+    },
+    {
+      "key": "invoice-chaser",
+      "name": "Invoice Chaser",
+      "tag": "Money",
+      "icon": "🧾",
+      "description": "Track who owes you what. Bum Bum can chase as your billing assistant, learns when each client usually pays, and emails you a reminder digest.",
+      "url": "/tools/invoice-chaser/",
+      "cta": "Chase invoices",
+      "mascot": "/bum/cat-bowtie.png"
+    },
+    {
+      "key": "receipt-reader",
+      "name": "Receipt Reader",
+      "tag": "Money",
+      "icon": "📸",
+      "description": "Snap photos of up to 10 receipts at once. Bum Bum reads them in your browser and hands you vendor, date, line items, tax, and total as clean editable tables.",
+      "url": "/tools/receipt-reader/",
+      "cta": "Read receipts",
+      "mascot": "/bum/cat-glasses.png"
+    },
+    {
+      "cta": "Find my gaps",
+      "description": "Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions.",
+      "icon": "🔍",
+      "key": "gap-scout",
+      "name": "Gap Scout",
+      "tag": "Career",
+      "url": "/tools/gap-scout/",
+      "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "video-trimmer",
+      "name": "Video Trimmer",
+      "tag": "Video",
+      "icon": "🎬",
+      "description": "Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser. Your video never leaves your device.",
+      "url": "/tools/video-trimmer/",
+      "cta": "Trim a video",
+      "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "image-converter",
+      "name": "Image Converter",
+      "tag": "Files",
+      "icon": "🖼️",
+      "description": "WebP to PNG, JPG to WebP, whatever to whatever. Bum Bum converts your images right in your browser and hands them back in the format you wanted.",
+      "url": "/tools/image-converter/",
+      "cta": "Convert images",
+      "mascot": "/bum/cat-curious.png"
+    }
+  ]
+}
