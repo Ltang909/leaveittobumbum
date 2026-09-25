@@ -33,8 +33,11 @@ $pdo = db();
 try {
     $pdo->prepare('INSERT INTO webhook_events (stripe_event_id, event_type) VALUES (?, ?)')->execute([$event['id'], $event['type']]);
 } catch (PDOException $error) {
-    if ((string) $error->getCode() === '23000') jsonResponse(['received' => true, 'duplicate' => true]);
-    throw $error;
+    if ((string) $error->getCode() !== '23000') throw $error;
+    // Duplicate delivery (e.g. a manual resend from the Stripe dashboard).
+    // checkout.session.completed is idempotent (it just re-links the same
+    // customer/subscription IDs), so let it reprocess; skip anything else.
+    if ($event['type'] !== 'checkout.session.completed') jsonResponse(['received' => true, 'duplicate' => true]);
 }
 
 $object = $event['data']['object'] ?? [];
