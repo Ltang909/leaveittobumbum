@@ -95,7 +95,7 @@ export function SiteFooter() {
         <p>© {new Date().getFullYear()} Leave It to Bum Bum</p>
         <p className="exe"><img src="/bum/cat-butt-v2.png" alt="" aria-hidden="true" /> BumBum.exe is running…</p>
       </div>
-      <script src="/petpet.js?v=4" defer></script>
+      <script src="/petpet.js?v=5" defer></script>
     </footer>
   );
 }

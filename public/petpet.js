@@ -151,8 +151,8 @@
       var x = r.left + r.width * xRatio - 75;
       x = Math.max(8, Math.min(window.innerWidth - 158, x));
       wrap.style.left = x + 'px';
-      // Perched in the whitespace gap above the element, chin resting on its edge.
-      wrap.style.top = (r.top - cropH + 6) + 'px';
+      // Perched in the whitespace gap above the element, chin resting right on its edge.
+      wrap.style.top = (r.top - cropH + 2) + 'px';
     }
     function schedule() { if (!raf) raf = requestAnimationFrame(place); }
     window.addEventListener('scroll', schedule, { passive: true });
