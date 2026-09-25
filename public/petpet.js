@@ -40,10 +40,8 @@
 
   var css = [
     '.pp-wrap{position:fixed;z-index:2147483000;pointer-events:auto;cursor:pointer;line-height:0;width:150px}',
-    '.pp-crop{height:66px;overflow:hidden;border-radius:18px 18px 0 0}',
+    '.pp-crop{overflow:hidden;border-radius:18px 18px 0 0}',
     '.pp-crop img{display:block;width:150px;max-width:none;height:auto;user-select:none;-webkit-user-drag:none}',
-    '.pp-bob{animation:pp-bob 2.6s ease-in-out infinite}',
-    '@keyframes pp-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}',
     '.pp-duck{transition:transform .55s ease-in,opacity .55s ease-in;transform:translateY(70px)!important;opacity:0!important}',
     '.pp-bubble{position:absolute;bottom:calc(100% + 10px);right:0;min-width:170px;max-width:230px;background:#E8EBE9;color:#1E2321;border:1px solid rgba(140,133,123,.4);border-radius:14px;padding:10px 13px;font:500 13px/1.45 -apple-system,"Segoe UI",sans-serif;box-shadow:0 8px 24px rgba(30,35,33,.18);line-height:1.45;cursor:pointer}',
     '.pp-bubble:after{content:"";position:absolute;top:100%;right:34px;border:8px solid transparent;border-top-color:#E8EBE9}',
@@ -85,7 +83,7 @@
     if (!anchor) return; // No suitable element below the fold: she sits this one out.
 
     var wrap = document.createElement('div');
-    wrap.className = 'pp-wrap pp-bob';
+    wrap.className = 'pp-wrap';
     wrap.setAttribute('role', 'img');
     wrap.setAttribute('aria-label', 'Pet Pet, middle management, is peeking over this section');
     wrap.title = 'pet pet · middle management';
@@ -99,6 +97,18 @@
     wrap.appendChild(crop);
     wrap.style.display = 'none';
     document.body.appendChild(wrap);
+
+    // Show most of her face: reveal ~80% of the frame, chin tucked behind the edge.
+    var cropH = 100; // fallback until the image reports its real size
+    function sizeCrop() {
+      if (img.naturalWidth && img.naturalHeight) {
+        cropH = Math.round(150 * (img.naturalHeight / img.naturalWidth) * 0.8);
+      }
+      crop.style.height = cropH + 'px';
+      schedule();
+    }
+    if (img.complete && img.naturalWidth) sizeCrop();
+    else { img.addEventListener('load', sizeCrop); setTimeout(sizeCrop, 1500); }
 
     // Lock her horizontal perch per pageview; track the anchor vertically.
     var xRatio = 0.15 + Math.random() * 0.55;
@@ -114,7 +124,7 @@
       var x = r.left + r.width * xRatio - 75;
       x = Math.max(8, Math.min(window.innerWidth - 158, x));
       wrap.style.left = x + 'px';
-      wrap.style.top = (r.top - 62) + 'px';
+      wrap.style.top = (r.top - cropH + 14) + 'px';
     }
     function schedule() { if (!raf) raf = requestAnimationFrame(place); }
     window.addEventListener('scroll', schedule, { passive: true });
@@ -124,7 +134,6 @@
 
     var open = false;
     function duck() {
-      wrap.classList.remove('pp-bob');
       wrap.classList.add('pp-duck');
       setTimeout(function () { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); }, 600);
     }
@@ -144,8 +153,7 @@
       }, 4500);
       b.addEventListener('click', function (ev) { ev.stopPropagation(); clearTimeout(t); duck(); });
     });
-    // She gets bored and ducks back behind the element on her own.
-    setTimeout(function () { if (wrap.parentNode && !open) duck(); }, 40000);
+    // She stays put — middle management never leaves early.
   }
 
   if (document.readyState === 'loading') {

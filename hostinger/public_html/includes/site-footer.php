@@ -28,5 +28,5 @@ $socials = [
     <p>© <?= date('Y') ?> Leave It to Bum Bum</p>
     <p class="exe"><img src="/bum/cat-butt-v2.png" alt="" aria-hidden="true"> BumBum.exe is running…</p>
   </div>
-  <script src="/petpet.js?v=2" defer></script>
+  <script src="/petpet.js?v=3" defer></script>
 </footer>
