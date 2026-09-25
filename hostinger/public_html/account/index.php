@@ -44,7 +44,7 @@ $DASHBOARD_TOOLS = [
   'notes' => ['name' => 'Bum Bum Notes', 'tag' => 'VOICE', 'icon' => '&#9834;', 'desc' => 'Talk it out and get a live transcript you can copy or download.', 'url' => '/tools/notes/', 'cta' => 'Record a note'],
   'cutline' => ['name' => 'Cutline', 'tag' => 'MONEY', 'icon' => '&#9986;', 'desc' => 'Every subscription you forgot about, in one place, with renewal nudges.', 'url' => '/tools/cutline/', 'cta' => 'Cut subscriptions'],
   'purrsuit' => ['name' => 'Purrsuit', 'tag' => 'CLIENTS', 'icon' => '&#128100;', 'desc' => 'A tiny CRM that tells you who to follow up with today and what to say.', 'url' => '/tools/purrsuit/', 'cta' => 'Track every lead'],
-  'corporate-bum-bum' => ['name' => 'Corporate Bum Bum', 'tag' => 'CAREER', 'icon' => '&#128188;', 'desc' => 'A job application tracker that tells you who to follow up with today and what to say.', 'url' => '/tools/corporate-bum-bum/', 'cta' => 'Track applications'],
+  'corporate-bum-bum' => ['name' => 'Corporate Bum', 'tag' => 'CAREER', 'icon' => '&#128188;', 'desc' => 'A job application tracker that tells you who to follow up with today and what to say.', 'url' => '/tools/corporate-bum-bum/', 'cta' => 'Track applications'],
   'doodle' => ['name' => 'Doodle', 'tag' => 'DRAW', 'icon' => '&#9999;&#65039;', 'desc' => 'A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.', 'url' => '/tools/doodle/', 'cta' => 'Start doodling'],
 ];
 $DASHBOARD_ORDER = array_keys($DASHBOARD_TOOLS);
