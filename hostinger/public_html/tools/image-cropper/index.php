@@ -14,9 +14,10 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .time-hint{font-size:13px;opacity:.7;margin-top:4px}
 .error{color:#b3261e;font-weight:700}
 .hidden{display:none!important}
-.crop-stage{position:relative;display:inline-block;line-height:0;max-width:100%;margin-top:14px;touch-action:none;user-select:none;-webkit-user-select:none}
+.crop-stage{position:relative;display:inline-block;line-height:0;max-width:100%;margin-top:14px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair}
 .crop-stage img{max-width:100%;max-height:62vh;display:block;border-radius:10px;pointer-events:none}
-.crop-box{position:absolute;border:2px solid #fff;box-shadow:0 0 0 2px #2f2a22,0 0 0 9999px rgba(23,20,14,.45);cursor:move}
+.crop-box{position:absolute;border:2px solid #fff;box-shadow:0 0 0 2px #2f2a22;cursor:move;z-index:2}
+.crop-dim{position:absolute;background:rgba(47,42,34,.42);display:none;z-index:1}
 .handle{position:absolute;width:16px;height:16px;background:#fff;border:2px solid #2f2a22;border-radius:50%;z-index:2}
 .handle.nw{left:-9px;top:-9px;cursor:nwse-resize}.handle.ne{right:-9px;top:-9px;cursor:nesw-resize}
 .handle.sw{left:-9px;bottom:-9px;cursor:nesw-resize}.handle.se{right:-9px;bottom:-9px;cursor:nwse-resize}
@@ -52,8 +53,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 <button type="button" data-ratio="1.5">3:2</button>
 <button type="button" data-ratio="1.7777778">16:9</button>
 </div>
-<p class="crop-meta" id="cropHint">Drag on the image to draw your crop box. Drag inside it to move.</p>
-<div style="text-align:center"><div class="crop-stage" id="cropStage"><img id="cropImg" alt="Image to crop"><div class="crop-box" id="cropBox" style="display:none"></div></div></div>
+<p class="crop-meta" id="cropHint">Draw a box anywhere on the image. Drag inside it to move, pull a corner to resize, or just draw a new box.</p>
+<div style="text-align:center"><div class="crop-stage" id="cropStage"><img id="cropImg" alt="Image to crop"><div class="crop-dim" id="dimT"></div><div class="crop-dim" id="dimB"></div><div class="crop-dim" id="dimL"></div><div class="crop-dim" id="dimR"></div><div class="crop-box" id="cropBox" style="display:none"></div></div></div>
 <p class="crop-meta" id="cropSize"></p>
 <div class="controls">
 <div><label>Save as<select id="formatSel"><option value="image/png">PNG</option><option value="image/jpeg">JPG</option><option value="image/webp">WebP</option></select></label></div>
@@ -77,6 +78,7 @@ const cropArea=document.querySelector('#cropArea'),stage=document.querySelector(
 const cropBtn=document.querySelector('#cropBtn'),cropError=document.querySelector('#cropError'),cropSize=document.querySelector('#cropSize');
 const formatSel=document.querySelector('#formatSel'),qualityRange=document.querySelector('#qualityRange'),qualityVal=document.querySelector('#qualityVal'),qualityWrap=document.querySelector('#qualityWrap');
 const resultWrap=document.querySelector('#resultWrap'),resultImg=document.querySelector('#resultImg'),dlBtn=document.querySelector('#dlBtn');
+const dims=['dimT','dimB','dimL','dimR'].map(id=>document.querySelector('#'+id));
 
 let NW=0,NH=0,scale=1,crop=null,aspect=0,imgFile=null,imgUrl=null,cropKey=0,gesture=null;
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
@@ -101,10 +103,13 @@ function fitAspectToCrop(){
 function stagePos(e){const r=stage.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
 function measure(){if(NW)scale=cimg.clientWidth/NW}
 function renderBox(){
-  if(!crop){cbox.style.display='none';cropSize.textContent='';cropBtn.disabled=true;return}
+  if(!crop){cbox.style.display='none';dims.forEach(d=>d.style.display='none');cropSize.textContent='';cropBtn.disabled=true;return}
   cbox.style.display='block';
-  cbox.style.left=(crop.x*scale)+'px';cbox.style.top=(crop.y*scale)+'px';
-  cbox.style.width=(crop.w*scale)+'px';cbox.style.height=(crop.h*scale)+'px';
+  const x=crop.x*scale,y=crop.y*scale,w=crop.w*scale,h=crop.h*scale;
+  cbox.style.left=x+'px';cbox.style.top=y+'px';cbox.style.width=w+'px';cbox.style.height=h+'px';
+  const W=cimg.clientWidth,H=cimg.clientHeight;
+  const set=(el,l,t,wd,ht)=>{el.style.display='block';el.style.left=l+'px';el.style.top=t+'px';el.style.width=Math.max(0,wd)+'px';el.style.height=Math.max(0,ht)+'px'};
+  set(dims[0],0,0,W,y);set(dims[1],0,y+h,W,H-y-h);set(dims[2],0,y,x,h);set(dims[3],x+w,y,W-x-w,h);
   cropSize.textContent='Crop size: '+Math.round(crop.w)+' × '+Math.round(crop.h)+' px';
   cropBtn.disabled=false;
 }
