@@ -75,15 +75,28 @@ const previewBtn=document.querySelector('#previewBtn'),trimBtn=document.querySel
 const trimProgress=document.querySelector('#trimProgress'),barFill=document.querySelector('#barFill'),progText=document.querySelector('#progText'),trimError=document.querySelector('#trimError');
 const resultCard=document.querySelector('#resultCard'),resultVideo=document.querySelector('#resultVideo'),dlLink=document.querySelector('#dlLink');
 let duration=0,objectUrl=null,resultUrl=null,ffmpeg=null,trimKey=0,ffLogs=[];
-function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('script-load:'+src));document.head.appendChild(s)})}
+const FFMPEG_CDNS=[
+ {js:'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/umd/ffmpeg.js',core:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js'},
+ {js:'https://unpkg.com/@ffmpeg/ffmpeg@0.12.15/dist/umd/ffmpeg.js',core:'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js'}
+];
+function loadScript(src,timeoutMs){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;const to=setTimeout(()=>{s.remove();rej(new Error('script-timeout:'+src))},timeoutMs||60000);s.onload=()=>{clearTimeout(to);res()};s.onerror=()=>{clearTimeout(to);rej(new Error('script-load:'+src))};document.head.appendChild(s)})}
 async function fetchFile(file){return new Uint8Array(await file.arrayBuffer())}
 async function getFFmpeg(onStage){
   if(ffmpeg)return ffmpeg;
-  if(!window.FFmpegWASM){onStage&&onStage('engine');await loadScript('https://unpkg.com/@ffmpeg/ffmpeg@0.12.15/dist/umd/ffmpeg.js')}
-  const{FFmpeg}=window.FFmpegWASM;ffmpeg=new FFmpeg();
-  ffmpeg.on('log',({message})=>{ffLogs.push(String(message));if(ffLogs.length>40)ffLogs.shift()});
-  onStage&&onStage('core');await ffmpeg.load({coreURL:'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js'});
-  return ffmpeg;
+  let lastErr=null;
+  for(const cdn of FFMPEG_CDNS){
+    try{
+      onStage&&onStage('engine');
+      if(!window.FFmpegWASM)await loadScript(cdn.js);
+      if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');
+      const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();
+      ff.on('log',({message})=>{ffLogs.push(String(message));if(ffLogs.length>40)ffLogs.shift()});
+      onStage&&onStage('core');
+      await ff.load({coreURL:cdn.core});
+      ffmpeg=ff;return ffmpeg;
+    }catch(e){lastErr=e;console.warn('ffmpeg CDN failed, trying next:',cdn.js,(e&&e.message)||e)}
+  }
+  throw lastErr||new Error('engine-load-failed');
 }
 
 function fmt(s){s=Math.max(0,s);const m=Math.floor(s/60),sec=(s%60);return m+':'+(sec<10?'0':'')+sec.toFixed(1)}
