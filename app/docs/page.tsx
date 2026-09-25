@@ -48,7 +48,7 @@ export default function Docs() {
             <li><strong>Notes:</strong> voice notes that stay in your browser, with playback and download.</li>
             <li><strong>Cutline:</strong> every subscription you forgot about, in one place, with renewal nudges.</li>
             <li><strong>Purrsuit:</strong> a tiny CRM for following up with people.</li>
-            <li><strong>Corporate Bum Bum:</strong> track job applications without the spreadsheet dread.</li>
+            <li><strong>Corporate Bum:</strong> track job applications without the spreadsheet dread.</li>
             <li><strong>Doodle:</strong> sketch something, export it, done.</li>
           </ul>
 
