@@ -50,13 +50,16 @@ export default function ToolsView() {
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="What are you trying to get done?" />
             <span>⌕</span>
           </label>
-          <div className="filters" aria-label="Tool categories">
-            {categories.map((item) => (
-              <button key={item} className={category === item ? "active" : ""} onClick={() => setCategory(item)}>
-                {item}
-              </button>
-            ))}
-          </div>
+          <label className="cat-filter">
+            <span className="sr-only">Filter tools by category</span>
+            <select value={category} onChange={(event) => setCategory(event.target.value)} aria-label="Filter tools by category">
+              {categories.map((item) => (
+                <option key={item} value={item}>
+                  {item === "All" ? "All types" : item}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         <div className="tool-grid">
