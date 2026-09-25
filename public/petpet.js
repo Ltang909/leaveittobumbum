@@ -59,6 +59,8 @@
   }
 
   // Anchor candidates: roomy elements sitting at/below the fold — never the hero.
+  // Prefer the smallest qualifying elements (cards beat section wrappers),
+  // so her measured top edge matches the visual top edge.
   function findAnchor() {
     var fold = window.innerHeight * 0.75;
     var cands = Array.prototype.filter.call(
@@ -71,10 +73,15 @@
       }
     );
     if (!cands.length) return null;
+    cands.sort(function (a, b) {
+      var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+      return (ra.width * ra.height) - (rb.width * rb.height);
+    });
+    var small = cands.slice(0, Math.max(1, Math.ceil(cands.length * 0.6)));
     // She has a soft spot for looming over forms.
-    var forms = cands.filter(function (el) { return el.tagName === 'FORM'; });
+    var forms = small.filter(function (el) { return el.tagName === 'FORM'; });
     if (forms.length && Math.random() < 0.6) return pick(forms);
-    return pick(cands);
+    return pick(small);
   }
 
   // Pick a horizontal perch with no text under her face: sample candidate
