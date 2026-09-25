@@ -109,6 +109,16 @@
       "url": "/tools/image-converter/",
       "cta": "Convert images",
       "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "image-cropper",
+      "name": "Image Cropper",
+      "tag": "Files",
+      "icon": "✂️",
+      "description": "Drag a box around the good part. Bum Bum crops your image right in your browser, with aspect presets for profile pics and posts.",
+      "url": "/tools/image-cropper/",
+      "cta": "Crop an image",
+      "mascot": "/bum/cat-box-v2.png"
     }
   ]
 }

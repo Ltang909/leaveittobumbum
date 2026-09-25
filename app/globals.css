@@ -61,9 +61,8 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .finder label { flex:1; position:relative; }
 .finder input { width:100%; border:var(--line); background:white; min-height:58px; border-radius:8px; padding:0 50px 0 18px; font-size:1rem; box-shadow:4px 4px 0 var(--ink); }
 .finder label>span:last-child { position:absolute; right:19px; top:12px; font-size:1.5rem; }
-.filters { display:flex; gap:7px; flex-wrap:wrap; }
-.filters button { border:1.5px solid var(--ink); border-radius:100px; background:transparent; padding:9px 14px; font-size:.84rem; font-weight:900; cursor:pointer; }
-.filters button.active { background:var(--ink); color:white; }
+.cat-filter select { border:var(--line); background:#fff; min-height:58px; border-radius:8px; padding:0 40px 0 16px; font-size:.95rem; font-weight:900; font-family:inherit; box-shadow:4px 4px 0 var(--ink); cursor:pointer; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2317150f' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; }
+.cat-filter select:focus { outline:2px solid var(--ink); outline-offset:2px; }
 .tool-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:17px; }
 .tool-card { min-height:350px; padding:23px; border:var(--line); border-radius:10px; display:flex; flex-direction:column; box-shadow:5px 5px 0 var(--ink); }
 .card-1 { background:var(--yellow); }.card-2 { background:#f7a9ca; }.card-3 { background:var(--mint); }.card-4 { background:#8eb5ff; }.card-5 { background:#ffc59b; }.card-6 { background:#d6c9f5; }.card-7 { background:#b2e8dc; }.card-8 { background:#ffb3b3; }
