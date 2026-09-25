@@ -137,13 +137,13 @@ trimBtn.addEventListener('click',async()=>{
     await ff.writeFile('input',await fetchFile(f));
     step='trimming';
     const dur=(b-a).toFixed(2);
-    const code=await ff.exec(['-i','input','-ss',a.toFixed(2),'-t',dur,'-c:v','libx264','-preset','veryfast','-crf','23','-c:a','aac','-movflags','faststart','output.mp4']);
+    const code=await ff.exec(['-ss',a.toFixed(2),'-i','input','-t',dur,'-c:v','libx264','-preset','veryfast','-crf','23','-c:a','aac','-movflags','faststart','output.mp4']);
     if(code!==0)throw new Error('encode-exit-'+code);
     step='saving';
     const out=await ff.readFile('output.mp4');
     try{await ff.deleteFile('input');await ff.deleteFile('output.mp4')}catch(e){}
     step='metering';progText.textContent='Almost done...';barFill.style.width='94%';
-    const key='trim-'+Date.now().toString(36)+'-'+(++trimKey);
+    const key='trim-'+Date.now().toString(36)+'-'+(++trimKey)+'-'+Math.random().toString(36).slice(2,10);
     const{response,data}=await apiCall({action:'trim',idempotencyKey:key});
     if(response.status===402)throw new Error('actions');
     if(!response.ok)throw new Error(data.error||'metering failed');
