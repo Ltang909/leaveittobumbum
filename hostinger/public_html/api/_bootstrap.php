@@ -197,10 +197,11 @@ function ensureCustomRequestTables(): void {
 
 // One-time (and ongoing, for rows whose mirror insert failed) linking of
 // Operator custom_requests to their mirrored community-queue rows. Matches
-// on title + a tight timestamp window; the mirror is inserted in the same
-// HTTP request as the custom request, so created_at ≈ requested_at. Also
-// applies any already-terminal queue status the admin set before the link
-// existed (no emails here — only fresh admin actions notify).
+// on title, preferring the closest timestamp within a generous window —
+// mirrors are usually inserted in the same request, but manual or backfilled
+// mirrors can be days apart. Also applies any already-terminal queue status
+// the admin set before the link existed (no emails here — only fresh admin
+// actions notify).
 function backfillCustomRequestQueueLinks(): void {
     try {
         $unlinked = db()->query('SELECT id, title, requested_at FROM custom_requests WHERE queue_id IS NULL')->fetchAll();
@@ -215,7 +216,7 @@ function backfillCustomRequestQueueLinks(): void {
         $link = db()->prepare('UPDATE custom_requests SET queue_id = ? WHERE id = ?');
         foreach ($unlinked as $cr) {
             $best = null;
-            $bestDiff = 7200;
+            $bestDiff = 7 * 24 * 3600;
             foreach ($mirrors as $m) {
                 if (isset($used[(int) $m['id']])) continue;
                 if (trim((string) $m['problem']) !== trim((string) $cr['title'])) continue;
