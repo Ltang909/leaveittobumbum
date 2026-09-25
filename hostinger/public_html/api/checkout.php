@@ -6,6 +6,13 @@ requireCsrf($input);
 $user = requireUser();
 $plan = (string) ($input['plan'] ?? '');
 if (!in_array($plan, ['helper', 'operator'], true)) jsonResponse(['error' => 'Choose a valid plan.'], 422);
+// Never stack a second subscription: paid users switch plans from the account page.
+$own = db()->prepare('SELECT plan, subscription_status, stripe_subscription_id FROM users WHERE id = ?');
+$own->execute([(int) $user['id']]);
+$ownRow = $own->fetch() ?: [];
+if (!empty($ownRow['stripe_subscription_id']) && in_array((string) ($ownRow['subscription_status'] ?? ''), ['active', 'trialing', 'past_due'], true)) {
+    jsonResponse(['error' => (string) ($ownRow['plan'] ?? '') === $plan ? 'You are already on ' . ucfirst($plan) . '.' : 'You already have an active subscription. Switch plans from your account page instead of checking out again.'], 422);
+}
 $stripe = config()['stripe'];
 $price = $plan === 'helper' ? $stripe['helper_price'] : $stripe['operator_price'];
 $params = [
