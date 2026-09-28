@@ -32,6 +32,22 @@ function audiogram_idempotency(array $input): string {
 
 function audiogram_words(array $data): array {
     $words = [];
+    // Groq whisper-large-v3-turbo returns word timestamps in a top-level "words" array.
+    $top = $data['words'] ?? null;
+    if (is_array($top)) {
+        foreach ($top as $w) {
+            if (!is_array($w)) continue;
+            $text = trim((string) ($w['word'] ?? $w['text'] ?? ''));
+            if ($text === '') continue;
+            $words[] = [
+                'w' => $text,
+                'start' => round((float) ($w['start'] ?? 0), 2),
+                'end' => round((float) ($w['end'] ?? 0), 2),
+            ];
+            if (count($words) >= 4000) break;
+        }
+    }
+    if ($words) return $words;
     $segments = $data['segments'] ?? null;
     if (is_array($segments)) {
         foreach ($segments as $seg) {
@@ -133,12 +149,8 @@ if ($action === 'transcribe') {
     }
     $words = audiogram_words($data);
     if (!$words) {
-        // TEMP DEBUG: surface the response shape until the empty-transcription cause is found.
-        $dbg = 'segments=' . (is_array($segments) ? count($segments) : 'none')
-            . ' keys=' . implode(',', array_keys($data))
-            . ' text_len=' . strlen((string) ($data['text'] ?? ''));
-        error_log('audiogram: empty words. ' . $dbg);
-        jsonResponse(['error' => 'The audiogram could not hear any words in that MP3. [' . $dbg . ']'], 422);
+        error_log('audiogram: empty words for upload, text_len=' . strlen((string) ($data['text'] ?? '')));
+        jsonResponse(['error' => 'The audiogram could not hear any words in that MP3.'], 422);
     }
     $_SESSION['ag_count'] = (int) ($_SESSION['ag_count'] ?? 0) + 1;
     jsonResponse([
