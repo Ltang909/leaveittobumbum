@@ -123,7 +123,8 @@ function ghostwriter_call_groq(string $transcript, string $tone): array {
         jsonResponse(['error' => 'The ghostwriter is swamped right now. Try again in a minute.'], 429);
     }
     if ($code < 200 || $code >= 300) {
-        jsonResponse(['error' => 'The ghostwriter tripped over its own paws. Try again.'], 502);
+        // TEMP DEBUG: surface the upstream code until the staging failure is diagnosed.
+        jsonResponse(['error' => 'The ghostwriter tripped over its own paws (Groq HTTP ' . $code . '). Try again.'], 502);
     }
     $data = json_decode((string) $raw, true);
     $content = $data['choices'][0]['message']['content'] ?? '';
