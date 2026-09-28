@@ -120,8 +120,8 @@ genBtn.disabled=true;setStatus('Ghostwriting your content. This takes a few seco
 try{
 const{response,data}=await apiCall({action:'generate',transcript:text,idempotencyKey:key,tone:toneSel.value});
 if(!response.ok){
-if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');usageEl.textContent='This pack was not counted. Your words are safe above.';}
-else{setStatus('Ghostwriter hiccup ('+(data.error||'hmm')+'). Your words are safe above, try again.',true);}
+if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');usageEl.textContent='This pack was not counted. Your words are safe below.';}
+else{setStatus('Ghostwriter hiccup ('+(data.error||'hmm')+'). Your words are safe below, try again.',true);}
 return;}
 bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining,chars:text.length});
 currentEntryId=data.entry&&data.entry.id;
@@ -129,7 +129,7 @@ renderPack(data.pack);
 setStatus('Done. Steal the hooks, tweak the script, post it.');
 usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
 loadPacks();
-}catch(e){setStatus('Ghostwriter hiccup. Your words are safe above, try again.',true);}
+}catch(e){setStatus('Ghostwriter hiccup. Your words are safe below, try again.',true);}
 finally{setGen(true);}
 });
 async function loadPacks(){const listEl=document.querySelector('#gwList');if(!listEl)return;const{response,data}=await apiCall({action:'list'});if(!response.ok){listEl.innerHTML='<p class="error">Could not load your packs.</p>';return}const entries=data.entries||[];if(!entries.length){listEl.innerHTML='<p class="lede" style="margin:0">No packs yet. Your finished content packs will land here.</p>';return}listEl.innerHTML=entries.map(e=>'<div class="req" data-id="'+e.id+'"><div style="display:flex;justify-content:space-between;gap:12px;align-items:start;flex-wrap:wrap"><div><div style="font-weight:900">'+esc(e.title)+'</div><div style="color:var(--muted);font-size:14px">'+esc(e.created_at)+'</div><div style="margin-top:6px">'+esc(e.preview)+(e.preview.length>=140?'...':'')+'</div></div><div style="white-space:nowrap"><button type="button" class="secondary" data-open style="margin-top:0">Open</button> <button type="button" class="secondary" data-del style="margin-top:0">Delete</button></div></div></div>').join('')}
