@@ -51,6 +51,7 @@ export default function Docs() {
             <li><strong>Corporate Bum:</strong> track job applications without the spreadsheet dread.</li>
             <li><strong>Doodle:</strong> sketch something, export it, done.</li>
             <li><strong>Ghostwriter:</strong> ramble for a minute, get hooks, a script, and a caption ready to post.</li>
+            <li><strong>Audiogram:</strong> upload an MP3 and a background image, get a captioned video ready for the feed.</li>
           </ul>
 
           <h2>Teams</h2>

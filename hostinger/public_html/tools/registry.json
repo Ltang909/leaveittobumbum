@@ -129,6 +129,16 @@
       "url": "/tools/ghostwriter/",
       "cta": "Get ghostwritten",
       "mascot": "/bum/cat-excited-v2.png"
+    },
+    {
+      "key": "audiogram",
+      "name": "Audiogram",
+      "tag": "Content",
+      "icon": "🎙️",
+      "description": "Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4.",
+      "url": "/tools/audiogram/",
+      "cta": "Make an audiogram",
+      "mascot": "/bum/cat-laptop.png"
     }
   ]
 }
