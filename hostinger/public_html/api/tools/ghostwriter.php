@@ -9,7 +9,8 @@
 //
 // Auth: signed-in session + CSRF (same as the other tool endpoints).
 // Server config: 'groq_api_key' in leaveittobumbum-config.php
-// (free key from https://console.groq.com/keys).
+// (free key from https://console.groq.com/keys). Optional 'ghostwriter_model'
+// overrides the Groq chat model (default openai/gpt-oss-120b).
 // Metering: one action covers one finished pack. The usage pre-check means
 // a failed generation never costs the user an action; the idempotency key
 // means a retried generation never costs two.
@@ -69,8 +70,12 @@ function ghostwriter_call_groq(string $transcript): array {
         . '5) Never invent facts, offers, prices, results, or credentials the user did not mention. If the ramble is vague, write around the feeling, not fake specifics. '
         . '6) Keep the tone warm and confident, never cringe, never corporate. '
         . 'Output STRICT JSON only, no other text: {"hooks": ["...", "...", "..."], "script": "...", "caption": "...", "hashtags": ["#...", "..."]}.';
+    // Model is overridable from the server config ('ghostwriter_model') so the
+    // next Groq retirement is a config tweak, not a code deploy.
+    $model = trim((string) (config()['ghostwriter_model'] ?? ''));
+    if ($model === '') $model = 'openai/gpt-oss-120b';
     $payload = [
-        'model' => 'llama-3.3-70b-versatile',
+        'model' => $model,
         'messages' => [
             ['role' => 'system', 'content' => $system],
             ['role' => 'user', 'content' => $transcript],
