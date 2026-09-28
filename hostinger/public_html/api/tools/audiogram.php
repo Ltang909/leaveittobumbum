@@ -149,6 +149,7 @@ if ($action === 'transcribe') {
     }
     $words = audiogram_words($data);
     if (!$words) {
+        error_log('audiogram: empty words for upload, text_len=' . strlen((string) ($data['text'] ?? '')));
         jsonResponse(['error' => 'The audiogram could not hear any words in that MP3.'], 422);
     }
     $_SESSION['ag_count'] = (int) ($_SESSION['ag_count'] ?? 0) + 1;
