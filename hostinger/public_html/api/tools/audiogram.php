@@ -133,7 +133,12 @@ if ($action === 'transcribe') {
     }
     $words = audiogram_words($data);
     if (!$words) {
-        jsonResponse(['error' => 'The audiogram could not hear any words in that MP3.'], 422);
+        // TEMP DEBUG: surface the response shape until the empty-transcription cause is found.
+        $dbg = 'segments=' . (is_array($segments) ? count($segments) : 'none')
+            . ' keys=' . implode(',', array_keys($data))
+            . ' text_len=' . strlen((string) ($data['text'] ?? ''));
+        error_log('audiogram: empty words. ' . $dbg);
+        jsonResponse(['error' => 'The audiogram could not hear any words in that MP3. [' . $dbg . ']'], 422);
     }
     $_SESSION['ag_count'] = (int) ($_SESSION['ag_count'] ?? 0) + 1;
     jsonResponse([
