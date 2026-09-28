@@ -13,6 +13,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
 #gwPack .hook{border:2px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 0 12px;background:#fff}
 #gwPack .hook .rank{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+#gwPack .hook .theme{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:#333;color:#fff;border-radius:999px;padding:3px 10px;margin-left:8px;vertical-align:2px}
 #gwPack .hook p{margin:6px 0 10px;font-size:18px;font-weight:800;line-height:1.35}
 #gwPack .script-card{border:2px solid var(--line);border-radius:10px;padding:16px;background:#fff;margin:0 0 12px}
 #gwPack .script-card p{margin:6px 0 10px;line-height:1.65;white-space:pre-wrap}
@@ -20,7 +21,7 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 #gwPack .tags{color:var(--muted);font-size:14px}
 .mini{padding:8px 14px;font-size:14px}
 .hidden{display:none!important}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Ghostwriter"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-excited-v2.png" alt="Bum Bum feeling inspired"><h1>You ramble. It writes.</h1><p class="lede">Hit record and talk for a minute about your day, your work, whatever is on your mind. Bum Bum turns it into three hooks, a 60-second script, and a caption ready to post. Your audio is only raw material, it is never kept. One finished pack uses one action.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Ghostwriter"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-excited-v2.png" alt="Bum Bum feeling inspired"><h1>You ramble. It writes.</h1><p class="lede">Hit record and talk for a minute about your day, your work, whatever is on your mind. Bum Bum turns it into three hooks (each testing a different angle), a 60-second script, and a caption ready to post. Your audio is only raw material, it is never kept. One finished pack uses one action.</p>
 <?php if (!$user): ?><section class="panel"><h2>Sign in to use Ghostwriter</h2><a class="button" href="/account/?next=<?= urlencode('/tools/ghostwriter/') ?>">Sign in or create an account</a></section><?php else: ?>
 <?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php $out = empty($usage['unlimited']) && ($usage['remaining'] ?? 0) <= 0; ?>
@@ -34,6 +35,7 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 <canvas id="gwMeter" width="640" height="56" aria-hidden="true"></canvas>
 <p id="gwStatus" class="notes-status">Ready when you are. Sixty seconds of rambling is plenty.</p>
 <label>Transcription language<select id="gwLang"><option value="en-US" selected>English (US)</option><option value="en-GB">English (UK)</option><option value="es-ES">Español</option><option value="fr-FR">Français</option><option value="de-DE">Deutsch</option><option value="it-IT">Italiano</option><option value="pt-BR">Português (BR)</option><option value="zh-CN">中文 (简体)</option><option value="zh-TW">中文 (繁體)</option><option value="yue-Hant-HK">粵語 (香港)</option><option value="ja-JP">日本語</option><option value="ko-KR">한국어</option></select></label>
+<label>Tone of voice<select id="gwTone"><option value="professional" selected>Professional</option><option value="friendly">Friendly</option><option value="playful">Playful</option><option value="bold">Bold</option></select></label>
 <button id="gwPasteToggle" class="linklike" type="button">or paste text instead</button>
 </div>
 <div id="gwPasteUI" class="hidden">
@@ -67,6 +69,7 @@ const timerEl=document.querySelector('#gwTimer');
 const statusEl=document.querySelector('#gwStatus');
 const srHint=document.querySelector('#gwSrHint');
 const langSel=document.querySelector('#gwLang');
+const toneSel=document.querySelector('#gwTone');
 const meterCanvas=document.querySelector('#gwMeter');
 const textEl=document.querySelector('#gwText');
 const usageEl=document.querySelector('#gwUsage');
@@ -101,7 +104,8 @@ textEl.addEventListener('input',()=>{if(pasteMode){pasteText.value=textEl.value;
 againBtn.addEventListener('click',()=>{if(recording)stopRecording();pasteMode=false;pasteUI.classList.add('hidden');recordUI.classList.remove('hidden');pasteText.value='';textEl.value='';textEl.readOnly=true;finalTranscript='';currentEntryId=null;genKey=crypto.randomUUID();setGen(false);packSec.classList.add('hidden');usageEl.textContent='';timerEl.textContent='00:00';setStatus('Ready when you are. Sixty seconds of rambling is plenty.');recBtn.focus();});
 function copyText(t,btn){const done=()=>{const old=btn.textContent;btn.textContent='Copied!';setTimeout(()=>{btn.textContent=old;},1500);};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>{done();bbTrack('pack_copied',{tool:TOOL_KEY});}).catch(()=>{fallbackCopy(t)?done():null;});}else{if(fallbackCopy(t))done();}}
 function fallbackCopy(t){textEl.value=t;textEl.select();try{return document.execCommand('copy');}catch(_){return false;}}
-function renderPack(pack){const hooks=(pack.hooks||[]).map((h,i)=>`<div class="hook"><span class="rank">Hook ${i+1}${i===0?' · strongest':''}</span><p>${esc(h)}</p><button type="button" class="button secondary mini" data-copy="${esc(h)}">Copy hook</button></div>`).join('');
+function hookParts(h){if(typeof h==='string')return{hook:h,theme:''};return{hook:String(h.hook||''),theme:String(h.theme||'')}}
+function renderPack(pack){const hooks=(pack.hooks||[]).map((h,i)=>{const{hook,theme}=hookParts(h);return `<div class="hook"><span class="rank">Hook ${i+1}${i===0?' · strongest':''}</span>${theme?`<span class="theme">${esc(theme)}</span>`:''}<p>${esc(hook)}</p><button type="button" class="button secondary mini" data-copy="${esc(hook)}">Copy hook</button></div>`}).join('');
 const tags=((pack.hashtags||[]).join(' '));
 packBody.innerHTML=`${hooks}
 <div class="script-card"><span class="rank" style="font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Your 60-second script</span><p>${esc(pack.script||'')}</p><button type="button" class="button secondary mini" data-copy="${esc(pack.script||'')}">Copy script</button></div>
@@ -114,7 +118,7 @@ if(text.length<20){setStatus('Give me a little more to work with, at least a sen
 const key=genKey;genKey=crypto.randomUUID();
 genBtn.disabled=true;setStatus('Ghostwriting your content. This takes a few seconds...');
 try{
-const{response,data}=await apiCall({action:'generate',transcript:text,idempotencyKey:key});
+const{response,data}=await apiCall({action:'generate',transcript:text,idempotencyKey:key,tone:toneSel.value});
 if(!response.ok){
 if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');usageEl.textContent='This pack was not counted. Your words are safe above.';}
 else{setStatus('Ghostwriter hiccup ('+(data.error||'hmm')+'). Your words are safe above, try again.',true);}
