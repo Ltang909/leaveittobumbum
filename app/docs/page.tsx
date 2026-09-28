@@ -50,6 +50,7 @@ export default function Docs() {
             <li><strong>Purrsuit:</strong> a tiny CRM for following up with people.</li>
             <li><strong>Corporate Bum:</strong> track job applications without the spreadsheet dread.</li>
             <li><strong>Doodle:</strong> sketch something, export it, done.</li>
+            <li><strong>Ghostwriter:</strong> ramble for a minute, get hooks, a script, and a caption ready to post.</li>
           </ul>
 
           <h2>Teams</h2>

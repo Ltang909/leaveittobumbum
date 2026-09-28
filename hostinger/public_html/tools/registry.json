@@ -119,6 +119,16 @@
       "url": "/tools/image-cropper/",
       "cta": "Crop an image",
       "mascot": "/bum/cat-box-v2.png"
+    },
+    {
+      "key": "ghostwriter",
+      "name": "Ghostwriter",
+      "tag": "Content",
+      "icon": "✍️",
+      "description": "Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.",
+      "url": "/tools/ghostwriter/",
+      "cta": "Get ghostwritten",
+      "mascot": "/bum/cat-excited-v2.png"
     }
   ]
 }
