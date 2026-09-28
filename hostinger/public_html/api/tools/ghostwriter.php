@@ -50,26 +50,45 @@ function ghostwriter_public_row(array $row, bool $full): array {
         $out['pack'] = $pack;
     } else {
         $hooks = $pack['hooks'] ?? [];
-        $out['preview'] = is_array($hooks) && isset($hooks[0]) ? (string) $hooks[0] : mb_substr((string) $row['transcript'], 0, 140);
+        // Hooks used to be plain strings; now they are {hook, theme} objects. Handle both.
+        $first = is_array($hooks) ? ($hooks[0] ?? null) : null;
+        $previewHook = is_array($first) ? (string) ($first['hook'] ?? '') : (string) $first;
+        $out['preview'] = $previewHook !== '' ? $previewHook : mb_substr((string) $row['transcript'], 0, 140);
     }
     return $out;
 }
 
-function ghostwriter_call_groq(string $transcript): array {
+function ghostwriter_clean(string $s): string {
+    // Guardrail: no em dashes, ever. " — " becomes ", ", strays become commas, en dashes become hyphens.
+    $s = str_replace(' — ', ', ', $s);
+    $s = str_replace('—', ',', $s);
+    $s = str_replace('–', '-', $s);
+    return $s;
+}
+
+function ghostwriter_call_groq(string $transcript, string $tone): array {
     $key = (string) (config()['groq_api_key'] ?? '');
     if ($key === '' || $key === 'replace_me') {
         jsonResponse(['error' => 'The ghostwriter is not set up on the server yet.'], 503);
     }
+    $tones = [
+        'professional' => 'polished and professional, like a trusted advisor. No slang, no hype',
+        'friendly' => 'warm and friendly, like a helpful peer',
+        'playful' => 'playful and cheeky, full of personality, but never cringe',
+        'bold' => 'bold and direct with strong opinions, built to stop the scroll',
+    ];
+    $toneDesc = $tones[$tone] ?? $tones['professional'];
     $system = 'You are Bum Bum\'s ghostwriter, writing for Gen Z solopreneurs and small creators: lash techs, nail artists, barbers, photographers, fitness coaches, freelancers, and online sellers. '
         . 'The user rambled into their phone about their day or their work. Turn the ramble into a ready-to-post content pack. '
         . 'Rules: '
-        . '1) hooks: exactly 3 opening lines for a short video, ranked strongest first. Punchy, specific, under 12 words each. No emojis in hooks. '
+        . '1) hooks: exactly 3 opening lines for a short video, ranked strongest first. Punchy, specific, under 12 words each. No emojis in hooks. Each hook must test a DIFFERENT angle, and you must label each hook with the theme it is testing, a short label like "curiosity gap", "contrarian take", "specific number", or "relatable pain". '
         . '2) script: a conversational 60-second talking-head script, 130 to 160 words, in the creator\'s own voice, based ONLY on what they actually said. '
         . '3) caption: 1 to 3 sentences plus one soft call to action. A couple of emojis are fine here. '
         . '4) hashtags: 5 to 8 niche-relevant hashtags, no generic spam like #love or #instagood. '
         . '5) Never invent facts, offers, prices, results, or credentials the user did not mention. If the ramble is vague, write around the feeling, not fake specifics. '
-        . '6) Keep the tone warm and confident, never cringe, never corporate. '
-        . 'Output STRICT JSON only, no other text: {"hooks": ["...", "...", "..."], "script": "...", "caption": "...", "hashtags": ["#...", "..."]}.';
+        . '6) Tone of voice: ' . $toneDesc . '. '
+        . '7) NEVER use em dashes or en dashes anywhere in the output. Use commas, colons, or parentheses instead. '
+        . 'Output STRICT JSON only, no other text: {"hooks": [{"hook": "...", "theme": "..."}, {"hook": "...", "theme": "..."}, {"hook": "...", "theme": "..."}], "script": "...", "caption": "...", "hashtags": ["#...", "..."]}';
     // Model is overridable from the server config ('ghostwriter_model') so the
     // next Groq retirement is a config tweak, not a code deploy.
     $model = trim((string) (config()['ghostwriter_model'] ?? ''));
@@ -104,8 +123,7 @@ function ghostwriter_call_groq(string $transcript): array {
         jsonResponse(['error' => 'The ghostwriter is swamped right now. Try again in a minute.'], 429);
     }
     if ($code < 200 || $code >= 300) {
-        // TEMP DEBUG: surface the upstream code until the staging failure is diagnosed.
-        jsonResponse(['error' => 'The ghostwriter tripped over its own paws (Groq HTTP ' . $code . '). Try again.'], 502);
+        jsonResponse(['error' => 'The ghostwriter tripped over its own paws. Try again.'], 502);
     }
     $data = json_decode((string) $raw, true);
     $content = $data['choices'][0]['message']['content'] ?? '';
@@ -119,11 +137,23 @@ function ghostwriter_call_groq(string $transcript): array {
         && is_string($pack['script'] ?? null) && trim((string) $pack['script']) !== ''
         && is_string($pack['caption'] ?? null) && trim((string) $pack['caption']) !== ''
         && is_array($hashtags) && count($hashtags) >= 3;
+    if ($valid) {
+        foreach ($hooks as $h) {
+            if (!is_array($h) || trim((string) ($h['hook'] ?? '')) === '' || trim((string) ($h['theme'] ?? '')) === '') { $valid = false; break; }
+        }
+    }
     if (!$valid) {
         jsonResponse(['error' => 'The ghostwriter mumbled. Try again.'], 502);
     }
-    $pack['hooks'] = array_values(array_map('strval', array_slice($hooks, 0, 3)));
-    $pack['hashtags'] = array_values(array_map('strval', array_slice($hashtags, 0, 10)));
+    $pack['hooks'] = array_values(array_map(function ($h) {
+        return [
+            'hook' => ghostwriter_clean((string) ($h['hook'] ?? '')),
+            'theme' => ghostwriter_clean(mb_substr((string) ($h['theme'] ?? ''), 0, 48)),
+        ];
+    }, array_slice($hooks, 0, 3)));
+    $pack['script'] = ghostwriter_clean((string) $pack['script']);
+    $pack['caption'] = ghostwriter_clean((string) $pack['caption']);
+    $pack['hashtags'] = array_values(array_map('ghostwriter_clean', array_slice($hashtags, 0, 10)));
     return $pack;
 }
 
@@ -169,12 +199,14 @@ if ($action === 'generate') {
     if (mb_strlen($transcript) < 20) jsonResponse(['error' => 'Give me a little more to work with, at least a sentence or two.'], 422);
     if (mb_strlen($transcript) > 6000) jsonResponse(['error' => 'That ramble is a bit long. Keep it under a few minutes.'], 422);
     $idempotency = ghostwriter_idempotency($input);
+    $tone = strtolower(trim((string) ($input['tone'] ?? 'professional')));
+    if (!in_array($tone, ['professional', 'friendly', 'playful', 'bold'], true)) $tone = 'professional';
     // Pre-check so a failed generation never costs an action.
     $pre = usageFor($bill);
     if (empty($pre['unlimited']) && ($pre['remaining'] ?? 0) <= 0) {
         jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $pre], 402);
     }
-    $pack = ghostwriter_call_groq($transcript);
+    $pack = ghostwriter_call_groq($transcript, $tone);
     $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'ghostwriter', $idempotency);
     if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
     $entry = null;
