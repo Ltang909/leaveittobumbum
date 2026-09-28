@@ -32,6 +32,22 @@ function audiogram_idempotency(array $input): string {
 
 function audiogram_words(array $data): array {
     $words = [];
+    // Groq whisper-large-v3-turbo returns word timestamps in a top-level "words" array.
+    $top = $data['words'] ?? null;
+    if (is_array($top)) {
+        foreach ($top as $w) {
+            if (!is_array($w)) continue;
+            $text = trim((string) ($w['word'] ?? $w['text'] ?? ''));
+            if ($text === '') continue;
+            $words[] = [
+                'w' => $text,
+                'start' => round((float) ($w['start'] ?? 0), 2),
+                'end' => round((float) ($w['end'] ?? 0), 2),
+            ];
+            if (count($words) >= 4000) break;
+        }
+    }
+    if ($words) return $words;
     $segments = $data['segments'] ?? null;
     if (is_array($segments)) {
         foreach ($segments as $seg) {
