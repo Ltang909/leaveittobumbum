@@ -30,7 +30,7 @@ $shMeter = !empty($showMeter);
       if(url.indexOf('/api/tools/')===0){
         res.clone().json().then(function(data){
           if(data&&data.usage)document.dispatchEvent(new CustomEvent('bb:usage',{detail:data.usage}));
-          if(data&&data.signup_required)document.dispatchEvent(new CustomEvent('bb:signup-required',{detail:data}));
+          if(res.status===402&&data&&data.signup_required)document.dispatchEvent(new CustomEvent('bb:signup-required',{detail:data}));
         }).catch(function(){});
       }
       return res;
