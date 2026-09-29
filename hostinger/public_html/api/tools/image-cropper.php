@@ -7,21 +7,21 @@ require dirname(__DIR__) . '/_bootstrap.php';
 requirePost();
 $input = body();
 requireCsrf($input);
-$user = requireUser();
-$bill = billingUser($user);
+$subject = requireSubject();
+$isGuest = $subject['kind'] === 'guest';
 $action = (string) ($input['action'] ?? '');
 if ($action === 'status') {
-    jsonResponse(['ok' => true, 'usage' => usageFor($bill)]);
+    jsonResponse(['ok' => true, 'usage' => subjectUsage($subject)]);
 }
 if ($action === 'crop') {
     $key = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($input['idempotencyKey'] ?? ''));
     if (strlen($key) < 16 || strlen($key) > 128) {
         jsonResponse(['error' => 'Invalid request identifier.'], 422);
     }
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'image-cropper', 'image-crop-' . $key);
+    $count = consumeSubjectAction($subject, 'image-cropper', 'image-crop-' . $key);
     if (!empty($count['limit_reached'])) {
-        jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+        limitReachedResponse($subject, $count);
     }
-    jsonResponse(['ok' => true, 'usage' => usageFor($bill), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
+    jsonResponse(['ok' => true, 'usage' => subjectUsage($subject), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
 }
 jsonResponse(['error' => 'Unknown action.'], 400);

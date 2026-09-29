@@ -1,4 +1,4 @@
-<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor(billingUser($user)) : null; ?>
+<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -14,10 +14,13 @@
 <p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-sunglasses.png" alt="Bum Bum looking cool">
 <h1>Show them instead of telling them</h1>
 <p class="lede">Bum Bum Clips records your screen right in your browser. Pick a tab, a window, or your whole screen, add your mic and a little camera bubble if you want to be in it, then trim and tweak the speed before you download. Nothing uploads anywhere, your video never leaves your computer. One finished recording uses one action.</p>
-<?php if (!$user): ?>
+<?php if (!$user && !$isGuest): ?>
 <section class="panel"><h2>Sign in to use Bum Bum Clips</h2><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Sign in or create an account</a></section>
+<?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/clips/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Create a free account</a></p></div>
 <?php else: ?>
-<?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
+<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/clips/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
+<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php if ($usage && empty($usage['unlimited']) && $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>
@@ -369,7 +372,7 @@ if(!screenOK){
       }
       attempt=crypto.randomUUID();
       bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-      usageLine.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
+      usageLine.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
     }catch(err){usageLine.textContent='We could not count this one, but your clip is still yours. Download away.'}
   }
   const probeVideo=document.createElement('video');

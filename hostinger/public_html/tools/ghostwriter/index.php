@@ -1,4 +1,4 @@
-<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor(billingUser($user)) : null; ?>
+<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Ghostwriter | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .notes-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
@@ -22,8 +22,11 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 .mini{padding:8px 14px;font-size:14px}
 .hidden{display:none!important}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Ghostwriter"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-excited-v2.png" alt="Bum Bum feeling inspired"><h1>You ramble. It writes.</h1><p class="lede">Hit record and talk for a minute about your day, your work, whatever is on your mind. Bum Bum turns it into three hooks (each testing a different angle), a 60-second script, and a caption ready to post. Your audio is only raw material, it is never kept. One finished pack uses one action.</p>
-<?php if (!$user): ?><section class="panel"><h2>Sign in to use Ghostwriter</h2><a class="button" href="/account/?next=<?= urlencode('/tools/ghostwriter/') ?>">Sign in or create an account</a></section><?php else: ?>
-<?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Ghostwriter</h2><a class="button" href="/account/?next=<?= urlencode('/tools/ghostwriter/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/ghostwriter/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/ghostwriter/') ?>">Create a free account</a></p></div>
+<?php else: ?>
+<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/ghostwriter/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
+<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php $out = empty($usage['unlimited']) && ($usage['remaining'] ?? 0) <= 0; ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php if ($out): ?>
@@ -127,7 +130,7 @@ bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.
 currentEntryId=data.entry&&data.entry.id;
 renderPack(data.pack);
 setStatus('Done. Steal the hooks, tweak the script, post it.');
-usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
+usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
 loadPacks();
 }catch(e){setStatus('Ghostwriter hiccup. Your words are safe below, try again.',true);}
 finally{setGen(true);}

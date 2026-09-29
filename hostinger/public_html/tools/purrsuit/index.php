@@ -1,4 +1,4 @@
-<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor(billingUser($user)) : null; ?>
+<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Purrsuit | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
@@ -67,8 +67,11 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .modal-close{font-weight:700}
 .quiet{box-shadow:0 2px 10px rgba(90,72,38,.08)}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purrsuit"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-wink-blep.png" alt="Bum Bum winking"><h1>Never let a lead go cold.</h1><p class="lede">Purrsuit is a tiny CRM for people who hate CRMs. Add the humans, move them down the pipeline, and every morning Purrsuit tells you exactly who to follow up with and what to say. Adding a contact uses one action. Everything else is free.</p>
-<?php if (!$user): ?><section class="panel"><h2>Sign in to use Purrsuit</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section><?php else: ?>
-<?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Purrsuit</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a></p></div>
+<?php else: ?>
+<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
+<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
 <div class="stat-row"><div class="stat-card"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card"><b id="statWon">$0</b><span>won</span></div><div class="stat-card"><b id="statCount">0</b><span>contacts</span></div></div>
@@ -238,7 +241,7 @@ addForm.addEventListener('submit',async e=>{
   }
   attempt=crypto.randomUUID();
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
+  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
   addForm.reset();await refresh();
 });
 document.querySelector('#csvDownload').addEventListener('click',async e=>{
@@ -272,7 +275,7 @@ csvForm.addEventListener('submit',async e=>{
   if(response.status===402){
     bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
     errEl.textContent=data.error||'Out of actions.';
-    document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
+    document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
     document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
     document.querySelectorAll('#upgrade-slot [data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:'limit',tool:TOOL_KEY})));
     await refresh();return;
@@ -280,7 +283,7 @@ csvForm.addEventListener('submit',async e=>{
   if(!response.ok){errEl.textContent=data.error||'Import failed.';return}
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
   bbTrack('purrsuit_imported',{tool:TOOL_KEY,imported:data.imported});
-  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
+  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
   let msg=`Added ${data.imported} new, updated ${data.updated}.`;
   if(data.skipped)msg+=` Skipped ${data.skipped}.`;
   if(data.errors&&data.errors.length)msg+='\n'+data.errors.join('\n');

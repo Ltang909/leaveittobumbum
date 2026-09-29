@@ -35,13 +35,14 @@ requirePost();
 $input = body();
 $action = (string) ($input['action'] ?? 'finalize');
 requireCsrf($input);
-$user = requireUser();
-$bill = billingUser($user);
-$userId = (int) $user['id'];
+$subject = requireSubject();
+$isGuest = $subject['kind'] === 'guest';
+$userId = $isGuest ? 0 : (int) $subject['user']['id'];
 ensureNotesSchema();
 $pdo = db();
 
 if ($action === 'list') {
+    if ($isGuest) jsonResponse(['entries' => []]);
     $stmt = $pdo->prepare('SELECT id, title, transcript, created_at FROM notes_entries WHERE user_id = ? ORDER BY id DESC LIMIT 200');
     $stmt->execute([$userId]);
     $entries = [];
@@ -85,11 +86,11 @@ if ($action === 'finalize') {
     $transcript = (string) ($input['transcript'] ?? '');
     if (mb_strlen($transcript) > 100000) jsonResponse(['error' => 'That note is too long to save.'], 422);
     $idempotency = notes_idempotency($input);
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'notes', $idempotency);
-    if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+    $count = consumeSubjectAction($subject, 'notes', $idempotency);
+    if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
     $entry = null;
     $text = trim($transcript);
-    if (empty($count['duplicate']) && $text !== '') {
+    if (empty($count['duplicate']) && $text !== '' && !$isGuest) {
         $title = mb_substr(preg_replace('/\s+/', ' ', $text), 0, 60);
         $stmt = $pdo->prepare('INSERT INTO notes_entries (user_id, title, transcript) VALUES (?, ?, ?)');
         $stmt->execute([$userId, $title, $transcript]);
@@ -98,7 +99,7 @@ if ($action === 'finalize') {
     jsonResponse([
         'entry' => $entry,
         'saved' => $entry !== null,
-        'usage' => usageFor($bill),
+        'usage' => subjectUsage($subject),
         'duplicate' => (bool) ($count['duplicate'] ?? false),
     ]);
 }

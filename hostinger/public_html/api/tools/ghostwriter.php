@@ -165,13 +165,14 @@ requirePost();
 $input = body();
 $action = (string) ($input['action'] ?? 'generate');
 requireCsrf($input);
-$user = requireUser();
-$bill = billingUser($user);
-$userId = (int) $user['id'];
+$subject = requireSubject();
+$isGuest = $subject['kind'] === 'guest';
+$userId = $isGuest ? 0 : (int) $subject['user']['id'];
 ensureGhostwriterSchema();
 $pdo = db();
 
 if ($action === 'list') {
+    if ($isGuest) jsonResponse(['entries' => []]);
     $stmt = $pdo->prepare('SELECT id, title, transcript, pack, created_at FROM ghostwriter_entries WHERE user_id = ? ORDER BY id DESC LIMIT 200');
     $stmt->execute([$userId]);
     $entries = [];
@@ -206,15 +207,15 @@ if ($action === 'generate') {
     $tone = strtolower(trim((string) ($input['tone'] ?? 'professional')));
     if (!in_array($tone, ['professional', 'friendly', 'playful', 'bold'], true)) $tone = 'professional';
     // Pre-check so a failed generation never costs an action.
-    $pre = usageFor($bill);
+    $pre = subjectUsage($subject);
     if (empty($pre['unlimited']) && ($pre['remaining'] ?? 0) <= 0) {
-        jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $pre], 402);
+        limitReachedResponse($subject, $pre);
     }
     $pack = ghostwriter_call_groq($transcript, $tone);
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'ghostwriter', $idempotency);
-    if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+    $count = consumeSubjectAction($subject, 'ghostwriter', $idempotency);
+    if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
     $entry = null;
-    if (empty($count['duplicate'])) {
+    if (empty($count['duplicate']) && !$isGuest) {
         $title = mb_substr(preg_replace('/\s+/', ' ', $transcript), 0, 60);
         $stmt = $pdo->prepare('INSERT INTO ghostwriter_entries (user_id, title, transcript, pack) VALUES (?, ?, ?, ?)');
         $stmt->execute([$userId, $title, $transcript, json_encode($pack, JSON_UNESCAPED_UNICODE)]);
@@ -224,7 +225,7 @@ if ($action === 'generate') {
         'ok' => true,
         'entry' => $entry,
         'pack' => $pack,
-        'usage' => usageFor($bill),
+        'usage' => subjectUsage($subject),
         'duplicate' => (bool) ($count['duplicate'] ?? false),
     ]);
 }

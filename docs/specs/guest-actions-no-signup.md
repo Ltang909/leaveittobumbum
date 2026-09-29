@@ -87,11 +87,12 @@ ALTER TABLE action_ledger
 unaffected. Tables are created lazily on first guest use, following the
 existing `ensureToolRequestTables()` pattern.)
 
-Guest period key: calendar month (`gmdate('Y-m')`) — guests have no billing
-period. Guest limit is a named constant next to `PLAN_LIMITS`:
+Guest period key: the fixed string `lifetime` — guests get 15 lifetime
+actions, never a monthly reset. Guest limit is a named constant next to
+`PLAN_LIMITS`:
 
 ```php
-const GUEST_ACTION_LIMIT = 5; // TBD — starting proposal, not locked
+const GUEST_ACTION_LIMIT = 15;
 ```
 
 ### 3. The subject abstraction
@@ -127,8 +128,11 @@ When a guest creates an account or logs in while holding an unconverted
 4. PostHog: `alias` the guest distinct ID to the new user ID so the funnel
    stays continuous (see Analytics).
 
-Net effect: everything they made as a guest now belongs to their account.
-Nothing is lost in the upgrade — this is what makes the paywall feel fair.
+Net effect: the guest's used action count merges into the new account's
+current period. Note: guest-created records in stateful tools (notes,
+cutline, purrsuit, etc.) are ephemeral and NOT persisted for guests, so
+conversion copy must not promise that creations carry over — only that the
+free actions continue on the new account.
 
 ### 5. The threshold moment (UX contract)
 
@@ -136,15 +140,18 @@ When `signup_required: true` comes back, the frontend shows an upgrade offer,
 not a dead end:
 
 - Headline with *their* numbers: "You've made N things with Bum Bum."
-- What they keep: every creation so far moves into their account on signup.
+- What they keep: their remaining free actions continue on the new account
+  (guest usage merges into the account's current period). Do NOT promise that
+  guest creations carry over: stateful guest output is ephemeral.
 - One-field start: email only → magic link (no password). Full signup is a
   second step, not the price of admission.
 - Secondary lever in the same screen: "Use Bum Bum on your phone too — sign
   up to sync."
 
 The header pill (`includes/meter.php`) also changes: signed-out visitors see
-"N of 5 free actions — no signup needed" from the very first action, per the
-goal's "visible meter from the first action."
+"N of 15 free actions" from the very first page view (tool pages mint the
+guest on view via `pageSubject()`), per the goal's "visible meter from the
+first action."
 
 ### 6. Abuse & privacy guardrails
 
@@ -182,10 +189,9 @@ goal's "visible meter from the first action."
 
 ## Open questions (decisions needed before build)
 
-1. **Threshold number.** Proposal: 5 lifetime guest actions. Alternatives: 3
-   (tighter), or 3/day resetting daily (self-healing, encourages return
-   visits). The `guest_converted` event with `guest_actions_used` will tell us
-   where the real drop-off cliff is — pick 5 to start, tune with data.
+1. **Threshold number.** DECIDED: 15 lifetime guest actions (2026-09-29).
+   The `guest_converted` event with `guest_actions_used` will tell us where
+   the real drop-off cliff is — tune with data.
 2. **Consume timing for guests** on tools with a free expensive step
    (audiogram transcription): consume-at-start vs consume-on-complete.
    Recommendation: consume-at-start for guests only.

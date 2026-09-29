@@ -4,6 +4,14 @@ declare(strict_types=1);
 const PLAN_LIMITS = ['free' => 75, 'helper' => 1500, 'operator' => 6000];
 const PLAN_SEATS = ['free' => 0, 'helper' => 3, 'operator' => 10];
 
+// Guest actions: visitors can use the tools with no account. Every visitor
+// gets a server-minted guest identity (signed cookie + DB row) and a small
+// lifetime allowance. At the limit they are asked to sign up, and everything
+// they made merges into their new account.
+const GUEST_ACTION_LIMIT = 15;
+const GUEST_COOKIE_NAME = 'bb_guest';
+const GUEST_MINTS_PER_IP_PER_DAY = 20;
+
 function isStagingHost(): bool {
     $host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
     return str_starts_with($host, 'staging.');
@@ -355,6 +363,311 @@ function consumeAction(int $userId, string $plan, string $period, string $tool, 
     }
 }
 
+// ---------------------------------------------------------------------------
+// Guest actions: use the tools with no account.
+//
+// A guest is a server-minted identity: a UUID stored in the `guests` table,
+// carried in a long-lived HMAC-signed cookie. Guests are metered in their own
+// tables (`guest_usage`, `guest_ledger`) so the user metering tables are never
+// touched. At the limit the API answers 402 with `signup_required: true`; on
+// signup/login everything merges into the new account.
+//
+// Deliberately NOT used: browser fingerprinting (creepy, unreliable) and IP
+// as identity (shared networks). Clearing cookies resets the allowance; that
+// is accepted — the goal is conversion, not DRM.
+// ---------------------------------------------------------------------------
+
+function guestSecret(): ?string {
+    try {
+        $s = trim((string) (config()['guest_secret'] ?? ''));
+        return $s !== '' ? $s : null;
+    } catch (Throwable $e) {
+        return null;
+    }
+}
+
+function guestActionsEnabled(): bool {
+    return guestSecret() !== null;
+}
+
+// Lazy table creation, same pattern as ensureToolRequestTables(): the first
+// guest request creates them, so no manual migration is needed on deploy.
+function ensureGuestTables(): void {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    $pdo = db();
+    $pdo->exec("CREATE TABLE IF NOT EXISTS guests (
+        id CHAR(36) NOT NULL PRIMARY KEY,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        last_seen_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        ip_hash CHAR(64) NOT NULL DEFAULT '',
+        ua_hash CHAR(64) NOT NULL DEFAULT '',
+        converted_user_id BIGINT UNSIGNED NULL DEFAULT NULL,
+        KEY idx_guests_ip_created (ip_hash, created_at),
+        KEY idx_guests_seen (converted_user_id, last_seen_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS guest_usage (
+        guest_id CHAR(36) NOT NULL,
+        period_key VARCHAR(16) NOT NULL,
+        used_actions INT UNSIGNED NOT NULL DEFAULT 0,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (guest_id, period_key)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS guest_ledger (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        guest_id CHAR(36) NOT NULL,
+        period_key VARCHAR(16) NOT NULL,
+        tool_key VARCHAR(64) NOT NULL,
+        idempotency_key VARCHAR(128) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE KEY uq_guest_idem (guest_id, idempotency_key),
+        KEY idx_guest_period (guest_id, period_key)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+function newGuestId(): string {
+    $b = random_bytes(16);
+    $b[6] = chr((ord($b[6]) & 0x0f) | 0x40);
+    $b[8] = chr((ord($b[8]) & 0x3f) | 0x80);
+    $h = bin2hex($b);
+    return substr($h, 0, 8) . '-' . substr($h, 8, 4) . '-' . substr($h, 12, 4) . '-' . substr($h, 16, 4) . '-' . substr($h, 20, 12);
+}
+
+function signGuestId(string $id, string $secret): string {
+    return $id . '.' . hash_hmac('sha256', $id, $secret);
+}
+
+// Validate the signed cookie. Returns the guest id or null. Never mints:
+// safe to call on plain page views.
+function guestIdFromCookie(): ?string {
+    $secret = guestSecret();
+    if ($secret === null) return null;
+    $raw = (string) ($_COOKIE[GUEST_COOKIE_NAME] ?? '');
+    if (!preg_match('/^([0-9a-f-]{36})\.([0-9a-f]{64})$/', $raw, $m)) return null;
+    if (!hash_equals(hash_hmac('sha256', $m[1], $secret), $m[2])) return null;
+    return $m[1];
+}
+
+// Mint a fresh guest: DB row + signed cookie. The velocity guard rejects
+// more than GUEST_MINTS_PER_IP_PER_DAY new guests per IP per day.
+function mintGuest(): string {
+    ensureGuestTables();
+    $secret = guestSecret();
+    if ($secret === null) jsonResponse(['error' => 'Sign in to continue.'], 401);
+    $pdo = db();
+    $ipHash = hash('sha256', 'bb-guest-ip:' . (string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+    $recent = $pdo->prepare("SELECT COUNT(*) FROM guests WHERE ip_hash = ? AND created_at > DATE_SUB(UTC_TIMESTAMP(), INTERVAL 24 HOUR)");
+    $recent->execute([$ipHash]);
+    if ((int) $recent->fetchColumn() >= GUEST_MINTS_PER_IP_PER_DAY) {
+        jsonResponse(['error' => 'Too many visits from this network right now. Try again tomorrow.'], 429);
+    }
+    $id = newGuestId();
+    $uaHash = hash('sha256', 'bb-guest-ua:' . (string) ($_SERVER['HTTP_USER_AGENT'] ?? ''));
+    $pdo->prepare('INSERT INTO guests (id, ip_hash, ua_hash) VALUES (?, ?, ?)')->execute([$id, $ipHash, $uaHash]);
+    $signed = signGuestId($id, $secret);
+    if (!headers_sent()) {
+        setcookie(GUEST_COOKIE_NAME, $signed, ['expires' => time() + 365 * 24 * 3600, 'httponly' => true, 'secure' => true, 'samesite' => 'Lax', 'path' => '/']);
+    }
+    $_COOKIE[GUEST_COOKIE_NAME] = $signed;
+    posthogCapture('guest_created', $id, []);
+    return $id;
+}
+
+// Who is making this request? Tool pages use pageSubject() (mints a guest on
+// first view so the meter can read "15 of 15 actions left" before first use);
+// API endpoints use requireSubject() (mints on first use). Shapes:
+//   ['kind' => 'user', 'user' => $userRow, 'bill' => $billingRow]
+//   ['kind' => 'guest', 'guest_id' => $uuid]
+//   ['kind' => 'none']
+function pageSubject(): array {
+    $subject = currentSubject();
+    if ($subject['kind'] !== 'none') return $subject;
+    if (!guestActionsEnabled()) return $subject;
+    // Mint, but never break the page: if the velocity guard trips or the DB
+    // hiccups, the visitor simply sees the tool with no guest meter yet.
+    try {
+        ensureGuestTables();
+        $pdo = db();
+        $ipHash = hash('sha256', 'bb-guest-ip:' . (string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+        $recent = $pdo->prepare("SELECT COUNT(*) FROM guests WHERE ip_hash = ? AND created_at > DATE_SUB(UTC_TIMESTAMP(), INTERVAL 24 HOUR)");
+        $recent->execute([$ipHash]);
+        if ((int) $recent->fetchColumn() >= GUEST_MINTS_PER_IP_PER_DAY) return $subject;
+        return ['kind' => 'guest', 'guest_id' => mintGuest()];
+    } catch (Throwable $error) {
+        return $subject;
+    }
+}
+function currentSubject(): array {
+    $user = currentUser();
+    if ($user) return ['kind' => 'user', 'user' => $user, 'bill' => billingUser($user)];
+    $gid = guestIdFromCookie();
+    if ($gid !== null) {
+        try {
+            db()->prepare('UPDATE guests SET last_seen_at = CURRENT_TIMESTAMP WHERE id = ?')->execute([$gid]);
+        } catch (Throwable $e) {}
+        return ['kind' => 'guest', 'guest_id' => $gid];
+    }
+    return ['kind' => 'none'];
+}
+
+// For API endpoints: like requireUser(), but signed-out visitors get a guest
+// instead of a 401. Set $mint=false for endpoints that must not create guests.
+function requireSubject(bool $mint = true): array {
+    $subject = currentSubject();
+    if ($subject['kind'] !== 'none') return $subject;
+    if (!$mint || !guestActionsEnabled()) jsonResponse(['error' => 'Sign in to continue.'], 401);
+    return ['kind' => 'guest', 'guest_id' => mintGuest(), 'fresh' => true];
+}
+
+// Guests get a fixed lifetime allowance, not a monthly reset. One row per
+// guest, period_key = 'lifetime'.
+function guestPeriodKey(): string {
+    return 'lifetime';
+}
+
+function guestUsage(string $guestId): array {
+    ensureGuestTables();
+    $period = guestPeriodKey();
+    $stmt = db()->prepare('SELECT used_actions FROM guest_usage WHERE guest_id = ? AND period_key = ?');
+    $stmt->execute([$guestId, $period]);
+    $used = (int) ($stmt->fetchColumn() ?: 0);
+    return [
+        'period' => $period,
+        'used' => $used,
+        'limit' => GUEST_ACTION_LIMIT,
+        'remaining' => max(0, GUEST_ACTION_LIMIT - $used),
+        'unlimited' => false,
+        'is_guest' => true,
+    ];
+}
+
+// Usage for either subject kind. Drop-in replacement for usageFor($bill).
+function subjectUsage(array $subject): array {
+    if ($subject['kind'] === 'guest') return guestUsage($subject['guest_id']);
+    return usageFor($subject['bill']) + ['is_guest' => false];
+}
+
+// Consume one action for either subject kind. Drop-in replacement for
+// consumeAction((int)$bill['id'], (string)$bill['plan'], periodKey($bill), $tool, $idem).
+function consumeSubjectAction(array $subject, string $tool, string $idempotency): array {
+    if ($subject['kind'] === 'guest') return consumeGuestAction($subject['guest_id'], $tool, $idempotency);
+    $bill = $subject['bill'];
+    return consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), $tool, $idempotency);
+}
+
+function consumeGuestAction(string $guestId, string $tool, string $idempotency): array {
+    ensureGuestTables();
+    $pdo = db();
+    $period = guestPeriodKey();
+    $pdo->beginTransaction();
+    try {
+        $existing = $pdo->prepare('SELECT id FROM guest_ledger WHERE guest_id = ? AND idempotency_key = ?');
+        $existing->execute([$guestId, $idempotency]);
+        if ($existing->fetch()) {
+            $pdo->commit();
+            return ['counted' => false, 'duplicate' => true, 'is_guest' => true];
+        }
+        $pdo->prepare('INSERT IGNORE INTO guest_usage (guest_id, period_key, used_actions) VALUES (?, ?, 0)')->execute([$guestId, $period]);
+        $lock = $pdo->prepare('SELECT used_actions FROM guest_usage WHERE guest_id = ? AND period_key = ? FOR UPDATE');
+        $lock->execute([$guestId, $period]);
+        $used = (int) $lock->fetchColumn();
+        if ($used >= GUEST_ACTION_LIMIT) {
+            $pdo->rollBack();
+            return ['counted' => false, 'limit_reached' => true, 'used' => $used, 'limit' => GUEST_ACTION_LIMIT, 'remaining' => 0, 'is_guest' => true];
+        }
+        $pdo->prepare('INSERT INTO guest_ledger (guest_id, period_key, tool_key, idempotency_key) VALUES (?, ?, ?, ?)')->execute([$guestId, $period, $tool, $idempotency]);
+        $pdo->prepare('UPDATE guest_usage SET used_actions = used_actions + 1 WHERE guest_id = ? AND period_key = ?')->execute([$guestId, $period]);
+        $pdo->commit();
+        posthogCapture('guest_action', $guestId, ['tool' => $tool, 'used' => $used + 1, 'limit' => GUEST_ACTION_LIMIT]);
+        return ['counted' => true, 'used' => $used + 1, 'limit' => GUEST_ACTION_LIMIT, 'remaining' => GUEST_ACTION_LIMIT - $used - 1, 'is_guest' => true];
+    } catch (Throwable $error) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        throw $error;
+    }
+}
+
+// The limit response. Guests get signup_required: true and signup copy;
+// users keep the existing upgrade copy.
+function limitReachedResponse(array $subject, array $usage): never {
+    if ($subject['kind'] === 'guest') {
+        posthogCapture('guest_limit_reached', $subject['guest_id'], ['used' => $usage['used'] ?? GUEST_ACTION_LIMIT, 'limit' => GUEST_ACTION_LIMIT]);
+        jsonResponse([
+            'error' => 'You have used all ' . GUEST_ACTION_LIMIT . ' free actions. Create a free account to keep going.',
+            'usage' => $usage,
+            'signup_required' => true,
+        ], 402);
+    }
+    jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $usage], 402);
+}
+
+// Merge a guest into a user on signup/login: the guest's lifetime used
+// actions move into the user's current period row, ledger rows move with
+// INSERT IGNORE (a colliding idempotency key keeps the user's row), guest
+// rows are retired. $bill is the billing user row (from billingUser()).
+function mergeGuestIntoUser(string $guestId, array $bill): void {
+    ensureGuestTables();
+    $userId = (int) ($bill['id'] ?? 0);
+    if (!preg_match('/^[0-9a-f-]{36}$/', $guestId) || $userId <= 0) return;
+    $period = periodKey($bill);
+    $pdo = db();
+    $pdo->beginTransaction();
+    try {
+        $sumStmt = $pdo->prepare('SELECT COALESCE(SUM(used_actions), 0) FROM guest_usage WHERE guest_id = ?');
+        $sumStmt->execute([$guestId]);
+        $moved = (int) $sumStmt->fetchColumn();
+        if ($moved > 0) {
+            $planLimit = PLAN_LIMITS[$bill['plan'] ?? 'free'] ?? PLAN_LIMITS['free'];
+            $pdo->prepare('INSERT INTO usage_periods (user_id, period_key, used_actions, included_actions) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE used_actions = used_actions + VALUES(used_actions)')->execute([$userId, $period, $moved, $planLimit]);
+        }
+        $pdo->prepare('INSERT IGNORE INTO action_ledger (user_id, period_key, tool_key, idempotency_key) SELECT ?, ?, tool_key, idempotency_key FROM guest_ledger WHERE guest_id = ?')->execute([$userId, $period, $guestId]);
+        $pdo->prepare('DELETE FROM guest_ledger WHERE guest_id = ?')->execute([$guestId]);
+        $pdo->prepare('DELETE FROM guest_usage WHERE guest_id = ?')->execute([$guestId]);
+        $pdo->prepare('UPDATE guests SET converted_user_id = ? WHERE id = ?')->execute([$userId, $guestId]);
+        $pdo->commit();
+    } catch (Throwable $error) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        throw $error;
+    }
+    posthogCapture('guest_converted', $guestId, ['user_id' => $userId, 'guest_actions_used' => $moved]);
+    posthogAlias($guestId, 'user-' . $userId);
+}
+
+// Expire the guest cookie (after conversion, so the old allowance cannot be
+// reused alongside the new account).
+function expireGuestCookie(): void {
+    unset($_COOKIE[GUEST_COOKIE_NAME]);
+    if (!headers_sent()) {
+        setcookie(GUEST_COOKIE_NAME, '', ['expires' => time() - 3600, 'httponly' => true, 'secure' => true, 'samesite' => 'Lax', 'path' => '/']);
+    }
+}
+
+// Called from signup/login after the user session is established: merge the
+// pending guest (captured from the cookie before auth) into the new account
+// and retire the guest cookie. Safe to call with null.
+function mergePendingGuest(?string $guestId): void {
+    if ($guestId === null) return;
+    $user = currentUser();
+    if (!$user) return;
+    mergeGuestIntoUser($guestId, billingUser($user));
+    expireGuestCookie();
+}
+
+// Delete unconverted guests idle for 90+ days, with their usage rows.
+// Called from the daily cron. Returns the number purged.
+function purgeOldGuests(): int {
+    ensureGuestTables();
+    $pdo = db();
+    $ids = $pdo->query("SELECT id FROM guests WHERE converted_user_id IS NULL AND last_seen_at < DATE_SUB(UTC_TIMESTAMP(), INTERVAL 90 DAY) LIMIT 1000")->fetchAll(PDO::FETCH_COLUMN);
+    if (!$ids) return 0;
+    $in = implode(',', array_fill(0, count($ids), '?'));
+    $pdo->prepare("DELETE FROM guest_ledger WHERE guest_id IN ($in)")->execute($ids);
+    $pdo->prepare("DELETE FROM guest_usage WHERE guest_id IN ($in)")->execute($ids);
+    $pdo->prepare("DELETE FROM guests WHERE id IN ($in)")->execute($ids);
+    return count($ids);
+}
+
 function posthogCapture(string $event, string $distinctId, array $properties = []): void {
     $ph = config()['posthog'] ?? [];
     $apiKey = (string) ($ph['api_key'] ?? '');
@@ -367,6 +680,27 @@ function posthogCapture(string $event, string $distinctId, array $properties = [
     $ok = curl_exec($curl);
     if ($ok === false) error_log('PostHog capture failed: ' . curl_error($curl));
     curl_close($curl);
+}
+
+// Link a guest's pre-signup events to their new user id so the funnel stays
+// one journey. Best-effort: failures are logged, never fatal.
+function posthogAlias(string $guestId, string $userDistinctId): void {
+    try {
+        $ph = config()['posthog'] ?? [];
+        $apiKey = (string) ($ph['api_key'] ?? '');
+        if ($apiKey === '' || $apiKey === 'phx_replace_me') return;
+        $host = rtrim((string) ($ph['host'] ?? 'https://us.i.posthog.com'), '/');
+        $payload = json_encode([
+            'api_key' => $apiKey,
+            'event' => '$create_alias',
+            'distinct_id' => $userDistinctId,
+            'properties' => ['alias' => $guestId, 'env' => isStagingHost() ? 'staging' : 'production'],
+        ]);
+        $curl = curl_init($host . '/capture/');
+        curl_setopt_array($curl, [CURLOPT_RETURNTRANSFER => true, CURLOPT_POST => true, CURLOPT_POSTFIELDS => $payload, CURLOPT_HTTPHEADER => ['Content-Type: application/json'], CURLOPT_TIMEOUT => 3]);
+        if (curl_exec($curl) === false) error_log('PostHog alias failed: ' . curl_error($curl));
+        curl_close($curl);
+    } catch (Throwable $e) {}
 }
 
 function stripeRequest(string $method, string $path, array $params = []): array {

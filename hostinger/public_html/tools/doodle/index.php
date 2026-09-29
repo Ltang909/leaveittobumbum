@@ -1,4 +1,4 @@
-<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor(billingUser($user)) : null; ?>
+<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Doodle | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .doodle-layout{display:grid;gap:16px;margin-top:20px}
@@ -34,7 +34,8 @@ input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
 <div class="tool-group"><span class="lbl">Paper</span><div class="seg" role="group" aria-label="Background"><button type="button" data-bg="transparent" class="on">Clear</button><button type="button" data-bg="#ffffff">White</button><button type="button" data-bg="#fdf6e3">Cream</button></div></div>
 <div class="tool-group"><span class="lbl">Shape</span><div class="seg" role="group" aria-label="Canvas shape"><button type="button" data-aspect="wide" class="on">Classic</button><button type="button" data-aspect="sig">Signature</button><button type="button" data-aspect="square">Square</button></div></div>
 </div>
-<div class="export-row"><?php if (!$user): ?><a class="button" href="/account/?next=<?= urlencode('/tools/doodle/') ?>">Sign in to save your doodle</a><span class="hint" style="margin:0">Saving or copying uses one action.</span><?php else: ?><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button><button type="button" class="button secondary" id="copyBtn">Copy</button><span class="hint" style="margin:0">1 action per save.</span><?php endif; ?></div>
+<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/doodle/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
+<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button><button type="button" class="button secondary" id="copyBtn">Copy</button><span class="hint" style="margin:0">1 action per save.</span></div>
 <div class="canvas-wrap"><canvas id="pad"></canvas></div>
 <p class="hint">Tip: pick Signature shape and Clear paper for a transparent signature you can drop onto any document.</p>
 </div>
@@ -101,6 +102,7 @@ async function spendDoodleAction(){
     const res=await fetch('/api/tools/doodle.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:s.csrf,idempotencyKey:key})});
     const data=await res.json().catch(()=>({}));
     if(res.status===402){
+      if(data&&data.signup_required)return false;
       document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">Saving a doodle uses one action. Helper gives you 1,500 actions for $12/month.</p><p><a class="button" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" href="/account/">See your usage</a></p></div>';
       return false;
     }
