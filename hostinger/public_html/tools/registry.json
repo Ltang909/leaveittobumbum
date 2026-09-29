@@ -149,6 +149,16 @@
       "url": "/tools/vibe-check/",
       "cta": "Check my vibe",
       "mascot": "/bum/cat-sunglasses.png"
+    },
+    {
+      "key": "purr-code",
+      "name": "Purr Code",
+      "tag": "Design",
+      "icon": "🐾",
+      "description": "Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.",
+      "url": "/tools/purr-code/",
+      "cta": "Make it cute",
+      "mascot": "/bum/cat-paws-up.png"
     }
   ]
 }
