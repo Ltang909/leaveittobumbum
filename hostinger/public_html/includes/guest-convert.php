@@ -5,7 +5,7 @@
 $gcGuest = !empty($isGuest) && !empty($guestId);
 $gcNext = urlencode((string) ($_SERVER['REQUEST_URI'] ?? '/tools/'));
 ?>
-<div id="bbGuestModal" hidden style="position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(30,35,33,.55)">
+<div id="bbGuestModal" style="position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(30,35,33,.55)">
   <div class="upgrade-card" style="max-width:440px;margin:0;text-align:center">
     <img src="/bum/favicon-cat.png" alt="Bum Bum the cat" style="width:64px;height:64px">
     <h2>You are out of free actions</h2>
@@ -27,7 +27,7 @@ $gcNext = urlencode((string) ($_SERVER['REQUEST_URI'] ?? '/tools/'));
     var limit = usage && typeof usage.limit !== 'undefined' ? usage.limit : 15;
     var text = document.getElementById('bbGuestModalText');
     if (text) text.textContent = 'You used all ' + used + ' free actions. Create a free account to keep going.';
-    modal.hidden = false;
+    modal.style.display = 'flex';
     try { bbTrack('guest_signup_prompt_shown', {used: used}); } catch (e) {}
     // Tool pages inject their own (signed-in) upgrade card into #upgrade-slot
     // on a 402; it runs after this handler, so swap it for the guest card a
@@ -41,7 +41,7 @@ $gcNext = urlencode((string) ($_SERVER['REQUEST_URI'] ?? '/tools/'));
       document.querySelectorAll('#upgrade-slot').forEach(function(slot){ slot.innerHTML = html; });
     }, 60);
   }
-  function hide() { modal.hidden = true; }
+  function hide() { modal.style.display = 'none'; }
   document.getElementById('bbGuestModalLater').addEventListener('click', hide);
   modal.addEventListener('click', function(e){ if (e.target === modal) hide(); });
   document.getElementById('bbGuestModalCta').addEventListener('click', function(){
