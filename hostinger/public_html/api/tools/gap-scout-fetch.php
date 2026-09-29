@@ -8,7 +8,9 @@ require dirname(__DIR__) . '/_bootstrap.php';
 requirePost();
 $input = body();
 requireCsrf($input);
-requireUser();
+// Free endpoint (no metering): mint a guest for signed-out visitors so the
+// tool works with no account.
+requireSubject();
 
 $url = trim((string) ($input['url'] ?? ''));
 if ($url === '') jsonResponse(['ok' => false, 'error' => 'Paste a job posting link first.'], 422);

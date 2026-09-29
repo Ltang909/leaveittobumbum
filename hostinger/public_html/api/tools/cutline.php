@@ -150,14 +150,15 @@ if (basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === 'cutline.php') {
     requirePost();
     $input = body();
     requireCsrf($input);
-    $user = requireUser();
-$bill = billingUser($user);
-    $userId = (int) $user['id'];
+    $subject = requireSubject();
+    $isGuest = $subject['kind'] === 'guest';
+    $userId = $isGuest ? 0 : (int) $subject['user']['id'];
     ensureCutlineSchema();
     $pdo = db();
     $action = (string) ($input['action'] ?? '');
 
     if ($action === 'list') {
+        if ($isGuest) jsonResponse(['subscriptions' => [], 'prefs' => ['notify_days_before' => 3], 'monthly_total_cents' => 0, 'count' => 0]);
         $pdo->prepare('INSERT IGNORE INTO cutline_prefs (user_id) VALUES (?)')->execute([$userId]);
         $stmt = $pdo->prepare("SELECT * FROM cutline_subscriptions WHERE user_id = ? AND status = 'active' ORDER BY next_renewal_on ASC");
         $stmt->execute([$userId]);
@@ -186,9 +187,27 @@ $bill = billingUser($user);
         }
         [$errors, $clean] = cutline_validate($input);
         if ($errors) jsonResponse(['error' => $errors[0]], 422);
-        $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'cutline', $idempotency);
+        $count = consumeSubjectAction($subject, 'cutline', $idempotency);
         if (!empty($count['limit_reached'])) {
-            jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+            limitReachedResponse($subject, $count);
+        }
+        if ($isGuest) {
+            // Guests feel the magic (the parsed subscription) but nothing is
+            // stored. Signing up is what keeps it.
+            jsonResponse([
+                'subscription' => cutline_public_row([
+                    'id' => 0, 'custom_name' => $clean['custom_name'], 'category' => $clean['category'],
+                    'tier_name' => $clean['tier_name'], 'price_cents' => $clean['price_cents'],
+                    'currency' => $clean['currency'], 'cadence' => $clean['cadence'],
+                    'started_on' => $clean['started_on'], 'next_renewal_on' => $clean['next_renewal_on'],
+                    'status' => 'active', 'is_free_trial' => $clean['is_free_trial'],
+                    'trial_ends_on' => $clean['trial_ends_on'],
+                ]),
+                'saved' => false,
+                'signup_required' => true,
+                'usage' => subjectUsage($subject),
+                'duplicate' => (bool) ($count['duplicate'] ?? false),
+            ]);
         }
         if (empty($count['duplicate'])) {
             $stmt = $pdo->prepare('INSERT INTO cutline_subscriptions
@@ -212,12 +231,13 @@ $bill = billingUser($user);
         }
         jsonResponse([
             'subscription' => $row ? cutline_public_row($row) : null,
-            'usage' => usageFor($bill),
+            'usage' => subjectUsage($subject),
             'duplicate' => (bool) ($count['duplicate'] ?? false),
         ]);
     }
 
     if ($action === 'update') {
+        if ($isGuest) jsonResponse(['error' => 'Subscription not found.'], 404);
         $id = (int) ($input['id'] ?? 0);
         if ($id <= 0) jsonResponse(['error' => 'Missing subscription id.'], 422);
         [$errors, $clean] = cutline_validate($input);
@@ -241,6 +261,7 @@ $bill = billingUser($user);
     }
 
     if ($action === 'delete') {
+        if ($isGuest) jsonResponse(['error' => 'Subscription not found.'], 404);
         $id = (int) ($input['id'] ?? 0);
         if ($id <= 0) jsonResponse(['error' => 'Missing subscription id.'], 422);
         $stmt = $pdo->prepare('DELETE FROM cutline_subscriptions WHERE id = ? AND user_id = ?');
@@ -250,6 +271,7 @@ $bill = billingUser($user);
     }
 
     if ($action === 'prefs') {
+        if ($isGuest) jsonResponse(['prefs' => ['notify_days_before' => 3]]);
         if (array_key_exists('notify_days_before', $input)) {
             $days = filter_var($input['notify_days_before'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 30]]);
             if ($days === false) jsonResponse(['error' => 'Pick 0 to 30 days.'], 422);

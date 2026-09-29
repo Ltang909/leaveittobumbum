@@ -54,9 +54,9 @@ function clean_amount($v) {
 requirePost();
 $input = body();
 requireCsrf($input);
-$user = requireUser();
-$bill = billingUser($user);
-$userId = (int) $user['id'];
+$subject = requireSubject();
+$isGuest = $subject['kind'] === 'guest';
+$userId = $isGuest ? 0 : (int) $subject['user']['id'];
 ensureReceiptSchema();
 $pdo = db();
 $action = (string) ($input['action'] ?? '');
@@ -66,14 +66,15 @@ if ($action === 'scan') {
     if (strlen($key) < 16 || strlen($key) > 128) {
         jsonResponse(['error' => 'Invalid request identifier.'], 422);
     }
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'receipt-reader', 'receipt-scan-' . $key);
+    $count = consumeSubjectAction($subject, 'receipt-reader', 'receipt-scan-' . $key);
     if (!empty($count['limit_reached'])) {
-        jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+        limitReachedResponse($subject, $count);
     }
-    jsonResponse(['ok' => true, 'usage' => usageFor($bill), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
+    jsonResponse(['ok' => true, 'usage' => subjectUsage($subject), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
 }
 
 if ($action === 'list') {
+    if ($isGuest) jsonResponse(['logs' => []]);
     $stmt = $pdo->prepare("SELECT * FROM receipt_logs WHERE user_id = ? ORDER BY created_at DESC, id DESC LIMIT 200");
     $stmt->execute([$userId]);
     jsonResponse(['logs' => array_map('receipt_public', $stmt->fetchAll())]);
@@ -95,6 +96,16 @@ if ($action === 'save') {
         $cleanItems[] = ['name' => $name, 'amount' => $amount === null ? '0.00' : number_format($amount, 2, '.', '')];
     }
     $taxLabel = mb_substr(trim((string) ($input['taxLabel'] ?? 'Tax')), 0, 64) ?: 'Tax';
+    if ($isGuest) {
+        // Guests get the parsed receipt back for this session, but it is not
+        // stored. Signing up is what keeps it.
+        jsonResponse(['ok' => true, 'saved' => false, 'signup_required' => true, 'log' => receipt_public([
+            'id' => 0, 'vendor' => $vendor, 'receipt_date' => $date, 'currency' => $currency,
+            'subtotal' => clean_amount($input['subtotal'] ?? ''), 'tax' => clean_amount($input['tax'] ?? ''),
+            'tax_label' => $taxLabel, 'total' => clean_amount($input['total'] ?? ''),
+            'items' => json_encode($cleanItems, JSON_UNESCAPED_UNICODE),
+        ])]);
+    }
     $stmt = $pdo->prepare("INSERT INTO receipt_logs (user_id, vendor, receipt_date, currency, subtotal, tax, tax_label, total, items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([
         $userId, $vendor, $date, $currency,
@@ -110,6 +121,7 @@ if ($action === 'save') {
 }
 
 if ($action === 'delete') {
+    if ($isGuest) jsonResponse(['ok' => true, 'deleted' => false]);
     $id = (int) ($input['id'] ?? 0);
     if ($id <= 0) jsonResponse(['error' => 'Missing receipt id.'], 422);
     $stmt = $pdo->prepare("DELETE FROM receipt_logs WHERE id = ? AND user_id = ?");

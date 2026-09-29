@@ -51,3 +51,37 @@ CREATE TABLE login_attempts (
   attempted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY recent_attempts (email, ip_hash, attempted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Guest actions (no-signup tool use). Created lazily by ensureGuestTables()
+-- on first guest request; documented here for reference. period_key is the
+-- fixed string 'lifetime': guests get 15 lifetime actions, never a reset.
+CREATE TABLE guests (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_seen_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  ip_hash CHAR(64) NOT NULL DEFAULT '',
+  ua_hash CHAR(64) NOT NULL DEFAULT '',
+  converted_user_id BIGINT UNSIGNED NULL DEFAULT NULL,
+  KEY idx_guests_ip_created (ip_hash, created_at),
+  KEY idx_guests_seen (converted_user_id, last_seen_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE guest_usage (
+  guest_id CHAR(36) NOT NULL,
+  period_key VARCHAR(16) NOT NULL,
+  used_actions INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (guest_id, period_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE guest_ledger (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  guest_id CHAR(36) NOT NULL,
+  period_key VARCHAR(16) NOT NULL,
+  tool_key VARCHAR(64) NOT NULL,
+  idempotency_key VARCHAR(128) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_guest_idem (guest_id, idempotency_key),
+  KEY idx_guest_period (guest_id, period_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
