@@ -139,6 +139,16 @@
       "url": "/tools/audiogram/",
       "cta": "Make an audiogram",
       "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "vibe-check",
+      "name": "Vibe Check",
+      "tag": "Website",
+      "icon": "🪞",
+      "description": "Drop in your URL. Bum Bum roasts your site kindly and hands you three fixes that actually move the needle.",
+      "url": "/tools/vibe-check/",
+      "cta": "Check my vibe",
+      "mascot": "/bum/cat-sunglasses.png"
     }
   ]
 }
