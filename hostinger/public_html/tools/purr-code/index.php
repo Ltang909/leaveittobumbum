@@ -31,7 +31,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .pc-trackstats p{margin:6px 0}
 .pc-short{font-size:14px;word-break:break-all}
 .linklike{background:none;border:none;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;font-weight:800;padding:0}
-#pcMyCodes{width:100%;max-width:420px}
+#pcMyCodes{margin-top:18px}
 #pcMyCodes h3{margin:0 0 8px;font-size:1rem}
 #pcCodesList{list-style:none;margin:0;padding:0}
 #pcCodesList li{display:flex;align-items:center;gap:12px;border:2px solid var(--line);border-radius:10px;padding:8px 12px;margin:0 0 8px;background:#fff;font-size:14px}
@@ -84,9 +84,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 <p id="pcStatus" class="pc-status"></p>
 <p id="pcUsage"></p>
 <p class="pc-tip">Tip: scan it with your phone camera before you print a hundred of them.</p>
-<div id="pcMyCodes"><h3>My tracked codes</h3><ul id="pcCodesList"></ul><p class="pc-tip" id="pcCodesEmpty" style="display:none">No tracked codes yet. Flip on "Track scans" to make your first one.</p></div>
 </section>
 </div>
+<section class="panel" id="pcMyCodes"><h3>My tracked codes</h3><ul id="pcCodesList"></ul><p class="pc-tip" id="pcCodesEmpty" style="display:none">No tracked codes yet. Flip on "Track scans" to make your first one.</p></section>
 <div id="upgrade-slot"></div>
 <?php endif; ?>
 <script src="qrcode.min.js"></script>
@@ -284,7 +284,7 @@ const li=document.createElement('li');
 const info=document.createElement('span');info.className='t';info.title=l.target_url;info.textContent=l.target_url;
 const s=document.createElement('span');s.className='s';s.textContent=l.scans+(l.scans===1?' scan':' scans');
 const b=document.createElement('button');b.type='button';b.className='linklike';b.textContent='Load';
-b.addEventListener('click',()=>{trackEl.checked=true;trackEl.dispatchEvent(new Event('change'));showTracked({code:l.code,shortUrl:l.shortUrl,target:l.target_url},l.scans);statusEl.textContent='Loaded. Downloads and copies are free for tracked codes.';});
+b.addEventListener('click',()=>{trackEl.checked=true;trackEl.dispatchEvent(new Event('change'));showTracked({code:l.code,shortUrl:l.shortUrl,target:l.target_url},l.scans);statusEl.textContent='Loaded. Downloads and copies are free for tracked codes.';document.querySelector('.pc-preview').scrollIntoView({behavior:'smooth',block:'nearest'});});
 const meta=document.createElement('span');meta.className='meta';
 meta.appendChild(s);meta.appendChild(b);
 li.appendChild(info);li.appendChild(meta);
