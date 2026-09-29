@@ -3,7 +3,19 @@
 // cards a user wants on their dashboard. Not metered.
 require dirname(__DIR__) . '/_bootstrap.php';
 
-const DASHBOARD_TOOL_KEYS = ['clips', 'notes', 'cutline', 'purrsuit', 'corporate-bum-bum', 'doodle'];
+// Allowed dashboard keys come from the tool registry so the picker and the
+// API can never drift apart. Falls back to a static list if unreadable.
+function dashboardToolKeys(): array {
+    static $keys = null;
+    if ($keys !== null) return $keys;
+    $keys = [];
+    $reg = json_decode(@file_get_contents(dirname(__DIR__, 2) . '/tools/registry.json'), true);
+    foreach (($reg['tools'] ?? []) as $t) {
+        if (!empty($t['key'])) $keys[] = (string) $t['key'];
+    }
+    if (!$keys) $keys = ['clips', 'notes', 'cutline', 'purrsuit', 'corporate-bum-bum', 'doodle'];
+    return $keys;
+}
 
 function ensureToolPrefsSchema(): void {
     db()->exec("CREATE TABLE IF NOT EXISTS user_tool_prefs (
@@ -17,7 +29,7 @@ function ensureToolPrefsSchema(): void {
 function sanitizeToolKeys($raw): array {
     if (!is_array($raw)) return [];
     $clean = array_map('strval', $raw);
-    return array_values(array_intersect(DASHBOARD_TOOL_KEYS, $clean));
+    return array_values(array_intersect(dashboardToolKeys(), $clean));
 }
 
 requirePost();
@@ -34,7 +46,7 @@ if ($action === 'get') {
     $stmt->execute([$userId]);
     $row = $stmt->fetch();
     $keys = $row ? sanitizeToolKeys(json_decode((string) $row['tool_keys'], true)) : [];
-    if (!$keys) $keys = DASHBOARD_TOOL_KEYS;
+    if (!$keys) $keys = dashboardToolKeys();
     jsonResponse(['keys' => $keys]);
 }
 
