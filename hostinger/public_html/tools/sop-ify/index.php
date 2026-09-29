@@ -42,7 +42,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 <?php else: ?>
 <section class="panel" id="sopForm">
 <div class="sop-field"><label for="sopWho">Who is this playbook for? <span class="sop-hint">(optional)</span></label><input id="sopWho" type="text" maxlength="120" placeholder="my new part-time helper"></div>
-<div class="sop-field"><label for="sopDump">Your brain-dump</label><textarea id="sopDump" maxlength="6000" placeholder="ok so when someone books a lash fill I first check the calendar then I text them the day before to confirm, if they don't reply I..."></textarea><p class="sop-hint">Messy is fine. Ramble. Skip steps. Bum Bum sorts it out.</p></div>
+<div class="sop-field"><label for="sopDump">Your brain-dump</label>
+<div style="margin-bottom:10px"><button id="sopRec" class="button secondary" type="button">Record a voice note</button> <button id="sopStop" class="button secondary hidden" type="button">Stop recording</button></div>
+<textarea id="sopDump" maxlength="6000" placeholder="ok so when someone books a lash fill I first check the calendar then I text them the day before to confirm, if they don't reply I..."></textarea><p class="sop-hint">Messy is fine. Ramble, type, or record. Bum Bum sorts it out.</p></div>
 <button id="sopGo" class="button" type="button">Make it a playbook</button>
 <p id="sopStatus" class="sop-status"></p>
 <p id="sopUsage"></p>
@@ -81,6 +83,53 @@ const usageEl=document.querySelector('#sopUsage');
 const resultEl=document.querySelector('#sopResult');
 const formEl=document.querySelector('#sopForm');
 let genKey=crypto.randomUUID();
+const recBtn=document.querySelector('#sopRec');
+const stopBtn=document.querySelector('#sopStop');
+const recState={recording:false,stream:null,recorder:null,chunks:[]};
+function pickMime(){const c=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
+function cleanupRec(){if(recState.stream){recState.stream.getTracks().forEach(t=>t.stop());recState.stream=null;}recState.recording=false;recBtn.classList.remove('hidden');stopBtn.classList.add('hidden');dumpEl.readOnly=false;}
+async function transcribeViaRelay(blob){
+const session=await fetch('/api/session.php').then(r=>r.json());
+const m=(blob.type||'').split(';')[0];
+const ext=m.indexOf('mp4')>=0?'m4a':(m.indexOf('ogg')>=0?'ogg':(m.indexOf('wav')>=0?'wav':'webm'));
+const fd=new FormData();
+fd.append('audio',blob,'sopbrain.'+ext);
+fd.append('language','en');
+fd.append('csrf',session.csrf||'');
+const r=await fetch('/api/voice-transcribe.php',{method:'POST',body:fd});
+let data={};try{data=await r.json();}catch(e){}
+if(!r.ok)throw new Error(data.error||'Transcription failed.');
+return data.transcript||'';
+}
+recBtn.addEventListener('click',async()=>{
+if(recState.recording)return;
+if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){statusEl.textContent='This browser cannot access the microphone.';statusEl.classList.add('error');return;}
+try{recState.stream=await navigator.mediaDevices.getUserMedia({audio:true});}catch(e){statusEl.textContent='Microphone permission denied.';statusEl.classList.add('error');return;}
+recState.chunks=[];
+const mime=pickMime();
+try{recState.recorder=new MediaRecorder(recState.stream,mime?{mimeType:mime}:undefined);}catch(e){cleanupRec();statusEl.textContent='Recording is not supported in this browser.';statusEl.classList.add('error');return;}
+recState.recorder.ondataavailable=e=>{if(e.data&&e.data.size)recState.chunks.push(e.data);};
+recState.recorder.onstop=onRecStop;
+try{recState.recorder.start(250);}catch(e){cleanupRec();statusEl.textContent='Recording could not start.';statusEl.classList.add('error');return;}
+recState.recording=true;
+recBtn.classList.add('hidden');stopBtn.classList.remove('hidden');
+dumpEl.readOnly=true;
+statusEl.textContent='Recording. Ramble away, then hit stop.';statusEl.classList.remove('error');
+bbTrack('recording_started',{tool:TOOL_KEY});
+});
+stopBtn.addEventListener('click',()=>{try{recState.recorder.stop();}catch(e){cleanupRec();}});
+async function onRecStop(){
+const mime=(recState.recorder&&recState.recorder.mimeType)||'audio/webm';
+const blob=new Blob(recState.chunks,{type:mime});
+cleanupRec();
+if(!blob||!blob.size){statusEl.textContent='Nothing recorded. Try again.';statusEl.classList.add('error');return;}
+statusEl.textContent='Transcribing your ramble...';statusEl.classList.remove('error');
+try{
+const t=await transcribeViaRelay(blob);
+if(t){dumpEl.value=(dumpEl.value.trim()?dumpEl.value.trim()+'\n':'')+t;statusEl.textContent='Nice. Tweak anything I misheard, then hit the big button.';}
+else{statusEl.textContent='Hmm, I did not catch any words. Try again or type instead.';statusEl.classList.add('error');}
+}catch(e){statusEl.textContent='Transcription failed. Try typing instead.';statusEl.classList.add('error');}
+}
 const msgs=['Reading your ramble','Finding the actual order','Writing the steps','Adding the gotchas','Polishing the checklist'];
 let msgTimer=0;
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
