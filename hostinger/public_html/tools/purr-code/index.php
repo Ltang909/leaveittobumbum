@@ -38,6 +38,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 #pcCodesList .t{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #pcCodesList .meta{display:flex;align-items:center;gap:12px;flex:none}
 #pcCodesList .s{font-weight:900;white-space:nowrap}
+#pcCodesList .qrthumb{width:60px;height:60px;padding:5px;border:2px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center}
+#pcCodesList .qrthumb:hover{border-color:#1E2321}
+#pcCodesList .qrthumb canvas{width:46px;height:46px;display:block}
 .hidden{display:none!important}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purr Code"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Purr Code</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
@@ -270,6 +273,13 @@ copyLinkBtn.addEventListener('click',()=>{
 if(!tracked)return;
 navigator.clipboard.writeText(tracked.shortUrl).then(()=>{copyLinkBtn.textContent='Copied!';setTimeout(()=>copyLinkBtn.textContent='Copy',1500);});
 });
+function drawThumb(cv,text){
+let qr;try{qr=qrcode(0,'M');qr.addData(text);qr.make();}catch(e){return;}
+const n=qr.getModuleCount(),c=cv.getContext('2d'),s=cv.width/n;
+c.fillStyle='#ffffff';c.fillRect(0,0,cv.width,cv.height);
+c.fillStyle='#1E2321';
+for(let r=0;r<n;r++)for(let col=0;col<n;col++){if(qr.isDark(r,col))c.fillRect(Math.floor(col*s),Math.floor(r*s),Math.ceil(s),Math.ceil(s));}
+}
 async function loadMyCodes(){
 try{
 const session=await fetch('/api/session.php').then(r=>r.json());
@@ -283,7 +293,9 @@ links.forEach(l=>{
 const li=document.createElement('li');
 const info=document.createElement('span');info.className='t';info.title=l.target_url;info.textContent=l.target_url;
 const s=document.createElement('span');s.className='s';s.textContent=l.scans+(l.scans===1?' scan':' scans');
-const b=document.createElement('button');b.type='button';b.className='linklike';b.textContent='Load';
+const b=document.createElement('button');b.type='button';b.className='qrthumb';b.title='Load this code into the preview';
+const cv=document.createElement('canvas');cv.width=138;cv.height=138;b.appendChild(cv);
+drawThumb(cv,l.shortUrl);
 b.addEventListener('click',()=>{trackEl.checked=true;trackEl.dispatchEvent(new Event('change'));showTracked({code:l.code,shortUrl:l.shortUrl,target:l.target_url},l.scans);statusEl.textContent='Loaded. Downloads and copies are free for tracked codes.';document.querySelector('.pc-preview').scrollIntoView({behavior:'smooth',block:'nearest'});});
 const meta=document.createElement('span');meta.className='meta';
 meta.appendChild(s);meta.appendChild(b);
