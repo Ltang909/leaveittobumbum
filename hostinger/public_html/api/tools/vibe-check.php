@@ -61,17 +61,19 @@ function vibecheck_validate_url(string $raw): array {
         vibecheck_fail('Nice try. I only visit public websites.');
     }
     // Resolve and pin one IP; reject private and reserved ranges (SSRF guard).
-    $ips = [];
+    // IPv4 is preferred to keep the curl pin format simple.
+    $v4 = [];
+    $v6 = [];
     foreach ((array) @dns_get_record($host, DNS_A + DNS_AAAA) as $rec) {
-        if (!empty($rec['ip'])) $ips[] = $rec['ip'];
-        elseif (!empty($rec['ipv6'])) $ips[] = $rec['ipv6'];
+        if (!empty($rec['ip'])) $v4[] = $rec['ip'];
+        elseif (!empty($rec['ipv6'])) $v6[] = $rec['ipv6'];
     }
-    if (!$ips) {
+    if (!$v4 && !$v6) {
         $single = @gethostbyname($host);
-        if ($single && $single !== $host) $ips[] = $single;
+        if ($single && $single !== $host) $v4[] = $single;
     }
     $pinned = null;
-    foreach ($ips as $ip) {
+    foreach (array_merge($v4, $v6) as $ip) {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
             $pinned = $ip;
             break;
@@ -111,12 +113,13 @@ function vibecheck_http_get(array $v): array {
         CURLOPT_USERAGENT => 'BumBumVibeCheck/1.0 (+https://leaveittobumbum.com)',
         CURLOPT_HTTPHEADER => ['Accept: text/html,application/xhtml+xml'],
         CURLOPT_HEADERFUNCTION => function ($ch, $line) use (&$headers) {
+            $len = strlen($line);
             $line = trim($line);
             if (strpos($line, ':') !== false) {
                 [$k, $val] = explode(':', $line, 2);
                 $headers[strtolower(trim($k))] = trim($val);
             }
-            return strlen($line);
+            return $len;
         },
         CURLOPT_WRITEFUNCTION => function ($ch, $chunk) use (&$body, $maxBytes) {
             $body .= $chunk;
