@@ -39,14 +39,31 @@ $isOperator = $bill['plan'] === 'operator' && in_array($bill['subscription_statu
 $lowUsage = $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2);
 $hour = (int) (new DateTime('now', new DateTimeZone('America/Toronto')))->format('G');
 $greet = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening');
-$DASHBOARD_TOOLS = [
-  'clips' => ['name' => 'Bum Bum Clips', 'tag' => 'VIDEO', 'icon' => '&#9679;', 'desc' => 'Record your screen right in your browser. Download the clip, keep it forever.', 'url' => '/tools/clips/', 'cta' => 'Record a clip'],
-  'notes' => ['name' => 'Bum Bum Notes', 'tag' => 'VOICE', 'icon' => '&#9834;', 'desc' => 'Talk it out and get a live transcript you can copy or download.', 'url' => '/tools/notes/', 'cta' => 'Record a note'],
-  'cutline' => ['name' => 'Cutline', 'tag' => 'MONEY', 'icon' => '&#9986;', 'desc' => 'Every subscription you forgot about, in one place, with renewal nudges.', 'url' => '/tools/cutline/', 'cta' => 'Cut subscriptions'],
-  'purrsuit' => ['name' => 'Purrsuit', 'tag' => 'CLIENTS', 'icon' => '&#128100;', 'desc' => 'A tiny CRM that tells you who to follow up with today and what to say.', 'url' => '/tools/purrsuit/', 'cta' => 'Track every lead'],
-  'corporate-bum-bum' => ['name' => 'Corporate Bum', 'tag' => 'CAREER', 'icon' => '&#128188;', 'desc' => 'A job application tracker that tells you who to follow up with today and what to say.', 'url' => '/tools/corporate-bum-bum/', 'cta' => 'Track applications'],
-  'doodle' => ['name' => 'Doodle', 'tag' => 'DRAW', 'icon' => '&#9999;&#65039;', 'desc' => 'A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.', 'url' => '/tools/doodle/', 'cta' => 'Start doodling'],
-];
+// Dashboard toolbox is built from the tool registry so the Customize picker
+// always offers every tool, never a stale hardcoded subset.
+$DASHBOARD_TOOLS = [];
+$reg = json_decode(@file_get_contents(dirname(__DIR__) . '/tools/registry.json'), true);
+foreach (($reg['tools'] ?? []) as $t) {
+    if (empty($t['key'])) continue;
+    $DASHBOARD_TOOLS[(string) $t['key']] = [
+        'name' => (string) ($t['name'] ?? $t['key']),
+        'tag' => (string) ($t['tag'] ?? ''),
+        'icon' => (string) ($t['icon'] ?? '🐾'),
+        'desc' => (string) ($t['description'] ?? ''),
+        'url' => (string) ($t['url'] ?? '/tools/'),
+        'cta' => (string) ($t['cta'] ?? 'Open'),
+    ];
+}
+if (!$DASHBOARD_TOOLS) {
+    $DASHBOARD_TOOLS = [
+        'clips' => ['name' => 'Bum Bum Clips', 'tag' => 'VIDEO', 'icon' => '&#9679;', 'desc' => 'Record your screen right in your browser. Download the clip, keep it forever.', 'url' => '/tools/clips/', 'cta' => 'Record a clip'],
+        'notes' => ['name' => 'Bum Bum Notes', 'tag' => 'VOICE', 'icon' => '&#9834;', 'desc' => 'Talk it out and get a live transcript you can copy or download.', 'url' => '/tools/notes/', 'cta' => 'Record a note'],
+        'cutline' => ['name' => 'Cutline', 'tag' => 'MONEY', 'icon' => '&#9986;', 'desc' => 'Every subscription you forgot about, in one place, with renewal nudges.', 'url' => '/tools/cutline/', 'cta' => 'Cut subscriptions'],
+        'purrsuit' => ['name' => 'Purrsuit', 'tag' => 'CLIENTS', 'icon' => '&#128100;', 'desc' => 'A tiny CRM that tells you who to follow up with today and what to say.', 'url' => '/tools/purrsuit/', 'cta' => 'Track every lead'],
+        'corporate-bum-bum' => ['name' => 'Corporate Bum', 'tag' => 'CAREER', 'icon' => '&#128188;', 'desc' => 'A job application tracker that tells you who to follow up with today and what to say.', 'url' => '/tools/corporate-bum-bum/', 'cta' => 'Track applications'],
+        'doodle' => ['name' => 'Doodle', 'tag' => 'DRAW', 'icon' => '&#9999;&#65039;', 'desc' => 'A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.', 'url' => '/tools/doodle/', 'cta' => 'Start doodling'],
+    ];
+}
 $DASHBOARD_ORDER = array_keys($DASHBOARD_TOOLS);
 $selectedKeys = $DASHBOARD_ORDER;
 try {
@@ -151,18 +168,18 @@ box.querySelectorAll('[data-remove]').forEach(b=>b.onclick=async()=>{if(b.datase
 }catch(e){box.innerHTML='<p class="lede">Bum Bum tripped over the team roster. Refresh to try again.</p>'}}
 loadTeam();
 document.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:a.dataset.context||'account'})));
-<?php if ($isOperator): ?>
-function countdown(iso){const ms=new Date(iso).getTime()-Date.now();if(ms<=0)return 'past due';const h=Math.floor(ms/36e5),m=Math.floor(ms%36e5/6e4);return h>0?('in '+h+'h '+m+'m'):('in '+m+'m')}
-async function loadRequests(){try{const data=await fetch('/api/requests.php').then(r=>r.json());const list=data.requests||[];const box=document.querySelector('#req-list');if(!list.length){box.innerHTML='<p class="lede">No requests yet. Your first one is on the house this month.</p>';return}
-box.innerHTML=list.map(q=>{const status=q.status==='delivered'?'Delivered':(q.status==='overdue_credited'?'Missed the deadline, free month credited':('In progress, due '+countdown(q.deadline_at)));return `<div class="req"><b>${q.title.replace(/</g,'&lt;')}</b><br><span class="due">${status}</span> · requested ${new Date(q.requested_at).toLocaleDateString()}</div>`}).join('');
-const open=list.some(q=>q.status==='open');const form=document.querySelector('#req-form');if(open){form.innerHTML='<p class="lede">Your request for this month is in progress. Bum Bum is on it.</p>';return}
-if(data.slot_used){const note=document.createElement('p');note.className='lede';note.style.fontSize='15px';note.innerHTML='You have already used this month\'s Operator request. You can still submit below to the <a href="/requests/">community queue</a>, but it will not fall under the same 36-hour promise.';form.prepend(note)}}catch(e){}}
-loadRequests();
-const reqForm=document.querySelector('#req-form');if(reqForm)reqForm.addEventListener('submit',async event=>{event.preventDefault();const button=reqForm.querySelector('button');button.disabled=true;document.querySelector('#req-error').textContent='';const s=await session();const fields=Object.fromEntries(new FormData(reqForm));const response=await fetch('/api/requests.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...fields,csrf:s.csrf})});const data=await response.json();if(response.ok){if(data.queued){bbTrack('request_submitted',{queued:true});reqForm.innerHTML='<p class="lede">It is in the <a href="/requests/">community queue</a>. The 36-hour promise applied to this month\'s first request.</p>'}else{bbTrack('request_submitted',{request_id:data.request.id});location.reload()}}else{document.querySelector('#req-error').textContent=data.error;button.disabled=false}});
 document.querySelectorAll('.tool-card').forEach(a=>a.addEventListener('click',()=>bbTrack('dashboard_tool_opened',{tool:a.dataset.tool})));
 const customizeBtn=document.querySelector('#customizeBtn');const toolPicker=document.querySelector('#tool-picker');
 if(customizeBtn&&toolPicker)customizeBtn.addEventListener('click',()=>{const hidden=toolPicker.classList.toggle('hidden');customizeBtn.textContent=hidden?'Customize':'Hide';});
 const toolSave=document.querySelector('#toolSave');
 if(toolSave)toolSave.addEventListener('click',async()=>{const msg=document.querySelector('#toolMsg');msg.textContent='';const keys=[...document.querySelectorAll('#tool-picker input[type="checkbox"]:checked')].map(c=>c.value);if(!keys.length){msg.textContent='Pick at least one tool.';return}toolSave.disabled=true;const s=await session();const response=await fetch('/api/account/tools.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save',keys:keys,csrf:s.csrf})});const data=await response.json();toolSave.disabled=false;if(!response.ok){msg.textContent=data.error||'Could not save.';return}bbTrack('dashboard_customized',{count:keys.length});location.reload();});
+<?php if ($isOperator): ?>
+function countdown(iso){const ms=new Date(iso).getTime()-Date.now();if(ms<=0)return 'past due';const h=Math.floor(ms/36e5),m=Math.floor(ms%36e5/6e4);return h>0?('in '+h+'h '+m+'m'):('in '+m+'m')}
+async function loadRequests(){try{const data=await fetch('/api/requests.php').then(r=>r.json());const list=data.requests||[];const box=document.querySelector('#req-list');if(!list.length){box.innerHTML='<p class="lede">No requests yet. Your first one is on the house this month.</p>';return}
+box.innerHTML=list.map(q=>{const stage=q.queue_status==='planned'?' · Planned':(q.queue_status==='building'?' · Building':'');const cd=countdown(q.deadline_at);const status=q.status==='delivered'?'Delivered':(q.status==='overdue_credited'?'Missed the deadline, free month credited':(q.status==='cancelled'?'Cancelled':('In progress'+stage+(cd==='past due'?' · past due':', due '+cd))));return `<div class="req"><b>${q.title.replace(/</g,'&lt;')}</b><br><span class="due">${status}</span> · requested ${new Date(q.requested_at).toLocaleDateString()}</div>`}).join('');
+const open=list.some(q=>q.status==='open');const form=document.querySelector('#req-form');if(open){form.innerHTML='<p class="lede">Your request for this month is in progress. Bum Bum is on it.</p>';return}
+if(data.slot_used){const note=document.createElement('p');note.className='lede';note.style.fontSize='15px';note.innerHTML='You have already used this month\'s Operator request. You can still submit below to the <a href="/requests/">community queue</a>, but it will not fall under the same 36-hour promise.';form.prepend(note)}}catch(e){}}
+loadRequests();
+const reqForm=document.querySelector('#req-form');if(reqForm)reqForm.addEventListener('submit',async event=>{event.preventDefault();const button=reqForm.querySelector('button');button.disabled=true;document.querySelector('#req-error').textContent='';const s=await session();const fields=Object.fromEntries(new FormData(reqForm));const response=await fetch('/api/requests.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...fields,csrf:s.csrf})});const data=await response.json();if(response.ok){if(data.queued){bbTrack('request_submitted',{queued:true});reqForm.innerHTML='<p class="lede">It is in the <a href="/requests/">community queue</a>. The 36-hour promise applied to this month\'s first request.</p>'}else{bbTrack('request_submitted',{request_id:data.request.id});location.reload()}}else{document.querySelector('#req-error').textContent=data.error;button.disabled=false}});
 <?php endif; ?>
 </script><?php endif; ?></main><?php require dirname(__DIR__)."/includes/site-footer.php"; ?></body></html>

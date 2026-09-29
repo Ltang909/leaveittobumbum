@@ -139,6 +139,26 @@
       "url": "/tools/audiogram/",
       "cta": "Make an audiogram",
       "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "purr-code",
+      "name": "Purr Code",
+      "tag": "Design",
+      "icon": "🐾",
+      "description": "Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.",
+      "url": "/tools/purr-code/",
+      "cta": "Make it cute",
+      "mascot": "/bum/cat-paws-up.png"
+    },
+    {
+      "key": "sop-ify",
+      "name": "SOP-ify",
+      "tag": "Team",
+      "icon": "📋",
+      "description": "Paste your chaotic process brain-dump. Get a clean step-by-step playbook a brand-new helper can follow.",
+      "url": "/tools/sop-ify/",
+      "cta": "Make it a playbook",
+      "mascot": "/bum/cat-bowtie.png"
     }
   ]
 }
