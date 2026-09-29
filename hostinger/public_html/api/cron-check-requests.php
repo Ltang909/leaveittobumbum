@@ -41,4 +41,11 @@ foreach ($rows as $row) {
         $errors[] = $requestId;
     }
 }
-jsonResponse(['checked' => $checked, 'credited' => $credited, 'errors' => $errors]);
+// Housekeeping: retire unconverted guest identities idle for 90+ days.
+$purgedGuests = 0;
+try {
+    $purgedGuests = purgeOldGuests();
+} catch (Throwable $error) {
+    error_log('Guest purge failed: ' . $error->getMessage());
+}
+jsonResponse(['checked' => $checked, 'credited' => $credited, 'errors' => $errors, 'guests_purged' => $purgedGuests]);

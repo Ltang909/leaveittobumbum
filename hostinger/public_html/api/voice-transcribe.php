@@ -24,7 +24,8 @@ require __DIR__ . '/_bootstrap.php';
 
 requirePost();
 requireCsrf($_POST);
-requireUser();
+$subject = requireSubject();
+$isGuest = $subject['kind'] === 'guest';
 
 startSecureSession();
 $today = gmdate('Y-m-d');

@@ -91,14 +91,15 @@ function rolodex_draft(array $c): string {
 requirePost();
 $input = body();
 requireCsrf($input);
-$user = requireUser();
-$bill = billingUser($user);
-$userId = (int) $user['id'];
+$subject = requireSubject();
+$isGuest = $subject['kind'] === 'guest';
+$userId = $isGuest ? 0 : (int) $subject['user']['id'];
 ensureRolodexSchema();
 $pdo = db();
 $action = (string) ($input['action'] ?? 'list');
 
 if ($action === 'list') {
+    if ($isGuest) jsonResponse(['contacts' => [], 'followUpDue' => [], 'goneQuiet' => [], 'counts' => array_fill_keys(ROLODEX_STAGES, 0), 'today' => date('Y-m-d')]);
     $stmt = $pdo->prepare('SELECT * FROM rolodex_contacts WHERE user_id = ? ORDER BY follow_up_date IS NULL, follow_up_date ASC, updated_at DESC LIMIT 500');
     $stmt->execute([$userId]);
     $contacts = [];
@@ -125,6 +126,7 @@ if ($action === 'list') {
 }
 
 if ($action === 'get') {
+    if ($isGuest) jsonResponse(['error' => 'Contact not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $stmt = $pdo->prepare('SELECT * FROM rolodex_contacts WHERE id = ? AND user_id = ?');
     $stmt->execute([$id, $userId]);
@@ -161,9 +163,20 @@ if ($action === 'add') {
         if ($dealValue === false || $dealValue < 0 || $dealValue > 100000000) jsonResponse(['error' => 'Enter a valid deal value of zero or more.'], 422);
     }
     $idempotency = rolodex_idempotency($input);
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'purrsuit', $idempotency);
-    if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+    $count = consumeSubjectAction($subject, 'purrsuit', $idempotency);
+    if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
     $contact = null;
+    if ($isGuest) {
+        // Guests see the contact they added, but it is not stored. Signing
+        // up is what keeps it.
+        $contact = rolodex_public_contact([
+            'id' => 0, 'name' => $name, 'company' => $company, 'title' => $title,
+            'contact_info' => $email, 'source' => $source, 'deal_value' => $dealValue,
+            'stage' => $stage, 'follow_up_date' => $followUp,
+            'last_touch_at' => date('Y-m-d H:i:s'), 'created_at' => date('Y-m-d H:i:s'),
+        ]);
+        jsonResponse(['contact' => $contact, 'saved' => false, 'signup_required' => true, 'usage' => subjectUsage($subject), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
+    }
     if (empty($count['duplicate'])) {
         $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, company, title, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
         $stmt->execute([$userId, $name, $company, $title, $email, $source, $dealValue, $stage, $followUp]);
@@ -176,7 +189,7 @@ if ($action === 'add') {
         $stmt->execute([$id]);
         $contact = rolodex_public_contact($stmt->fetch());
     }
-    jsonResponse(['contact' => $contact, 'usage' => usageFor($bill), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
+    jsonResponse(['contact' => $contact, 'usage' => subjectUsage($subject), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
 }
 
 if ($action === 'import') {
@@ -212,6 +225,7 @@ if ($action === 'import') {
     $errors = [];
     $rows = 0;
     $limitHit = false;
+    $guestImported = [];
     while (($row = fgetcsv($stream)) !== false && $rows < 200) {
         $rows++;
         $rec = ['name' => '', 'company' => '', 'title' => '', 'email' => '', 'source' => '', 'deal_value' => '', 'stage' => '', 'follow_up_date' => '', 'notes' => ''];
@@ -233,9 +247,13 @@ if ($action === 'import') {
         $followUp = $rec['follow_up_date'] === '' ? null : rolodex_clean_date($rec['follow_up_date']);
         if ($followUp === false) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: invalid follow-up date (use YYYY-MM-DD)."; continue; }
         // Match existing contact by name (case-insensitive). Empty cells leave existing values alone.
-        $stmt = $pdo->prepare('SELECT id FROM rolodex_contacts WHERE user_id = ? AND LOWER(name) = LOWER(?) AND LOWER(company) = LOWER(?) LIMIT 1');
-        $stmt->execute([$userId, $rec['name'], $rec['company']]);
-        $existing = $stmt->fetch();
+        // Guests store nothing, so there is never an existing match.
+        $existing = $isGuest ? false : null;
+        if (!$isGuest) {
+            $stmt = $pdo->prepare('SELECT id FROM rolodex_contacts WHERE user_id = ? AND LOWER(name) = LOWER(?) AND LOWER(company) = LOWER(?) LIMIT 1');
+            $stmt->execute([$userId, $rec['name'], $rec['company']]);
+            $existing = $stmt->fetch();
+        }
         if ($existing) {
             $sets = [];
             $params = [];
@@ -255,25 +273,36 @@ if ($action === 'import') {
             $updated++;
             continue;
         }
-        $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'purrsuit', $batchKey . '-' . $rows);
+        $count = consumeSubjectAction($subject, 'purrsuit', $batchKey . '-' . $rows);
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
-            $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, company, title, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-            $stmt->execute([$userId, $rec['name'], $rec['company'], $rec['title'], $rec['email'], $rec['source'], $dealValue, $stageValid ? $stage : 'new', $followUp]);
-            $newId = (int) $pdo->lastInsertId();
-            if ($rec['notes'] !== '') {
-                $stmt = $pdo->prepare('INSERT INTO rolodex_notes (contact_id, user_id, body) VALUES (?, ?, ?)');
-                $stmt->execute([$newId, $userId, $rec['notes']]);
+            if ($isGuest) {
+                $guestImported[] = rolodex_public_contact([
+                    'id' => 0, 'name' => $rec['name'], 'company' => $rec['company'], 'title' => $rec['title'],
+                    'contact_info' => $rec['email'], 'source' => $rec['source'], 'deal_value' => $dealValue,
+                    'stage' => $stageValid ? $stage : 'new', 'follow_up_date' => $followUp,
+                    'last_touch_at' => date('Y-m-d H:i:s'), 'created_at' => date('Y-m-d H:i:s'),
+                ]);
+                $imported++;
+            } else {
+                $stmt = $pdo->prepare('INSERT INTO rolodex_contacts (user_id, name, company, title, contact_info, source, deal_value, stage, follow_up_date, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+                $stmt->execute([$userId, $rec['name'], $rec['company'], $rec['title'], $rec['email'], $rec['source'], $dealValue, $stageValid ? $stage : 'new', $followUp]);
+                $newId = (int) $pdo->lastInsertId();
+                if ($rec['notes'] !== '') {
+                    $stmt = $pdo->prepare('INSERT INTO rolodex_notes (contact_id, user_id, body) VALUES (?, ?, ?)');
+                    $stmt->execute([$newId, $userId, $rec['notes']]);
+                }
+                $imported++;
             }
-            $imported++;
         }
     }
     fclose($stream);
-    if ($limitHit) jsonResponse(['error' => 'You ran out of actions partway through. ' . $imported . ' new contacts added, ' . $updated . ' updated, ' . $skipped . ' skipped.', 'imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'usage' => usageFor($bill)], 402);
-    jsonResponse(['imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'errors' => $errors, 'usage' => usageFor($bill)]);
+    if ($limitHit) jsonResponse(['error' => 'You ran out of actions partway through. ' . $imported . ' new contacts added, ' . $updated . ' updated, ' . $skipped . ' skipped.', 'imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'usage' => subjectUsage($subject), 'signup_required' => $isGuest], 402);
+    jsonResponse(['imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'errors' => $errors, 'usage' => subjectUsage($subject), 'contacts' => $guestImported ?? null, 'saved' => !$isGuest, 'signup_required' => $isGuest]);
 }
 
 if ($action === 'export') {
+    if ($isGuest) jsonResponse(['csv' => '', 'filename' => 'purrsuit-export-' . date('Y-m-d') . '.csv']);
     $stmt = $pdo->prepare('SELECT id, name, company, title, contact_info, source, deal_value, stage, follow_up_date FROM rolodex_contacts WHERE user_id = ? ORDER BY name ASC LIMIT 2000');
     $stmt->execute([$userId]);
     $contacts = $stmt->fetchAll();
@@ -309,6 +338,7 @@ if ($action === 'export') {
 }
 
 if ($action === 'update') {
+    if ($isGuest) jsonResponse(['error' => 'Contact not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $fields = [];
     $params = [];
@@ -357,6 +387,7 @@ if ($action === 'update') {
 }
 
 if ($action === 'log') {
+    if ($isGuest) jsonResponse(['error' => 'Contact not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $body = trim((string) ($input['body'] ?? ''));
     if ($body === '') jsonResponse(['error' => 'Write a note about the interaction.'], 422);
@@ -383,6 +414,7 @@ if ($action === 'log') {
 }
 
 if ($action === 'delete') {
+    if ($isGuest) jsonResponse(['error' => 'Contact not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $stmt = $pdo->prepare('DELETE FROM rolodex_notes WHERE contact_id = ? AND user_id = ?');
     $stmt->execute([$id, $userId]);

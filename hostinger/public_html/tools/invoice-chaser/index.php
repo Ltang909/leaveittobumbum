@@ -1,4 +1,4 @@
-<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $user = currentUser(); $usage = $user ? usageFor(billingUser($user)) : null; ?>
+<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Invoice Chaser | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
@@ -51,8 +51,11 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .chaching-amount{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:clamp(2.5rem,9vw,4rem);margin:6px 0;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Invoice Chaser"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum in a bowtie, ready to collect"><h1>Get paid without the awkward.</h1><p class="lede">Log who owes you what, and Bum Bum writes the chase email in the right tone, sends it <b>as your billing assistant</b> in one tap, and learns how each client actually pays so it knows when to nudge and when to sit tight. Adding an invoice or sending a chase uses one action. Everything else is free.</p>
-<?php if (!$user): ?><section class="panel"><h2>Sign in to chase invoices</h2><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Sign in or create an account</a></section><?php else: ?>
-<?php $low = $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to chase invoices</h2><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Create a free account</a></p></div>
+<?php else: ?>
+<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
+<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <div class="stat-row">
   <div class="stat-card"><b id="statOutstanding">–</b><span>outstanding</span><small id="statOutstandingBy"></small></div>
@@ -251,7 +254,7 @@ document.querySelector('#remindBtn').addEventListener('click',async e=>{
     return;
   }
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
+  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
   msg.textContent=`Sent to ${data.sent_to}${data.duplicate?' (already sent today, no extra charge)':''}. Go get that money.`;
   bbTrack('chaser_reminded',{tool:TOOL_KEY,overdue:data.overdue});
 });
@@ -272,7 +275,7 @@ addForm.addEventListener('submit',async e=>{
   }
   attempt=crypto.randomUUID();
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions remaining this month.';
+  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
   addForm.reset();await refresh();
 });
 refresh();
