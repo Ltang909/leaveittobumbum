@@ -83,8 +83,8 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 </div>
 <p id="pcStatus" class="pc-status"></p>
 <p id="pcUsage"></p>
-<div id="pcMyCodes" style="display:none"><h3>My tracked codes</h3><ul id="pcCodesList"></ul></div>
 <p class="pc-tip">Tip: scan it with your phone camera before you print a hundred of them.</p>
+<div id="pcMyCodes"><h3>My tracked codes</h3><ul id="pcCodesList"></ul><p class="pc-tip" id="pcCodesEmpty" style="display:none">No tracked codes yet. Flip on "Track scans" to make your first one.</p></div>
 </section>
 </div>
 <div id="upgrade-slot"></div>
@@ -127,6 +127,7 @@ const copyLinkBtn=document.querySelector('#pcCopyLink');
 const refreshBtn=document.querySelector('#pcRefresh');
 const myCodesEl=document.querySelector('#pcMyCodes');
 const codesListEl=document.querySelector('#pcCodesList');
+const codesEmpty=document.querySelector('#pcCodesEmpty');
 const canvas=document.querySelector('#pcCanvas');
 const ctx=canvas.getContext('2d');
 const dlBtn=document.querySelector('#pcDl');
@@ -274,11 +275,11 @@ try{
 const session=await fetch('/api/session.php').then(r=>r.json());
 const response=await fetch('/api/tools/purr-code.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'my_links',csrf:session.csrf})});
 let data={};try{data=await response.json()}catch(e){}
-if(!response.ok||!data.links)return;
-if(!data.links.length){myCodesEl.style.display='none';return;}
-myCodesEl.style.display='';
+if(!response.ok)return;
+const links=data.links||[];
 codesListEl.innerHTML='';
-data.links.forEach(l=>{
+codesEmpty.style.display=links.length?'none':'';
+links.forEach(l=>{
 const li=document.createElement('li');
 const info=document.createElement('span');info.className='t';info.title=l.target_url;info.textContent=l.target_url;
 const s=document.createElement('span');s.className='s';s.textContent=l.scans+(l.scans===1?' scan':' scans');
@@ -305,6 +306,7 @@ statusEl.textContent='Stats refreshed.';
 }catch(e){statusEl.textContent='Could not refresh. Try again.';statusEl.classList.add('error');}
 finally{refreshBtn.disabled=false;}
 });
+loadMyCodes();
 draw();
 <?php endif; ?>
 </script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
