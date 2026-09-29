@@ -159,6 +159,16 @@
       "url": "/tools/purr-code/",
       "cta": "Make it cute",
       "mascot": "/bum/cat-paws-up.png"
+    },
+    {
+      "key": "sop-ify",
+      "name": "SOP-ify",
+      "tag": "Team",
+      "icon": "📋",
+      "description": "Paste your chaotic process brain-dump. Get a clean step-by-step playbook a brand-new helper can follow.",
+      "url": "/tools/sop-ify/",
+      "cta": "Make it a playbook",
+      "mascot": "/bum/cat-bowtie.png"
     }
   ]
 }
