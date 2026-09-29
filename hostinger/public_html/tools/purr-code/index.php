@@ -1,4 +1,8 @@
-<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
+<?php
+require dirname(__DIR__, 2) . '/api/_bootstrap.php';
+require dirname(__DIR__, 2) . '/includes/purr-code-lib.php';
+purrcode_handle_redirect(); // /tools/purr-code/?go=CODE logs the scan and 302s.
+$subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Purr Code | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .pc-grid{display:grid;grid-template-columns:1fr;gap:18px}
@@ -19,11 +23,22 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .toggle-row input{width:22px;height:22px;accent-color:#1E2321}
 #pcCanvas{width:100%;max-width:420px;height:auto;display:block;border-radius:18px;box-shadow:0 8px 30px rgba(30,35,33,.12);background:#fff}
 .pc-preview{display:flex;flex-direction:column;align-items:center;gap:14px}
+.pc-btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 #pcDl{font-size:18px;padding:14px 26px}
-.pc-status{font-weight:700;min-height:1.5em;margin:10px 0 0}
+.pc-status{font-weight:700;min-height:1.5em;margin:10px 0 0;text-align:center}
 .pc-tip{color:var(--muted);font-size:14px;margin:8px 0 0}
+.pc-trackstats{width:100%;max-width:420px;background:#FFF9F2;border:2px solid var(--line);border-radius:12px;padding:12px 16px;text-align:center}
+.pc-trackstats p{margin:6px 0}
+.pc-short{font-size:14px;word-break:break-all}
+.linklike{background:none;border:none;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;font-weight:800;padding:0}
+#pcMyCodes{width:100%;max-width:420px}
+#pcMyCodes h3{margin:0 0 8px;font-size:1rem}
+#pcCodesList{list-style:none;margin:0;padding:0}
+#pcCodesList li{display:flex;align-items:center;gap:10px;justify-content:space-between;border:2px solid var(--line);border-radius:10px;padding:8px 12px;margin:0 0 8px;background:#fff;font-size:14px}
+#pcCodesList .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+#pcCodesList .s{font-weight:900;white-space:nowrap}
 .hidden{display:none!important}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purr Code"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, downloading uses one action.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purr Code"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Purr Code</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -50,12 +65,24 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 <button type="button" class="dotstyle" data-size="2048" aria-pressed="false">Print</button>
 </div></div>
 <div class="pc-field"><div class="toggle-row"><input id="pcLogo" type="checkbox" checked><label for="pcLogo" style="margin:0">Cat in the middle</label></div></div>
+<div class="pc-field"><div class="toggle-row"><input id="pcTrack" type="checkbox"><label for="pcTrack" style="margin:0">Track scans with a short link</label></div>
+<p class="pc-tip" id="pcTrackHint" style="display:none">1 action creates your tracked code. Downloads and copies are free after that, and you will see how many times it gets scanned.</p></div>
+<div class="pc-field" id="pcTrackCreateWrap" style="display:none"><button id="pcCreate" class="button" type="button">Create tracked QR code</button></div>
 </section>
 <section class="panel pc-preview">
 <canvas id="pcCanvas" width="1024" height="1024"></canvas>
+<div class="pc-trackstats" id="pcTrackStats" style="display:none">
+<p><strong id="pcScanCount">0</strong> scans so far</p>
+<p class="pc-short"><a id="pcShortLink" href="#" target="_blank" rel="noopener"></a> <button id="pcCopyLink" class="linklike" type="button">Copy</button></p>
+<button id="pcRefresh" class="button secondary" type="button">Refresh stats</button>
+</div>
+<div class="pc-btnrow">
 <button id="pcDl" class="button" type="button">Download PNG</button>
+<button id="pcCopy" class="button secondary" type="button">Copy PNG</button>
+</div>
 <p id="pcStatus" class="pc-status"></p>
 <p id="pcUsage"></p>
+<div id="pcMyCodes" style="display:none"><h3>My tracked codes</h3><ul id="pcCodesList"></ul></div>
 <p class="pc-tip">Tip: scan it with your phone camera before you print a hundred of them.</p>
 </section>
 </div>
@@ -88,12 +115,24 @@ const swWrap=document.querySelector('#pcSwatches');
 const dotsWrap=document.querySelector('#pcDots');
 const sizesWrap=document.querySelector('#pcSizes');
 const logoEl=document.querySelector('#pcLogo');
+const trackEl=document.querySelector('#pcTrack');
+const trackHint=document.querySelector('#pcTrackHint');
+const trackCreateWrap=document.querySelector('#pcTrackCreateWrap');
+const createBtn=document.querySelector('#pcCreate');
+const trackStats=document.querySelector('#pcTrackStats');
+const scanCountEl=document.querySelector('#pcScanCount');
+const shortLinkEl=document.querySelector('#pcShortLink');
+const copyLinkBtn=document.querySelector('#pcCopyLink');
+const refreshBtn=document.querySelector('#pcRefresh');
+const myCodesEl=document.querySelector('#pcMyCodes');
+const codesListEl=document.querySelector('#pcCodesList');
 const canvas=document.querySelector('#pcCanvas');
 const ctx=canvas.getContext('2d');
 const dlBtn=document.querySelector('#pcDl');
+const copyBtn=document.querySelector('#pcCopy');
 const statusEl=document.querySelector('#pcStatus');
 const usageEl=document.querySelector('#pcUsage');
-let dotStyle='soft', outSize=1024, dlKey=crypto.randomUUID();
+let dotStyle='soft', outSize=1024, dlKey=crypto.randomUUID(), tracked=null;
 const catImg=new Image();
 catImg.onload=()=>draw();
 catImg.src='/bum/favicon-cat.png';
@@ -109,8 +148,21 @@ dotsWrap.querySelectorAll('.dotstyle').forEach(b=>b.addEventListener('click',()=
 sizesWrap.querySelectorAll('.dotstyle').forEach(b=>b.addEventListener('click',()=>{pressOnly(sizesWrap,b);outSize=parseInt(b.dataset.size,10);draw();}));
 [fgEl,bgEl].forEach(el=>el.addEventListener('input',()=>{swWrap.querySelectorAll('.swatch').forEach(x=>x.setAttribute('aria-pressed','false'));draw();}));
 logoEl.addEventListener('change',draw);
+function qrText(){
+if(tracked)return tracked.shortUrl;
+const t=urlEl.value.trim();
+return t||'https://leaveittobumbum.com';
+}
 let drawT=0;
-urlEl.addEventListener('input',()=>{clearTimeout(drawT);drawT=setTimeout(draw,250);});
+urlEl.addEventListener('input',()=>{if(tracked){tracked=null;trackStats.style.display='none';}clearTimeout(drawT);drawT=setTimeout(draw,250);});
+trackEl.addEventListener('change',()=>{
+const on=trackEl.checked;
+trackHint.style.display=on?'':'none';
+trackCreateWrap.style.display=on?'':'none';
+if(!on){tracked=null;trackStats.style.display='none';}
+else{loadMyCodes();}
+draw();
+});
 function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
 function inFinder(r,c,n){return (r<8&&c<8)||(r<8&&c>=n-8)||(r>=n-8&&c<8);}
 function drawEye(sr,sc,m,fg,bg){
@@ -120,9 +172,7 @@ ctx.fillStyle=bg;rr(x+m,y+m,s-2*m,s-2*m,1.1*m);ctx.fill();
 ctx.fillStyle=fg;rr(x+2*m,y+2*m,s-4*m,s-4*m,0.8*m);ctx.fill();
 }
 function draw(){
-let text=urlEl.value.trim();
-if(!text)text='https://leaveittobumbum.com';
-let qr;
+let text=qrText(),qr;
 try{qr=qrcode(0,'H');qr.addData(text);qr.make();}
 catch(e){statusEl.textContent='That link is too long for a QR code. Try a shorter URL.';statusEl.classList.add('error');return;}
 statusEl.textContent='';statusEl.classList.remove('error');
@@ -148,30 +198,109 @@ const pad=ls*0.14;
 ctx.drawImage(catImg,lx+pad,ly+pad,ls-pad*2,ls-pad*2);
 }
 }
-dlBtn.addEventListener('click',async()=>{
+async function meteredExport(kind){
 const text=urlEl.value.trim();
-if(!text){statusEl.textContent='Give me a link first.';statusEl.classList.add('error');urlEl.focus();return;}
+if(!tracked&&!text){statusEl.textContent='Give me a link first.';statusEl.classList.add('error');urlEl.focus();return;}
 const key=dlKey;dlKey=crypto.randomUUID();
-dlBtn.disabled=true;statusEl.textContent='Making it cute...';statusEl.classList.remove('error');
-try{
-const session=await fetch('/api/session.php').then(r=>r.json());
-const response=await fetch('/api/tools/purr-code.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'download',text:text,idempotencyKey:key,csrf:session.csrf})});
-let data={};try{data=await response.json()}catch(e){}
-if(!response.ok){
-if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This download was not counted.';}
-else{statusEl.textContent=data.error||'Purr Code hiccup. Try again.';statusEl.classList.add('error');}
-return;}
-bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
+const doExport=()=>{
 canvas.toBlob(blob=>{
+if(!blob){statusEl.textContent='Could not make the image. Try again.';statusEl.classList.add('error');return;}
+if(kind==='download'){
 const a=document.createElement('a');
 a.href=URL.createObjectURL(blob);a.download='purr-code.png';
 document.body.appendChild(a);a.click();a.remove();
 setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 statusEl.textContent='Done. Go stick it on everything.';
+}else{
+if(!(navigator.clipboard&&window.ClipboardItem)){statusEl.textContent='Copy is not supported in this browser. Download instead.';statusEl.classList.add('error');return;}
+navigator.clipboard.write([new ClipboardItem({'image/png':blob})]).then(
+()=>{statusEl.textContent='Copied. Paste it anywhere.';},
+()=>{statusEl.textContent='Copy was blocked. Download instead.';statusEl.classList.add('error');});
+}
+},'image/png');};
+if(tracked){doExport();bbTrack('tracked_export',{tool:TOOL_KEY,kind:kind});return;}
+dlBtn.disabled=true;copyBtn.disabled=true;statusEl.textContent='Making it cute...';statusEl.classList.remove('error');
+try{
+const session=await fetch('/api/session.php').then(r=>r.json());
+const response=await fetch('/api/tools/purr-code.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'download',text:text,idempotencyKey:key,csrf:session.csrf})});
+let data={};try{data=await response.json()}catch(e){}
+if(!response.ok){
+if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This export was not counted.';}
+else{statusEl.textContent=data.error||'Purr Code hiccup. Try again.';statusEl.classList.add('error');}
+return;}
+bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
 usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
-},'image/png');
+doExport();
 }catch(e){statusEl.textContent='Purr Code hiccup. Try again.';statusEl.classList.add('error');}
-finally{dlBtn.disabled=false;}
+finally{dlBtn.disabled=false;copyBtn.disabled=false;}
+}
+dlBtn.addEventListener('click',()=>meteredExport('download'));
+copyBtn.addEventListener('click',()=>meteredExport('copy'));
+function showTracked(t,scans){
+tracked=t;draw();
+scanCountEl.textContent=scans;
+shortLinkEl.textContent=t.shortUrl;shortLinkEl.href=t.shortUrl;
+trackStats.style.display='';
+}
+createBtn.addEventListener('click',async()=>{
+const text=urlEl.value.trim();
+if(!text){statusEl.textContent='Give me a link first.';statusEl.classList.add('error');urlEl.focus();return;}
+const key=dlKey;dlKey=crypto.randomUUID();
+createBtn.disabled=true;statusEl.textContent='Minting your short link...';statusEl.classList.remove('error');
+try{
+const session=await fetch('/api/session.php').then(r=>r.json());
+const response=await fetch('/api/tools/purr-code.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'create_link',text:text,idempotencyKey:key,csrf:session.csrf})});
+let data={};try{data=await response.json()}catch(e){}
+if(!response.ok){
+if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This code was not counted.';}
+else if(response.status===503){statusEl.textContent='Scan tracking is still being set up. Try again soon.';statusEl.classList.add('error');}
+else{statusEl.textContent=data.error||'Purr Code hiccup. Try again.';statusEl.classList.add('error');}
+return;}
+bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining,action:'create_link'});
+usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+showTracked({code:data.code,shortUrl:data.shortUrl,target:data.target},0);
+statusEl.textContent='Tracked code ready. Downloads and copies are free from here.';
+loadMyCodes();
+}catch(e){statusEl.textContent='Purr Code hiccup. Try again.';statusEl.classList.add('error');}
+finally{createBtn.disabled=false;}
+});
+copyLinkBtn.addEventListener('click',()=>{
+if(!tracked)return;
+navigator.clipboard.writeText(tracked.shortUrl).then(()=>{copyLinkBtn.textContent='Copied!';setTimeout(()=>copyLinkBtn.textContent='Copy',1500);});
+});
+async function loadMyCodes(){
+try{
+const session=await fetch('/api/session.php').then(r=>r.json());
+const response=await fetch('/api/tools/purr-code.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'my_links',csrf:session.csrf})});
+let data={};try{data=await response.json()}catch(e){}
+if(!response.ok||!data.links)return;
+if(!data.links.length){myCodesEl.style.display='none';return;}
+myCodesEl.style.display='';
+codesListEl.innerHTML='';
+data.links.forEach(l=>{
+const li=document.createElement('li');
+const info=document.createElement('span');info.className='t';info.title=l.target_url;info.textContent=l.target_url;
+const s=document.createElement('span');s.className='s';s.textContent=l.scans+(l.scans===1?' scan':' scans');
+const b=document.createElement('button');b.type='button';b.className='linklike';b.textContent='Load';
+b.addEventListener('click',()=>{trackEl.checked=true;trackEl.dispatchEvent(new Event('change'));showTracked({code:l.code,shortUrl:l.shortUrl,target:l.target_url},l.scans);statusEl.textContent='Loaded. Downloads and copies are free for tracked codes.';});
+li.appendChild(info);li.appendChild(s);li.appendChild(b);
+codesListEl.appendChild(li);
+});
+}catch(e){}
+}
+refreshBtn.addEventListener('click',async()=>{
+if(!tracked)return;
+refreshBtn.disabled=true;
+await loadMyCodes();
+try{
+const session=await fetch('/api/session.php').then(r=>r.json());
+const response=await fetch('/api/tools/purr-code.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'my_links',csrf:session.csrf})});
+const data=await response.json();
+const mine=(data.links||[]).find(l=>l.code===tracked.code);
+if(mine)scanCountEl.textContent=mine.scans;
+statusEl.textContent='Stats refreshed.';
+}catch(e){statusEl.textContent='Could not refresh. Try again.';statusEl.classList.add('error');}
+finally{refreshBtn.disabled=false;}
 });
 draw();
 <?php endif; ?>
