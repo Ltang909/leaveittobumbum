@@ -39,14 +39,31 @@ $isOperator = $bill['plan'] === 'operator' && in_array($bill['subscription_statu
 $lowUsage = $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2);
 $hour = (int) (new DateTime('now', new DateTimeZone('America/Toronto')))->format('G');
 $greet = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening');
-$DASHBOARD_TOOLS = [
-  'clips' => ['name' => 'Bum Bum Clips', 'tag' => 'VIDEO', 'icon' => '&#9679;', 'desc' => 'Record your screen right in your browser. Download the clip, keep it forever.', 'url' => '/tools/clips/', 'cta' => 'Record a clip'],
-  'notes' => ['name' => 'Bum Bum Notes', 'tag' => 'VOICE', 'icon' => '&#9834;', 'desc' => 'Talk it out and get a live transcript you can copy or download.', 'url' => '/tools/notes/', 'cta' => 'Record a note'],
-  'cutline' => ['name' => 'Cutline', 'tag' => 'MONEY', 'icon' => '&#9986;', 'desc' => 'Every subscription you forgot about, in one place, with renewal nudges.', 'url' => '/tools/cutline/', 'cta' => 'Cut subscriptions'],
-  'purrsuit' => ['name' => 'Purrsuit', 'tag' => 'CLIENTS', 'icon' => '&#128100;', 'desc' => 'A tiny CRM that tells you who to follow up with today and what to say.', 'url' => '/tools/purrsuit/', 'cta' => 'Track every lead'],
-  'corporate-bum-bum' => ['name' => 'Corporate Bum', 'tag' => 'CAREER', 'icon' => '&#128188;', 'desc' => 'A job application tracker that tells you who to follow up with today and what to say.', 'url' => '/tools/corporate-bum-bum/', 'cta' => 'Track applications'],
-  'doodle' => ['name' => 'Doodle', 'tag' => 'DRAW', 'icon' => '&#9999;&#65039;', 'desc' => 'A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.', 'url' => '/tools/doodle/', 'cta' => 'Start doodling'],
-];
+// Dashboard toolbox is built from the tool registry so the Customize picker
+// always offers every tool, never a stale hardcoded subset.
+$DASHBOARD_TOOLS = [];
+$reg = json_decode(@file_get_contents(dirname(__DIR__) . '/tools/registry.json'), true);
+foreach (($reg['tools'] ?? []) as $t) {
+    if (empty($t['key'])) continue;
+    $DASHBOARD_TOOLS[(string) $t['key']] = [
+        'name' => (string) ($t['name'] ?? $t['key']),
+        'tag' => (string) ($t['tag'] ?? ''),
+        'icon' => (string) ($t['icon'] ?? '🐾'),
+        'desc' => (string) ($t['description'] ?? ''),
+        'url' => (string) ($t['url'] ?? '/tools/'),
+        'cta' => (string) ($t['cta'] ?? 'Open'),
+    ];
+}
+if (!$DASHBOARD_TOOLS) {
+    $DASHBOARD_TOOLS = [
+        'clips' => ['name' => 'Bum Bum Clips', 'tag' => 'VIDEO', 'icon' => '&#9679;', 'desc' => 'Record your screen right in your browser. Download the clip, keep it forever.', 'url' => '/tools/clips/', 'cta' => 'Record a clip'],
+        'notes' => ['name' => 'Bum Bum Notes', 'tag' => 'VOICE', 'icon' => '&#9834;', 'desc' => 'Talk it out and get a live transcript you can copy or download.', 'url' => '/tools/notes/', 'cta' => 'Record a note'],
+        'cutline' => ['name' => 'Cutline', 'tag' => 'MONEY', 'icon' => '&#9986;', 'desc' => 'Every subscription you forgot about, in one place, with renewal nudges.', 'url' => '/tools/cutline/', 'cta' => 'Cut subscriptions'],
+        'purrsuit' => ['name' => 'Purrsuit', 'tag' => 'CLIENTS', 'icon' => '&#128100;', 'desc' => 'A tiny CRM that tells you who to follow up with today and what to say.', 'url' => '/tools/purrsuit/', 'cta' => 'Track every lead'],
+        'corporate-bum-bum' => ['name' => 'Corporate Bum', 'tag' => 'CAREER', 'icon' => '&#128188;', 'desc' => 'A job application tracker that tells you who to follow up with today and what to say.', 'url' => '/tools/corporate-bum-bum/', 'cta' => 'Track applications'],
+        'doodle' => ['name' => 'Doodle', 'tag' => 'DRAW', 'icon' => '&#9999;&#65039;', 'desc' => 'A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.', 'url' => '/tools/doodle/', 'cta' => 'Start doodling'],
+    ];
+}
 $DASHBOARD_ORDER = array_keys($DASHBOARD_TOOLS);
 $selectedKeys = $DASHBOARD_ORDER;
 try {
