@@ -22,6 +22,7 @@ return [
         'api_key' => 'phx_replace_me', // server-side personal API key, keep secret
     ],
     'cron_secret' => 'replace_me', // shared secret for /api/cron-check-requests.php
+    'guest_secret' => 'replace_me', // signs the guest cookie for no-signup tool use; generate with: openssl rand -hex 32 (use a DIFFERENT value on staging and production)
     'groq_api_key' => 'replace_me', // server-side Groq key for Notes transcription on iPhone (free: https://console.groq.com/keys)
     // OAuth sign-in ("Continue with Google / LinkedIn"). The account page
     // shows each button only when its id + secret are both set.

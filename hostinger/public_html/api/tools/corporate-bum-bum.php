@@ -158,14 +158,15 @@ function jobtrack_draft(array $c): string {
 requirePost();
 $input = body();
 requireCsrf($input);
-$user = requireUser();
-$bill = billingUser($user);
-$userId = (int) $user['id'];
+$subject = requireSubject();
+$isGuest = $subject['kind'] === 'guest';
+$userId = $isGuest ? 0 : (int) $subject['user']['id'];
 ensureJobtrackSchema();
 $pdo = db();
 $action = (string) ($input['action'] ?? 'list');
 
 if ($action === 'list') {
+    if ($isGuest) jsonResponse(['contacts' => [], 'followUpDue' => [], 'goneQuiet' => [], 'counts' => array_fill_keys(JOBTRACK_STAGES, 0), 'today' => date('Y-m-d')]);
     $stmt = $pdo->prepare('SELECT * FROM jobtrack_contacts WHERE user_id = ? ORDER BY follow_up_date IS NULL, follow_up_date ASC, updated_at DESC LIMIT 500');
     $stmt->execute([$userId]);
     $contacts = [];
@@ -192,6 +193,7 @@ if ($action === 'list') {
 }
 
 if ($action === 'get') {
+    if ($isGuest) jsonResponse(['error' => 'Application not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $stmt = $pdo->prepare('SELECT * FROM jobtrack_contacts WHERE id = ? AND user_id = ?');
     $stmt->execute([$id, $userId]);
@@ -233,9 +235,23 @@ if ($action === 'add') {
     if ($dateApplied === false) jsonResponse(['error' => 'Pick a valid applied date.'], 422);
     if ($salaryMin === false || $salaryMax === false) jsonResponse(['error' => 'Enter valid salary numbers.'], 422);
     $idempotency = jobtrack_idempotency($input);
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'corporate-bum-bum', $idempotency);
-    if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+    $count = consumeSubjectAction($subject, 'corporate-bum-bum', $idempotency);
+    if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
     $contact = null;
+    if ($isGuest) {
+        // Guests see the application they added, but it is not stored.
+        // Signing up is what keeps it.
+        $contact = jobtrack_public_contact([
+            'id' => 0, 'company' => $company, 'role' => $role, 'contact_name' => $contactName,
+            'contact_email' => $contactEmail, 'job_url' => $jobUrl, 'location' => $location,
+            'salary_min' => $salaryMin, 'salary_max' => $salaryMax, 'currency' => $currency,
+            'source' => $source, 'date_applied' => $dateApplied, 'stage' => $stage,
+            'follow_up_date' => $followUp, 'notes' => $notes, 'starred' => $starred,
+            'interview_held' => $interviewHeld,
+            'last_touch_at' => date('Y-m-d H:i:s'), 'created_at' => date('Y-m-d H:i:s'),
+        ]);
+        jsonResponse(['contact' => $contact, 'saved' => false, 'signup_required' => true, 'usage' => subjectUsage($subject), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
+    }
     if (empty($count['duplicate'])) {
         $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, starred, interview_held, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
         $stmt->execute([$userId, $company, $role, $contactName, $contactEmail, $jobUrl, $location, $salaryMin, $salaryMax, $currency, $source, $dateApplied, $stage, $followUp, $notes, $starred, $interviewHeld]);
@@ -244,7 +260,7 @@ if ($action === 'add') {
         $stmt->execute([$id]);
         $contact = jobtrack_public_contact($stmt->fetch());
     }
-    jsonResponse(['contact' => $contact, 'usage' => usageFor($bill), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
+    jsonResponse(['contact' => $contact, 'usage' => subjectUsage($subject), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
 }
 
 if ($action === 'import') {
@@ -287,6 +303,7 @@ if ($action === 'import') {
     $errors = [];
     $rows = 0;
     $limitHit = false;
+    $guestImported = [];
     while (($row = fgetcsv($stream)) !== false && $rows < 200) {
         $rows++;
         $rec = ['company' => '', 'role' => '', 'contact_name' => '', 'contact_email' => '', 'job_url' => '', 'location' => '', 'salary_min' => '', 'salary_max' => '', 'currency' => '', 'source' => '', 'date_applied' => '', 'stage' => '', 'follow_up_date' => '', 'notes' => '', 'starred' => '', 'interview_held' => ''];
@@ -309,9 +326,13 @@ if ($action === 'import') {
         $followUp = $rec['follow_up_date'] === '' ? null : jobtrack_clean_date($rec['follow_up_date']);
         if ($followUp === false) { $skipped++; if (count($errors) < 20) $errors[] = "Row $rows: invalid follow-up date (use YYYY-MM-DD)."; continue; }
         // Match existing application by company + role (case-insensitive). Empty cells leave existing values alone.
-        $stmt = $pdo->prepare('SELECT id FROM jobtrack_contacts WHERE user_id = ? AND LOWER(company) = LOWER(?) AND LOWER(role) = LOWER(?) LIMIT 1');
-        $stmt->execute([$userId, $rec['company'], $rec['role']]);
-        $existing = $stmt->fetch();
+        // Guests store nothing, so there is never an existing match.
+        $existing = $isGuest ? false : null;
+        if (!$isGuest) {
+            $stmt = $pdo->prepare('SELECT id FROM jobtrack_contacts WHERE user_id = ? AND LOWER(company) = LOWER(?) AND LOWER(role) = LOWER(?) LIMIT 1');
+            $stmt->execute([$userId, $rec['company'], $rec['role']]);
+            $existing = $stmt->fetch();
+        }
         if ($existing) {
             $sets = [];
             $params = [];
@@ -338,20 +359,36 @@ if ($action === 'import') {
             $updated++;
             continue;
         }
-        $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'corporate-bum-bum', $batchKey . '-' . $rows);
+        $count = consumeSubjectAction($subject, 'corporate-bum-bum', $batchKey . '-' . $rows);
         if (!empty($count['limit_reached'])) { $limitHit = true; break; }
         if (empty($count['duplicate'])) {
-            $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, starred, interview_held, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
-            $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, jobtrack_clean_currency($rec['currency']), $rec['source'], $dateApplied, $stageValid ? $stage : 'applied', $followUp, $rec['notes'], $starred ?? 0, $interviewHeld ?? 0]);
-            $imported++;
+            if ($isGuest) {
+                $guestImported[] = jobtrack_public_contact([
+                    'id' => 0, 'company' => $rec['company'], 'role' => $rec['role'],
+                    'contact_name' => $rec['contact_name'], 'contact_email' => $rec['contact_email'],
+                    'job_url' => $rec['job_url'], 'location' => $rec['location'],
+                    'salary_min' => $salaryMin, 'salary_max' => $salaryMax,
+                    'currency' => jobtrack_clean_currency($rec['currency']), 'source' => $rec['source'],
+                    'date_applied' => $dateApplied, 'stage' => $stageValid ? $stage : 'applied',
+                    'follow_up_date' => $followUp, 'notes' => $rec['notes'],
+                    'starred' => $starred ?? 0, 'interview_held' => $interviewHeld ?? 0,
+                    'last_touch_at' => date('Y-m-d H:i:s'), 'created_at' => date('Y-m-d H:i:s'),
+                ]);
+                $imported++;
+            } else {
+                $stmt = $pdo->prepare('INSERT INTO jobtrack_contacts (user_id, company, role, contact_name, contact_email, job_url, location, salary_min, salary_max, currency, source, date_applied, stage, follow_up_date, notes, starred, interview_held, last_touch_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
+                $stmt->execute([$userId, $rec['company'], $rec['role'], $rec['contact_name'], $rec['contact_email'], $rec['job_url'], $rec['location'], $salaryMin, $salaryMax, jobtrack_clean_currency($rec['currency']), $rec['source'], $dateApplied, $stageValid ? $stage : 'applied', $followUp, $rec['notes'], $starred ?? 0, $interviewHeld ?? 0]);
+                $imported++;
+            }
         }
     }
     fclose($stream);
-    if ($limitHit) jsonResponse(['error' => 'You ran out of actions partway through. ' . $imported . ' new applications added, ' . $updated . ' updated, ' . $skipped . ' skipped.', 'imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'usage' => usageFor($bill)], 402);
-    jsonResponse(['imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'errors' => $errors, 'usage' => usageFor($bill)]);
+    if ($limitHit) jsonResponse(['error' => 'You ran out of actions partway through. ' . $imported . ' new applications added, ' . $updated . ' updated, ' . $skipped . ' skipped.', 'imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'usage' => subjectUsage($subject), 'signup_required' => $isGuest], 402);
+    jsonResponse(['imported' => $imported, 'updated' => $updated, 'skipped' => $skipped, 'errors' => $errors, 'usage' => subjectUsage($subject), 'contacts' => $guestImported ?? null, 'saved' => !$isGuest, 'signup_required' => $isGuest]);
 }
 
 if ($action === 'export') {
+    if ($isGuest) jsonResponse(['csv' => '', 'filename' => 'corporate-bum-bum-export-' . date('Y-m-d') . '.csv']);
     $stmt = $pdo->prepare('SELECT * FROM jobtrack_contacts WHERE user_id = ? ORDER BY company ASC LIMIT 2000');
     $stmt->execute([$userId]);
     $contacts = $stmt->fetchAll();
@@ -384,6 +421,7 @@ if ($action === 'export') {
 }
 
 if ($action === 'update') {
+    if ($isGuest) jsonResponse(['error' => 'Application not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $fields = [];
     $params = [];
@@ -489,6 +527,7 @@ if ($action === 'update') {
 }
 
 if ($action === 'log') {
+    if ($isGuest) jsonResponse(['error' => 'Application not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $body = trim((string) ($input['body'] ?? ''));
     if ($body === '') jsonResponse(['error' => 'Write a note about the interaction.'], 422);
@@ -515,6 +554,7 @@ if ($action === 'log') {
 }
 
 if ($action === 'delete') {
+    if ($isGuest) jsonResponse(['error' => 'Application not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $stmt = $pdo->prepare('DELETE FROM jobtrack_notes WHERE contact_id = ? AND user_id = ?');
     $stmt->execute([$id, $userId]);
@@ -525,6 +565,7 @@ if ($action === 'delete') {
 }
 
 if ($action === 'delete_note') {
+    if ($isGuest) jsonResponse(['error' => 'Note not found.'], 404);
     $noteId = (int) ($input['note_id'] ?? 0);
     $stmt = $pdo->prepare('DELETE FROM jobtrack_notes WHERE id = ? AND user_id = ?');
     $stmt->execute([$noteId, $userId]);

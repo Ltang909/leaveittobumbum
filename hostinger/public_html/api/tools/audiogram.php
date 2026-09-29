@@ -87,7 +87,8 @@ $action = (string) ($input['action'] ?? ($_POST['action'] ?? ''));
 
 if ($action === 'transcribe') {
     requireCsrf($_POST);
-    requireUser();
+    $subject = requireSubject();
+    $isGuest = $subject['kind'] === 'guest';
     startSecureSession();
     $today = gmdate('Y-m-d');
     if (($_SESSION['ag_day'] ?? '') !== $today) {
@@ -116,6 +117,12 @@ if ($action === 'transcribe') {
         || substr($name, -4) === '.wav' || substr($name, -5) === '.webm';
     if (!$looksAudio) {
         jsonResponse(['error' => 'That does not look like an MP3.'], 422);
+    }
+    if ($isGuest) {
+        // Pre-check before the Groq call so guests at the limit never burn a
+        // transcription. The action itself is consumed after success below.
+        $preTr = subjectUsage($subject);
+        if (empty($preTr['unlimited']) && ($preTr['remaining'] ?? 0) <= 0) limitReachedResponse($subject, $preTr);
     }
     $ch = curl_init('https://api.groq.com/openai/v1/audio/transcriptions');
     curl_setopt_array($ch, [
@@ -153,33 +160,50 @@ if ($action === 'transcribe') {
         jsonResponse(['error' => 'The audiogram could not hear any words in that MP3.'], 422);
     }
     $_SESSION['ag_count'] = (int) ($_SESSION['ag_count'] ?? 0) + 1;
+    $agUsage = null;
+    if ($isGuest) {
+        // Guests pay for the transcription itself: the Groq call is the
+        // expensive step, so the action is consumed here on success. The
+        // later 'complete' call does not consume again for guests.
+        $pre = subjectUsage($subject);
+        if (empty($pre['unlimited']) && ($pre['remaining'] ?? 0) <= 0) limitReachedResponse($subject, $pre);
+        $tkey = 'ag-transcribe-' . hash('sha256', (string) file_get_contents($audio['tmp_name']));
+        $count = consumeSubjectAction($subject, 'audiogram', $tkey);
+        if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
+        $agUsage = subjectUsage($subject);
+    }
     jsonResponse([
         'ok' => true,
         'words' => $words,
         'duration' => round((float) ($data['duration'] ?? 0), 2),
+        'usage' => $agUsage,
     ]);
 }
 
 requireCsrf($input);
-$user = requireUser();
-$bill = billingUser($user);
+$subject = requireSubject();
+$isGuest = $subject['kind'] === 'guest';
 
 if ($action === 'status') {
-    jsonResponse(['ok' => true, 'usage' => usageFor($bill)]);
+    jsonResponse(['ok' => true, 'usage' => subjectUsage($subject)]);
 }
 
 if ($action === 'complete') {
+    if ($isGuest) {
+        // Guests already paid at 'transcribe'; completing the render is free.
+        jsonResponse(['ok' => true, 'usage' => subjectUsage($subject), 'duplicate' => false]);
+    }
     $idempotency = audiogram_idempotency($input);
     // Pre-check so a failed render never costs an action.
-    $pre = usageFor($bill);
+    $pre = subjectUsage($subject);
     if (empty($pre['unlimited']) && ($pre['remaining'] ?? 0) <= 0) {
-        jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $pre], 402);
+        limitReachedResponse($subject, $pre);
     }
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'audiogram', $idempotency);
-    if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+    $count = consumeSubjectAction($subject, 'audiogram', $idempotency);
+    if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
     jsonResponse([
         'ok' => true,
-        'usage' => usageFor($bill),
+        'usage' => subjectUsage($subject),
         'duplicate' => (bool) ($count['duplicate'] ?? false),
     ]);
 }

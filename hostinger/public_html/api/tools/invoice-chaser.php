@@ -162,14 +162,21 @@ function chaser_take(array $inv, ?array $intel): string {
 requirePost();
 $input = body();
 requireCsrf($input);
-$user = requireUser();
-$bill = billingUser($user);
-$userId = (int) $user['id'];
+$subject = requireSubject();
+$isGuest = $subject['kind'] === 'guest';
+$userEmail = $isGuest ? '' : (string) ($subject['user']['email'] ?? '');
+$userId = $isGuest ? 0 : (int) $subject['user']['id'];
 ensureChaserSchema();
 $pdo = db();
 $action = (string) ($input['action'] ?? 'list');
 
 if ($action === 'list') {
+    if ($isGuest) jsonResponse([
+        'invoices' => [],
+        'stats' => ['outstanding' => 0, 'overdue' => 0, 'open' => 0, 'overdue_count' => 0, 'recovered' => []],
+        'today' => date('Y-m-d'),
+        'currencies' => CHASER_CURRENCIES,
+    ]);
     $stmt = $pdo->prepare("SELECT * FROM chaser_invoices WHERE user_id = ? ORDER BY (status = 'open') DESC, due_date ASC, id DESC LIMIT 500");
     $stmt->execute([$userId]);
     $intelMap = chaser_intel_map($pdo, $userId);
@@ -213,6 +220,7 @@ if ($action === 'list') {
 }
 
 if ($action === 'draft') {
+    if ($isGuest) jsonResponse(['error' => 'Invoice not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $voice = (string) ($input['voice'] ?? 'me');
     if (!in_array($voice, ['me', 'assistant'], true)) $voice = 'me';
@@ -232,6 +240,7 @@ if ($action === 'draft') {
 }
 
 if ($action === 'send') {
+    if ($isGuest) jsonResponse(['error' => 'Invoice not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $voice = (string) ($input['voice'] ?? 'me');
     if (!in_array($voice, ['me', 'assistant'], true)) $voice = 'me';
@@ -250,25 +259,25 @@ if ($action === 'send') {
     // Already chased today? Report success without charging or re-sending.
     $todayStart = date('Y-m-d 00:00:00');
     if (!empty($row['last_chase_sent_at']) && $row['last_chase_sent_at'] >= $todayStart) {
-        jsonResponse(['ok' => true, 'sent_to' => $clientEmail, 'voice' => $voice, 'duplicate' => true, 'usage' => usageFor($bill)]);
+        jsonResponse(['ok' => true, 'sent_to' => $clientEmail, 'voice' => $voice, 'duplicate' => true, 'usage' => subjectUsage($subject)]);
     }
     // One charged send per invoice per day; the day key keeps a retry after a
     // failed send free, while last_chase_sent_at gates the actual email.
     $dayKey = 'chaser-send-' . $id . '-' . date('Y-m-d');
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'invoice-chaser', $dayKey);
-    if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+    $count = consumeSubjectAction($subject, 'invoice-chaser', $dayKey);
+    if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
 
     $inv = chaser_public_invoice($row);
     $draft = chaser_draft($inv, $voice);
     $body = $draft['body'] . "\n\n--\nSent via Bum Bum";
-    $replyTo = trim((string) ($user['email'] ?? ''));
+    $replyTo = $userEmail;
     [$sent, $mailError] = bb_send_mail($clientEmail, $draft['subject'], $body, $replyTo);
     if (!$sent) {
         jsonResponse(['error' => 'The email could not be sent right now. Try again in a bit.'], 502);
     }
     $stmt = $pdo->prepare('UPDATE chaser_invoices SET last_chase_sent_at = NOW() WHERE id = ? AND user_id = ?');
     $stmt->execute([$id, $userId]);
-    jsonResponse(['ok' => true, 'sent_to' => $clientEmail, 'voice' => $voice, 'duplicate' => false, 'usage' => usageFor($bill)]);
+    jsonResponse(['ok' => true, 'sent_to' => $clientEmail, 'voice' => $voice, 'duplicate' => false, 'usage' => subjectUsage($subject)]);
 }
 
 if ($action === 'add') {
@@ -290,9 +299,21 @@ if ($action === 'add') {
     if ($dueDate === false) jsonResponse(['error' => 'Pick a valid due date.'], 422);
     if (mb_strlen($notes) > 2000) jsonResponse(['error' => 'Keep notes under 2000 characters.'], 422);
     $idempotency = chaser_idempotency($input);
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'invoice-chaser', $idempotency);
-    if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+    $count = consumeSubjectAction($subject, 'invoice-chaser', $idempotency);
+    if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
     $invoice = null;
+    if ($isGuest) {
+        // Guests see the invoice they added, but it is not stored. Signing
+        // up is what keeps it.
+        $invoice = chaser_public_invoice([
+            'id' => 0, 'client_name' => $client, 'client_email' => $clientEmail,
+            'amount' => $amount, 'currency' => $currency, 'invoice_no' => $invoiceNo,
+            'due_date' => $dueDate, 'notes' => $notes === '' ? null : $notes,
+            'status' => 'open', 'paid_at' => null, 'last_chase_sent_at' => null,
+            'created_at' => date('Y-m-d H:i:s'),
+        ]);
+        jsonResponse(['invoice' => $invoice, 'saved' => false, 'signup_required' => true, 'usage' => subjectUsage($subject), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
+    }
     if (empty($count['duplicate'])) {
         $stmt = $pdo->prepare('INSERT INTO chaser_invoices (user_id, client_name, client_email, amount, currency, invoice_no, due_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([$userId, $client, $clientEmail, $amount, $currency, $invoiceNo, $dueDate, $notes === '' ? null : $notes]);
@@ -301,10 +322,11 @@ if ($action === 'add') {
         $stmt->execute([$id]);
         $invoice = chaser_public_invoice($stmt->fetch());
     }
-    jsonResponse(['invoice' => $invoice, 'usage' => usageFor($bill), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
+    jsonResponse(['invoice' => $invoice, 'usage' => subjectUsage($subject), 'duplicate' => (bool) ($count['duplicate'] ?? false)]);
 }
 
 if ($action === 'update') {
+    if ($isGuest) jsonResponse(['error' => 'Invoice not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $fields = [];
     $params = [];
@@ -368,6 +390,7 @@ if ($action === 'update') {
 }
 
 if ($action === 'delete') {
+    if ($isGuest) jsonResponse(['error' => 'Invoice not found.'], 404);
     $id = (int) ($input['id'] ?? 0);
     $stmt = $pdo->prepare('DELETE FROM chaser_invoices WHERE id = ? AND user_id = ?');
     $stmt->execute([$id, $userId]);
@@ -376,7 +399,8 @@ if ($action === 'delete') {
 }
 
 if ($action === 'remind') {
-    $email = trim((string) ($user['email'] ?? ''));
+    if ($isGuest) jsonResponse(['error' => 'Sign up first and Bum Bum will email you the chase list.'], 401);
+    $email = $userEmail;
     if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         jsonResponse(['error' => 'Your account has no email address to send to.'], 422);
     }
@@ -390,8 +414,8 @@ if ($action === 'remind') {
 
     // One charged reminder per day; same-day repeats ride free on the first send.
     $dayKey = 'chaser-remind-' . $userId . '-' . date('Y-m-d');
-    $count = consumeAction((int) $bill['id'], (string) $bill['plan'], periodKey($bill), 'invoice-chaser', $dayKey);
-    if (!empty($count['limit_reached'])) jsonResponse(['error' => 'You have used all actions for this month.', 'usage' => $count], 402);
+    $count = consumeSubjectAction($subject, 'invoice-chaser', $dayKey);
+    if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
     $alreadySent = !empty($count['duplicate']);
 
     $overdueLines = [];
@@ -450,7 +474,7 @@ if ($action === 'remind') {
     }
     $stmt = $pdo->prepare("UPDATE chaser_invoices SET reminded_at = NOW() WHERE user_id = ? AND status = 'open'");
     $stmt->execute([$userId]);
-    jsonResponse(['ok' => true, 'sent_to' => $email, 'overdue' => $nOverdue, 'duplicate' => $alreadySent, 'usage' => usageFor($bill)]);
+    jsonResponse(['ok' => true, 'sent_to' => $email, 'overdue' => $nOverdue, 'duplicate' => $alreadySent, 'usage' => subjectUsage($subject)]);
 }
 
 jsonResponse(['error' => 'Unknown action.'], 400);

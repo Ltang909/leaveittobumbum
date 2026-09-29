@@ -30,6 +30,7 @@ $shMeter = !empty($showMeter);
       if(url.indexOf('/api/tools/')===0){
         res.clone().json().then(function(data){
           if(data&&data.usage)document.dispatchEvent(new CustomEvent('bb:usage',{detail:data.usage}));
+          if(data&&data.signup_required)document.dispatchEvent(new CustomEvent('bb:signup-required',{detail:data}));
         }).catch(function(){});
       }
       return res;
@@ -40,3 +41,5 @@ $shMeter = !empty($showMeter);
 <?php if ($shUser): ?><script>
 (function(){var b=document.getElementById('bbSignOut');if(!b)return;b.addEventListener('click',async function(){b.disabled=true;try{var s=await fetch('/api/session.php').then(function(r){return r.json()});await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout',csrf:s.csrf})});}catch(e){}location.reload();});})();
 </script><?php endif; ?>
+<?php // Guest conversion modal (no-op markup when not a guest page). ?>
+<?php require __DIR__ . '/guest-convert.php'; ?>
