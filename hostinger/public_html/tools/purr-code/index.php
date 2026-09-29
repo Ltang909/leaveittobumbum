@@ -34,8 +34,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 #pcMyCodes{width:100%;max-width:420px}
 #pcMyCodes h3{margin:0 0 8px;font-size:1rem}
 #pcCodesList{list-style:none;margin:0;padding:0}
-#pcCodesList li{display:flex;align-items:center;gap:10px;justify-content:space-between;border:2px solid var(--line);border-radius:10px;padding:8px 12px;margin:0 0 8px;background:#fff;font-size:14px}
-#pcCodesList .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+#pcCodesList li{display:flex;align-items:center;gap:12px;border:2px solid var(--line);border-radius:10px;padding:8px 12px;margin:0 0 8px;background:#fff;font-size:14px}
+#pcCodesList .t{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#pcCodesList .meta{display:flex;align-items:center;gap:12px;flex:none}
 #pcCodesList .s{font-weight:900;white-space:nowrap}
 .hidden{display:none!important}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purr Code"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
@@ -283,7 +284,9 @@ const info=document.createElement('span');info.className='t';info.title=l.target
 const s=document.createElement('span');s.className='s';s.textContent=l.scans+(l.scans===1?' scan':' scans');
 const b=document.createElement('button');b.type='button';b.className='linklike';b.textContent='Load';
 b.addEventListener('click',()=>{trackEl.checked=true;trackEl.dispatchEvent(new Event('change'));showTracked({code:l.code,shortUrl:l.shortUrl,target:l.target_url},l.scans);statusEl.textContent='Loaded. Downloads and copies are free for tracked codes.';});
-li.appendChild(info);li.appendChild(s);li.appendChild(b);
+const meta=document.createElement('span');meta.className='meta';
+meta.appendChild(s);meta.appendChild(b);
+li.appendChild(info);li.appendChild(meta);
 codesListEl.appendChild(li);
 });
 }catch(e){}
