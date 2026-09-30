@@ -3,7 +3,81 @@ require dirname(__DIR__, 2) . '/api/_bootstrap.php';
 require dirname(__DIR__, 2) . '/includes/purr-code-lib.php';
 purrcode_handle_redirect(); // /tools/purr-code/?go=CODE logs the scan and 302s.
 $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Purr Code | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Purr Code | Leave It to Bum Bum</title>
+<meta name="description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
+<meta property="og:title" content="Purr Code | Leave It to Bum Bum">
+<meta property="og:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/purr-code/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Purr Code | Leave It to Bum Bum">
+<meta name="twitter:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/purr-code/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Purr Code",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.",
+  "url": "https://leaveittobumbum.com/tools/purr-code/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Purr Code free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Previewing is free and unlimited. Exporting a QR code uses one action, and guests get 15 free actions with no signup."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Design as a guest. A free account saves your tracked codes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I track how many times my code is scanned?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Turn on tracking and Purr Code counts every scan."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I customize the look?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Pick from six color palettes or set your own colors, with soft, dots, or classic styles, plus a cat in the middle."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do the QR codes expire?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Your codes work as long as your link does."
+      }
+    }
+  ]
+}
+</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .pc-grid{display:grid;grid-template-columns:1fr;gap:18px}
 @media(min-width:900px){.pc-grid{grid-template-columns:1fr 1fr;align-items:start}}
@@ -321,4 +395,17 @@ finally{refreshBtn.disabled=false;}
 loadMyCodes();
 draw();
 <?php endif; ?>
-</script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<h3>Is Purr Code free?</h3>
+<p>Previewing is free and unlimited. Exporting a QR code uses one action, and guests get 15 free actions with no signup.</p>
+<h3>Do I need an account?</h3>
+<p>No. Design as a guest. A free account saves your tracked codes.</p>
+<h3>Can I track how many times my code is scanned?</h3>
+<p>Yes. Turn on tracking and Purr Code counts every scan.</p>
+<h3>Can I customize the look?</h3>
+<p>Yes. Pick from six color palettes or set your own colors, with soft, dots, or classic styles, plus a cat in the middle.</p>
+<h3>Do the QR codes expire?</h3>
+<p>No. Your codes work as long as your link does.</p>
+</section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

@@ -1,5 +1,79 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Image Converter | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Image Converter | Leave It to Bum Bum</title>
+<meta name="description" content="Convert images between WebP, PNG, and JPG in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
+<meta property="og:title" content="Image Converter | Leave It to Bum Bum">
+<meta property="og:description" content="Convert images between WebP, PNG, and JPG in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/image-converter/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Image Converter | Leave It to Bum Bum">
+<meta name="twitter:description" content="Convert images between WebP, PNG, and JPG in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/image-converter/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Image Converter",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Convert images between WebP, PNG, and JPG in your browser. Fast, private, files never leave your device. Free to try, no account needed.",
+  "url": "https://leaveittobumbum.com/tools/image-converter/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Image Converter free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup. One action per image converted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Convert as a guest with 15 free actions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do my images upload anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Your files never leave your device. Conversion happens right in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which formats are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WebP, PNG, and JPG, in any direction."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a size limit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If your browser can open it, Image Converter can convert it."
+      }
+    }
+  ]
+}
+</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -55,6 +129,19 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 <div id="resultList"></div>
 </section>
 <?php endif; ?>
+<section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<h3>Is Image Converter free?</h3>
+<p>You get 15 free actions with no signup. One action per image converted.</p>
+<h3>Do I need an account?</h3>
+<p>No. Convert as a guest with 15 free actions.</p>
+<h3>Do my images upload anywhere?</h3>
+<p>No. Your files never leave your device. Conversion happens right in your browser.</p>
+<h3>Which formats are supported?</h3>
+<p>WebP, PNG, and JPG, in any direction.</p>
+<h3>Is there a size limit?</h3>
+<p>If your browser can open it, Image Converter can convert it.</p>
+</section>
 </main>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}

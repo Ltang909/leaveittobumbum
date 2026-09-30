@@ -1,5 +1,79 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Invoice Chaser | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Invoice Chaser | Leave It to Bum Bum</title>
+<meta name="description" content="Get paid without the awkward. Bum Bum writes the chase email, sends it as your billing assistant, and learns when each client needs a nudge. Free to try.">
+<meta property="og:title" content="Invoice Chaser | Leave It to Bum Bum">
+<meta property="og:description" content="Get paid without the awkward. Bum Bum writes the chase email, sends it as your billing assistant, and learns when each client needs a nudge. Free to try.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/invoice-chaser/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Invoice Chaser | Leave It to Bum Bum">
+<meta name="twitter:description" content="Get paid without the awkward. Bum Bum writes the chase email, sends it as your billing assistant, and learns when each client needs a nudge. Free to try.">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/invoice-chaser/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Invoice Chaser",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Get paid without the awkward. Bum Bum writes the chase email, sends it as your billing assistant, and learns when each client needs a nudge. Free to try.",
+  "url": "https://leaveittobumbum.com/tools/invoice-chaser/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Invoice Chaser free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup. Adding an invoice or sending a chase uses one action. Everything else is free."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Start as a guest with 15 free actions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it actually send the emails?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Bum Bum writes the chase email in the right tone and sends it as your billing assistant in one tap."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will it annoy my clients?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It learns how each client actually pays, so it knows when to nudge and when to sit tight. The tone stays professional, never desperate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if a client always pays late?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "That is exactly who this is for. The chaser adapts its timing to each client's real payment pattern."
+      }
+    }
+  ]
+}
+</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer}
@@ -279,4 +353,17 @@ addForm.addEventListener('submit',async e=>{
   addForm.reset();await refresh();
 });
 refresh();
-</script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<h3>Is Invoice Chaser free?</h3>
+<p>You get 15 free actions with no signup. Adding an invoice or sending a chase uses one action. Everything else is free.</p>
+<h3>Do I need an account?</h3>
+<p>No. Start as a guest with 15 free actions.</p>
+<h3>Does it actually send the emails?</h3>
+<p>Yes. Bum Bum writes the chase email in the right tone and sends it as your billing assistant in one tap.</p>
+<h3>Will it annoy my clients?</h3>
+<p>It learns how each client actually pays, so it knows when to nudge and when to sit tight. The tone stays professional, never desperate.</p>
+<h3>What if a client always pays late?</h3>
+<p>That is exactly who this is for. The chaser adapts its timing to each client's real payment pattern.</p>
+</section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
