@@ -12,19 +12,6 @@ function Arrow() {
 const VIEW_KEY = "bum-tools-view";
 type View = "cards" | "list";
 
-// Per-tool action cost, matching each tool page's own pricing FAQ.
-// Gap Scout is genuinely free; Doodle and Purr Code are free to
-// try with actions only for saving/exporting. Everything else: 1 action.
-const ACTION_COST: Record<string, string> = {
-  "gap-scout": "Free",
-  "doodle": "Free to draw, 1 action to save",
-  "purr-code": "Free to preview, 1 action to export",
-};
-
-function costFor(tool: Tool) {
-  return ACTION_COST[tool.key] ?? "1 action";
-}
-
 export default function ToolsView() {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
@@ -126,7 +113,7 @@ export default function ToolsView() {
                     <span className="tool-row-name">{tool.name}</span>
                     <span className="tool-row-desc">{tool.description}</span>
                   </span>
-                  <span className="tool-row-cost">{costFor(tool)}</span>
+                  <span className="tool-row-tag">{tool.tag}</span>
                   <Arrow />
                 </a>
               </li>
