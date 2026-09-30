@@ -34,7 +34,7 @@ if ($test !== '') {
         CURLOPT_POSTFIELDS => json_encode([
             'model' => $test,
             'messages' => [['role' => 'user', 'content' => 'Reply with exactly: OK']],
-            'max_tokens' => 10,
+            'max_tokens' => (int) ($_GET['tokens'] ?? 10),
             'temperature' => 0,
         ]),
         CURLOPT_TIMEOUT => 30,
