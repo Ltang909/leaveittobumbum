@@ -159,6 +159,26 @@
       "url": "/tools/sop-ify/",
       "cta": "Make it a playbook",
       "mascot": "/bum/cat-bowtie.png"
+    },
+    {
+      "key": "hearsay",
+      "name": "Hearsay",
+      "tag": "Marketing",
+      "icon": "👂",
+      "description": "Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead.",
+      "url": "/tools/hearsay/",
+      "cta": "Run a scan",
+      "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "video-converter",
+      "name": "Video Converter",
+      "tag": "Video",
+      "icon": "🔄",
+      "description": "Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device.",
+      "url": "/tools/video-converter/",
+      "cta": "Convert a video",
+      "mascot": "/bum/cat-laptop.png"
     }
   ]
 }
