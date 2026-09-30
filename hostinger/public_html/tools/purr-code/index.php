@@ -40,7 +40,7 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
       "name": "Is Purr Code free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Previewing is free and unlimited. Exporting a QR code uses one action, and guests get 15 free actions with no signup."
+        "text": "Previewing is free and unlimited. Exporting a QR code uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -48,7 +48,7 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Design as a guest. A free account saves your tracked codes."
+        "text": "No. Design as a guest. A free account gets 75 actions every month and saves your tracked codes. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -116,7 +116,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 #pcCodesList .qrthumb:hover{border-color:#1E2321}
 #pcCodesList .qrthumb canvas{width:46px;height:46px;display:block}
 .hidden{display:none!important}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purr Code"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purr Code"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Purr Code</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -397,15 +397,25 @@ draw();
 <?php endif; ?>
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is Purr Code free?</h3>
-<p>Previewing is free and unlimited. Exporting a QR code uses one action, and guests get 15 free actions with no signup.</p>
-<h3>Do I need an account?</h3>
-<p>No. Design as a guest. A free account saves your tracked codes.</p>
-<h3>Can I track how many times my code is scanned?</h3>
+<details>
+<summary>Is Purr Code free?</summary>
+<p>Previewing is free and unlimited. Exporting a QR code uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Design as a guest. A free account gets 75 actions every month and saves your tracked codes. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Can I track how many times my code is scanned?</summary>
 <p>Yes. Turn on tracking and Purr Code counts every scan.</p>
-<h3>Can I customize the look?</h3>
+</details>
+<details>
+<summary>Can I customize the look?</summary>
 <p>Yes. Pick from six color palettes or set your own colors, with soft, dots, or classic styles, plus a cat in the middle.</p>
-<h3>Do the QR codes expire?</h3>
+</details>
+<details>
+<summary>Do the QR codes expire?</summary>
 <p>No. Your codes work as long as your link does.</p>
+</details>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

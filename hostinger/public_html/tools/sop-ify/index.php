@@ -36,7 +36,7 @@
       "name": "Is SOP-ify free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You get 15 free actions with no signup. One finished playbook uses one action."
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished playbook uses one action."
       }
     },
     {
@@ -44,7 +44,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Start as a guest with 15 free actions."
+        "text": "No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -103,7 +103,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 @keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
 @media print{.site-header,.site-footer,.no-print,#sopForm{display:none!important}#sopResult{display:block!important}.shell{max-width:none}}
 .hidden{display:none!important}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"SOP-ify"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum the executive"><h1>Chaos in. Playbook out.</h1><p class="lede">Dump how you do the thing, all messy and rambling. Get back a clean step-by-step playbook a brand-new helper could follow with zero prior context.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"SOP-ify"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum the executive"><h1>Chaos in. Playbook out.</h1><p class="lede">Dump how you do the thing, all messy and rambling. Get back a clean step-by-step playbook a brand-new helper could follow with zero prior context.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use SOP-ify</h2><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -258,15 +258,25 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <?php endif; ?>
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is SOP-ify free?</h3>
-<p>You get 15 free actions with no signup. One finished playbook uses one action.</p>
-<h3>Do I need an account?</h3>
-<p>No. Start as a guest with 15 free actions.</p>
-<h3>How detailed is the playbook?</h3>
+<details>
+<summary>Is SOP-ify free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished playbook uses one action.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>How detailed is the playbook?</summary>
 <p>Step by step, written so a brand-new helper could follow it with zero prior context.</p>
-<h3>Can I talk instead of typing?</h3>
+</details>
+<details>
+<summary>Can I talk instead of typing?</summary>
 <p>Yes. Record a voice note and it gets transcribed automatically.</p>
-<h3>What do I do with the playbook?</h3>
+</details>
+<details>
+<summary>What do I do with the playbook?</summary>
 <p>Hand it to a helper, save it as your process doc, or use it to train the next person.</p>
+</details>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

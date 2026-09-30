@@ -36,7 +36,7 @@
       "name": "Is Corporate Bum Bum free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You get 15 free actions with no signup. Adding an application uses one action. Everything else is free."
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. Adding an application uses one action. Everything else is free."
       }
     },
     {
@@ -44,7 +44,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Start as a guest with 15 free actions."
+        "text": "No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -160,7 +160,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .fld input[type=checkbox]{accent-color:#8a7a55}
 .modal h3{font-weight:700}
 .modal-close{font-weight:700}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Corporate Bum"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum looking professional"><h1>Your job hunt, in a suit.</h1><p class="lede">Corporate Bum is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Corporate Bum"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum looking professional"><h1>Your job hunt, in a suit.</h1><p class="lede">Corporate Bum is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Corporate Bum</h2><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -440,15 +440,25 @@ csvForm.addEventListener('submit',async e=>{
 refresh();
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is Corporate Bum Bum free?</h3>
-<p>You get 15 free actions with no signup. Adding an application uses one action. Everything else is free.</p>
-<h3>Do I need an account?</h3>
-<p>No. Start as a guest with 15 free actions.</p>
-<h3>How is this different from a spreadsheet?</h3>
+<details>
+<summary>Is Corporate Bum Bum free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. Adding an application uses one action. Everything else is free.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>How is this different from a spreadsheet?</summary>
 <p>It tells you who to follow up with every morning and drafts what to say. A spreadsheet just sits there.</p>
-<h3>What does the morning follow-up tell me?</h3>
+</details>
+<details>
+<summary>What does the morning follow-up tell me?</summary>
 <p>Which applications have gone quiet and a draft follow-up note for each one.</p>
-<h3>Can I import my applications?</h3>
+</details>
+<details>
+<summary>Can I import my applications?</summary>
 <p>Yes. Import a CSV matched by company and role.</p>
+</details>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

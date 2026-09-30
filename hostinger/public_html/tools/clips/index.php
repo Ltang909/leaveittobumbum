@@ -41,7 +41,7 @@
       "name": "Is Bum Bum Clips free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You get 15 free actions with no signup, and one finished recording uses one action. Setting up and previewing costs nothing."
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished recording uses one action. Setting up and previewing costs nothing."
       }
     },
     {
@@ -49,7 +49,7 @@
       "name": "Do I need an account to record my screen?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Record as a guest with 15 free actions. Create a free account when you want more."
+        "text": "No. Record as a guest with 15 free actions. Create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -79,7 +79,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}</style>
+<link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style>
 <?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?>
 </head>
 <body>
@@ -567,16 +567,26 @@ if(!screenOK){
 <?php endif; ?>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is Bum Bum Clips free?</h3>
-<p>You get 15 free actions with no signup, and one finished recording uses one action. Setting up and previewing costs nothing.</p>
-<h3>Do I need an account to record my screen?</h3>
-<p>No. Record as a guest with 15 free actions. Create a free account when you want more.</p>
-<h3>Where does my video go?</h3>
+<details>
+<summary>Is Bum Bum Clips free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished recording uses one action. Setting up and previewing costs nothing.</p>
+</details>
+<details>
+<summary>Do I need an account to record my screen?</summary>
+<p>No. Record as a guest with 15 free actions. Create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Where does my video go?</summary>
 <p>Nowhere. Your recording never leaves your computer. Nothing uploads to any server.</p>
-<h3>Can I include my webcam in the recording?</h3>
+</details>
+<details>
+<summary>Can I include my webcam in the recording?</summary>
 <p>Yes. Add your mic and a little camera bubble if you want to be in the recording.</p>
-<h3>Can I trim the recording before downloading?</h3>
+</details>
+<details>
+<summary>Can I trim the recording before downloading?</summary>
 <p>Yes. Trim the start and end and tweak the playback speed before you download.</p>
+</details>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 </body>

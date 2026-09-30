@@ -124,7 +124,7 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .jd-break summary{cursor:pointer;font-weight:800;font-size:15px;padding:8px 0}
 .ok-note{background:#eef7ee;border:1px solid #bfe0bf;border-radius:10px;padding:10px 14px;font-size:14px;margin-top:10px}
 .warn-note{background:#fdf6e3;border:1px solid #e7d08a;border-radius:10px;padding:10px 14px;font-size:14px;margin-top:10px}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Gap Scout"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum the curious cat detective, on the hunt for missing skills"><h1>Find the gaps before they do.</h1><p class="lede">Upload your resume, drop in up to 5 job descriptions, and Bum Bum shows you the skills they keep asking for that your resume never mentions, with the exact line from each posting as proof. Paste the text or a link and Bum Bum fetches it. Everything happens in your browser, your resume never leaves your device, and it is free.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Gap Scout"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum the curious cat detective, on the hunt for missing skills"><h1>Find the gaps before they do.</h1><p class="lede">Upload your resume, drop in up to 5 job descriptions, and Bum Bum shows you the skills they keep asking for that your resume never mentions, with the exact line from each posting as proof. Paste the text or a link and Bum Bum fetches it. Everything happens in your browser, your resume never leaves your device, and it is free.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to scout gaps</h2><a class="button" href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -505,15 +505,25 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 });
 </script><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is Gap Scout really free?</h3>
+<details>
+<summary>Is Gap Scout really free?</summary>
 <p>Yes. It is completely free. No account, no actions, no catch.</p>
-<h3>Do I need an account?</h3>
+</details>
+<details>
+<summary>Do I need an account?</summary>
 <p>No. Just open the page and start.</p>
-<h3>Does my resume leave my device?</h3>
+</details>
+<details>
+<summary>Does my resume leave my device?</summary>
 <p>No. Everything happens in your browser. Your resume never leaves your device.</p>
-<h3>How many job descriptions can I compare?</h3>
+</details>
+<details>
+<summary>How many job descriptions can I compare?</summary>
 <p>Up to 5 at once.</p>
-<h3>How do I add a job description?</h3>
+</details>
+<details>
+<summary>How do I add a job description?</summary>
 <p>Paste the text or drop in a link and Gap Scout fetches it for you.</p>
+</details>
 </section>
 </main></body></html>

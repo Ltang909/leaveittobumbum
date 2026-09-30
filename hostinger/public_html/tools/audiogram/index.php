@@ -36,7 +36,7 @@
       "name": "Is Audiogram free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You get 15 free actions with no signup. One finished video uses one action."
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished video uses one action."
       }
     },
     {
@@ -44,7 +44,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Make videos as a guest with 15 free actions."
+        "text": "No. Make videos as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -98,7 +98,7 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 .linklike{background:none;border:0;padding:0;margin-top:14px;color:var(--accent,#b3541e);font:inherit;font-weight:700;cursor:pointer;text-decoration:underline}
 .mini{padding:8px 14px;font-size:14px}
 #agGen{font-size:18px;padding:14px 26px;margin-top:12px}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum editing video"><h1>MP3 in. Video out.</h1><p class="lede">Upload an MP3 and a background image. Bum Bum transcribes your audio, you pick a caption style, and you get a captioned video ready for the feed. Your audio is only transcribed, it is never kept. One finished video uses one action.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum editing video"><h1>MP3 in. Video out.</h1><p class="lede">Upload an MP3 and a background image. Bum Bum transcribes your audio, you pick a caption style, and you get a captioned video ready for the feed. Your audio is only transcribed, it is never kept. One finished video uses one action.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Audiogram</h2><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -460,15 +460,25 @@ againBtn.addEventListener('click',()=>{
 <?php endif; ?>
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is Audiogram free?</h3>
-<p>You get 15 free actions with no signup. One finished video uses one action.</p>
-<h3>Do I need an account?</h3>
-<p>No. Make videos as a guest with 15 free actions.</p>
-<h3>What happens to my audio?</h3>
+<details>
+<summary>Is Audiogram free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished video uses one action.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Make videos as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>What happens to my audio?</summary>
 <p>It is only transcribed to make your captions. Your audio is never kept.</p>
-<h3>What caption styles are there?</h3>
+</details>
+<details>
+<summary>What caption styles are there?</summary>
 <p>Four styles to pick from, so the captions match your feed.</p>
-<h3>What video sizes can I make?</h3>
+</details>
+<details>
+<summary>What video sizes can I make?</summary>
 <p>Vertical, square, and widescreen, ready for any feed.</p>
+</details>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

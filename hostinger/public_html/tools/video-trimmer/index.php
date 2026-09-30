@@ -36,7 +36,7 @@
       "name": "Is Video Trimmer free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You get 15 free actions with no signup. One action per trim."
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One action per trim."
       }
     },
     {
@@ -44,7 +44,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Trim as a guest with 15 free actions."
+        "text": "No. Trim as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -98,7 +98,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button:active{box-shadow:none;transform:translateY(2px)}
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Video Trimmer"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum with a laptop, ready to edit"><h1>Keep the good part.</h1><p class="lede">Drop in a video, mark where the good part starts and ends, and Bum Bum snips it <b>right in your browser</b>. Your video never leaves your device. One action per trim.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Video Trimmer"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum with a laptop, ready to edit"><h1>Keep the good part.</h1><p class="lede">Drop in a video, mark where the good part starts and ends, and Bum Bum snips it <b>right in your browser</b>. Your video never leaves your device. One action per trim.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to trim videos</h2><a class="button" href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -141,16 +141,26 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 <?php endif; ?>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is Video Trimmer free?</h3>
-<p>You get 15 free actions with no signup. One action per trim.</p>
-<h3>Do I need an account?</h3>
-<p>No. Trim as a guest with 15 free actions.</p>
-<h3>Does my video upload anywhere?</h3>
+<details>
+<summary>Is Video Trimmer free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One action per trim.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Trim as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Does my video upload anywhere?</summary>
 <p>No. Your video never leaves your device. The trim happens right in your browser.</p>
-<h3>What video formats work?</h3>
+</details>
+<details>
+<summary>What video formats work?</summary>
 <p>Anything your browser can play, including MP4 and WebM.</p>
-<h3>How do I pick the good part?</h3>
+</details>
+<details>
+<summary>How do I pick the good part?</summary>
 <p>Mark where the good part starts and ends, preview the snip, then download it.</p>
+</details>
 </section>
 </main>
 <script>

@@ -36,7 +36,7 @@
       "name": "Is Image Converter free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You get 15 free actions with no signup. One action per image converted."
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One action per image converted."
       }
     },
     {
@@ -44,7 +44,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Convert as a guest with 15 free actions."
+        "text": "No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -102,7 +102,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button:active{box-shadow:none;transform:translateY(2px)}
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Image Converter"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum looking curious"><h1>Whatever to whatever.</h1><p class="lede">WebP to PNG, JPG to WebP, PNG to JPG. Bum Bum converts your images <b>right in your browser</b> and hands them back in the format you actually wanted. Your files never leave your device. One action per image converted.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Image Converter"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum looking curious"><h1>Whatever to whatever.</h1><p class="lede">WebP to PNG, JPG to WebP, PNG to JPG. Bum Bum converts your images <b>right in your browser</b> and hands them back in the format you actually wanted. Your files never leave your device. One action per image converted.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to convert images</h2><a class="button" href="/account/?next=<?= urlencode('/tools/image-converter/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/image-converter/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/image-converter/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -131,16 +131,26 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 <?php endif; ?>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is Image Converter free?</h3>
-<p>You get 15 free actions with no signup. One action per image converted.</p>
-<h3>Do I need an account?</h3>
-<p>No. Convert as a guest with 15 free actions.</p>
-<h3>Do my images upload anywhere?</h3>
+<details>
+<summary>Is Image Converter free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One action per image converted.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Do my images upload anywhere?</summary>
 <p>No. Your files never leave your device. Conversion happens right in your browser.</p>
-<h3>Which formats are supported?</h3>
+</details>
+<details>
+<summary>Which formats are supported?</summary>
 <p>WebP, PNG, and JPG, in any direction.</p>
-<h3>Is there a size limit?</h3>
+</details>
+<details>
+<summary>Is there a size limit?</summary>
 <p>If your browser can open it, Image Converter can convert it.</p>
+</details>
 </section>
 </main>
 <script>
