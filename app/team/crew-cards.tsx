@@ -61,17 +61,90 @@ const crew: Member[] = [
 
 export default function CrewCards() {
   const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
+  const cardRefs = useRef<Record<string, HTMLElement | null>>({});
+  const ctxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourcesRef = useRef(new Map<HTMLAudioElement, MediaElementAudioSourceNode>());
+  const freqRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const smoothRef = useRef(0);
+  const playingRef = useRef<string | null>(null);
+  const reduceMotionRef = useRef(false);
   const [playing, setPlaying] = useState<string | null>(null);
   const [chiNote, setChiNote] = useState(false);
   const chiTimer = useRef<number | null>(null);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    reduceMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    return () => {
+      stopLoop();
       Object.values(audioRefs.current).forEach((a) => a.pause());
       if (chiTimer.current) window.clearTimeout(chiTimer.current);
-    },
-    []
-  );
+      ctxRef.current?.close().catch(() => {});
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function setPlayingKey(key: string | null) {
+    playingRef.current = key;
+    setPlaying(key);
+  }
+
+  function stopLoop() {
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+    smoothRef.current = 0;
+    Object.values(cardRefs.current).forEach((el) => el?.style.setProperty("--beat", "0"));
+  }
+
+  function ensureGraph(audio: HTMLAudioElement): boolean {
+    const w = window as unknown as { webkitAudioContext?: typeof AudioContext };
+    const AC = window.AudioContext ?? w.webkitAudioContext;
+    if (!AC) return false;
+    if (!ctxRef.current) {
+      const ctx = new AC();
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.72;
+      analyser.connect(ctx.destination);
+      ctxRef.current = ctx;
+      analyserRef.current = analyser;
+      freqRef.current = new Uint8Array(new ArrayBuffer(analyser.frequencyBinCount));
+    }
+    if (ctxRef.current.state === "suspended") void ctxRef.current.resume();
+    if (!sourcesRef.current.has(audio)) {
+      const src = ctxRef.current.createMediaElementSource(audio);
+      src.connect(analyserRef.current!);
+      sourcesRef.current.set(audio, src);
+    }
+    return true;
+  }
+
+  function tick() {
+    const analyser = analyserRef.current;
+    const freq = freqRef.current;
+    const key = playingRef.current;
+    const card = key ? cardRefs.current[key] : null;
+    if (!analyser || !freq || !card) {
+      rafRef.current = null;
+      return;
+    }
+    analyser.getByteFrequencyData(freq);
+    let sum = 0;
+    for (let i = 1; i <= 6; i++) sum += freq[i];
+    const target = Math.min(1, (sum / 6 / 255) * 1.9);
+    const s = smoothRef.current;
+    // Fast attack, slow release: the glow punches with the kick, then breathes out.
+    smoothRef.current = target > s ? s + (target - s) * 0.55 : s + (target - s) * 0.14;
+    card.style.setProperty("--beat", smoothRef.current.toFixed(3));
+    rafRef.current = requestAnimationFrame(tick);
+  }
+
+  function startLoop() {
+    if (reduceMotionRef.current) return;
+    if (rafRef.current !== null) return;
+    rafRef.current = requestAnimationFrame(tick);
+  }
 
   function toggle(member: Member) {
     if (!member.song) {
@@ -86,25 +159,43 @@ export default function CrewCards() {
     if (!audio) {
       audio = new Audio(member.song);
       audioRefs.current[key] = audio;
-      audio.onended = () => setPlaying((p) => (p === key ? null : p));
+      audio.onended = () => {
+        setPlayingKey(null);
+        stopLoop();
+      };
     }
-    if (playing === key) {
+    if (playingRef.current === key) {
       audio.pause();
-      setPlaying(null);
+      setPlayingKey(null);
+      stopLoop();
       return;
     }
     Object.entries(audioRefs.current).forEach(([k, a]) => {
       if (k !== key) a.pause();
     });
-    audio.play().catch(() => {});
-    setPlaying(key);
+    stopLoop();
+    if (ensureGraph(audio)) startLoop();
+    audio
+      .play()
+      .then(() => setPlayingKey(key))
+      .catch(() => {
+        setPlayingKey(null);
+        stopLoop();
+      });
   }
 
   return (
     <>
       <style>{`
+        .team-card { --beat: 0; }
         .team-song-btn { position: relative; display: block; width: 100%; aspect-ratio: 1 / 1; padding: 0; border: 0; background: none; cursor: pointer; overflow: hidden; }
         .team-song-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .beat-wash {
+          position: absolute; inset: 0; pointer-events: none;
+          opacity: 0; transition: opacity 0.4s ease;
+          background: radial-gradient(ellipse at 50% 62%, rgba(255, 205, 110, 0.34), rgba(255, 175, 70, 0.10) 55%, rgba(255, 175, 70, 0) 75%);
+        }
+        .team-song-btn.is-playing .beat-wash { opacity: calc(0.45 + var(--beat, 0) * 0.55); }
         .team-song-hint {
           position: absolute; left: 50%; bottom: 12px;
           transform: translateX(-50%) translateY(4px);
@@ -118,6 +209,7 @@ export default function CrewCards() {
         .team-song-btn:hover .team-song-hint,
         .team-song-btn:focus-visible .team-song-hint,
         .team-song-hint.is-on { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .team-song-btn.is-playing .team-song-hint.is-on { transform: translateX(-50%) scale(calc(1 + var(--beat, 0) * 0.05)); }
       `}</style>
       <div
         style={{
@@ -137,17 +229,23 @@ export default function CrewCards() {
           return (
             <article
               key={m.name}
+              ref={(el) => {
+                cardRefs.current[m.name] = el;
+              }}
+              className={isPlaying ? "team-card is-playing" : "team-card"}
               style={{
                 background: "var(--card, #fffdf6)",
                 border: "2px solid var(--ink, #2b2118)",
                 borderRadius: 18,
                 overflow: "hidden",
-                boxShadow: "4px 4px 0 var(--ink, #2b2118)",
+                boxShadow: isPlaying
+                  ? "4px 4px 0 var(--ink, #2b2118), 0 0 calc(22px + var(--beat, 0) * 60px) rgba(255, 186, 88, calc(0.35 + var(--beat, 0) * 0.55))"
+                  : "4px 4px 0 var(--ink, #2b2118)",
               }}
             >
               <button
                 type="button"
-                className="team-song-btn"
+                className={isPlaying ? "team-song-btn is-playing" : "team-song-btn"}
                 onClick={() => toggle(m)}
                 aria-label={
                   m.song
@@ -157,9 +255,8 @@ export default function CrewCards() {
                 aria-pressed={isPlaying}
               >
                 <img src={m.img} alt={m.alt} />
-                <span className={`team-song-hint${showHint ? " is-on" : ""}`}>
-                  {hintText}
-                </span>
+                <span className="beat-wash" aria-hidden="true" />
+                <span className={`team-song-hint${showHint ? " is-on" : ""}`}>{hintText}</span>
               </button>
               <div style={{ padding: "20px 22px 26px" }}>
                 <h2 style={{ margin: "0 0 4px" }}>{m.name}</h2>
