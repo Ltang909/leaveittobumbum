@@ -1,5 +1,82 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Bum Bum Notes | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Bum Bum Notes | Leave It to Bum Bum</title>
+<meta name="description" content="Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.">
+<meta property="og:title" content="Bum Bum Notes | Leave It to Bum Bum">
+<meta property="og:description" content="Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/notes/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-notes.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bum Bum Notes | Leave It to Bum Bum">
+<meta name="twitter:description" content="Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-notes.png">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/notes/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Bum Bum Notes",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.",
+  "url": "https://leaveittobumbum.com/tools/notes/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Bum Bum Notes free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished note uses one action."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Record as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. Your transcript library is tied to your session."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where does my recording go?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It stays in your browser. Listen back right away or download the audio. On iPhone, audio is sent to our server for transcription and never stored."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I download my transcripts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every transcript in your library is ready to copy or download."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work on iPhone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. On iPhone your recording is transcribed on our server after you stop, because iOS does not allow live browser transcription."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Bum Bum Notes | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Bum Bum Notes","item":"https://leaveittobumbum.com/tools/notes/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .notes-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
 .notes-row .button{margin-top:0}
@@ -10,7 +87,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 #notesText{min-height:170px}
 #notesActions button:disabled{opacity:.45;cursor:not-allowed}
 select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Bum Bum Notes"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum in work mode"><h1>Talk it out. We'll write it down.</h1><p class="lede">Hit record and talk it out. Your words appear as you speak, and when you stop your transcript is saved to your private library, ready to copy or download. Your recording stays in your browser so you can listen back right away, or download the audio to keep it. On iPhone your audio is sent to our server for transcription and never stored. One finished note uses one action.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Bum Bum Notes"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum in work mode"><h1>Talk it out. We'll write it down.</h1><p class="lede">Hit record and talk it out. Your words appear as you speak, and when you stop your transcript is saved to your private library, ready to copy or download. Your recording stays in your browser so you can listen back right away, or download the audio to keep it. On iPhone your audio is sent to our server for transcription and never stored. One finished note uses one action.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Bum Bum Notes</h2><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/notes/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -83,4 +160,33 @@ recBtn.addEventListener('click',startRecording);
 stopBtn.addEventListener('click',stopRecording);
 loadNotes();
 <?php endif; ?>
-</script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<details>
+<summary>Is Bum Bum Notes free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished note uses one action.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Record as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>. Your transcript library is tied to your session.</p>
+</details>
+<details>
+<summary>Where does my recording go?</summary>
+<p>It stays in your browser. Listen back right away or download the audio. On iPhone, audio is sent to our server for transcription and never stored.</p>
+</details>
+<details>
+<summary>Can I download my transcripts?</summary>
+<p>Yes. Every transcript in your library is ready to copy or download.</p>
+</details>
+<details>
+<summary>Does it work on iPhone?</summary>
+<p>Yes. On iPhone your recording is transcribed on our server after you stop, because iOS does not allow live browser transcription.</p>
+</details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/ghostwriter/">Ghostwriter</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+<p><a href="/tools/sop-ify/">SOP-ify</a> - Paste your chaotic process brain-dump.</p>
+<p><a href="/tools/clips/">Bum Bum Clips</a> - Record your screen right in your browser.</p>
+</section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

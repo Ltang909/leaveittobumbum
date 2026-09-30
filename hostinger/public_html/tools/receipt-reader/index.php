@@ -1,5 +1,83 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Receipt Reader | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Receipt Reader | Leave It to Bum Bum</title>
+<meta name="description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<meta property="og:title" content="Receipt Reader | Leave It to Bum Bum">
+<meta property="og:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/receipt-reader/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Receipt Reader | Leave It to Bum Bum">
+<meta name="twitter:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/receipt-reader/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Receipt Reader",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.",
+  "url": "https://leaveittobumbum.com/tools/receipt-reader/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Receipt Reader free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One action per receipt scanned."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Scan as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do my receipt photos upload anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Your photos never leave your device. Only the typed-up numbers are saved, in your account."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many receipts can I scan at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Up to 10 at a time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get my data out?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Download your whole receipt log as one CSV whenever you like."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Receipt Reader | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Receipt Reader","item":"https://leaveittobumbum.com/tools/receipt-reader/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Receipt Reader","description":"Snap photos of up to 10 receipts at once.","step":[{"@type":"HowToStep","position":1,"name":"Snap photos of your receipts, up to 10 at a time."},{"@type":"HowToStep","position":2,"name":"Bum Bum reads them right in your browser and pulls out vendor, date, line items, tax, and total."},{"@type":"HowToStep","position":3,"name":"Review and fix up the extracted tables."},{"@type":"HowToStep","position":4,"name":"Save the clean tables to your receipt library."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -49,7 +127,7 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .queue-item .meta{font-size:13px;opacity:.75}
 .receipt-card{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);border-radius:14px;background:#fff;padding:16px;margin-bottom:14px}
 .receipt-card .card-head{font-size:16px;margin-bottom:4px}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Reader"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum with reading glasses, squinting at a receipt"><h1>Receipts in, spreadsheets out.</h1><p class="lede">Snap photos of your receipts, up to 10 at a time. Bum Bum reads them <b>right in your browser</b>, pulls out the vendor, date, line items, tax, and total, and hands you clean tables you can fix up and save to your receipt log. Download the whole log as one CSV whenever you like. Your photos never leave your device; only the typed-up numbers are saved, in your account. One action per receipt scanned. Saving and exports are free.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Reader"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum with reading glasses, squinting at a receipt"><h1>Receipts in, spreadsheets out.</h1><p class="lede">Snap photos of your receipts, up to 10 at a time. Bum Bum reads them <b>right in your browser</b>, pulls out the vendor, date, line items, tax, and total, and hands you clean tables you can fix up and save to your receipt log. Download the whole log as one CSV whenever you like. Your photos never leave your device; only the typed-up numbers are saved, in your account. One action per receipt scanned. Saving and exports are free.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to read receipts</h2><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -90,6 +168,35 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 <div id="logList" style="margin-top:10px"><p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. After a scan, hit &ldquo;Save to log&rdquo; and it will live here, in your account.</p></div>
 </section>
 <?php endif; ?>
+<section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<details>
+<summary>Is Receipt Reader free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One action per receipt scanned.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Scan as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Do my receipt photos upload anywhere?</summary>
+<p>No. Your photos never leave your device. Only the typed-up numbers are saved, in your account.</p>
+</details>
+<details>
+<summary>How many receipts can I scan at once?</summary>
+<p>Up to 10 at a time.</p>
+</details>
+<details>
+<summary>Can I get my data out?</summary>
+<p>Yes. Download your whole receipt log as one CSV whenever you like.</p>
+</details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/invoice-chaser/">Invoice Chaser</a> - Track who owes you what.</p>
+<p><a href="/tools/cutline/">Cutline</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
+<p><a href="/tools/purrsuit/">Purrsuit</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
+</section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>

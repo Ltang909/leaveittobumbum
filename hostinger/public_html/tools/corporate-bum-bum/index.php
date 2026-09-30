@@ -1,5 +1,82 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Corporate Bum | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Corporate Bum | Leave It to Bum Bum</title>
+<meta name="description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
+<meta property="og:title" content="Corporate Bum Bum | Leave It to Bum Bum">
+<meta property="og:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/corporate-bum-bum/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-corporate-bum-bum.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Corporate Bum Bum | Leave It to Bum Bum">
+<meta name="twitter:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-corporate-bum-bum.png">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/corporate-bum-bum/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Corporate Bum Bum",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.",
+  "url": "https://leaveittobumbum.com/tools/corporate-bum-bum/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Corporate Bum Bum free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. Adding an application uses one action. Everything else is free."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is this different from a spreadsheet?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It tells you who to follow up with every morning and drafts what to say. A spreadsheet just sits there."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the morning follow-up tell me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Which applications have gone quiet and a draft follow-up note for each one."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I import my applications?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Import a CSV matched by company and role."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Corporate Bum | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Corporate Bum","item":"https://leaveittobumbum.com/tools/corporate-bum-bum/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer;font-family:inherit}
@@ -86,7 +163,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .fld input[type=checkbox]{accent-color:#8a7a55}
 .modal h3{font-weight:700}
 .modal-close{font-weight:700}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Corporate Bum"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum looking professional"><h1>Your job hunt, in a suit.</h1><p class="lede">Corporate Bum is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Corporate Bum"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum looking professional"><h1>Your job hunt, in a suit.</h1><p class="lede">Corporate Bum is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Corporate Bum</h2><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -364,4 +441,33 @@ csvForm.addEventListener('submit',async e=>{
   csvForm.reset();await refresh();
 });
 refresh();
-</script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<details>
+<summary>Is Corporate Bum Bum free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. Adding an application uses one action. Everything else is free.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>How is this different from a spreadsheet?</summary>
+<p>It tells you who to follow up with every morning and drafts what to say. A spreadsheet just sits there.</p>
+</details>
+<details>
+<summary>What does the morning follow-up tell me?</summary>
+<p>Which applications have gone quiet and a draft follow-up note for each one.</p>
+</details>
+<details>
+<summary>Can I import my applications?</summary>
+<p>Yes. Import a CSV matched by company and role.</p>
+</details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/purrsuit/">Purrsuit</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
+<p><a href="/tools/gap-scout/">Gap Scout</a> - Upload your resume and paste in job descriptions.</p>
+<p><a href="/tools/cutline/">Cutline</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
+</section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

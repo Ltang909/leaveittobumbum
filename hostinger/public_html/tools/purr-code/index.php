@@ -3,7 +3,85 @@ require dirname(__DIR__, 2) . '/api/_bootstrap.php';
 require dirname(__DIR__, 2) . '/includes/purr-code-lib.php';
 purrcode_handle_redirect(); // /tools/purr-code/?go=CODE logs the scan and 302s.
 $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Purr Code | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Purr Code | Leave It to Bum Bum</title>
+<meta name="description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
+<meta property="og:title" content="Purr Code | Leave It to Bum Bum">
+<meta property="og:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/purr-code/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-purr-code.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Purr Code | Leave It to Bum Bum">
+<meta name="twitter:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-purr-code.png">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/purr-code/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Purr Code",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.",
+  "url": "https://leaveittobumbum.com/tools/purr-code/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Purr Code free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Previewing is free and unlimited. Exporting a QR code uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Design as a guest. A free account gets 75 actions every month and saves your tracked codes. See pricing: https://leaveittobumbum.com/pricing/."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I track how many times my code is scanned?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Turn on tracking and Purr Code counts every scan."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I customize the look?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Pick from six color palettes or set your own colors, with soft, dots, or classic styles, plus a cat in the middle."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do the QR codes expire?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Your codes work as long as your link does."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Purr Code | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Purr Code","item":"https://leaveittobumbum.com/tools/purr-code/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Purr Code","description":"Your link, but cute.","step":[{"@type":"HowToStep","position":1,"name":"Paste the link you want the QR code to open."},{"@type":"HowToStep","position":2,"name":"Pick soft dots or classic style, colors, and size."},{"@type":"HowToStep","position":3,"name":"Preview it as much as you like, free."},{"@type":"HowToStep","position":4,"name":"Export your QR code and turn on scan tracking if you want it."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .pc-grid{display:grid;grid-template-columns:1fr;gap:18px}
 @media(min-width:900px){.pc-grid{grid-template-columns:1fr 1fr;align-items:start}}
@@ -42,7 +120,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 #pcCodesList .qrthumb:hover{border-color:#1E2321}
 #pcCodesList .qrthumb canvas{width:46px;height:46px;display:block}
 .hidden{display:none!important}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purr Code"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purr Code"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Purr Code</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -321,4 +399,33 @@ finally{refreshBtn.disabled=false;}
 loadMyCodes();
 draw();
 <?php endif; ?>
-</script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<details>
+<summary>Is Purr Code free?</summary>
+<p>Previewing is free and unlimited. Exporting a QR code uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Design as a guest. A free account gets 75 actions every month and saves your tracked codes. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Can I track how many times my code is scanned?</summary>
+<p>Yes. Turn on tracking and Purr Code counts every scan.</p>
+</details>
+<details>
+<summary>Can I customize the look?</summary>
+<p>Yes. Pick from six color palettes or set your own colors, with soft, dots, or classic styles, plus a cat in the middle.</p>
+</details>
+<details>
+<summary>Do the QR codes expire?</summary>
+<p>No. Your codes work as long as your link does.</p>
+</details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/doodle/">Doodle</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
+<p><a href="/tools/sop-ify/">SOP-ify</a> - Paste your chaotic process brain-dump.</p>
+<p><a href="/tools/ghostwriter/">Ghostwriter</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+</section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

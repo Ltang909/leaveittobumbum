@@ -1,5 +1,82 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Cutline | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}</style><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Cutline"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum&rsquo;s toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum judging your subscriptions"><h1>Cut the subscriptions you forgot about.</h1><p class="lede">Every subscription you forgot about, in one place. Bum Bum will even nudge you before each one renews. Adding one uses one action.</p>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Cutline | Leave It to Bum Bum</title>
+<meta name="description" content="Every subscription you forgot about, in one place. Get nudged before each renewal so free trials stop billing you. Free to try, no account needed.">
+<meta property="og:title" content="Cutline | Leave It to Bum Bum">
+<meta property="og:description" content="Every subscription you forgot about, in one place. Get nudged before each renewal so free trials stop billing you. Free to try, no account needed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/cutline/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-cutline.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cutline | Leave It to Bum Bum">
+<meta name="twitter:description" content="Every subscription you forgot about, in one place. Get nudged before each renewal so free trials stop billing you. Free to try, no account needed.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-cutline.png">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/cutline/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Cutline",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Every subscription you forgot about, in one place. Get nudged before each renewal so free trials stop billing you. Free to try, no account needed.",
+  "url": "https://leaveittobumbum.com/tools/cutline/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Cutline free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. Adding a subscription uses one action."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Start as a guest. A free account gets 75 actions every month and keeps your list saved across devices. See pricing: https://leaveittobumbum.com/pricing/."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do renewal reminders work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add a subscription with its renewal date and Cutline nudges you before each one renews, so the free trial trap stops working on you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can Cutline cancel subscriptions for me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Cutline shows you everything in one place and reminds you before renewals, but you cancel with the provider directly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What counts as an action?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Adding a subscription uses one action. Viewing your list and getting nudges are free."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Cutline | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Cutline","item":"https://leaveittobumbum.com/tools/cutline/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Cutline"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum&rsquo;s toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum judging your subscriptions"><h1>Cut the subscriptions you forgot about.</h1><p class="lede">Every subscription you forgot about, in one place. Bum Bum will even nudge you before each one renews. Adding one uses one action.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Cutline</h2><a class="button" href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -35,4 +112,33 @@ document.querySelector('#sub-list').addEventListener('change',event=>{if(event.t
 document.querySelector('#sub-list').addEventListener('submit',async event=>{const form=event.target;if(!form.classList.contains('edit-form'))return;event.preventDefault();const card=form.closest('[data-id]');const id=card.dataset.id;const button=form.querySelector('button[type=submit]');button.disabled=true;form.querySelector('.error').textContent='';const{response,data}=await callApi({action:'update',id,...formFields(form)});button.disabled=false;if(!response.ok){form.querySelector('.error').textContent=data.error||'Could not save.';return}load()});
 document.querySelector('#prefs-form').addEventListener('submit',async event=>{event.preventDefault();const note=document.querySelector('#prefs-note');note.textContent='Saving...';const days=parseInt(event.target.notify_days_before.value,10);const{response,data}=await callApi({action:'prefs',notify_days_before:days});if(!response.ok){note.textContent=data.error||'Could not save.';return}note.textContent='Saved. Bum Bum will email you '+data.prefs.notify_days_before+' days before each renewal.'});
 load();
-</script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<details>
+<summary>Is Cutline free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. Adding a subscription uses one action.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Start as a guest. A free account gets 75 actions every month and keeps your list saved across devices. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>How do renewal reminders work?</summary>
+<p>Add a subscription with its renewal date and Cutline nudges you before each one renews, so the free trial trap stops working on you.</p>
+</details>
+<details>
+<summary>Can Cutline cancel subscriptions for me?</summary>
+<p>No. Cutline shows you everything in one place and reminds you before renewals, but you cancel with the provider directly.</p>
+</details>
+<details>
+<summary>What counts as an action?</summary>
+<p>Adding a subscription uses one action. Viewing your list and getting nudges are free.</p>
+</details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/invoice-chaser/">Invoice Chaser</a> - Track who owes you what.</p>
+<p><a href="/tools/receipt-reader/">Receipt Reader</a> - Snap photos of up to 10 receipts at once.</p>
+<p><a href="/tools/purrsuit/">Purrsuit</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
+</section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
