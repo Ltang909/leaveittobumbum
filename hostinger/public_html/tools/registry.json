@@ -179,16 +179,6 @@
       "url": "/tools/video-converter/",
       "cta": "Convert a video",
       "mascot": "/bum/cat-laptop.png"
-    },
-    {
-      "key": "stat-cat",
-      "name": "Stat Cat",
-      "tag": "Analytics",
-      "icon": "≡",
-      "description": "Connect Google Analytics and Search Console. Get a plain-English digest of your traffic with one clear next step.",
-      "url": "/tools/stat-cat/",
-      "cta": "Connect Google",
-      "mascot": "/bum/cat-laptop.png"
     }
   ]
 }
