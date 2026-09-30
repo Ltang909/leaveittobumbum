@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 import { useRequestTool } from "../components/request-tool";
 import { tools, type Tool } from "../lib/tools";
@@ -9,10 +9,33 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
 
+const VIEW_KEY = "bum-tools-view";
+type View = "cards" | "list";
+
 export default function ToolsView() {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
+  const [view, setView] = useState<View>("cards");
   const { openRequest, requestModal } = useRequestTool();
+
+  // Read the saved view on mount (not during render) to avoid a hydration mismatch.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(VIEW_KEY);
+      if (saved === "cards" || saved === "list") setView(saved);
+    } catch {
+      /* private mode: cards it is */
+    }
+  }, []);
+
+  function pickView(next: View) {
+    setView(next);
+    try {
+      localStorage.setItem(VIEW_KEY, next);
+    } catch {
+      /* private mode: choice just won't stick */
+    }
+  }
 
   const categories = useMemo(
     () => ["All", ...Array.from(new Set(tools.map((tool) => tool.tag)))],
@@ -60,8 +83,43 @@ export default function ToolsView() {
               ))}
             </select>
           </label>
+          <div className="view-toggle" role="group" aria-label="Toolbox view">
+            <button
+              type="button"
+              aria-pressed={view === "cards"}
+              onClick={() => pickView("cards")}
+            >
+              Cards
+            </button>
+            <button
+              type="button"
+              aria-pressed={view === "list"}
+              onClick={() => pickView("list")}
+            >
+              List
+            </button>
+          </div>
         </div>
 
+        {view === "list" ? (
+          <ul className="tool-list">
+            {filtered.map((tool, index) => (
+              <li key={tool.key}>
+                <a className="tool-row" href={tool.url}>
+                  <span className={`tool-row-icon card-${(index % 8) + 1}`} aria-hidden="true">
+                    {tool.icon}
+                  </span>
+                  <span className="tool-row-main">
+                    <span className="tool-row-name">{tool.name}</span>
+                    <span className="tool-row-desc">{tool.description}</span>
+                  </span>
+                  <span className="tool-row-tag">{tool.tag}</span>
+                  <Arrow />
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
         <div className="tool-grid">
           {filtered.map((tool, index) => (
             <article className={`tool-card card-${(index % 8) + 1}`} key={tool.key}>
@@ -76,6 +134,7 @@ export default function ToolsView() {
             </article>
           ))}
         </div>
+        )}
 
         {!filtered.length && <p className="empty">Bum Bum could not find that one. Sounds like a good tool request.</p>}
 
