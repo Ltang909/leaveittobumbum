@@ -5,10 +5,11 @@
 <meta property="og:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-trimmer/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-video-trimmer.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Video Trimmer | Leave It to Bum Bum">
 <meta name="twitter:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-video-trimmer.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-trimmer/">
 <script type="application/ld+json">
 {
@@ -73,7 +74,10 @@
     }
   ]
 }
-</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Video Trimmer | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Video Trimmer","item":"https://leaveittobumbum.com/tools/video-trimmer/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Video Trimmer","description":"Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.","step":[{"@type":"HowToStep","position":1,"name":"Drop a video into Video Trimmer."},{"@type":"HowToStep","position":2,"name":"Mark where the good part starts and ends."},{"@type":"HowToStep","position":3,"name":"Bum Bum snips it right in your browser; your video never leaves your device."},{"@type":"HowToStep","position":4,"name":"Download the trimmed clip."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -161,6 +165,12 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <summary>How do I pick the good part?</summary>
 <p>Mark where the good part starts and ends, preview the snip, then download it.</p>
 </details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/clips/">Bum Bum Clips</a> - Record your screen right in your browser.</p>
+<p><a href="/tools/audiogram/">Audiogram</a> - Turn an MP3 into a captioned video.</p>
+<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
 </section>
 </main>
 <script>

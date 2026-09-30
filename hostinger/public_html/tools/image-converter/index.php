@@ -5,10 +5,11 @@
 <meta property="og:description" content="Convert images between WebP, PNG, and JPG in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/image-converter/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-image-converter.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Image Converter | Leave It to Bum Bum">
 <meta name="twitter:description" content="Convert images between WebP, PNG, and JPG in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-image-converter.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/image-converter/">
 <script type="application/ld+json">
 {
@@ -73,7 +74,10 @@
     }
   ]
 }
-</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Image Converter | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Image Converter","item":"https://leaveittobumbum.com/tools/image-converter/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Image Converter","description":"WebP to PNG, JPG to WebP, whatever to whatever.","step":[{"@type":"HowToStep","position":1,"name":"Drop an image into Image Converter."},{"@type":"HowToStep","position":2,"name":"Pick the format you want: WebP, PNG, or JPG."},{"@type":"HowToStep","position":3,"name":"Bum Bum converts it right in your browser; your file never leaves your device."},{"@type":"HowToStep","position":4,"name":"Download the converted image."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -151,6 +155,12 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <summary>Is there a size limit?</summary>
 <p>If your browser can open it, Image Converter can convert it.</p>
 </details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/image-cropper/">Image Cropper</a> - Drag a box around the good part.</p>
+<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
+<p><a href="/tools/clips/">Bum Bum Clips</a> - Record your screen right in your browser.</p>
 </section>
 </main>
 <script>
