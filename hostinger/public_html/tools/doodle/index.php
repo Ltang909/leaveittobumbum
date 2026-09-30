@@ -36,7 +36,7 @@
       "name": "Is Doodle free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Drawing is completely free and unlimited. Saving or copying your doodle uses one action, and guests get 15 free actions with no signup."
+        "text": "Drawing is completely free and unlimited. Saving or copying your doodle uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -44,7 +44,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Draw as much as you like without signing up."
+        "text": "No. Draw as much as you like without signing up. Saving or copying uses one action: 15 free as a guest, 75 every month with a free account. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -98,7 +98,7 @@ input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
 .export-row .button{min-height:48px}
 .hint{font-size:13px;opacity:.7;margin:0}
 @media(max-width:560px){.tool-group{width:100%;justify-content:flex-start}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Doodle"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum ready to doodle"><h1>A tiny canvas for big ideas.</h1><p class="lede">Doodle is a pocket sketchpad. Draw with a finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Saving or copying your doodle uses one action.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Doodle"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum ready to doodle"><h1>A tiny canvas for big ideas.</h1><p class="lede">Doodle is a pocket sketchpad. Draw with a finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Saving or copying your doodle uses one action.</p>
 <div class="doodle-layout">
 <div class="toolbar">
 <div class="tool-group"><span class="lbl">Tool</span><div class="seg" role="group" aria-label="Pen or eraser"><button type="button" id="penBtn" class="on">Pen</button><button type="button" id="eraserBtn">Eraser</button></div></div>
@@ -222,15 +222,25 @@ window.addEventListener('resize',fitCanvas);
 fitCanvas();
 </script><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is Doodle free?</h3>
-<p>Drawing is completely free and unlimited. Saving or copying your doodle uses one action, and guests get 15 free actions with no signup.</p>
-<h3>Do I need an account?</h3>
-<p>No. Draw as much as you like without signing up.</p>
-<h3>Does my drawing leave my browser?</h3>
+<details>
+<summary>Is Doodle free?</summary>
+<p>Drawing is completely free and unlimited. Saving or copying your doodle uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Draw as much as you like without signing up. Saving or copying uses one action: 15 free as a guest, 75 every month with a free account. <a href="/pricing/">See pricing</a>.</p>
+</details>
+<details>
+<summary>Does my drawing leave my browser?</summary>
 <p>No. Nothing leaves your browser while you draw. Only the saved image is kept, in your account.</p>
-<h3>Can I use a stylus?</h3>
+</details>
+<details>
+<summary>Can I use a stylus?</summary>
 <p>Yes. Draw with a finger, stylus, or mouse.</p>
-<h3>What can I do with a saved doodle?</h3>
+</details>
+<details>
+<summary>What can I do with a saved doodle?</summary>
 <p>Copy it to your clipboard or download it as an image file.</p>
+</details>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

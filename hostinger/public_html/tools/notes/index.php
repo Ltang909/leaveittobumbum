@@ -36,7 +36,7 @@
       "name": "Is Bum Bum Notes free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You get 15 free actions with no signup. One finished note uses one action."
+        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished note uses one action."
       }
     },
     {
@@ -44,7 +44,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Record as a guest with 15 free actions. Your transcript library is tied to your session."
+        "text": "No. Record as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. Your transcript library is tied to your session."
       }
     },
     {
@@ -84,7 +84,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 #notesText{min-height:170px}
 #notesActions button:disabled{opacity:.45;cursor:not-allowed}
 select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Bum Bum Notes"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum in work mode"><h1>Talk it out. We'll write it down.</h1><p class="lede">Hit record and talk it out. Your words appear as you speak, and when you stop your transcript is saved to your private library, ready to copy or download. Your recording stays in your browser so you can listen back right away, or download the audio to keep it. On iPhone your audio is sent to our server for transcription and never stored. One finished note uses one action.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Bum Bum Notes"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum in work mode"><h1>Talk it out. We'll write it down.</h1><p class="lede">Hit record and talk it out. Your words appear as you speak, and when you stop your transcript is saved to your private library, ready to copy or download. Your recording stays in your browser so you can listen back right away, or download the audio to keep it. On iPhone your audio is sent to our server for transcription and never stored. One finished note uses one action.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Bum Bum Notes</h2><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/notes/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -159,15 +159,25 @@ loadNotes();
 <?php endif; ?>
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<h3>Is Bum Bum Notes free?</h3>
-<p>You get 15 free actions with no signup. One finished note uses one action.</p>
-<h3>Do I need an account?</h3>
-<p>No. Record as a guest with 15 free actions. Your transcript library is tied to your session.</p>
-<h3>Where does my recording go?</h3>
+<details>
+<summary>Is Bum Bum Notes free?</summary>
+<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished note uses one action.</p>
+</details>
+<details>
+<summary>Do I need an account?</summary>
+<p>No. Record as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>. Your transcript library is tied to your session.</p>
+</details>
+<details>
+<summary>Where does my recording go?</summary>
 <p>It stays in your browser. Listen back right away or download the audio. On iPhone, audio is sent to our server for transcription and never stored.</p>
-<h3>Can I download my transcripts?</h3>
+</details>
+<details>
+<summary>Can I download my transcripts?</summary>
 <p>Yes. Every transcript in your library is ready to copy or download.</p>
-<h3>Does it work on iPhone?</h3>
+</details>
+<details>
+<summary>Does it work on iPhone?</summary>
 <p>Yes. On iPhone your recording is transcribed on our server after you stop, because iOS does not allow live browser transcription.</p>
+</details>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
