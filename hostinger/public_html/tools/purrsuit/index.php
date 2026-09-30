@@ -5,10 +5,11 @@
 <meta property="og:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/purrsuit/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-purrsuit.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Purrsuit | Leave It to Bum Bum">
 <meta name="twitter:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-purrsuit.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/purrsuit/">
 <script type="application/ld+json">
 {
@@ -73,7 +74,9 @@
     }
   ]
 }
-</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Purrsuit | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Purrsuit","item":"https://leaveittobumbum.com/tools/purrsuit/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer}
@@ -387,5 +390,11 @@ refresh();
 <summary>Can I import my contacts?</summary>
 <p>Yes. Import a CSV and Purrsuit matches them up for you.</p>
 </details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/corporate-bum-bum/">Corporate Bum</a> - A job application tracker that tells you who to follow up with today and what to say.</p>
+<p><a href="/tools/invoice-chaser/">Invoice Chaser</a> - Track who owes you what.</p>
+<p><a href="/tools/cutline/">Cutline</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

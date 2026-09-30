@@ -5,10 +5,11 @@
 <meta property="og:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/receipt-reader/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Receipt Reader | Leave It to Bum Bum">
 <meta name="twitter:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/receipt-reader/">
 <script type="application/ld+json">
 {
@@ -73,7 +74,10 @@
     }
   ]
 }
-</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Receipt Reader | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Receipt Reader","item":"https://leaveittobumbum.com/tools/receipt-reader/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Receipt Reader","description":"Snap photos of up to 10 receipts at once.","step":[{"@type":"HowToStep","position":1,"name":"Snap photos of your receipts, up to 10 at a time."},{"@type":"HowToStep","position":2,"name":"Bum Bum reads them right in your browser and pulls out vendor, date, line items, tax, and total."},{"@type":"HowToStep","position":3,"name":"Review and fix up the extracted tables."},{"@type":"HowToStep","position":4,"name":"Save the clean tables to your receipt library."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -186,6 +190,12 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <summary>Can I get my data out?</summary>
 <p>Yes. Download your whole receipt log as one CSV whenever you like.</p>
 </details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/invoice-chaser/">Invoice Chaser</a> - Track who owes you what.</p>
+<p><a href="/tools/cutline/">Cutline</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
+<p><a href="/tools/purrsuit/">Purrsuit</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
 </section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>

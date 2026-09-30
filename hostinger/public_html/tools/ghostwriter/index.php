@@ -5,10 +5,11 @@
 <meta property="og:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/ghostwriter/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-ghostwriter.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ghostwriter | Leave It to Bum Bum">
 <meta name="twitter:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-ghostwriter.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/ghostwriter/">
 <script type="application/ld+json">
 {
@@ -73,7 +74,9 @@
     }
   ]
 }
-</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Ghostwriter | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Ghostwriter","item":"https://leaveittobumbum.com/tools/ghostwriter/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .notes-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
 .notes-row .button{margin-top:0}
@@ -238,5 +241,11 @@ loadPacks();
 <summary>Which languages can I ramble in?</summary>
 <p>English plus Spanish, French, German, Italian, Portuguese, Chinese, Cantonese, Japanese, and Korean.</p>
 </details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/sop-ify/">SOP-ify</a> - Paste your chaotic process brain-dump.</p>
+<p><a href="/tools/notes/">Bum Bum Notes</a> - Talk it out and get a live transcript you can copy or download.</p>
+<p><a href="/tools/doodle/">Doodle</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

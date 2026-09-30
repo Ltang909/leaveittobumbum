@@ -5,10 +5,11 @@
 <meta property="og:description" content="Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/notes/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-notes.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bum Bum Notes | Leave It to Bum Bum">
 <meta name="twitter:description" content="Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-notes.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/notes/">
 <script type="application/ld+json">
 {
@@ -73,7 +74,9 @@
     }
   ]
 }
-</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Bum Bum Notes | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Bum Bum Notes","item":"https://leaveittobumbum.com/tools/notes/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .notes-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
 .notes-row .button{margin-top:0}
@@ -179,5 +182,11 @@ loadNotes();
 <summary>Does it work on iPhone?</summary>
 <p>Yes. On iPhone your recording is transcribed on our server after you stop, because iOS does not allow live browser transcription.</p>
 </details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/ghostwriter/">Ghostwriter</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+<p><a href="/tools/sop-ify/">SOP-ify</a> - Paste your chaotic process brain-dump.</p>
+<p><a href="/tools/clips/">Bum Bum Clips</a> - Record your screen right in your browser.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

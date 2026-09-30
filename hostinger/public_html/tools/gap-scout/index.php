@@ -5,10 +5,11 @@
 <meta property="og:description" content="Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/gap-scout/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-gap-scout.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Gap Scout | Leave It to Bum Bum">
 <meta name="twitter:description" content="Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-gap-scout.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/gap-scout/">
 <script type="application/ld+json">
 {
@@ -73,7 +74,9 @@
     }
   ]
 }
-</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Gap Scout | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Gap Scout","item":"https://leaveittobumbum.com/tools/gap-scout/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -525,5 +528,11 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 <summary>How do I add a job description?</summary>
 <p>Paste the text or drop in a link and Gap Scout fetches it for you.</p>
 </details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/corporate-bum-bum/">Corporate Bum</a> - A job application tracker that tells you who to follow up with today and what to say.</p>
+<p><a href="/tools/purrsuit/">Purrsuit</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
+<p><a href="/tools/receipt-reader/">Receipt Reader</a> - Snap photos of up to 10 receipts at once.</p>
 </section>
 </main></body></html>

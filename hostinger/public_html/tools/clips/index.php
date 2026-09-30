@@ -10,10 +10,11 @@
 <meta property="og:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/clips/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-clips.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bum Bum Clips | Leave It to Bum Bum">
 <meta name="twitter:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-clips.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/clips/">
 <script type="application/ld+json">
 {
@@ -79,6 +80,8 @@
   ]
 }
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Bum Bum Clips | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Bum Bum Clips","item":"https://leaveittobumbum.com/tools/clips/"}]}</script>
 <link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style>
 <?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?>
 </head>
@@ -587,6 +590,12 @@ if(!screenOK){
 <summary>Can I trim the recording before downloading?</summary>
 <p>Yes. Trim the start and end and tweak the playback speed before you download.</p>
 </details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
+<p><a href="/tools/audiogram/">Audiogram</a> - Turn an MP3 into a captioned video.</p>
+<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 </body>

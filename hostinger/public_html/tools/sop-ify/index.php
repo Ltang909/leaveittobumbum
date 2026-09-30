@@ -5,10 +5,11 @@
 <meta property="og:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/sop-ify/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og-sop-ify.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SOP-ify | Leave It to Bum Bum">
 <meta name="twitter:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-sop-ify.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/sop-ify/">
 <script type="application/ld+json">
 {
@@ -73,7 +74,9 @@
     }
   ]
 }
-</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"SOP-ify | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"SOP-ify","item":"https://leaveittobumbum.com/tools/sop-ify/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .sop-field{margin:0 0 16px}
 .sop-field label{display:block;font-weight:800;margin-bottom:8px}
@@ -278,5 +281,11 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <summary>What do I do with the playbook?</summary>
 <p>Hand it to a helper, save it as your process doc, or use it to train the next person.</p>
 </details>
+</section>
+<section class="panel" aria-label="More tiny tools">
+<h2 style="margin-top:0">More tiny tools</h2>
+<p><a href="/tools/ghostwriter/">Ghostwriter</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+<p><a href="/tools/notes/">Bum Bum Notes</a> - Talk it out and get a live transcript you can copy or download.</p>
+<p><a href="/tools/purr-code/">Purr Code</a> - Your link, but cute.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
