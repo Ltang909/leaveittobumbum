@@ -5,6 +5,80 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no">
 <title>Bum Bum Clips | Leave It to Bum Bum</title>
+<meta name="description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
+<meta property="og:title" content="Bum Bum Clips | Leave It to Bum Bum">
+<meta property="og:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/clips/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bum Bum Clips | Leave It to Bum Bum">
+<meta name="twitter:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/clips/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Bum Bum Clips",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.",
+  "url": "https://leaveittobumbum.com/tools/clips/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Bum Bum Clips free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup, and one finished recording uses one action. Setting up and previewing costs nothing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account to record my screen?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Record as a guest with 15 free actions. Create a free account when you want more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where does my video go?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nowhere. Your recording never leaves your computer. Nothing uploads to any server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I include my webcam in the recording?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Add your mic and a little camera bubble if you want to be in the recording."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I trim the recording before downloading?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Trim the start and end and tweak the playback speed before you download."
+      }
+    }
+  ]
+}
+</script>
 <link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}</style>
 <?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?>
 </head>
@@ -491,6 +565,19 @@ if(!screenOK){
 </script>
 <?php endif; ?>
 <?php endif; ?>
+<section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<h3>Is Bum Bum Clips free?</h3>
+<p>You get 15 free actions with no signup, and one finished recording uses one action. Setting up and previewing costs nothing.</p>
+<h3>Do I need an account to record my screen?</h3>
+<p>No. Record as a guest with 15 free actions. Create a free account when you want more.</p>
+<h3>Where does my video go?</h3>
+<p>Nowhere. Your recording never leaves your computer. Nothing uploads to any server.</p>
+<h3>Can I include my webcam in the recording?</h3>
+<p>Yes. Add your mic and a little camera bubble if you want to be in the recording.</p>
+<h3>Can I trim the recording before downloading?</h3>
+<p>Yes. Trim the start and end and tweak the playback speed before you download.</p>
+</section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 </body>
 </html>

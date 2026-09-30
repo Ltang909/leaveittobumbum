@@ -1,5 +1,79 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Receipt Reader | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Receipt Reader | Leave It to Bum Bum</title>
+<meta name="description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<meta property="og:title" content="Receipt Reader | Leave It to Bum Bum">
+<meta property="og:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/receipt-reader/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Receipt Reader | Leave It to Bum Bum">
+<meta name="twitter:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/receipt-reader/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Receipt Reader",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.",
+  "url": "https://leaveittobumbum.com/tools/receipt-reader/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Receipt Reader free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup. One action per receipt scanned."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Scan as a guest with 15 free actions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do my receipt photos upload anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Your photos never leave your device. Only the typed-up numbers are saved, in your account."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many receipts can I scan at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Up to 10 at a time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I get my data out?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Download your whole receipt log as one CSV whenever you like."
+      }
+    }
+  ]
+}
+</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -90,6 +164,19 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 <div id="logList" style="margin-top:10px"><p class="meta" style="font-size:13px;opacity:.75">Nothing saved yet. After a scan, hit &ldquo;Save to log&rdquo; and it will live here, in your account.</p></div>
 </section>
 <?php endif; ?>
+<section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<h3>Is Receipt Reader free?</h3>
+<p>You get 15 free actions with no signup. One action per receipt scanned.</p>
+<h3>Do I need an account?</h3>
+<p>No. Scan as a guest with 15 free actions.</p>
+<h3>Do my receipt photos upload anywhere?</h3>
+<p>No. Your photos never leave your device. Only the typed-up numbers are saved, in your account.</p>
+<h3>How many receipts can I scan at once?</h3>
+<p>Up to 10 at a time.</p>
+<h3>Can I get my data out?</h3>
+<p>Yes. Download your whole receipt log as one CSV whenever you like.</p>
+</section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>

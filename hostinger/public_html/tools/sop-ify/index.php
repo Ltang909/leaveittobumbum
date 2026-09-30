@@ -1,5 +1,79 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>SOP-ify | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>SOP-ify | Leave It to Bum Bum</title>
+<meta name="description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
+<meta property="og:title" content="SOP-ify | Leave It to Bum Bum">
+<meta property="og:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/sop-ify/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SOP-ify | Leave It to Bum Bum">
+<meta name="twitter:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/sop-ify/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SOP-ify",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.",
+  "url": "https://leaveittobumbum.com/tools/sop-ify/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is SOP-ify free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup. One finished playbook uses one action."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Start as a guest with 15 free actions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How detailed is the playbook?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Step by step, written so a brand-new helper could follow it with zero prior context."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I talk instead of typing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Record a voice note and it gets transcribed automatically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do I do with the playbook?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hand it to a helper, save it as your process doc, or use it to train the next person."
+      }
+    }
+  ]
+}
+</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .sop-field{margin:0 0 16px}
 .sop-field label{display:block;font-weight:800;margin-bottom:8px}
@@ -182,4 +256,17 @@ navigator.clipboard.writeText(t).then(()=>{document.querySelector('#pbCopy').tex
 document.querySelector('#pbPrint').addEventListener('click',()=>window.print());
 document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.display='none';formEl.scrollIntoView({behavior:'smooth'});dumpEl.focus();});
 <?php endif; ?>
-</script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<h3>Is SOP-ify free?</h3>
+<p>You get 15 free actions with no signup. One finished playbook uses one action.</p>
+<h3>Do I need an account?</h3>
+<p>No. Start as a guest with 15 free actions.</p>
+<h3>How detailed is the playbook?</h3>
+<p>Step by step, written so a brand-new helper could follow it with zero prior context.</p>
+<h3>Can I talk instead of typing?</h3>
+<p>Yes. Record a voice note and it gets transcribed automatically.</p>
+<h3>What do I do with the playbook?</h3>
+<p>Hand it to a helper, save it as your process doc, or use it to train the next person.</p>
+</section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

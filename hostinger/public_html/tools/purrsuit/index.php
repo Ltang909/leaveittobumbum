@@ -1,5 +1,79 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Purrsuit | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Purrsuit | Leave It to Bum Bum</title>
+<meta name="description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
+<meta property="og:title" content="Purrsuit | Leave It to Bum Bum">
+<meta property="og:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/purrsuit/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Purrsuit | Leave It to Bum Bum">
+<meta name="twitter:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/purrsuit/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Purrsuit",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.",
+  "url": "https://leaveittobumbum.com/tools/purrsuit/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Purrsuit free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You get 15 free actions with no signup. Adding a contact uses one action. Everything else is free."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Start as a guest with 15 free actions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is Purrsuit different from a big CRM?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It does one job: it tells you who to follow up with every morning and what to say. No pipelines to configure, no fields to customize, no training needed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the morning follow-up tell me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Exactly who has gone quiet and a draft of what to say to them, so no lead goes cold."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I import my contacts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Import a CSV and Purrsuit matches them up for you."
+      }
+    }
+  ]
+}
+</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer}
@@ -291,4 +365,17 @@ csvForm.addEventListener('submit',async e=>{
   csvForm.reset();await refresh();
 });
 refresh();
-</script><?php endif; ?></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<h3>Is Purrsuit free?</h3>
+<p>You get 15 free actions with no signup. Adding a contact uses one action. Everything else is free.</p>
+<h3>Do I need an account?</h3>
+<p>No. Start as a guest with 15 free actions.</p>
+<h3>How is Purrsuit different from a big CRM?</h3>
+<p>It does one job: it tells you who to follow up with every morning and what to say. No pipelines to configure, no fields to customize, no training needed.</p>
+<h3>What does the morning follow-up tell me?</h3>
+<p>Exactly who has gone quiet and a draft of what to say to them, so no lead goes cold.</p>
+<h3>Can I import my contacts?</h3>
+<p>Yes. Import a CSV and Purrsuit matches them up for you.</p>
+</section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

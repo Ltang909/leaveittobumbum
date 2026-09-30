@@ -1,5 +1,79 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Doodle | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Doodle | Leave It to Bum Bum</title>
+<meta name="description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
+<meta property="og:title" content="Doodle | Leave It to Bum Bum">
+<meta property="og:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/doodle/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Doodle | Leave It to Bum Bum">
+<meta name="twitter:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/doodle/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Doodle",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.",
+  "url": "https://leaveittobumbum.com/tools/doodle/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Doodle free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Drawing is completely free and unlimited. Saving or copying your doodle uses one action, and guests get 15 free actions with no signup."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Draw as much as you like without signing up."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does my drawing leave my browser?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Nothing leaves your browser while you draw. Only the saved image is kept, in your account."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use a stylus?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Draw with a finger, stylus, or mouse."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What can I do with a saved doodle?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Copy it to your clipboard or download it as an image file."
+      }
+    }
+  ]
+}
+</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .doodle-layout{display:grid;gap:16px;margin-top:20px}
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
@@ -146,4 +220,17 @@ const copyBtn=document.querySelector('#copyBtn');if(copyBtn)copyBtn.addEventList
 });
 window.addEventListener('resize',fitCanvas);
 fitCanvas();
-</script></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</script><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<h3>Is Doodle free?</h3>
+<p>Drawing is completely free and unlimited. Saving or copying your doodle uses one action, and guests get 15 free actions with no signup.</p>
+<h3>Do I need an account?</h3>
+<p>No. Draw as much as you like without signing up.</p>
+<h3>Does my drawing leave my browser?</h3>
+<p>No. Nothing leaves your browser while you draw. Only the saved image is kept, in your account.</p>
+<h3>Can I use a stylus?</h3>
+<p>Yes. Draw with a finger, stylus, or mouse.</p>
+<h3>What can I do with a saved doodle?</h3>
+<p>Copy it to your clipboard or download it as an image file.</p>
+</section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

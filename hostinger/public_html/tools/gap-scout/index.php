@@ -1,5 +1,79 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Gap Scout | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Gap Scout | Leave It to Bum Bum</title>
+<meta name="description" content="Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.">
+<meta property="og:title" content="Gap Scout | Leave It to Bum Bum">
+<meta property="og:description" content="Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/gap-scout/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/favicon-cat.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Gap Scout | Leave It to Bum Bum">
+<meta name="twitter:description" content="Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/gap-scout/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Gap Scout",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "description": "Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.",
+  "url": "https://leaveittobumbum.com/tools/gap-scout/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Gap Scout really free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. It is completely free. No account, no actions, no catch."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Just open the page and start."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does my resume leave my device?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Everything happens in your browser. Your resume never leaves your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many job descriptions can I compare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Up to 5 at once."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I add a job description?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Paste the text or drop in a link and Gap Scout fetches it for you."
+      }
+    }
+  ]
+}
+</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -429,4 +503,17 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
   updateAnalyzeBtn();
   window.scrollTo({top:0,behavior:'smooth'});
 });
-</script></main></body></html>
+</script><section class="panel" id="faq" aria-label="Frequently asked questions">
+<h2 style="margin-top:0">Questions, answered</h2>
+<h3>Is Gap Scout really free?</h3>
+<p>Yes. It is completely free. No account, no actions, no catch.</p>
+<h3>Do I need an account?</h3>
+<p>No. Just open the page and start.</p>
+<h3>Does my resume leave my device?</h3>
+<p>No. Everything happens in your browser. Your resume never leaves your device.</p>
+<h3>How many job descriptions can I compare?</h3>
+<p>Up to 5 at once.</p>
+<h3>How do I add a job description?</h3>
+<p>Paste the text or drop in a link and Gap Scout fetches it for you.</p>
+</section>
+</main></body></html>
