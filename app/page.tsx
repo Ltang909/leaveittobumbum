@@ -148,8 +148,8 @@ export default function Home() {
       <section className="habit shell" id="daily">
         <div className="habit-card">
           <p className="kicker">The one you will open every morning</p>
-          <h2>Nobody wants to use a big CRM.</h2>
-          <p>Purrsuit is the opposite of a CRM: no pipelines, no dashboards, no data-entry guilt. Every morning it tells you who to follow up with today and what to say. That is the whole CRM.</p>
+          <h2>The people who build big CRMs still use spreadsheets.</h2>
+          <p>Storing every deal is not the same as knowing what to do today. Purrsuit keeps just the part that matters: who to follow up with this morning, and what to say. Your CRM can keep the pipeline. This is the simple list your spreadsheet was trying to be.</p>
           <a className="button" href="/tools/purrsuit/">Try Purrsuit free <Arrow /></a>
         </div>
       </section>
