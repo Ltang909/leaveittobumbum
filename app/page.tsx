@@ -145,15 +145,6 @@ export default function Home() {
         <p className="section-more section-more-left"><a href="#guarantee">Missing something? Bum Bum builds it in 36 hours <Arrow /></a></p>
       </section>
 
-      <section className="habit shell" id="daily">
-        <div className="habit-card">
-          <p className="kicker">The one you will open every morning</p>
-          <h2>The people who build big CRMs still use spreadsheets.</h2>
-          <p>Storing every deal is not the same as knowing what to do today. Purrsuit keeps just the part that matters: who to follow up with this morning, and what to say. Your CRM can keep the pipeline. This is the simple list your spreadsheet was trying to be.</p>
-          <a className="button" href="/tools/purrsuit/">Try Purrsuit free <Arrow /></a>
-        </div>
-      </section>
-
       <section className="how">
         <div className="shell"><div className="section-heading light"><div><p className="kicker">No software degree required</p><h2>Three steps.<br />Then, nap.</h2></div></div><div className="steps"><article><b>01</b><h3>Pick the annoying task</h3><p>Find the busywork with your name on it.</p></article><article><b>02</b><h3>Hand over the messy bits</h3><p>Paste in rough notes, numbers, or files. Bum Bum sorts it out.</p></article><article><b>03</b><h3>Get the finished thing</h3><p>Copy it, send it, save it. One action spent, afternoon reclaimed.</p></article></div></div>
       </section>
@@ -166,7 +157,6 @@ export default function Home() {
         <p className="pricing-note">Actions reset monthly and do not roll over. We warn you at 80% and 100%. Paid plans can keep going with simple action packs, or you can pause until the reset.</p>
         <p className="section-more"><a href="/pricing/">How pricing works, in plain English <Arrow /></a></p>
       </section>
-
 
       <section className="closing shell"><p className="kicker">Your to-don’t list starts here</p><h2>There has to be one thing<br />you would happily never do again.</h2><button className="button" onClick={() => openRequest()}>Tell Bum Bum <Arrow /></button></section>
 
