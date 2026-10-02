@@ -1,8 +1,8 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Audiogram | Leave It to Bum Bum</title>
-<meta name="description" content="Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed. Free to try.">
+<meta name="description" content="Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free to try.">
 <meta property="og:title" content="Audiogram | Leave It to Bum Bum">
-<meta property="og:description" content="Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed. Free to try.">
+<meta property="og:description" content="Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/audiogram/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-audiogram.png">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed. Free to try.",
+  "description": "Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free to try.",
   "url": "https://leaveittobumbum.com/tools/audiogram/"
 }
 </script>
@@ -53,7 +53,7 @@
       "name": "What happens to my audio?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It is only transcribed to make your captions. Your audio is never kept."
+        "text": "With captions, it is only transcribed to make them, and never kept. Pick No captions and your audio never leaves your browser at all."
       }
     },
     {
@@ -61,7 +61,7 @@
       "name": "What caption styles are there?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Four styles to pick from, so the captions match your feed."
+        "text": "Four caption styles, or No captions: just your image and your sound, with no transcription at all."
       }
     },
     {
@@ -77,7 +77,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Audiogram | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Audiogram","item":"https://leaveittobumbum.com/tools/audiogram/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Audiogram","description":"Turn an MP3 into a captioned video.","step":[{"@type":"HowToStep","position":1,"name":"Upload an MP3 and a background image."},{"@type":"HowToStep","position":2,"name":"Bum Bum transcribes your audio; the audio itself is never kept."},{"@type":"HowToStep","position":3,"name":"Pick a caption style and aspect ratio."},{"@type":"HowToStep","position":4,"name":"Download your captioned video, ready for the feed."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Audiogram","description":"Turn an MP3 into a video, with captions or without.","step":[{"@type":"HowToStep","position":1,"name":"Upload an MP3 and a background image."},{"@type":"HowToStep","position":2,"name":"Bum Bum transcribes your audio, or skips it entirely with No captions; the audio itself is never kept."},{"@type":"HowToStep","position":3,"name":"Pick a caption style (or none) and aspect ratio."},{"@type":"HowToStep","position":4,"name":"Download your video, ready for the feed."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .ag-drop{border:2px dashed var(--line);border-radius:12px;padding:26px 18px;text-align:center;cursor:pointer;background:#fff;margin:0 0 12px}
 .ag-drop.over{border-color:var(--accent,#b3541e);background:#fff8f2}
@@ -102,7 +102,7 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 .linklike{background:none;border:0;padding:0;margin-top:14px;color:var(--accent,#b3541e);font:inherit;font-weight:700;cursor:pointer;text-decoration:underline}
 .mini{padding:8px 14px;font-size:14px}
 #agGen{font-size:18px;padding:14px 26px;margin-top:12px}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum editing video"><h1>MP3 in. Video out.</h1><p class="lede">Upload an MP3 and a background image. Bum Bum transcribes your audio, you pick a caption style, and you get a captioned video ready for the feed. Your audio is only transcribed, it is never kept. One finished video uses one action.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum editing video"><h1>MP3 in. Video out.</h1><p class="lede">Upload an MP3 and a background image. Bum Bum transcribes your audio (or skips it entirely with No captions), you pick a caption style or none at all, and you get a video ready for the feed. Your audio is only transcribed, it is never kept. One finished video uses one action.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Audiogram</h2><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -115,7 +115,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php else: ?>
 <section class="panel" id="agUpload">
 <h2 style="margin-top:0">1. Your ingredients</h2>
-<div class="ag-drop" id="agMp3Drop" role="button" tabindex="0"><strong>Drop your MP3 here, or tap to pick one</strong><span>Up to 25 MB. Sent for transcription only, never stored.</span><input type="file" id="agMp3" accept="audio/mpeg,.mp3"></div>
+<div class="ag-drop" id="agMp3Drop" role="button" tabindex="0"><strong>Drop your MP3 here, or tap to pick one</strong><span>Up to 25 MB. Sent for transcription only with captions; with No captions it never leaves your browser.</span><input type="file" id="agMp3" accept="audio/mpeg,.mp3"></div>
 <p class="ag-fileline" id="agMp3Info"></p>
 <div class="ag-drop" id="agImgDrop" role="button" tabindex="0"><strong>Drop a background image here, or tap to pick one</strong><span>Stays in your browser. Never uploaded anywhere.</span><input type="file" id="agImg" accept="image/*"></div>
 <p class="ag-fileline" id="agImgInfo"></p>
@@ -129,6 +129,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <label class="style-card"><input type="radio" name="agStyle" value="clean"><span class="swatch" style="background:rgba(0,0,0,.75)">clean captions here</span><b>Clean</b><small>Classic white text on a dark bar. Readable everywhere.</small></label>
 <label class="style-card"><input type="radio" name="agStyle" value="neon"><span class="swatch" style="background:#1a0b2e;text-shadow:0 0 12px #ff4fd8">NEON GLOW</span><b>Neon</b><small>Bum Bum brand pink and purple glow. Made for the feed.</small></label>
 <label class="style-card"><input type="radio" name="agStyle" value="minimal"><span class="swatch" style="background:#222;color:#ddd;font-weight:600">quiet captions</span><b>Minimal</b><small>Small and elegant, tucked in the corner. No shouting.</small></label>
+<label class="style-card"><input type="radio" name="agStyle" value="none"><span class="swatch" style="background:#0f3d2e">&#9835; no words</span><b>No captions</b><small>Just your image and your sound. No transcription, nothing uploaded.</small></label>
 </div>
 <label>Video shape<select id="agAspect"><option value="9:16" selected>Vertical 9:16 (Reels, TikTok, Shorts)</option><option value="1:1">Square 1:1 (feed posts)</option><option value="16:9">Wide 16:9 (YouTube)</option></select></label>
 <p id="agStyleErr" class="error"></p>
@@ -200,6 +201,7 @@ document.querySelectorAll('#agStyles .style-card').forEach(card=>{
     document.querySelectorAll('#agStyles .style-card').forEach(c=>c.classList.remove('sel'));
     card.classList.add('sel');card.querySelector('input').checked=true;
     style=card.querySelector('input').value;
+    transcribeBtn.textContent=style==='none'?'Continue without captions':'Transcribe my MP3';
   });
 });
 $('agAspect').addEventListener('change',e=>{aspect=e.target.value;});
@@ -231,22 +233,30 @@ async function decodePeaks(file){
 }
 transcribeBtn.addEventListener('click',async()=>{
   styleErr.textContent='';transcribeBtn.disabled=true;
-  setStatus('Listening to your MP3...');studioSec.classList.remove('hidden');
+  const noCaptions=style==='none';
+  setStatus(noCaptions?'Reading your MP3...':'Listening to your MP3...');studioSec.classList.remove('hidden');
   try{
-    const session=await fetch('/api/session.php').then(r=>r.json());
-    const fd=new FormData();fd.append('action','transcribe');fd.append('audio',audioFile,audioFile.name);fd.append('csrf',session.csrf||'');
-    const[resp,dec]=await Promise.all([
-      fetch('/api/tools/audiogram.php',{method:'POST',body:fd}).then(async r=>({ok:r.ok,status:r.status,data:await r.json().catch(()=>({}))})),
-      decodePeaks(audioFile)
-    ]);
-    if(!resp.ok)throw new Error(resp.data.error||('transcription failed ('+resp.status+')'));
-    words=resp.data.words||[];duration=dec.duration||resp.data.duration||0;peaks=dec.peaks;
-    if(!words.length||!duration)throw new Error('no words heard');
-    cues=groupCues(words);
+    if(noCaptions){
+      const dec=await decodePeaks(audioFile);
+      duration=dec.duration||0;peaks=dec.peaks;words=[];cues=[];
+      if(!duration)throw new Error('could not read that MP3');
+      bbTrack('captions_skipped',{tool:TOOL_KEY,seconds:Math.round(duration)});
+    }else{
+      const session=await fetch('/api/session.php').then(r=>r.json());
+      const fd=new FormData();fd.append('action','transcribe');fd.append('audio',audioFile,audioFile.name);fd.append('csrf',session.csrf||'');
+      const[resp,dec]=await Promise.all([
+        fetch('/api/tools/audiogram.php',{method:'POST',body:fd}).then(async r=>({ok:r.ok,status:r.status,data:await r.json().catch(()=>({}))})),
+        decodePeaks(audioFile)
+      ]);
+      if(!resp.ok)throw new Error(resp.data.error||('transcription failed ('+resp.status+')'));
+      words=resp.data.words||[];duration=dec.duration||resp.data.duration||0;peaks=dec.peaks;
+      if(!words.length||!duration)throw new Error('no words heard');
+      cues=groupCues(words);
+      bbTrack('transcription_completed',{tool:TOOL_KEY,words:words.length,seconds:Math.round(duration)});
+    }
     setupStudio();
     styleSec.classList.add('hidden');studioSec.scrollIntoView({behavior:'smooth'});
-    setStatus('Have a look. When it feels right, render it.');
-    bbTrack('transcription_completed',{tool:TOOL_KEY,words:words.length,seconds:Math.round(duration)});
+    setStatus(noCaptions?'No captions. Your image, your sound, nothing else.':'Have a look. When it feels right, render it.');
   }catch(e){
     studioSec.classList.add('hidden');
     styleErr.textContent=String(e.message||e).replace(/^Error:\s*/,'');
@@ -474,11 +484,11 @@ againBtn.addEventListener('click',()=>{
 </details>
 <details>
 <summary>What happens to my audio?</summary>
-<p>It is only transcribed to make your captions. Your audio is never kept.</p>
+<p>With captions, it is only transcribed to make them, and never kept. Pick No captions and your audio never leaves your browser at all.</p>
 </details>
 <details>
 <summary>What caption styles are there?</summary>
-<p>Four styles to pick from, so the captions match your feed.</p>
+<p>Four caption styles, or No captions: just your image and your sound, with no transcription at all.</p>
 </details>
 <details>
 <summary>What video sizes can I make?</summary>
