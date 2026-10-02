@@ -396,6 +396,7 @@ renderBtn.addEventListener('click',async()=>{
   renderErr.textContent='';dlLink.classList.add('hidden');
   renderBtn.disabled=true;rendering=true;
   const setProg=(p,txt)=>{progWrap.classList.remove('hidden');progBar.style.width=Math.round(p*100)+'%';progText.textContent=txt;};
+  let webmMB='';
   try{
     setProg(0.02,'Checking your actions...');
     const st=await apiCall({action:'status'});
@@ -417,7 +418,7 @@ renderBtn.addEventListener('click',async()=>{
     const vstream=canvas.captureStream(30);
     const combined=new MediaStream([...vstream.getVideoTracks(),...dest.stream.getAudioTracks()]);
     const mime=pickRecorderMime();
-    const rec=new MediaRecorder(combined,mime?{mimeType:mime,videoBitsPerSecond:8000000}:undefined);
+    const rec=new MediaRecorder(combined,mime?{mimeType:mime,videoBitsPerSecond:3000000}:undefined);
     const chunks=[];
     rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
     const stopped=new Promise(res=>{rec.onstop=res;});
@@ -447,6 +448,7 @@ renderBtn.addEventListener('click',async()=>{
     playing=false;playBtn.textContent='Play';
     setProg(0.82,'Converting to MP4... 0%');
     const webm=new Blob(chunks,{type:rec.mimeType||'video/webm'});
+    webmMB=(webm.size/1048576).toFixed(0);
     setProg(0.80,'Checking the recording has sound...');
     try{
       const detBuf=await actx.decodeAudioData(await webm.arrayBuffer());
@@ -457,6 +459,7 @@ renderBtn.addEventListener('click',async()=>{
       }
       if(peak<0.003)throw{silent:true};
     }catch(se){if(se&&se.silent)throw se;}
+    setProg(0.81,'Preparing '+webmMB+' MB of video for conversion...');
     await ff.writeFile('input.webm',new Uint8Array(await webm.arrayBuffer()));
     const totalUs=Math.max(1,Math.round((duration||0)*1e6));
     const convProg=({time})=>{
@@ -464,10 +467,17 @@ renderBtn.addEventListener('click',async()=>{
       setProg(0.82+0.18*cp,'Converting to MP4... '+Math.round(cp*100)+'%');
     };
     ff.on('progress',convProg);
+    // Watchdog: a stuck conversion used to hang the page forever. Bound it and fail loudly.
+    const convTimeoutMs=Math.min(900000,Math.max(300000,(duration||60)*2000));
+    let convTimer=null;
+    const convTimeoutP=new Promise((_,rej)=>{convTimer=setTimeout(()=>rej({timeout:true}),convTimeoutMs);});
     let code=1;
     try{
-      code=await ff.exec(['-i','input.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']);
-    }finally{ff.off('progress',convProg);}
+      code=await Promise.race([
+        ff.exec(['-i','input.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']),
+        convTimeoutP
+      ]);
+    }finally{clearTimeout(convTimer);try{ff.off('progress',convProg);}catch(_){}}
     if(code!==0)throw new Error('convert failed');
     const data=await ff.readFile('output.mp4');
     const mp4=new Blob([data],{type:'video/mp4'});
@@ -493,6 +503,11 @@ renderBtn.addEventListener('click',async()=>{
     }else if(e&&e.slow){
       renderErr.textContent='Your audio played back much slower than real time, so the render was stopped instead of making a broken video. This usually means the browser or your audio output is struggling - try closing other tabs, disconnecting any Bluetooth audio devices, or switching browsers, then render again. If it keeps happening, tell me which browser and device you are on.';
       setStatus('The audio played too slowly to render. Nothing was rendered.',true);
+    }else if(e&&e.timeout){
+      try{if(ffmpeg&&typeof ffmpeg.terminate==='function')ffmpeg.terminate();}catch(_){}
+      ffmpeg=null;
+      renderErr.textContent='The MP4 conversion took too long and was stopped before it could finish. Your files are safe - try closing other tabs and rendering again. If it keeps happening, tell me which browser and device you are on.';
+      setStatus('The conversion timed out. Nothing was rendered.',true);
     }else if(e&&e.limit){
       bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
       document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
