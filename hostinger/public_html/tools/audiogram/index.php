@@ -434,6 +434,16 @@ renderBtn.addEventListener('click',async()=>{
     playing=false;playBtn.textContent='Play';
     setProg(0.82,'Converting to MP4... 0%');
     const webm=new Blob(chunks,{type:rec.mimeType||'video/webm'});
+    setProg(0.80,'Checking the recording has sound...');
+    try{
+      const detBuf=await actx.decodeAudioData(await webm.arrayBuffer());
+      let peak=0;
+      for(let ch=0;ch<detBuf.numberOfChannels&&peak<0.003;ch++){
+        const d=detBuf.getChannelData(ch);
+        for(let i=0;i<d.length&&peak<0.003;i+=97){const v=Math.abs(d[i]);if(v>peak)peak=v;}
+      }
+      if(peak<0.003)throw{silent:true};
+    }catch(se){if(se&&se.silent)throw se;}
     await ff.writeFile('input.webm',new Uint8Array(await webm.arrayBuffer()));
     const totalUs=Math.max(1,Math.round((duration||0)*1e6));
     const convProg=({time})=>{
@@ -464,7 +474,10 @@ renderBtn.addEventListener('click',async()=>{
       }
     }catch(_){}
   }catch(e){
-    if(e&&e.limit){
+    if(e&&e.silent){
+      renderErr.textContent='Bum Bum recorded silence instead of your audio, so this export was stopped before it could make a dead video. Hard-refresh this page (Ctrl/Cmd+Shift+R) and render again. If it keeps happening, tell me which browser and device you are on.';
+      setStatus('The recording came back silent. Nothing was rendered.',true);
+    }else if(e&&e.limit){
       bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
       document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
       bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');
