@@ -55,7 +55,8 @@ const crew: Member[] = [
     duties: 'Responsibilities: "coach"',
     blurb:
       "Head coach. Believes in Bum Bum on the days Bum Bum does not believe in Bum Bum. Morale is up 300% quarter over quarter. Specializes in the pep talk, the treat bribe, and knowing exactly when the laptop needs to be closed for the night.",
-    // Chi's anthem has not dropped yet. The portrait still teases it.
+    song: "/team-songs/nobody-asked-me.mp3",
+    songLabel: "Nobody Asked Me",
   },
 ];
 
@@ -71,15 +72,12 @@ export default function CrewCards() {
   const playingRef = useRef<string | null>(null);
   const reduceMotionRef = useRef(false);
   const [playing, setPlaying] = useState<string | null>(null);
-  const [chiNote, setChiNote] = useState(false);
-  const chiTimer = useRef<number | null>(null);
 
   useEffect(() => {
     reduceMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     return () => {
       stopLoop();
       Object.values(audioRefs.current).forEach((a) => a.pause());
-      if (chiTimer.current) window.clearTimeout(chiTimer.current);
       ctxRef.current?.close().catch(() => {});
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -147,13 +145,7 @@ export default function CrewCards() {
   }
 
   function toggle(member: Member) {
-    if (!member.song) {
-      // Chi: no anthem yet, just a whisper that one is coming.
-      setChiNote(true);
-      if (chiTimer.current) window.clearTimeout(chiTimer.current);
-      chiTimer.current = window.setTimeout(() => setChiNote(false), 2400);
-      return;
-    }
+    if (!member.song) return;
     const key = member.name;
     let audio = audioRefs.current[key];
     if (!audio) {
@@ -220,12 +212,10 @@ export default function CrewCards() {
       >
         {crew.map((m) => {
           const isPlaying = playing === m.name;
-          const showHint = isPlaying || (m.name === "Chi" && chiNote);
+          const showHint = isPlaying;
           const hintText = isPlaying
             ? `\u266A Now playing: ${m.songLabel}`
-            : m.song
-              ? "\u266A psst \u2014 click for a tune"
-              : "\u266A Chi's song is coming!";
+            : "\u266A psst \u2014 click for a tune";
           return (
             <article
               key={m.name}
@@ -247,11 +237,7 @@ export default function CrewCards() {
                 type="button"
                 className={isPlaying ? "team-song-btn is-playing" : "team-song-btn"}
                 onClick={() => toggle(m)}
-                aria-label={
-                  m.song
-                    ? `Play ${m.name}'s theme song${isPlaying ? " (playing, click to pause)" : ""}`
-                    : `${m.name}'s song is coming soon`
-                }
+                aria-label={`Play ${m.name}'s theme song${isPlaying ? " (playing, click to pause)" : ""}`}
                 aria-pressed={isPlaying}
               >
                 <img src={m.img} alt={m.alt} />
