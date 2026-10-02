@@ -110,6 +110,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .hidden{display:none!important}
 /* ---- Soft UI pass: easier on the eyes ---- */
 .invoice,.stat-card,.modal,.modal-close{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);color:#38332a}
+.invoice.flash{outline:3px solid #d8ff62;outline-offset:2px}
 .chip{border:1px solid #ddd1b8;font-weight:700}
 .chip.on{border-color:#2f2a22}
 .badge{border:1px solid #d9cdae;font-weight:700}
@@ -176,7 +177,7 @@ function invoiceCard(inv){
     parts.push(avg<=0?'usually pays on time':`usually pays ~${avg} days late`);
   }
   if(inv.notes)parts.push(esc(inv.notes));
-  return `<div class="invoice"><div class="top"><b>${esc(inv.client_name)}</b><span class="amount">${esc(inv.amount_display)}</span>${badge(inv)}<span style="flex:1"></span>`
+  return `<div class="invoice" data-inv="${inv.id}"><div class="top"><b>${esc(inv.client_name)}</b><span class="amount">${esc(inv.amount_display)}</span>${badge(inv)}<span style="flex:1"></span>`
     +(inv.status==='open'
       ? `<button type="button" class="button secondary" data-draft="${inv.id}">Chase draft</button><button type="button" class="button secondary" data-paid="${inv.id}">Mark paid</button>`
       : `<button type="button" class="button secondary" data-reopen="${inv.id}">Reopen</button>`)
@@ -355,7 +356,16 @@ addForm.addEventListener('submit',async e=>{
   document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
   addForm.reset();await refresh();
 });
-refresh();
+refresh().then(function(){
+  // Deep link from the dashboard briefing: scroll to the invoice and flash it.
+  var id = parseInt(new URLSearchParams(location.search).get('invoice') || '', 10);
+  if (!id) return;
+  var card = document.querySelector('[data-inv="' + id + '"]');
+  if (!card) return;
+  card.scrollIntoView({behavior:'smooth', block:'center'});
+  card.classList.add('flash');
+  setTimeout(function(){ card.classList.remove('flash'); }, 2800);
+}).catch(function(){});
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>

@@ -440,7 +440,12 @@ csvForm.addEventListener('submit',async e=>{
   resEl.textContent=msg;
   csvForm.reset();await refresh();
 });
-refresh();
+refresh().then(function(){
+  // Deep link from the dashboard briefing: open the record directly.
+  var id = parseInt(new URLSearchParams(location.search).get('contact') || '', 10);
+  if (!id || !DATA.contacts.some(function(c){ return c.id === id; })) return;
+  openDetail(id);
+}).catch(function(){});
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>

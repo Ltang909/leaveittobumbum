@@ -94,14 +94,14 @@ try {
     $todayYmd = date('Y-m-d');
     foreach ($bq->fetchAll() as $r) {
         $when = $r['follow_up_date'] < $todayYmd ? 'overdue' : 'due today';
-        $briefItems[] = ['kind' => 'followup', 'rid' => (int) $r['id'], 'icon' => '&#128188;', 'text' => 'Follow up: ' . trim($r['role'] . ' at ' . $r['company']) . ' (' . $when . ')', 'url' => '/tools/corporate-bum-bum/'];
+        $briefItems[] = ['icon' => '&#128188;', 'text' => 'Follow up: ' . trim($r['role'] . ' at ' . $r['company']) . ' (' . $when . ')', 'url' => '/tools/corporate-bum-bum/?contact=' . (int) $r['id']];
     }
 } catch (Throwable $e) {}
 try {
     $bq = db()->prepare("SELECT id, client_name, amount, currency, due_date FROM chaser_invoices WHERE user_id = ? AND status = 'open' AND due_date < CURDATE() ORDER BY due_date ASC LIMIT 5");
     $bq->execute([(int) $user['id']]);
     foreach ($bq->fetchAll() as $r) {
-        $briefItems[] = ['kind' => 'invoice', 'rid' => (int) $r['id'], 'icon' => '&#129534;', 'text' => 'Overdue invoice: ' . $r['client_name'] . ' ' . $r['currency'] . ' ' . $r['amount'] . ' (due ' . $r['due_date'] . ')', 'url' => '/tools/invoice-chaser/'];
+        $briefItems[] = ['icon' => '&#129534;', 'text' => 'Overdue invoice: ' . $r['client_name'] . ' ' . $r['currency'] . ' ' . $r['amount'] . ' (due ' . $r['due_date'] . ')', 'url' => '/tools/invoice-chaser/?invoice=' . (int) $r['id']];
     }
 } catch (Throwable $e) {}
 $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your workspace</p><h1><?= $greet ?>. <?= ucfirst(htmlspecialchars($bill['plan'])) ?> is handling it.</h1><p class="lede"><?= htmlspecialchars($user['email']) ?> · Subscription <?= htmlspecialchars($user['subscription_status']) ?></p>
@@ -119,10 +119,8 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 #captureResult p{margin:8px 0}
 .capture-chip{margin:4px 6px 4px 0}
 #briefing ul.activity li{display:flex;align-items:center;gap:10px}
-#briefing ul.activity li a{flex:1;min-width:0}
-.brief-done{flex:none;width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:#fff;font-weight:900;font-size:16px;cursor:pointer;margin:0;padding:0;line-height:1}
-.brief-done:hover{background:var(--lime)}
-.brief-done:disabled{opacity:.4;cursor:default}
+.brief-go{flex:none;white-space:nowrap;font-weight:700;font-size:14px;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:#fff;color:inherit}
+.brief-go:hover{background:var(--lime)}
 @media(max-width:700px){.capture-row{flex-wrap:wrap}.capture-row input{flex:1 1 100%}.capture-head img{width:44px;height:44px}}
 </style>
 <section class="panel" id="capturePanel" style="margin-top:28px">
@@ -148,49 +146,11 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <h2 style="margin-top:0">Needs your attention</h2>
 <ul class="activity" style="margin-top:8px">
 <?php foreach ($briefItems as $b): ?>
-<li><a href="<?= htmlspecialchars($b['url']) ?>" style="color:inherit;text-decoration:none"><span><?= $b['icon'] ?></span> <?= htmlspecialchars($b['text']) ?> <span aria-hidden="true">&#8599;</span></a><button type="button" class="brief-done" data-kind="<?= htmlspecialchars($b['kind']) ?>" data-id="<?= (int) $b['rid'] ?>" title="Mark done" aria-label="Mark done: <?= htmlspecialchars($b['text']) ?>">&#10003;</button></li>
+<li><span><?= $b['icon'] ?></span> <span style="flex:1;min-width:0"><?= htmlspecialchars($b['text']) ?></span> <a class="brief-go" href="<?= htmlspecialchars($b['url']) ?>">Go to record &#8599;</a></li>
 <?php endforeach; ?>
 </ul>
 </section>
 <?php endif; ?>
-<script>
-(function(){
-  var brief = document.getElementById('briefing');
-  if (!brief) return;
-  brief.addEventListener('click', function(e){
-    var btn = e.target && e.target.closest ? e.target.closest('.brief-done') : null;
-    if (!btn || btn.disabled) return;
-    btn.disabled = true;
-    fetch('/api/session.php').then(function(r){ return r.json(); }).then(function(sess){
-      return fetch('/api/briefing.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({kind: btn.getAttribute('data-kind'), id: btn.getAttribute('data-id'), csrf: sess.csrf})
-      });
-    }).then(function(r){ return r.json().then(function(d){ return {status: r.status, data: d}; }); }).then(function(res){
-      var d = res.data;
-      if (d.ok) {
-        var li = btn.closest('li');
-        li.style.transition = 'opacity .3s ease';
-        li.style.opacity = '0';
-        setTimeout(function(){
-          li.remove();
-          if (!brief.querySelectorAll('li').length) {
-            brief.innerHTML = '<h2 style="margin-top:0">Needs your attention</h2><p class="lede">All clear. Nothing needs you right now.</p>';
-          }
-        }, 320);
-      } else {
-        btn.disabled = false;
-        var p = document.createElement('p');
-        p.className = 'error';
-        p.textContent = d.error || 'Could not mark that done.';
-        brief.appendChild(p);
-        setTimeout(function(){ p.remove(); }, 3500);
-      }
-    }).catch(function(){ btn.disabled = false; });
-  });
-})();
-</script>
 <script>
 (function(){
   var input = document.getElementById('captureInput');
