@@ -154,7 +154,9 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
     }).then(function(r){ return r.json().then(function(d){ return {status: r.status, data: d}; }); }).then(function(res){
       go.disabled = false;
       var d = res.data;
-      if (d.ok) {
+      if (d.ok && d.logged === false) {
+        show('<p class="lede">' + escapeHtml(d.message || 'Can\'t do that from the log box.') + '</p>');
+      } else if (d.ok) {
         input.value = '';
         show('<p><b>&#10003; ' + escapeHtml(d.summary) + '</b> <a href="' + escapeHtml(d.url) + '">View in ' + escapeHtml(d.tool_name) + ' &rarr;</a></p>');
       } else if (d.ambiguous) {

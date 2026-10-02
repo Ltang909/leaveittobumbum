@@ -5,8 +5,10 @@ declare(strict_types=1);
  * Bum Bum universal capture: the "log anything" router.
  *
  * One box on the dashboard takes text (or a voice transcript) and files it
- * into the right tool: a note, a receipt, a job application, or an invoice.
- * The user never picks a tool; Bum Bum does.
+ * into the right tool: a note, a receipt, a subscription, a job application,
+ * or an invoice. The user never picks a tool; Bum Bum does.
+ * Action requests ("crop a picture") are declined honestly instead of being
+ * misfiled: the box records things, it doesn't perform tasks.
  *
  * How it works:
  *   1. Signed-in session + CSRF (same as every other tool endpoint).
@@ -25,6 +27,7 @@ declare(strict_types=1);
  *
  *   POST /api/capture.php  {text, csrf, idempotencyKey, tool?}
  *   -> {ok:true, tool, tool_name, summary, url, usage}
+ *   -> {ok:true, logged:false, message}          (action request, declined)
  *   -> {ok:false, ambiguous:true, options:[{tool,tool_name}]}
  */
 
@@ -123,14 +126,19 @@ function capture_llm_route(string $text): array {
         . 'cutline: a RECURRING subscription or membership (Netflix, Spotify, a SaaS plan). fields: {"name","price","cadence","category"}. '
         . 'cadence must be one of: weekly, monthly, quarterly, semiannual, annual. '
         . 'category must be one of: streaming, music, software, cloud_storage, fitness, reading, gaming, food_delivery, other. '
+        . 'unsupported: the user wants Bum Bum to DO, MAKE, or TRANSFORM something (crop, edit, resize, build, generate, create, summarize, remind) rather than record information. fields: {"reason": "short verb phrase, e.g. crop a picture"}. '
         . 'EXAMPLES: "idea: neon backgrounds for every tiktok" -> notes. '
         . '"lunch with Priya $24" -> receipt-reader. '
         . '"applied to Stripe for growth lead" -> corporate-bum-bum. '
         . '"invoice Acme $2000 due Friday" -> invoice-chaser. '
         . '"log a subscription" -> cutline. '
         . '"Netflix $15.99 a month" -> cutline. '
+        . '"crop a picture" -> unsupported with reason "crop a picture". '
+        . '"make me a logo" -> unsupported. '
         . 'RULES: Output STRICT JSON only: {"tool":"<key>","fields":{...},"confidence":0.0-1.0}. '
-        . '"tool" must be exactly one of: notes, receipt-reader, corporate-bum-bum, invoice-chaser, cutline. '
+        . '"tool" must be exactly one of: notes, receipt-reader, corporate-bum-bum, invoice-chaser, cutline, unsupported. '
+        . 'If the input asks Bum Bum to perform, create, or transform something instead of recording information, use unsupported with confidence 1.0. '
+        . 'Never file an action request as a note. '
         . 'The words subscription, membership, recurring, per month, or /month ALWAYS mean cutline, never receipt-reader. '
         . 'Receipt-reader is only for one-time purchases. '
         . 'If a cutline entry has no name, set confidence below 0.6 so the user is asked. '
@@ -372,6 +380,15 @@ if ($forced !== '' && isset($targets[$forced])) {
 $tool = $route['tool'];
 $fields = is_array($route['fields']) ? $route['fields'] : [];
 $confidence = (float) ($route['confidence'] ?? 0);
+
+// The box files things into tools; it doesn't perform tasks. Be honest
+// about that instead of misfiling an action request as a note.
+if ($tool === 'unsupported') {
+    $reason = trim((string) ($fields['reason'] ?? ''));
+    if ($reason === '') $reason = 'do that';
+    jsonResponse(['ok' => true, 'logged' => false,
+        'message' => 'Bum Bum can\'t ' . mb_substr($reason, 0, 60) . ' from here. This box files things into your tools, it doesn\'t do the task itself. Nothing was logged.']);
+}
 
 // Low confidence and no forced tool: ask, don't guess. Nothing is charged.
 // The router's field guess rides along so the user's pick needs one tap.
