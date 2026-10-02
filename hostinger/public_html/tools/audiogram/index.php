@@ -424,12 +424,25 @@ renderBtn.addEventListener('click',async()=>{
     audioEl.currentTime=0;
     setProg(0.18,'Recording your video...');
     rec.start(250);
+    const wallStart=performance.now();
     await audioEl.play();playing=true;playBtn.textContent='Pause';
-    const tick=()=>{if(rendering&&audioEl)setProg(0.18+0.6*(audioEl.currentTime/Math.max(1,duration)),'Recording your video... '+fmtT(audioEl.currentTime)+' / '+fmtT(duration));};
+    // The recording must never outlive the track. 'ended' is the primary stop,
+    // but if the browser fires it late (or never), these backstops end the
+    // recording instead of producing a runaway video.
+    let stopReason='',resolveEnded=null;
+    const finishRecording=reason=>{if(stopReason)return;stopReason=reason;clearInterval(tickInt);audioEl.onended=null;if(resolveEnded)resolveEnded();};
+    const tick=()=>{
+      if(!rendering||!audioEl||stopReason)return;
+      const ct=audioEl.currentTime,wall=(performance.now()-wallStart)/1000;
+      setProg(0.18+0.6*(ct/Math.max(1,duration)),'Recording your video... '+fmtT(ct)+' / '+fmtT(duration));
+      if(duration>0&&ct>=Math.max(0.5,duration-0.15))finishRecording('end');
+      else if(duration>0&&wall>duration+25)finishRecording('wall');
+      else if(wall>20&&duration>0&&ct<wall*0.4&&ct<duration-2)finishRecording('slow');
+    };
     const tickInt=setInterval(tick,400);
-    await new Promise(res=>{audioEl.onended=()=>res();});
-    clearInterval(tickInt);
+    await new Promise(res=>{resolveEnded=res;audioEl.onended=()=>finishRecording('end');});
     rec.stop();await stopped;
+    if(stopReason==='slow')throw{slow:true};
     mediaSrc.disconnect(dest);
     playing=false;playBtn.textContent='Play';
     setProg(0.82,'Converting to MP4... 0%');
@@ -477,6 +490,9 @@ renderBtn.addEventListener('click',async()=>{
     if(e&&e.silent){
       renderErr.textContent='Bum Bum recorded silence instead of your audio, so this export was stopped before it could make a dead video. Hard-refresh this page (Ctrl/Cmd+Shift+R) and render again. If it keeps happening, tell me which browser and device you are on.';
       setStatus('The recording came back silent. Nothing was rendered.',true);
+    }else if(e&&e.slow){
+      renderErr.textContent='Your audio played back much slower than real time, so the render was stopped instead of making a broken video. This usually means the browser or your audio output is struggling - try closing other tabs, disconnecting any Bluetooth audio devices, or switching browsers, then render again. If it keeps happening, tell me which browser and device you are on.';
+      setStatus('The audio played too slowly to render. Nothing was rendered.',true);
     }else if(e&&e.limit){
       bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
       document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
