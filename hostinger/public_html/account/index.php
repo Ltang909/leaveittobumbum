@@ -89,29 +89,24 @@ try {
 // query wrapped so a missing table never breaks the dashboard.
 $briefItems = [];
 try {
-    $bq = db()->prepare("SELECT company, role, follow_up_date FROM jobtrack_contacts WHERE user_id = ? AND follow_up_date IS NOT NULL AND follow_up_date <= CURDATE() AND stage IN ('new','applied','screening','interview_booked','waiting_next','offer') ORDER BY follow_up_date ASC LIMIT 5");
+    $bq = db()->prepare("SELECT id, company, role, follow_up_date FROM jobtrack_contacts WHERE user_id = ? AND follow_up_date IS NOT NULL AND follow_up_date <= CURDATE() AND stage IN ('new','applied','screening','interview_booked','waiting_next','offer') ORDER BY follow_up_date ASC LIMIT 5");
     $bq->execute([(int) $user['id']]);
     $todayYmd = date('Y-m-d');
     foreach ($bq->fetchAll() as $r) {
         $when = $r['follow_up_date'] < $todayYmd ? 'overdue' : 'due today';
-        $briefItems[] = ['icon' => '&#128188;', 'text' => 'Follow up: ' . trim($r['role'] . ' at ' . $r['company']) . ' (' . $when . ')', 'url' => '/tools/corporate-bum-bum/'];
+        $briefItems[] = ['kind' => 'followup', 'rid' => (int) $r['id'], 'icon' => '&#128188;', 'text' => 'Follow up: ' . trim($r['role'] . ' at ' . $r['company']) . ' (' . $when . ')', 'url' => '/tools/corporate-bum-bum/'];
     }
 } catch (Throwable $e) {}
 try {
-    $bq = db()->prepare("SELECT client_name, amount, currency, due_date FROM chaser_invoices WHERE user_id = ? AND status = 'open' AND due_date < CURDATE() ORDER BY due_date ASC LIMIT 5");
+    $bq = db()->prepare("SELECT id, client_name, amount, currency, due_date FROM chaser_invoices WHERE user_id = ? AND status = 'open' AND due_date < CURDATE() ORDER BY due_date ASC LIMIT 5");
     $bq->execute([(int) $user['id']]);
     foreach ($bq->fetchAll() as $r) {
-        $briefItems[] = ['icon' => '&#129534;', 'text' => 'Overdue invoice: ' . $r['client_name'] . ' ' . $r['currency'] . ' ' . $r['amount'] . ' (due ' . $r['due_date'] . ')', 'url' => '/tools/invoice-chaser/'];
+        $briefItems[] = ['kind' => 'invoice', 'rid' => (int) $r['id'], 'icon' => '&#129534;', 'text' => 'Overdue invoice: ' . $r['client_name'] . ' ' . $r['currency'] . ' ' . $r['amount'] . ' (due ' . $r['due_date'] . ')', 'url' => '/tools/invoice-chaser/'];
     }
 } catch (Throwable $e) {}
 $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your workspace</p><h1><?= $greet ?>. <?= ucfirst(htmlspecialchars($bill['plan'])) ?> is handling it.</h1><p class="lede"><?= htmlspecialchars($user['email']) ?> · Subscription <?= htmlspecialchars($user['subscription_status']) ?></p>
 <style>
 #capturePanel{background:#fffdf4}
-.dash-top{margin-top:28px}
-.dash-top .panel{margin-top:0}
-@media(min-width:900px){
-  .dash-top-duo{display:grid;grid-template-columns:7fr 5fr;gap:24px;align-items:start}
-}
 .capture-head{display:flex;gap:16px;align-items:center}
 .capture-head img{flex:none;width:56px;height:56px;object-fit:contain}
 .capture-head h2{margin:0}
@@ -123,10 +118,14 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 #captureFileChip{margin-top:10px}
 #captureResult p{margin:8px 0}
 .capture-chip{margin:4px 6px 4px 0}
+#briefing ul.activity li{display:flex;align-items:center;gap:10px}
+#briefing ul.activity li a{flex:1;min-width:0}
+.brief-done{flex:none;width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:#fff;font-weight:900;font-size:16px;cursor:pointer;margin:0;padding:0;line-height:1}
+.brief-done:hover{background:var(--lime)}
+.brief-done:disabled{opacity:.4;cursor:default}
 @media(max-width:700px){.capture-row{flex-wrap:wrap}.capture-row input{flex:1 1 100%}.capture-head img{width:44px;height:44px}}
 </style>
-<div class="dash-top<?php if ($briefItems): ?> dash-top-duo<?php endif; ?>">
-<section class="panel" id="capturePanel">
+<section class="panel" id="capturePanel" style="margin-top:28px">
 <div class="capture-head">
 <img src="/bum/cat-wink-blep.png" alt="Bum Bum" width="56" height="56">
 <div>
@@ -145,16 +144,53 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <div id="captureResult" aria-live="polite"></div>
 </section>
 <?php if ($briefItems): ?>
-<section class="panel" id="briefing">
+<section class="panel" id="briefing" style="margin-top:28px">
 <h2 style="margin-top:0">Needs your attention</h2>
 <ul class="activity" style="margin-top:8px">
 <?php foreach ($briefItems as $b): ?>
-<li><a href="<?= htmlspecialchars($b['url']) ?>" style="color:inherit;text-decoration:none"><span><?= $b['icon'] ?></span> <?= htmlspecialchars($b['text']) ?> <span aria-hidden="true">&#8599;</span></a></li>
+<li><a href="<?= htmlspecialchars($b['url']) ?>" style="color:inherit;text-decoration:none"><span><?= $b['icon'] ?></span> <?= htmlspecialchars($b['text']) ?> <span aria-hidden="true">&#8599;</span></a><button type="button" class="brief-done" data-kind="<?= htmlspecialchars($b['kind']) ?>" data-id="<?= (int) $b['rid'] ?>" title="Mark done" aria-label="Mark done: <?= htmlspecialchars($b['text']) ?>">&#10003;</button></li>
 <?php endforeach; ?>
 </ul>
 </section>
 <?php endif; ?>
-</div>
+<script>
+(function(){
+  var brief = document.getElementById('briefing');
+  if (!brief) return;
+  brief.addEventListener('click', function(e){
+    var btn = e.target && e.target.closest ? e.target.closest('.brief-done') : null;
+    if (!btn || btn.disabled) return;
+    btn.disabled = true;
+    fetch('/api/session.php').then(function(r){ return r.json(); }).then(function(sess){
+      return fetch('/api/briefing.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({kind: btn.getAttribute('data-kind'), id: btn.getAttribute('data-id'), csrf: sess.csrf})
+      });
+    }).then(function(r){ return r.json().then(function(d){ return {status: r.status, data: d}; }); }).then(function(res){
+      var d = res.data;
+      if (d.ok) {
+        var li = btn.closest('li');
+        li.style.transition = 'opacity .3s ease';
+        li.style.opacity = '0';
+        setTimeout(function(){
+          li.remove();
+          if (!brief.querySelectorAll('li').length) {
+            brief.innerHTML = '<h2 style="margin-top:0">Needs your attention</h2><p class="lede">All clear. Nothing needs you right now.</p>';
+          }
+        }, 320);
+      } else {
+        btn.disabled = false;
+        var p = document.createElement('p');
+        p.className = 'error';
+        p.textContent = d.error || 'Could not mark that done.';
+        brief.appendChild(p);
+        setTimeout(function(){ p.remove(); }, 3500);
+      }
+    }).catch(function(){ btn.disabled = false; });
+  });
+})();
+</script>
 <script>
 (function(){
   var input = document.getElementById('captureInput');
