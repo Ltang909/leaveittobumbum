@@ -28,7 +28,7 @@ main .grid .panel{margin-top:0}
 .oauth-btn{display:inline-flex;align-items:center;gap:10px}
 @media(max-width:700px){.tool-cards{grid-template-columns:1fr}}
 </style></head><body>
-<?php $showMeter = (bool) $user; require __DIR__ . '/../includes/site-header.php'; ?><main class="shell">
+<?php $showMeter = (bool) $user; $navShellWide = true; require __DIR__ . '/../includes/site-header.php'; ?><main class="shell shell-wide">
 <?php if (!$user): ?><p class="eyebrow">Your workspace</p><h1>First, tell Bum Bum who you are.</h1><?php $oauthNext = isset($_GET['next']) ? '&next=' . urlencode((string) $_GET['next']) : ''; $oauthAny = oauthEnabled('google') || oauthEnabled('linkedin'); ?><?php if (($_GET['oauth'] ?? '') === 'error'): ?><p class="error">That login did not go through. Try again, or use your email below.</p><?php endif; ?><?php if ($oauthAny): ?><div class="oauth-wrap"><?php if (oauthEnabled('google')): ?><a class="button secondary oauth-btn" href="/api/auth/oauth.php?provider=google<?= $oauthNext ?>"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.5h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.6 2.8c2.2-2 3.8-5 3.8-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.6-2.8c-1 .7-2.4 1.2-4.3 1.2-3.1 0-5.8-2.1-6.8-5l-3.7 2.9C3.4 21.5 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.2 14.5c-.2-.7-.4-1.5-.4-2.5s.1-1.8.4-2.5l-3.7-2.9C.5 8.5 0 10.1 0 12s.5 3.5 1.4 5.1l3.8-2.6z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.4 0 3.4 2.5 1.5 6.6l3.7 2.9c1-2.9 3.7-4.8 6.8-4.8z"/></svg>Continue with Google</a><?php endif; ?><?php if (oauthEnabled('linkedin')): ?><a class="button secondary oauth-btn" href="/api/auth/oauth.php?provider=linkedin<?= $oauthNext ?>"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#0A66C2" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.55V9h3.57v11.45z"/></svg>Continue with LinkedIn</a><?php endif; ?></div><p class="lede" style="margin-top:0">Or use your email:</p><?php endif; ?><div class="grid"><section class="panel tc-blue"><h2>Sign in</h2><form data-action="login"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Sign in</button><p class="error"></p></form></section><section class="panel tc-yellow"><h2>Create an account</h2><p>Your free workspace includes 75 completed actions each month.</p><form data-action="register"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Create free account</button><p class="error"></p></form></section></div>
 <script>
 document.querySelectorAll('form').forEach(form=>form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button');button.disabled=true;const session=await fetch('/api/session.php').then(r=>r.json());const fields=Object.fromEntries(new FormData(form));const response=await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...fields,action:form.dataset.action,csrf:session.csrf})});const data=await response.json();if(response.ok){bbIdentify(fields.email);bbTrack(form.dataset.action==='register'?'signed_up':'signed_in',{});const next=new URLSearchParams(location.search).get('next');location.href=next||'/account/'}else{form.querySelector('.error').textContent=data.error;button.disabled=false}}));
@@ -106,15 +106,28 @@ try {
 } catch (Throwable $e) {}
 $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your workspace</p><h1><?= $greet ?>. <?= ucfirst(htmlspecialchars($bill['plan'])) ?> is handling it.</h1><p class="lede"><?= htmlspecialchars($user['email']) ?> · Subscription <?= htmlspecialchars($user['subscription_status']) ?></p>
 <style>
-.capture-row{display:flex;gap:10px;align-items:stretch}
-.capture-row input{flex:1;min-width:0}
+#capturePanel{background:#fffdf4}
+.capture-head{display:flex;gap:16px;align-items:center}
+.capture-head img{flex:none;width:56px;height:56px;object-fit:contain}
+.capture-head h2{margin:0}
+.capture-head .lede{margin:6px 0 0}
+.capture-row{display:flex;gap:10px;align-items:stretch;margin-top:16px}
+.capture-row input{flex:1;min-width:0;padding:16px 18px;font-size:17px}
+.capture-row input:focus{outline:3px solid var(--lime);outline-offset:1px}
+.capture-row .button{margin-top:0;align-self:center;flex:none}
+#captureFileChip{margin-top:10px}
 #captureResult p{margin:8px 0}
 .capture-chip{margin:4px 6px 4px 0}
-@media(max-width:700px){.capture-row{flex-wrap:wrap}.capture-row input{flex:1 1 100%}}
+@media(max-width:700px){.capture-row{flex-wrap:wrap}.capture-row input{flex:1 1 100%}.capture-head img{width:44px;height:44px}}
 </style>
 <section class="panel" id="capturePanel" style="margin-top:28px">
-<h2 style="margin-top:0">Log anything</h2>
-<p class="lede" style="margin-top:0">Type it, say it, or attach a file. Bum Bum files it in the right tool, or hands it to the one that does the job. One action, same as using the tool itself.</p>
+<div class="capture-head">
+<img src="/bum/cat-wink-blep.png" alt="Bum Bum" width="56" height="56">
+<div>
+<h2>Log anything</h2>
+<p class="lede">Type it, say it, or attach a file. Bum Bum files it in the right tool, or hands it to the one that does the job. One action, same as using the tool itself.</p>
+</div>
+</div>
 <div class="capture-row">
 <input id="captureInput" type="text" placeholder="Netflix $15.99 a month &hellip; applied to Stripe &hellip; idea: neon backgrounds" autocomplete="off" maxlength="2000">
 <button id="captureFile" class="button secondary" type="button" title="Attach a photo or video">&#128206;</button>

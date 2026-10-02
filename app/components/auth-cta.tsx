@@ -35,9 +35,14 @@ export function AuthCta() {
   }
   if (state === "in") {
     return (
-      <button type="button" className="button button-small secondary" onClick={signOut}>
-        Sign out
-      </button>
+      <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+        <a className="button button-small" href="/account/">
+          My workspace <span aria-hidden="true">→</span>
+        </a>
+        <button type="button" className="text-button" onClick={signOut}>
+          Sign out
+        </button>
+      </span>
     );
   }
   return (
