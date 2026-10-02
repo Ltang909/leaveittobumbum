@@ -272,6 +272,9 @@ function setupStudio(){
   audioUrl=URL.createObjectURL(audioFile);audioEl=new Audio(audioUrl);audioEl.preload='auto';
   audioEl.addEventListener('timeupdate',()=>{timeEl.textContent=fmtT(audioEl.currentTime)+' / '+fmtT(duration)});
   audioEl.addEventListener('ended',()=>{playing=false;playBtn.textContent='Play';audioEl.currentTime=0;});
+  // Drop the old WebAudio tap: it belongs to the previous audio element,
+  // and render() rebuilds it for the current one. Keeping it would record silence.
+  if(mediaSrc){try{mediaSrc.disconnect();}catch(e){}mediaSrc=null;}
   timeEl.textContent='0:00 / '+fmtT(duration);
   playBtn.textContent='Play';playing=false;
   dlLink.classList.add('hidden');renderErr.textContent='';progText.textContent='';progWrap.classList.add('hidden');
@@ -404,7 +407,11 @@ renderBtn.addEventListener('click',async()=>{
     const ff=await getFFmpeg(s=>setProg(s==='engine'?0.08:0.14,'Loading the video engine...'));
     actx=actx||new (window.AudioContext||window.webkitAudioContext)();
     if(actx.state==='suspended')await actx.resume();
-    if(!mediaSrc){mediaSrc=actx.createMediaElementSource(audioEl);mediaSrc.connect(actx.destination);}
+    // Always rebuild the tap for the CURRENT audio element. The old code kept
+    // the first element's tap across "start over", so later renders recorded
+    // a silent audio track from a dead element.
+    if(mediaSrc){try{mediaSrc.disconnect();}catch(e){}mediaSrc=null;}
+    mediaSrc=actx.createMediaElementSource(audioEl);mediaSrc.connect(actx.destination);
     const dest=actx.createMediaStreamDestination();
     mediaSrc.connect(dest);
     const vstream=canvas.captureStream(30);
