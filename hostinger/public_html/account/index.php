@@ -114,7 +114,7 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 </style>
 <section class="panel" id="capturePanel" style="margin-top:28px">
 <h2 style="margin-top:0">Log anything</h2>
-<p class="lede" style="margin-top:0">Type it or say it. Bum Bum files it in the right tool. One action, same as using the tool itself.</p>
+<p class="lede" style="margin-top:0">Type it or say it. Bum Bum files it in the right tool, or points you at the one that does the job. One action, same as using the tool itself.</p>
 <div class="capture-row">
 <input id="captureInput" type="text" placeholder="Netflix $15.99 a month &hellip; applied to Stripe &hellip; idea: neon backgrounds" autocomplete="off" maxlength="2000">
 <button id="captureMic" class="button secondary" type="button" title="Dictate">&#127908;</button>
@@ -155,7 +155,9 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
       go.disabled = false;
       var d = res.data;
       if (d.ok && d.logged === false) {
-        show('<p class="lede">' + escapeHtml(d.message || 'Can\'t do that from the log box.') + '</p>');
+        var html = '<p class="lede">' + escapeHtml(d.message || 'Can\'t do that from the log box.') + '</p>';
+        if (d.suggest_url) html += '<p><a href="' + escapeHtml(d.suggest_url) + '">Open ' + escapeHtml(d.suggest_name || 'the tool') + ' &rarr;</a></p>';
+        show(html);
       } else if (d.ok) {
         input.value = '';
         show('<p><b>&#10003; ' + escapeHtml(d.summary) + '</b> <a href="' + escapeHtml(d.url) + '">View in ' + escapeHtml(d.tool_name) + ' &rarr;</a></p>');

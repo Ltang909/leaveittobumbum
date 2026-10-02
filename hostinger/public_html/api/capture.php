@@ -14,6 +14,8 @@ declare(strict_types=1);
  *   1. Signed-in session + CSRF (same as every other tool endpoint).
  *   2. Session rate limit: 30 captures/hour (bounds LLM spend).
  *   3. Keyword fast path for obvious receipts ("Starbucks $6.40"): no LLM.
+ *   3b. Task-intent fast path ("convert mp4 to wav", "crop a picture"):
+ *      the box can't run tools, so it points at the right one. No LLM.
  *   4. Otherwise a cheap Groq model (default openai/gpt-oss-20b) routes to
  *      one tool and extracts fields as strict JSON.
  *   5. Low confidence (< 0.6) or a forced `tool` mismatch returns options
@@ -105,6 +107,31 @@ function capture_fast_path(string $text): ?array {
 }
 
 /* ------------------------------------------------------------------ */
+/* Task intents: the box only files text, it can't run tools. But when the
+   intent clearly matches a tool, point the user straight at it instead of
+   guessing or declining flat. Runs after the receipt fast path so
+   "crop top $30" still files as a receipt.                                  */
+function capture_task_suggest(string $text): ?array {
+    if (preg_match('/\bconvert\b/i', $text)) {
+        if (preg_match('/\b(mp4|mov|avi|mkv|webm|m4v|wav|mp3|m4a|flac|ogg|opus|aac|video|audio|song|voice)\b/i', $text)) {
+            return ['name' => 'Video Converter', 'url' => '/tools/video-converter/'];
+        }
+        if (preg_match('/\b(png|jpe?g|webp|gif|avif|heic|svg|bmp|tiff?|image|picture|photo)\b/i', $text)) {
+            return ['name' => 'Image Converter', 'url' => '/tools/image-converter/'];
+        }
+    }
+    if (preg_match('/\bcrop\b/i', $text)) {
+        return ['name' => 'Image Cropper', 'url' => '/tools/image-cropper/'];
+    }
+    if (preg_match('/\btrim\b/i', $text) && preg_match('/\bvideo\b|\bmp4\b|\bmov\b/i', $text)) {
+        return ['name' => 'Video Trimmer', 'url' => '/tools/video-trimmer/'];
+    }
+    if (preg_match('/\bqr\b/i', $text)) {
+        return ['name' => 'Purr Code', 'url' => '/tools/purr-code/'];
+    }
+    return null;
+}
+
 /* LLM router                                                          */
 /* ------------------------------------------------------------------ */
 
@@ -374,7 +401,15 @@ if ($forced !== '' && isset($targets[$forced])) {
     ];
 } else {
     $route = capture_fast_path($text);
-    if ($route === null) $route = capture_llm_route($text);
+    if ($route === null) {
+        $suggest = capture_task_suggest($text);
+        if ($suggest !== null) {
+            jsonResponse(['ok' => true, 'logged' => false,
+                'message' => 'That\'s a job for ' . $suggest['name'] . '. The log box only files text into tools, so open it there to get it done. Nothing was logged.',
+                'suggest_name' => $suggest['name'], 'suggest_url' => $suggest['url']]);
+        }
+        $route = capture_llm_route($text);
+    }
 }
 
 $tool = $route['tool'];
