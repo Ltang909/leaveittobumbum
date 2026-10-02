@@ -425,10 +425,19 @@ renderBtn.addEventListener('click',async()=>{
     rec.stop();await stopped;
     mediaSrc.disconnect(dest);
     playing=false;playBtn.textContent='Play';
-    setProg(0.82,'Converting to MP4...');
+    setProg(0.82,'Converting to MP4... 0%');
     const webm=new Blob(chunks,{type:rec.mimeType||'video/webm'});
     await ff.writeFile('input.webm',new Uint8Array(await webm.arrayBuffer()));
-    const code=await ff.exec(['-i','input.webm','-c:v','libx264','-preset','veryfast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']);
+    const totalUs=Math.max(1,Math.round((duration||0)*1e6));
+    const convProg=({time})=>{
+      const cp=Math.min(0.999,Math.max(0,(Number(time)||0)/totalUs));
+      setProg(0.82+0.18*cp,'Converting to MP4... '+Math.round(cp*100)+'%');
+    };
+    ff.on('progress',convProg);
+    let code=1;
+    try{
+      code=await ff.exec(['-i','input.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']);
+    }finally{ff.off('progress',convProg);}
     if(code!==0)throw new Error('convert failed');
     const data=await ff.readFile('output.mp4');
     const mp4=new Blob([data],{type:'video/mp4'});
