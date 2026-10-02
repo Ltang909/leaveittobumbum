@@ -72,7 +72,7 @@ function capture_fast_path(string $text): ?array {
     // "Starbucks $6.40" or "$6.40 at Starbucks"
     if (preg_match('/^(.*?)\$\s*([\d,]+(?:\.\d{1,2})?)\s*(.*)$/', $t, $m)) {
         $vendor = trim($m[1] . ' ' . $m[3]);
-        $vendor = (string) preg_replace('/^(paid|bought|spent)\s+/i', '', $vendor);
+        $vendor = (string) preg_replace('/^(paid|bought|spent|at|for)\s+/i', '', $vendor);
         $vendor = trim((string) preg_replace('/\s+/', ' ', $vendor));
         $total = (float) str_replace(',', '', $m[2]);
         if ($total > 0 && $total < 1000000) {
