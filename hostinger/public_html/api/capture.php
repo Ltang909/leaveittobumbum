@@ -60,6 +60,12 @@ function capture_targets(): array {
             'name' => 'Invoice Chaser',
             'url' => '/tools/invoice-chaser/',
         ],
+        'cutline' => [
+            'endpoint' => '/api/tools/cutline.php',
+            'action' => 'add',
+            'name' => 'Cutline',
+            'url' => '/tools/cutline/',
+        ],
     ];
 }
 
@@ -69,6 +75,9 @@ function capture_targets(): array {
 
 function capture_fast_path(string $text): ?array {
     $t = trim(preg_replace('/\s+/', ' ', $text));
+    // Subscription language always goes to the LLM router (Cutline), even
+    // with a dollar amount present. Receipts are one-time purchases only.
+    if (preg_match('/subscri|membership|recurring|\bmonth(ly)?\b|\/\s*mo\b/i', $t)) return null;
     // "Starbucks $6.40" or "$6.40 at Starbucks"
     if (preg_match('/^(.*?)\$\s*([\d,]+(?:\.\d{1,2})?)\s*(.*)$/', $t, $m)) {
         $vendor = trim($m[1] . ' ' . $m[3]);
@@ -108,15 +117,23 @@ function capture_llm_route(string $text): array {
         . 'Pick the ONE tool it belongs to and extract its fields. '
         . 'TOOLS: '
         . 'notes: a thought, idea, reminder, or journal entry. fields: {"text"}. '
-        . 'receipt-reader: a purchase or expense with an amount. fields: {"vendor","total","date","currency"}. '
+        . 'receipt-reader: a ONE-TIME purchase or expense with an amount. fields: {"vendor","total","date","currency"}. '
         . 'corporate-bum-bum: a job application or career move. fields: {"company","role","job_url","location","salary"}. '
         . 'invoice-chaser: an invoice to chase, a client who owes money. fields: {"client_name","amount","due_date","invoice_no","notes"}. '
+        . 'cutline: a RECURRING subscription or membership (Netflix, Spotify, a SaaS plan). fields: {"name","price","cadence","category"}. '
+        . 'cadence must be one of: weekly, monthly, quarterly, semiannual, annual. '
+        . 'category must be one of: streaming, music, software, cloud_storage, fitness, reading, gaming, food_delivery, other. '
         . 'EXAMPLES: "idea: neon backgrounds for every tiktok" -> notes. '
         . '"lunch with Priya $24" -> receipt-reader. '
         . '"applied to Stripe for growth lead" -> corporate-bum-bum. '
         . '"invoice Acme $2000 due Friday" -> invoice-chaser. '
+        . '"log a subscription" -> cutline. '
+        . '"Netflix $15.99 a month" -> cutline. '
         . 'RULES: Output STRICT JSON only: {"tool":"<key>","fields":{...},"confidence":0.0-1.0}. '
-        . '"tool" must be exactly one of: notes, receipt-reader, corporate-bum-bum, invoice-chaser. '
+        . '"tool" must be exactly one of: notes, receipt-reader, corporate-bum-bum, invoice-chaser, cutline. '
+        . 'The words subscription, membership, recurring, per month, or /month ALWAYS mean cutline, never receipt-reader. '
+        . 'Receipt-reader is only for one-time purchases. '
+        . 'If a cutline entry has no name, set confidence below 0.6 so the user is asked. '
         . 'Never invent amounts, dates, or names the user did not mention. Omit unknown optional fields. '
         . 'Use YYYY-MM-DD for dates; assume the current year. No em dashes anywhere.';
 
@@ -241,6 +258,30 @@ function capture_tool_payload(string $tool, array $fields, string $text, string 
                 'notes' => mb_substr(trim((string) ($fields['notes'] ?? '')), 0, 1000),
             ];
         }
+        case 'cutline': {
+            $priceRaw = (string) ($fields['price'] ?? '');
+            $priceRaw = preg_replace('/[^0-9.]/', '', $priceRaw);
+            $cents = $priceRaw !== '' ? (int) round((float) $priceRaw * 100) : 0;
+            $cadRaw = strtolower(trim((string) ($fields['cadence'] ?? 'monthly')));
+            $cadence = 'monthly';
+            foreach (['weekly' => 'weekly', 'month' => 'monthly', 'quarter' => 'quarterly', 'semiannual' => 'semiannual', 'half' => 'semiannual', 'annual' => 'annual', 'year' => 'annual'] as $needle => $value) {
+                if (strpos($cadRaw, $needle) !== false) { $cadence = $value; break; }
+            }
+            $category = strtolower(trim((string) ($fields['category'] ?? 'other')));
+            if (!in_array($category, ['streaming', 'music', 'software', 'cloud_storage', 'fitness', 'reading', 'gaming', 'food_delivery', 'other'], true)) $category = 'other';
+            $today = date('Y-m-d');
+            return $base + [
+                'action' => 'add',
+                'custom_name' => mb_substr(trim((string) ($fields['name'] ?? '')), 0, 191),
+                'category' => $category,
+                'tier_name' => '',
+                'price_cents' => $cents,
+                'currency' => 'USD',
+                'cadence' => $cadence,
+                'started_on' => $today,
+                'next_renewal_on' => $today,
+            ];
+        }
     }
     return $base;
 }
@@ -266,6 +307,12 @@ function capture_summary(string $tool, array $fields, string $text, array $resul
             $c = trim((string) ($fields['client_name'] ?? 'client'));
             $a = (string) ($fields['amount'] ?? '');
             return 'Added ' . ($a !== '' ? '$' . $a . ' ' : '') . 'invoice for ' . $c . ' to Invoice Chaser';
+        }
+        case 'cutline': {
+            $n = trim((string) ($fields['name'] ?? 'subscription'));
+            $p = trim((string) ($fields['price'] ?? ''));
+            $cad = trim((string) ($fields['cadence'] ?? 'monthly'));
+            return 'Added ' . $n . ($p !== '' ? ' ($' . $p . '/' . $cad . ')' : '') . ' to Cutline';
         }
     }
     return 'Logged it';

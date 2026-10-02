@@ -116,7 +116,7 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <h2 style="margin-top:0">Log anything</h2>
 <p class="lede" style="margin-top:0">Type it or say it. Bum Bum files it in the right tool. One action, same as using the tool itself.</p>
 <div class="capture-row">
-<input id="captureInput" type="text" placeholder="Starbucks $6.40 &hellip; applied to Stripe &hellip; idea: neon backgrounds" autocomplete="off" maxlength="2000">
+<input id="captureInput" type="text" placeholder="Netflix $15.99 a month &hellip; applied to Stripe &hellip; idea: neon backgrounds" autocomplete="off" maxlength="2000">
 <button id="captureMic" class="button secondary" type="button" title="Dictate">&#127908;</button>
 <button id="captureGo" class="button" type="button">Log it</button>
 </div>
