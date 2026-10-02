@@ -189,6 +189,7 @@ if(dropzone){
   fileInput.addEventListener('change',()=>{addFiles(fileInput.files);fileInput.value=''});
 }
 function addFiles(list){convError.textContent='';let added=0;for(const f of list){if(!f.type.startsWith('image/'))continue;if(files.length>=20)break;files.push(f);added++}if(added)refreshButtons();else if(!files.length)convError.textContent='No image files in that drop.';else convError.textContent='Up to 20 images at a time.'}
+window.__bbCaptureHandoff=function(f){addFiles([f]);};
 clearBtn.addEventListener('click',()=>{files=[];resultList.innerHTML='';convError.textContent='';refreshButtons()});
 
 function loadImage(f){return new Promise((res,rej)=>{const url=URL.createObjectURL(f);const img=new Image();img.onload=()=>{URL.revokeObjectURL(url);res(img)};img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('decode'))};img.src=url})}
@@ -226,4 +227,4 @@ convertBtn.addEventListener('click',async()=>{
   setTimeout(()=>convProgress.classList.add('hidden'),900);
   resultList.scrollIntoView({behavior:'smooth',block:'center'});
 });
-</script></main></body></html>
+</script><script src="/tools/capture-handoff.js"></script></main></body></html>

@@ -1,5 +1,5 @@
 <?php require dirname(__DIR__) . '/api/_bootstrap.php'; $user = currentUser(); $bill = $user ? billingUser($user) : null; $usage = $bill ? usageFor($bill) : null; ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Your account | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require __DIR__ . '/../includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Your account | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=7"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require __DIR__ . '/../includes/analytics.php'; ?><style>
 #toolbox{margin-top:28px}
 .toolbox-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .toolbox-head h2{font-size:32px;margin:0}
@@ -28,7 +28,7 @@ main .grid .panel{margin-top:0}
 .oauth-btn{display:inline-flex;align-items:center;gap:10px}
 @media(max-width:700px){.tool-cards{grid-template-columns:1fr}}
 </style></head><body>
-<?php $showMeter = (bool) $user; require __DIR__ . '/../includes/site-header.php'; ?><main class="shell">
+<?php $showMeter = (bool) $user; $navShellWide = true; require __DIR__ . '/../includes/site-header.php'; ?><main class="shell shell-wide">
 <?php if (!$user): ?><p class="eyebrow">Your workspace</p><h1>First, tell Bum Bum who you are.</h1><?php $oauthNext = isset($_GET['next']) ? '&next=' . urlencode((string) $_GET['next']) : ''; $oauthAny = oauthEnabled('google') || oauthEnabled('linkedin'); ?><?php if (($_GET['oauth'] ?? '') === 'error'): ?><p class="error">That login did not go through. Try again, or use your email below.</p><?php endif; ?><?php if ($oauthAny): ?><div class="oauth-wrap"><?php if (oauthEnabled('google')): ?><a class="button secondary oauth-btn" href="/api/auth/oauth.php?provider=google<?= $oauthNext ?>"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.5h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.6 2.8c2.2-2 3.8-5 3.8-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.6-2.8c-1 .7-2.4 1.2-4.3 1.2-3.1 0-5.8-2.1-6.8-5l-3.7 2.9C3.4 21.5 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.2 14.5c-.2-.7-.4-1.5-.4-2.5s.1-1.8.4-2.5l-3.7-2.9C.5 8.5 0 10.1 0 12s.5 3.5 1.4 5.1l3.8-2.6z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.4 0 3.4 2.5 1.5 6.6l3.7 2.9c1-2.9 3.7-4.8 6.8-4.8z"/></svg>Continue with Google</a><?php endif; ?><?php if (oauthEnabled('linkedin')): ?><a class="button secondary oauth-btn" href="/api/auth/oauth.php?provider=linkedin<?= $oauthNext ?>"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#0A66C2" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.55V9h3.57v11.45z"/></svg>Continue with LinkedIn</a><?php endif; ?></div><p class="lede" style="margin-top:0">Or use your email:</p><?php endif; ?><div class="grid"><section class="panel tc-blue"><h2>Sign in</h2><form data-action="login"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Sign in</button><p class="error"></p></form></section><section class="panel tc-yellow"><h2>Create an account</h2><p>Your free workspace includes 75 completed actions each month.</p><form data-action="register"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Create free account</button><p class="error"></p></form></section></div>
 <script>
 document.querySelectorAll('form').forEach(form=>form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button');button.disabled=true;const session=await fetch('/api/session.php').then(r=>r.json());const fields=Object.fromEntries(new FormData(form));const response=await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...fields,action:form.dataset.action,csrf:session.csrf})});const data=await response.json();if(response.ok){bbIdentify(fields.email);bbTrack(form.dataset.action==='register'?'signed_up':'signed_in',{});const next=new URLSearchParams(location.search).get('next');location.href=next||'/account/'}else{form.querySelector('.error').textContent=data.error;button.disabled=false}}));
@@ -85,7 +85,240 @@ try {
     $actStmt->execute([(int) $bill['id']]);
     $activityRows = $actStmt->fetchAll();
 } catch (Throwable $e) { $activityRows = []; }
+// Mission-control briefing: what needs attention today. Read-only, each
+// query wrapped so a missing table never breaks the dashboard.
+$briefItems = [];
+try {
+    $bq = db()->prepare("SELECT id, company, role, follow_up_date FROM jobtrack_contacts WHERE user_id = ? AND follow_up_date IS NOT NULL AND follow_up_date <= CURDATE() AND stage IN ('new','applied','screening','interview_booked','waiting_next','offer') ORDER BY follow_up_date ASC LIMIT 5");
+    $bq->execute([(int) $user['id']]);
+    $todayYmd = date('Y-m-d');
+    foreach ($bq->fetchAll() as $r) {
+        $when = $r['follow_up_date'] < $todayYmd ? 'overdue' : 'due today';
+        $briefItems[] = ['icon' => '&#128188;', 'text' => 'Follow up: ' . trim($r['role'] . ' at ' . $r['company']) . ' (' . $when . ')', 'url' => '/tools/corporate-bum-bum/?contact=' . (int) $r['id']];
+    }
+} catch (Throwable $e) {}
+try {
+    $bq = db()->prepare("SELECT id, client_name, amount, currency, due_date FROM chaser_invoices WHERE user_id = ? AND status = 'open' AND due_date < CURDATE() ORDER BY due_date ASC LIMIT 5");
+    $bq->execute([(int) $user['id']]);
+    foreach ($bq->fetchAll() as $r) {
+        $briefItems[] = ['icon' => '&#129534;', 'text' => 'Overdue invoice: ' . $r['client_name'] . ' ' . $r['currency'] . ' ' . $r['amount'] . ' (due ' . $r['due_date'] . ')', 'url' => '/tools/invoice-chaser/?invoice=' . (int) $r['id']];
+    }
+} catch (Throwable $e) {}
 $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your workspace</p><h1><?= $greet ?>. <?= ucfirst(htmlspecialchars($bill['plan'])) ?> is handling it.</h1><p class="lede"><?= htmlspecialchars($user['email']) ?> · Subscription <?= htmlspecialchars($user['subscription_status']) ?></p>
+<style>
+#capturePanel{background:#fffdf4}
+.capture-head{display:flex;gap:16px;align-items:center}
+.capture-head img{flex:none;width:56px;height:56px;object-fit:contain}
+.capture-head h2{margin:0}
+.capture-head .lede{margin:6px 0 0}
+.capture-row{display:flex;gap:10px;align-items:stretch;margin-top:16px}
+.capture-row input{flex:1;min-width:0;padding:16px 18px;font-size:17px}
+.capture-row input:focus{outline:3px solid var(--lime);outline-offset:1px}
+.capture-row .button{margin-top:0;align-self:center;flex:none}
+#captureFileChip{margin-top:10px}
+#captureResult p{margin:8px 0}
+.capture-chip{margin:4px 6px 4px 0}
+#briefing ul.activity li{display:flex;align-items:center;gap:10px}
+.brief-go{flex:none;white-space:nowrap;font-weight:700;font-size:14px;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:#fff;color:inherit}
+.brief-go:hover{background:var(--lime)}
+@media(max-width:700px){.capture-row{flex-wrap:wrap}.capture-row input{flex:1 1 100%}.capture-head img{width:44px;height:44px}}
+</style>
+<section class="panel" id="capturePanel" style="margin-top:28px">
+<div class="capture-head">
+<img src="/bum/cat-wink-blep.png" alt="Bum Bum" width="56" height="56">
+<div>
+<h2>Log anything</h2>
+<p class="lede">Type it, say it, or attach a file. Bum Bum files it in the right tool, or hands it to the one that does the job. One action, same as using the tool itself.</p>
+</div>
+</div>
+<div class="capture-row">
+<input id="captureInput" type="text" placeholder="Netflix $15.99 a month &hellip; applied to Stripe &hellip; idea: neon backgrounds" autocomplete="off" maxlength="2000">
+<button id="captureFile" class="button secondary" type="button" title="Attach a photo or video">&#128206;</button>
+<button id="captureMic" class="button secondary" type="button" title="Dictate">&#127908;</button>
+<button id="captureGo" class="button" type="button">Log it</button>
+</div>
+<input id="captureFileInput" type="file" accept="image/*,video/*" style="display:none">
+<div id="captureFileChip" style="display:none;margin-top:8px"></div>
+<div id="captureResult" aria-live="polite"></div>
+</section>
+<?php if ($briefItems): ?>
+<section class="panel" id="briefing" style="margin-top:28px">
+<h2 style="margin-top:0">Needs your attention</h2>
+<ul class="activity" style="margin-top:8px">
+<?php foreach ($briefItems as $b): ?>
+<li><span><?= $b['icon'] ?></span> <span style="flex:1;min-width:0"><?= htmlspecialchars($b['text']) ?></span> <a class="brief-go" href="<?= htmlspecialchars($b['url']) ?>">Go to record &#8599;</a></li>
+<?php endforeach; ?>
+</ul>
+</section>
+<?php endif; ?>
+<script>
+(function(){
+  var input = document.getElementById('captureInput');
+  var go = document.getElementById('captureGo');
+  var mic = document.getElementById('captureMic');
+  var result = document.getElementById('captureResult');
+  if (!input || !go || !mic || !result) return;
+  var fileBtn = document.getElementById('captureFile');
+  var filePicker = document.getElementById('captureFileInput');
+  var chipRow = document.getElementById('captureFileChip');
+  var attachedFile = null;
+  function renderChip(){
+    if (!chipRow) return;
+    if (!attachedFile) { chipRow.style.display = 'none'; chipRow.innerHTML = ''; return; }
+    chipRow.style.display = 'block';
+    chipRow.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px">'
+      + '&#128206; ' + escapeHtml(attachedFile.name) + ' (' + (attachedFile.size / 1048576).toFixed(1) + ' MB)'
+      + ' <button type="button" id="captureFileRemove" class="button secondary" style="padding:2px 10px;margin:0" aria-label="Remove file">&times;</button></span>'
+      + '<p class="lede" style="font-size:13px;margin:6px 0 0">Stays on your device. Never uploaded.</p>';
+    document.getElementById('captureFileRemove').addEventListener('click', function(){ attachedFile = null; renderChip(); });
+  }
+  function storeHandoff(file){
+    return new Promise(function(res, rej){
+      if (!('indexedDB' in window)) { rej(new Error('no-idb')); return; }
+      var req = indexedDB.open('bumbum-capture', 1);
+      req.onupgradeneeded = function(e){
+        var db = e.target.result;
+        if (!db.objectStoreNames.contains('handoff')) db.createObjectStore('handoff');
+      };
+      req.onsuccess = function(e){
+        var db = e.target.result, tx;
+        try { tx = db.transaction('handoff', 'readwrite'); } catch (err) { rej(err); return; }
+        tx.objectStore('handoff').put({file: file, name: file.name, type: file.type, ts: Date.now()}, 'pending');
+        tx.oncomplete = function(){ res(); };
+        tx.onerror = function(){ rej(tx.error || new Error('tx')); };
+      };
+      req.onerror = function(){ rej(req.error || new Error('open')); };
+    });
+  }
+  if (fileBtn && filePicker) {
+    fileBtn.addEventListener('click', function(){ filePicker.click(); });
+    filePicker.addEventListener('change', function(){
+      var f = filePicker.files && filePicker.files[0];
+      filePicker.value = '';
+      if (!f) return;
+      attachedFile = f;
+      renderChip();
+      input.focus();
+    });
+  }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function idem(){ var a = new Uint8Array(24); crypto.getRandomValues(a); return Array.from(a, function(b){ return ('0'+b.toString(16)).slice(-2); }).join(''); }
+  function show(html){ result.innerHTML = html; }
+  function send(text, tool, fields, key){
+    show('<p class="lede">Filing it&hellip;</p>');
+    go.disabled = true;
+    fetch('/api/session.php').then(function(r){ return r.json(); }).then(function(sess){
+      return fetch('/api/capture.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({text: text, tool: tool || '', fields: fields || {}, csrf: sess.csrf, idempotencyKey: key || idem()})
+      });
+    }).then(function(r){ return r.json().then(function(d){ return {status: r.status, data: d}; }); }).then(function(res){
+      go.disabled = false;
+      var d = res.data;
+      if (d.ok && d.logged === false) {
+        var html = '<p class="lede">' + escapeHtml(d.message || 'Can\'t do that from the log box.') + '</p>';
+        if (d.suggest_url) html += '<p><a href="' + escapeHtml(d.suggest_url) + '">Open ' + escapeHtml(d.suggest_name || 'the tool') + ' &rarr;</a></p>';
+        show(html);
+      } else if (d.ok) {
+        input.value = '';
+        show('<p><b>&#10003; ' + escapeHtml(d.summary) + '</b> <a href="' + escapeHtml(d.url) + '">View in ' + escapeHtml(d.tool_name) + ' &rarr;</a></p>');
+      } else if (d.ambiguous) {
+        var chips = d.options.map(function(o){
+          return '<button type="button" class="button secondary capture-chip" data-tool="' + escapeHtml(o.tool) + '">' + escapeHtml(o.tool_name) + '</button>';
+        }).join('');
+        show('<p class="lede">Hmm, where should this go?</p><div>' + chips + '</div>');
+        result.querySelectorAll('.capture-chip').forEach(function(chip){
+          chip.addEventListener('click', function(){ send(d.text, chip.getAttribute('data-tool'), d.fields, key || idem()); });
+        });
+      } else if (d.limit_reached) {
+        show('<p class="error">' + escapeHtml(d.error || 'Out of actions.') + ' <a href="/account/#upgrade">Refill</a></p>');
+      } else {
+        show('<p class="error">' + escapeHtml(d.error || 'Something went wrong.') + '</p>');
+      }
+    }).catch(function(){
+      go.disabled = false;
+      show('<p class="error">Could not reach Bum Bum. Check your connection and try again.</p>');
+    });
+  }
+  function sendWithFile(text, file){
+    show('<p class="lede">Figuring out where this goes&hellip;</p>');
+    go.disabled = true;
+    fetch('/api/session.php').then(function(r){ return r.json(); }).then(function(sess){
+      return fetch('/api/capture.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({text: text, fileName: file.name, fileMime: file.type, fileSize: file.size, csrf: sess.csrf, idempotencyKey: idem()})
+      });
+    }).then(function(r){ return r.json().then(function(d){ return {status: r.status, data: d}; }); }).then(function(res){
+      go.disabled = false;
+      var d = res.data;
+      if (d.ok && d.handoff) {
+        show('<p class="lede">' + escapeHtml(d.message || 'Sending it over&hellip;') + '</p>');
+        storeHandoff(file).then(function(){
+          setTimeout(function(){ location.href = d.tool_url; }, 800);
+        }).catch(function(){
+          show('<p class="error">Could not stage the file in this browser. <a href="' + escapeHtml(d.tool_url) + '">Open ' + escapeHtml(d.tool_name || 'the tool') + '</a> and drop it in manually.</p>');
+        });
+      } else if (d.ok && d.logged === false) {
+        show('<p class="lede">' + escapeHtml(d.message || 'Not sure what to do with that file yet.') + '</p>');
+      } else {
+        show('<p class="error">' + escapeHtml(d.error || 'Something went wrong.') + '</p>');
+      }
+    }).catch(function(){
+      go.disabled = false;
+      show('<p class="error">Could not reach Bum Bum. Check your connection and try again.</p>');
+    });
+  }
+  function submitCapture(){
+    if (attachedFile) { sendWithFile(input.value.trim(), attachedFile); return; }
+    var t = input.value.trim();
+    if (t) send(t);
+  }
+  go.addEventListener('click', submitCapture);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ submitCapture(); } });
+  var recording = false, recorder = null, chunks = [];
+  mic.addEventListener('click', function(){
+    if (recording && recorder) { recorder.stop(); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+      show('<p class="error">Voice input is not supported in this browser. Type it instead.</p>');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({audio: true}).then(function(stream){
+      chunks = [];
+      recorder = new MediaRecorder(stream);
+      recorder.ondataavailable = function(e){ if (e.data && e.data.size) chunks.push(e.data); };
+      recorder.onstop = function(){
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        recording = false;
+        mic.innerHTML = '&#127908;';
+        transcribe(new Blob(chunks, {type: recorder.mimeType || 'audio/webm'}));
+      };
+      recorder.start();
+      recording = true;
+      mic.innerHTML = '&#9632;';
+      show('<p class="lede">Listening&hellip; tap again to stop.</p>');
+    }).catch(function(){ show('<p class="error">Microphone access was blocked.</p>'); });
+  });
+  function transcribe(blob){
+    show('<p class="lede">Transcribing&hellip;</p>');
+    fetch('/api/session.php').then(function(r){ return r.json(); }).then(function(sess){
+      var fd = new FormData();
+      fd.append('audio', blob, 'capture.webm');
+      fd.append('csrf', sess.csrf);
+      return fetch('/api/voice-transcribe.php', {method: 'POST', body: fd});
+    }).then(function(r){ return r.json(); }).then(function(d){
+      if (d.transcript) {
+        input.value = d.transcript;
+        show('<p class="lede">Heard you. Tap <b>Log it</b> to file it.</p>');
+        input.focus();
+      } else {
+        show('<p class="error">' + escapeHtml(d.error || 'Could not transcribe that.') + '</p>');
+      }
+    }).catch(function(){ show('<p class="error">Transcription failed. Try typing it.</p>'); });
+  }
+})();
+</script>
 <section id="toolbox"><div class="toolbox-head"><h2>Your toolbox</h2><button id="customizeBtn" class="button secondary" style="margin-top:0">Customize</button></div>
 <div id="tool-picker" class="hidden"><p class="lede" style="margin:0">Pick the tools that show up here.</p><div class="tool-pick">
 <?php foreach ($DASHBOARD_ORDER as $key): $t = $DASHBOARD_TOOLS[$key]; ?>

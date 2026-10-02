@@ -224,6 +224,7 @@ function loadFile(f){
   preview.dataset.name=f.name;preview.dataset.file=f.name;
   preview._file=f;
 }
+window.__bbCaptureHandoff=function(f){loadFile(f);};
 [startText,endText].forEach(el=>el.addEventListener('change',clampTimes));
 startRange.addEventListener('input',()=>{startText.value=fmt(parseFloat(startRange.value));clampTimes()});
 endRange.addEventListener('input',()=>{endText.value=fmt(parseFloat(endRange.value));clampTimes()});
@@ -274,4 +275,4 @@ trimBtn.addEventListener('click',async()=>{
     else trimError.textContent='Something went wrong finishing the trim. Try again?';
   }finally{trimBtn.disabled=false;setTimeout(()=>trimProgress.classList.add('hidden'),900)}
 });
-</script></main></body></html>
+</script><script src="/tools/capture-handoff.js"></script></main></body></html>
