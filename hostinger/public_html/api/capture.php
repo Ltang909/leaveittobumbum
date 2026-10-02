@@ -25,12 +25,19 @@ declare(strict_types=1);
  *      stay in the tool. One capture costs exactly one action: the tool's.
  *
  * Billing: the router itself is free; the tool API consumes its normal
- * single action. Ambiguous inputs cost nothing.
+ * single action. Ambiguous inputs cost nothing. File handoffs cost nothing
+ * here; the tool meters its own action when the user finishes there.
  *
  *   POST /api/capture.php  {text, csrf, idempotencyKey, tool?}
  *   -> {ok:true, tool, tool_name, summary, url, usage}
  *   -> {ok:true, logged:false, message}          (action request, declined)
+ *   -> {ok:true, logged:false, handoff:true, tool_name, tool_url}
+ *      (file attached: browser stashes the file in IndexedDB and navigates
+ *      to tool_url; the tool page picks it up via /tools/capture-handoff.js)
  *   -> {ok:false, ambiguous:true, options:[{tool,tool_name}]}
+ *
+ *   POST /api/capture.php  {text, fileName, fileMime, fileSize, csrf, ...}
+ *   -> handoff / ask / decline shapes above (file bytes never uploaded)
  */
 
 require __DIR__ . '/_bootstrap.php';
@@ -111,8 +118,7 @@ function capture_fast_path(string $text): ?array {
    intent clearly matches a tool, point the user straight at it instead of
    guessing or declining flat. Runs after the receipt fast path so
    "crop top $30" still files as a receipt.                                  */
-function capture_task_suggest(string $text): ?array {
-    if (preg_match('/\bconvert\b/i', $text)) {
+function capture_task_suggest(string $text): ?array {    if (preg_match('/\bconvert\b/i', $text)) {
         if (preg_match('/\b(mp4|mov|avi|mkv|webm|m4v|wav|mp3|m4a|flac|ogg|opus|aac|video|audio|song|voice)\b/i', $text)) {
             return ['name' => 'Video Converter', 'url' => '/tools/video-converter/'];
         }
@@ -130,6 +136,29 @@ function capture_task_suggest(string $text): ?array {
         return ['name' => 'Purr Code', 'url' => '/tools/purr-code/'];
     }
     return null;
+}
+
+/* File routing: pick a media tool from the file kind + the user's words.
+   Returns ['name','url'], ['ask'=>true] when the task is unclear, or null
+   when the combination can't be used. The file itself never reaches this
+   server; only name/mime/size travel here for routing.                     */
+function capture_file_target(string $kind, string $text): ?array {
+    if ($kind === 'video') {
+        if (preg_match('/\btrim\b|\bcut\b|\bsnip\b/i', $text)) {
+            return ['name' => 'Video Trimmer', 'url' => '/tools/video-trimmer/'];
+        }
+        if (preg_match('/\bconvert\b/i', $text)) {
+            return ['name' => 'Video Converter', 'url' => '/tools/video-converter/'];
+        }
+        return ['ask' => true];
+    }
+    if (preg_match('/\bcrop\b/i', $text)) {
+        return ['name' => 'Image Cropper', 'url' => '/tools/image-cropper/'];
+    }
+    if (preg_match('/\bconvert\b/i', $text)) {
+        return ['name' => 'Image Converter', 'url' => '/tools/image-converter/'];
+    }
+    return ['ask' => true];
 }
 
 /* LLM router                                                          */
@@ -381,6 +410,35 @@ if ((int) ($_SESSION['cap_count'] ?? 0) >= 30) {
 $_SESSION['cap_count'] = (int) ($_SESSION['cap_count'] ?? 0) + 1;
 
 $text = trim((string) ($input['text'] ?? ''));
+
+// File attached: route the file to a media tool. The bytes never touch this
+// server; only name/mime/size travel here for routing. The browser hands the
+// file to the tool page via IndexedDB after this responds.
+$fileName = trim((string) ($input['fileName'] ?? ''));
+if ($fileName !== '') {
+    $fileMime = strtolower(trim((string) ($input['fileMime'] ?? '')));
+    $fileSize = (int) ($input['fileSize'] ?? 0);
+    $ext = strtolower((string) pathinfo($fileName, PATHINFO_EXTENSION));
+    $isImage = strpos($fileMime, 'image/') === 0 && in_array($ext, ['png', 'jpg', 'jpeg', 'webp', 'gif', 'avif'], true);
+    $isVideo = strpos($fileMime, 'video/') === 0 && in_array($ext, ['mp4', 'webm', 'mov', 'mkv', 'avi', 'm4v', '3gp'], true);
+    if ($fileSize <= 0 || $fileSize > 100 * 1024 * 1024 || (!$isImage && !$isVideo)) {
+        jsonResponse(['error' => 'That file will not work here. Images (PNG, JPG, WebP, GIF, AVIF) or video (MP4, WebM, MOV, MKV, AVI) under 100 MB.'], 422);
+    }
+    $target = capture_file_target($isImage ? 'image' : 'video', $text);
+    if ($target === null) {
+        jsonResponse(['ok' => true, 'logged' => false,
+            'message' => 'Bum Bum can\'t do that with a file yet. Nothing was logged.']);
+    }
+    if (!empty($target['ask'])) {
+        jsonResponse(['ok' => true, 'logged' => false,
+            'message' => 'Got "' . mb_substr($fileName, 0, 60) . '". What should Bum Bum do with it? Try "crop it", "convert it", or "trim it".']);
+    }
+    jsonResponse(['ok' => true, 'logged' => false, 'handoff' => true,
+        'tool_name' => $target['name'],
+        'tool_url' => $target['url'] . '?from=capture',
+        'message' => 'Sending "' . mb_substr($fileName, 0, 60) . '" to ' . $target['name'] . '. Your file never leaves your device.']);
+}
+
 if ($text === '') jsonResponse(['error' => 'Give Bum Bum something to file.'], 422);
 if (mb_strlen($text) > 100000) jsonResponse(['error' => 'That is a novel, not a log. Try the Notes tool directly.'], 422);
 $idem = capture_idempotency($input);

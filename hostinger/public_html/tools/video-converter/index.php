@@ -166,7 +166,7 @@ async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engi
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/video-converter.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data};}
 function bindDrop(zone,input,onFile){zone.addEventListener('click',()=>input.click());zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});['dragover','dragenter'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('over')}));['dragleave','drop'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('over')}));zone.addEventListener('drop',e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)onFile(f)});input.addEventListener('change',()=>{const f=input.files&&input.files[0];if(f)onFile(f);input.value=''})}
 function extOf(name){const m=String(name||'').toLowerCase().match(/\.([a-z0-9]+)$/);return m?m[1]:'';}
-bindDrop($('vcDrop'),fileInput,f=>{
+function vcOnFile(f){
   uploadErr.textContent='';
   const ext=extOf(f.name);
   const looksVideo=f.type.indexOf('video/')===0||OK_EXTS.indexOf(ext)>=0;
@@ -175,7 +175,9 @@ bindDrop($('vcDrop'),fileInput,f=>{
   videoFile=f;videoExt=OK_EXTS.indexOf(ext)>=0?ext:'mp4';
   fileInfo.textContent='Video: '+f.name+' ('+(f.size/1048576).toFixed(1)+' MB)';
   toFmtBtn.disabled=false;
-});
+}
+bindDrop($('vcDrop'),fileInput,vcOnFile);
+window.__bbCaptureHandoff=function(f){vcOnFile(f);};
 toFmtBtn.addEventListener('click',()=>{uploadSec.classList.add('hidden');fmtSec.classList.remove('hidden');fmtSec.scrollIntoView({behavior:'smooth'})});
 back1Btn.addEventListener('click',()=>{fmtSec.classList.add('hidden');uploadSec.classList.remove('hidden')});
 document.querySelectorAll('#vcFormats .fmt-card').forEach(card=>{
@@ -298,4 +300,4 @@ againBtn.addEventListener('click',()=>{
 <p><a href="/tools/audiogram/">Audiogram</a> - Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed.</p>
 <p><a href="/tools/clips/">Bum Bum Clips</a> - Record your screen right in your browser.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js"></script></body></html>

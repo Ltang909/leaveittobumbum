@@ -114,12 +114,15 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 </style>
 <section class="panel" id="capturePanel" style="margin-top:28px">
 <h2 style="margin-top:0">Log anything</h2>
-<p class="lede" style="margin-top:0">Type it or say it. Bum Bum files it in the right tool, or points you at the one that does the job. One action, same as using the tool itself.</p>
+<p class="lede" style="margin-top:0">Type it, say it, or attach a file. Bum Bum files it in the right tool, or hands it to the one that does the job. One action, same as using the tool itself.</p>
 <div class="capture-row">
 <input id="captureInput" type="text" placeholder="Netflix $15.99 a month &hellip; applied to Stripe &hellip; idea: neon backgrounds" autocomplete="off" maxlength="2000">
+<button id="captureFile" class="button secondary" type="button" title="Attach a photo or video">&#128206;</button>
 <button id="captureMic" class="button secondary" type="button" title="Dictate">&#127908;</button>
 <button id="captureGo" class="button" type="button">Log it</button>
 </div>
+<input id="captureFileInput" type="file" accept="image/*,video/*" style="display:none">
+<div id="captureFileChip" style="display:none;margin-top:8px"></div>
 <div id="captureResult" aria-live="polite"></div>
 </section>
 <?php if ($briefItems): ?>
@@ -139,6 +142,49 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
   var mic = document.getElementById('captureMic');
   var result = document.getElementById('captureResult');
   if (!input || !go || !mic || !result) return;
+  var fileBtn = document.getElementById('captureFile');
+  var filePicker = document.getElementById('captureFileInput');
+  var chipRow = document.getElementById('captureFileChip');
+  var attachedFile = null;
+  function renderChip(){
+    if (!chipRow) return;
+    if (!attachedFile) { chipRow.style.display = 'none'; chipRow.innerHTML = ''; return; }
+    chipRow.style.display = 'block';
+    chipRow.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px">'
+      + '&#128206; ' + escapeHtml(attachedFile.name) + ' (' + (attachedFile.size / 1048576).toFixed(1) + ' MB)'
+      + ' <button type="button" id="captureFileRemove" class="button secondary" style="padding:2px 10px;margin:0" aria-label="Remove file">&times;</button></span>'
+      + '<p class="lede" style="font-size:13px;margin:6px 0 0">Stays on your device. Never uploaded.</p>';
+    document.getElementById('captureFileRemove').addEventListener('click', function(){ attachedFile = null; renderChip(); });
+  }
+  function storeHandoff(file){
+    return new Promise(function(res, rej){
+      if (!('indexedDB' in window)) { rej(new Error('no-idb')); return; }
+      var req = indexedDB.open('bumbum-capture', 1);
+      req.onupgradeneeded = function(e){
+        var db = e.target.result;
+        if (!db.objectStoreNames.contains('handoff')) db.createObjectStore('handoff');
+      };
+      req.onsuccess = function(e){
+        var db = e.target.result, tx;
+        try { tx = db.transaction('handoff', 'readwrite'); } catch (err) { rej(err); return; }
+        tx.objectStore('handoff').put({file: file, name: file.name, type: file.type, ts: Date.now()}, 'pending');
+        tx.oncomplete = function(){ res(); };
+        tx.onerror = function(){ rej(tx.error || new Error('tx')); };
+      };
+      req.onerror = function(){ rej(req.error || new Error('open')); };
+    });
+  }
+  if (fileBtn && filePicker) {
+    fileBtn.addEventListener('click', function(){ filePicker.click(); });
+    filePicker.addEventListener('change', function(){
+      var f = filePicker.files && filePicker.files[0];
+      filePicker.value = '';
+      if (!f) return;
+      attachedFile = f;
+      renderChip();
+      input.focus();
+    });
+  }
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function idem(){ var a = new Uint8Array(24); crypto.getRandomValues(a); return Array.from(a, function(b){ return ('0'+b.toString(16)).slice(-2); }).join(''); }
   function show(html){ result.innerHTML = html; }
@@ -179,8 +225,42 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
       show('<p class="error">Could not reach Bum Bum. Check your connection and try again.</p>');
     });
   }
-  go.addEventListener('click', function(){ var t = input.value.trim(); if (t) send(t); });
-  input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ var t = input.value.trim(); if (t) send(t); } });
+  function sendWithFile(text, file){
+    show('<p class="lede">Figuring out where this goes&hellip;</p>');
+    go.disabled = true;
+    fetch('/api/session.php').then(function(r){ return r.json(); }).then(function(sess){
+      return fetch('/api/capture.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({text: text, fileName: file.name, fileMime: file.type, fileSize: file.size, csrf: sess.csrf, idempotencyKey: idem()})
+      });
+    }).then(function(r){ return r.json().then(function(d){ return {status: r.status, data: d}; }); }).then(function(res){
+      go.disabled = false;
+      var d = res.data;
+      if (d.ok && d.handoff) {
+        show('<p class="lede">' + escapeHtml(d.message || 'Sending it over&hellip;') + '</p>');
+        storeHandoff(file).then(function(){
+          setTimeout(function(){ location.href = d.tool_url; }, 800);
+        }).catch(function(){
+          show('<p class="error">Could not stage the file in this browser. <a href="' + escapeHtml(d.tool_url) + '">Open ' + escapeHtml(d.tool_name || 'the tool') + '</a> and drop it in manually.</p>');
+        });
+      } else if (d.ok && d.logged === false) {
+        show('<p class="lede">' + escapeHtml(d.message || 'Not sure what to do with that file yet.') + '</p>');
+      } else {
+        show('<p class="error">' + escapeHtml(d.error || 'Something went wrong.') + '</p>');
+      }
+    }).catch(function(){
+      go.disabled = false;
+      show('<p class="error">Could not reach Bum Bum. Check your connection and try again.</p>');
+    });
+  }
+  function submitCapture(){
+    if (attachedFile) { sendWithFile(input.value.trim(), attachedFile); return; }
+    var t = input.value.trim();
+    if (t) send(t);
+  }
+  go.addEventListener('click', submitCapture);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ submitCapture(); } });
   var recording = false, recorder = null, chunks = [];
   mic.addEventListener('click', function(){
     if (recording && recorder) { recorder.stop(); return; }

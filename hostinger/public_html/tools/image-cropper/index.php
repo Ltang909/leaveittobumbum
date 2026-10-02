@@ -297,6 +297,7 @@ function setImage(f){
 cimg.addEventListener('load',()=>{measure();renderBox()});
 
 function addFile(list){for(const f of list){if(f.type.startsWith('image/')){setImage(f);return}}cropError.textContent='No image files in that drop.'}
+window.__bbCaptureHandoff=function(f){addFile([f]);};
 dropzone.addEventListener('click',()=>fileInput.click());
 dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileInput.click()}});
 ['dragover','dragenter'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.add('over')}));
@@ -348,4 +349,4 @@ cropBtn.addEventListener('click',async()=>{
   }
   cropBtn.disabled=false;
 });
-</script></main></body></html>
+</script><script src="/tools/capture-handoff.js"></script></main></body></html>
