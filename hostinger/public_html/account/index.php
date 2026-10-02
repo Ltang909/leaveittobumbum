@@ -1,5 +1,5 @@
 <?php require dirname(__DIR__) . '/api/_bootstrap.php'; $user = currentUser(); $bill = $user ? billingUser($user) : null; $usage = $bill ? usageFor($bill) : null; ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Your account | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require __DIR__ . '/../includes/analytics.php'; ?><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Your account | Leave It to Bum Bum</title><link rel="stylesheet" href="/app.css?v=7"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require __DIR__ . '/../includes/analytics.php'; ?><style>
 #toolbox{margin-top:28px}
 .toolbox-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .toolbox-head h2{font-size:32px;margin:0}
@@ -107,6 +107,11 @@ try {
 $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your workspace</p><h1><?= $greet ?>. <?= ucfirst(htmlspecialchars($bill['plan'])) ?> is handling it.</h1><p class="lede"><?= htmlspecialchars($user['email']) ?> · Subscription <?= htmlspecialchars($user['subscription_status']) ?></p>
 <style>
 #capturePanel{background:#fffdf4}
+.dash-top{margin-top:28px}
+.dash-top .panel{margin-top:0}
+@media(min-width:900px){
+  .dash-top-duo{display:grid;grid-template-columns:7fr 5fr;gap:24px;align-items:start}
+}
 .capture-head{display:flex;gap:16px;align-items:center}
 .capture-head img{flex:none;width:56px;height:56px;object-fit:contain}
 .capture-head h2{margin:0}
@@ -120,7 +125,8 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 .capture-chip{margin:4px 6px 4px 0}
 @media(max-width:700px){.capture-row{flex-wrap:wrap}.capture-row input{flex:1 1 100%}.capture-head img{width:44px;height:44px}}
 </style>
-<section class="panel" id="capturePanel" style="margin-top:28px">
+<div class="dash-top<?php if ($briefItems): ?> dash-top-duo<?php endif; ?>">
+<section class="panel" id="capturePanel">
 <div class="capture-head">
 <img src="/bum/cat-wink-blep.png" alt="Bum Bum" width="56" height="56">
 <div>
@@ -139,7 +145,7 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <div id="captureResult" aria-live="polite"></div>
 </section>
 <?php if ($briefItems): ?>
-<section class="panel" id="briefing" style="margin-top:28px">
+<section class="panel" id="briefing">
 <h2 style="margin-top:0">Needs your attention</h2>
 <ul class="activity" style="margin-top:8px">
 <?php foreach ($briefItems as $b): ?>
@@ -148,6 +154,7 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 </ul>
 </section>
 <?php endif; ?>
+</div>
 <script>
 (function(){
   var input = document.getElementById('captureInput');
