@@ -85,7 +85,140 @@ try {
     $actStmt->execute([(int) $bill['id']]);
     $activityRows = $actStmt->fetchAll();
 } catch (Throwable $e) { $activityRows = []; }
+// Mission-control briefing: what needs attention today. Read-only, each
+// query wrapped so a missing table never breaks the dashboard.
+$briefItems = [];
+try {
+    $bq = db()->prepare("SELECT company, role, follow_up_date FROM jobtrack_contacts WHERE user_id = ? AND follow_up_date IS NOT NULL AND follow_up_date <= CURDATE() AND stage IN ('new','applied','screening','interview_booked','waiting_next','offer') ORDER BY follow_up_date ASC LIMIT 5");
+    $bq->execute([(int) $user['id']]);
+    $todayYmd = date('Y-m-d');
+    foreach ($bq->fetchAll() as $r) {
+        $when = $r['follow_up_date'] < $todayYmd ? 'overdue' : 'due today';
+        $briefItems[] = ['icon' => '&#128188;', 'text' => 'Follow up: ' . trim($r['role'] . ' at ' . $r['company']) . ' (' . $when . ')', 'url' => '/tools/corporate-bum-bum/'];
+    }
+} catch (Throwable $e) {}
+try {
+    $bq = db()->prepare("SELECT client_name, amount, currency, due_date FROM chaser_invoices WHERE user_id = ? AND status = 'open' AND due_date < CURDATE() ORDER BY due_date ASC LIMIT 5");
+    $bq->execute([(int) $user['id']]);
+    foreach ($bq->fetchAll() as $r) {
+        $briefItems[] = ['icon' => '&#129534;', 'text' => 'Overdue invoice: ' . $r['client_name'] . ' ' . $r['currency'] . ' ' . $r['amount'] . ' (due ' . $r['due_date'] . ')', 'url' => '/tools/invoice-chaser/'];
+    }
+} catch (Throwable $e) {}
 $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your workspace</p><h1><?= $greet ?>. <?= ucfirst(htmlspecialchars($bill['plan'])) ?> is handling it.</h1><p class="lede"><?= htmlspecialchars($user['email']) ?> · Subscription <?= htmlspecialchars($user['subscription_status']) ?></p>
+<style>
+.capture-row{display:flex;gap:10px;align-items:stretch}
+.capture-row input{flex:1;min-width:0}
+#captureResult p{margin:8px 0}
+.capture-chip{margin:4px 6px 4px 0}
+@media(max-width:700px){.capture-row{flex-wrap:wrap}.capture-row input{flex:1 1 100%}}
+</style>
+<section class="panel" id="capturePanel" style="margin-top:28px">
+<h2 style="margin-top:0">Log anything</h2>
+<p class="lede" style="margin-top:0">Type it or say it. Bum Bum files it in the right tool. One action, same as using the tool itself.</p>
+<div class="capture-row">
+<input id="captureInput" type="text" placeholder="Starbucks $6.40 &hellip; applied to Stripe &hellip; idea: neon backgrounds" autocomplete="off" maxlength="2000">
+<button id="captureMic" class="button secondary" type="button" title="Dictate">&#127908;</button>
+<button id="captureGo" class="button" type="button">Log it</button>
+</div>
+<div id="captureResult" aria-live="polite"></div>
+</section>
+<?php if ($briefItems): ?>
+<section class="panel" id="briefing" style="margin-top:28px">
+<h2 style="margin-top:0">Needs your attention</h2>
+<ul class="activity" style="margin-top:8px">
+<?php foreach ($briefItems as $b): ?>
+<li><a href="<?= htmlspecialchars($b['url']) ?>" style="color:inherit;text-decoration:none"><span><?= $b['icon'] ?></span> <?= htmlspecialchars($b['text']) ?> <span aria-hidden="true">&#8599;</span></a></li>
+<?php endforeach; ?>
+</ul>
+</section>
+<?php endif; ?>
+<script>
+(function(){
+  var input = document.getElementById('captureInput');
+  var go = document.getElementById('captureGo');
+  var mic = document.getElementById('captureMic');
+  var result = document.getElementById('captureResult');
+  if (!input || !go || !mic || !result) return;
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function idem(){ var a = new Uint8Array(24); crypto.getRandomValues(a); return Array.from(a, function(b){ return ('0'+b.toString(16)).slice(-2); }).join(''); }
+  function show(html){ result.innerHTML = html; }
+  function send(text, tool, fields, key){
+    show('<p class="lede">Filing it&hellip;</p>');
+    go.disabled = true;
+    fetch('/api/session.php').then(function(r){ return r.json(); }).then(function(sess){
+      return fetch('/api/capture.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({text: text, tool: tool || '', fields: fields || {}, csrf: sess.csrf, idempotencyKey: key || idem()})
+      });
+    }).then(function(r){ return r.json().then(function(d){ return {status: r.status, data: d}; }); }).then(function(res){
+      go.disabled = false;
+      var d = res.data;
+      if (d.ok) {
+        input.value = '';
+        show('<p><b>&#10003; ' + escapeHtml(d.summary) + '</b> <a href="' + escapeHtml(d.url) + '">View in ' + escapeHtml(d.tool_name) + ' &rarr;</a></p>');
+      } else if (d.ambiguous) {
+        var chips = d.options.map(function(o){
+          return '<button type="button" class="button secondary capture-chip" data-tool="' + escapeHtml(o.tool) + '">' + escapeHtml(o.tool_name) + '</button>';
+        }).join('');
+        show('<p class="lede">Hmm, where should this go?</p><div>' + chips + '</div>');
+        result.querySelectorAll('.capture-chip').forEach(function(chip){
+          chip.addEventListener('click', function(){ send(d.text, chip.getAttribute('data-tool'), d.fields, key || idem()); });
+        });
+      } else if (d.limit_reached) {
+        show('<p class="error">' + escapeHtml(d.error || 'Out of actions.') + ' <a href="/account/#upgrade">Refill</a></p>');
+      } else {
+        show('<p class="error">' + escapeHtml(d.error || 'Something went wrong.') + '</p>');
+      }
+    }).catch(function(){
+      go.disabled = false;
+      show('<p class="error">Could not reach Bum Bum. Check your connection and try again.</p>');
+    });
+  }
+  go.addEventListener('click', function(){ var t = input.value.trim(); if (t) send(t); });
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ var t = input.value.trim(); if (t) send(t); } });
+  var recording = false, recorder = null, chunks = [];
+  mic.addEventListener('click', function(){
+    if (recording && recorder) { recorder.stop(); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+      show('<p class="error">Voice input is not supported in this browser. Type it instead.</p>');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({audio: true}).then(function(stream){
+      chunks = [];
+      recorder = new MediaRecorder(stream);
+      recorder.ondataavailable = function(e){ if (e.data && e.data.size) chunks.push(e.data); };
+      recorder.onstop = function(){
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        recording = false;
+        mic.innerHTML = '&#127908;';
+        transcribe(new Blob(chunks, {type: recorder.mimeType || 'audio/webm'}));
+      };
+      recorder.start();
+      recording = true;
+      mic.innerHTML = '&#9632;';
+      show('<p class="lede">Listening&hellip; tap again to stop.</p>');
+    }).catch(function(){ show('<p class="error">Microphone access was blocked.</p>'); });
+  });
+  function transcribe(blob){
+    show('<p class="lede">Transcribing&hellip;</p>');
+    fetch('/api/session.php').then(function(r){ return r.json(); }).then(function(sess){
+      var fd = new FormData();
+      fd.append('audio', blob, 'capture.webm');
+      fd.append('csrf', sess.csrf);
+      return fetch('/api/voice-transcribe.php', {method: 'POST', body: fd});
+    }).then(function(r){ return r.json(); }).then(function(d){
+      if (d.transcript) {
+        input.value = d.transcript;
+        show('<p class="lede">Heard you. Tap <b>Log it</b> to file it.</p>');
+        input.focus();
+      } else {
+        show('<p class="error">' + escapeHtml(d.error || 'Could not transcribe that.') + '</p>');
+      }
+    }).catch(function(){ show('<p class="error">Transcription failed. Try typing it.</p>'); });
+  }
+})();
+</script>
 <section id="toolbox"><div class="toolbox-head"><h2>Your toolbox</h2><button id="customizeBtn" class="button secondary" style="margin-top:0">Customize</button></div>
 <div id="tool-picker" class="hidden"><p class="lede" style="margin:0">Pick the tools that show up here.</p><div class="tool-pick">
 <?php foreach ($DASHBOARD_ORDER as $key): $t = $DASHBOARD_TOOLS[$key]; ?>
