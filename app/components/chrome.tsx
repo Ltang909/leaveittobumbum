@@ -84,6 +84,7 @@ export function SiteFooter() {
         <a href="/about/">About</a>
         <a href="/team/">Team</a>
         <a href="/docs/">Docs</a>
+        <a href="/ai-instructions/">AI Instructions</a>
       </nav>
       <nav className="footer-links" aria-label="Legal">
         <b>Fine print</b>
