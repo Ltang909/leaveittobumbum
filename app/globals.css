@@ -257,6 +257,24 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .page-404 { text-align:center; padding:90px 0; }
 .page-404 .sticker { width:230px; transform:rotate(-4deg); margin-bottom:10px; }
 .page-404 .button { margin:6px; }
+.page-404 .kicker[title] { cursor:pointer; }
+.detectives { display:flex; gap:28px; justify-content:center; align-items:flex-end; margin:30px 0 6px; flex-wrap:wrap; }
+.detective { background:none; border:none; cursor:pointer; position:relative; padding:0 6px 0; font:inherit; color:inherit; }
+.detective img { width:165px; display:block; margin:0 auto 8px; transition:transform .15s ease; }
+.detective:hover img { transform:translateY(-4px) rotate(-2deg); }
+.detective b { display:block; font-size:17px; }
+.detective i { display:block; font-style:normal; font-size:12px; opacity:.55; margin-top:2px; }
+.speech { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:#fff; border:2px solid var(--ink); border-radius:14px; padding:9px 13px; font-size:14px; line-height:1.35; width:max-content; max-width:240px; box-shadow:3px 3px 0 var(--yellow); z-index:2; }
+.speech::after { content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:8px solid transparent; border-top-color:var(--ink); }
+.incident { margin:34px auto 8px; max-width:580px; }
+.incident .kicker { margin-bottom:6px; }
+.incident .excuse { font-size:19px; margin:0 0 14px; }
+.lostfound { margin:30px auto 34px; }
+.lostfound-box { background:none; border:none; cursor:pointer; font:inherit; color:inherit; }
+.lostfound-box img { width:120px; display:block; margin:0 auto 8px; transition:transform .15s ease; }
+.lostfound-box:hover img { transform:rotate(-4deg) scale(1.04); }
+.lostfound-box span { text-decoration:underline; text-underline-offset:3px; font-size:15px; }
+.found-item { margin:12px auto 0; max-width:420px; font-size:16px; background:var(--cream); border:2px dashed var(--ink); border-radius:12px; padding:10px 16px; }
 @media (max-width:900px){ .moods{grid-template-columns:repeat(2,1fr)} }
 .button.secondary { background:var(--cream); color:var(--ink); box-shadow:4px 4px 0 var(--yellow); }
 
