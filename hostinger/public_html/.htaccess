@@ -1,0 +1,2 @@
+# Serve the app's 404 page for missing URLs instead of the host default.
+ErrorDocument 404 /404.html
