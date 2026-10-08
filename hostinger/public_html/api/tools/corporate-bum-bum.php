@@ -445,6 +445,7 @@ if ($action === 'update') {
         if ($followUp === false) jsonResponse(['error' => 'Pick a valid follow-up date.'], 422);
         $fields[] = 'follow_up_date = ?';
         $params[] = $followUp;
+        if ($followUp === null) { $fields[] = 'last_touch_at = NOW()'; }
     }
     if (array_key_exists('notes', $input)) {
         $notes = trim((string) $input['notes']);
