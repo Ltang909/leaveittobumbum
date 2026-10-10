@@ -179,6 +179,15 @@
       "url": "/tools/video-converter/",
       "cta": "Convert a video",
       "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "cta": "Translate my cat",
+      "description": "Point your mic at your cat. Bum Bum reads the meows in real time and translates with total confidence.",
+      "icon": "🐱",
+      "key": "cat-translator",
+      "name": "Bum Bum Cat Translator",
+      "tag": "Voice",
+      "url": "/tools/cat-translator/"
     }
   ]
 }
