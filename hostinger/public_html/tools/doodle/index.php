@@ -172,7 +172,7 @@ document.querySelector('#clearBtn').addEventListener('click',()=>{if(!strokes.le
 document.querySelectorAll('[data-bg]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-bg]').forEach(x=>x.classList.remove('on'));b.classList.add('on');bg=b.dataset.bg;redraw()}));
 document.querySelectorAll('[data-aspect]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-aspect]').forEach(x=>x.classList.remove('on'));b.classList.add('on');aspect=b.dataset.aspect;fitCanvas()}));
 function download(name,url){const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}
-async function spendOnline SketchpadAction(){
+async function spendDoodleAction(){
   try{
     const s=await fetch('/api/session.php').then(r=>r.json());
     const key='doodle-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);
@@ -189,14 +189,14 @@ async function spendOnline SketchpadAction(){
   }catch(e){alert('Could not reach Bum Bum. Check your connection and try again.');return false}
 }
 const pngBtn=document.querySelector('#pngBtn');if(pngBtn)pngBtn.addEventListener('click',async()=>{
-  if(!await spendOnline SketchpadAction())return;
+  if(!await spendDoodleAction())return;
   const w=LOGICAL_W*2,h=logicalH()*2,off=document.createElement('canvas');off.width=w;off.height=h;
   render(off.getContext('2d'),w,h);
   download('doodle.png',off.toDataURL('image/png'));
 });
 function escXml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 const svgBtn=document.querySelector('#svgBtn');if(svgBtn)svgBtn.addEventListener('click',async()=>{
-  if(!await spendOnline SketchpadAction())return;
+  if(!await spendDoodleAction())return;
   const w=LOGICAL_W,h=logicalH();
   const d=s=>'M'+s.pts.map(p=>(p.x*w).toFixed(1)+' '+(p.y*h).toFixed(1)).join(' L');
   const sw=s=>(s.size*(0.4+0.6*(s.avgP||0.5))).toFixed(1);
@@ -212,7 +212,7 @@ const svgBtn=document.querySelector('#svgBtn');if(svgBtn)svgBtn.addEventListener
 });
 const copyBtn=document.querySelector('#copyBtn');if(copyBtn)copyBtn.addEventListener('click',async()=>{
   const btn=copyBtn;
-  if(!await spendOnline SketchpadAction())return;
+  if(!await spendDoodleAction())return;
   try{
     const w=LOGICAL_W*2,h=logicalH()*2,off=document.createElement('canvas');off.width=w;off.height=h;
     render(off.getContext('2d'),w,h);

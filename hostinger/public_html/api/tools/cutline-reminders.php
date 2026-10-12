@@ -11,7 +11,7 @@ if ($expected === '' || $expected === 'replace_me' || !hash_equals($expected, $s
     jsonResponse(['error' => 'Forbidden.'], 403);
 }
 
-ensureSubscription TrackerSchema();
+ensureCutlineSchema();
 $pdo = db();
 $sent = 0;
 $skipped = 0;

@@ -178,7 +178,7 @@ function hearsay_is_own_brand(string $name, array $variants): bool {
     return false;
 }
 
-function ensureAI Brand Mention CheckerSchema(): void {
+function ensureHearsaySchema(): void {
     db()->exec("CREATE TABLE IF NOT EXISTS hearsay_scans (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -215,7 +215,7 @@ requireCsrf($input);
 $subject = requireSubject();
 $isGuest = $subject['kind'] === 'guest';
 $userId = $isGuest ? 0 : (int) $subject['user']['id'];
-ensureAI Brand Mention CheckerSchema();
+ensureHearsaySchema();
 $pdo = db();
 
 if ($action === 'list') {

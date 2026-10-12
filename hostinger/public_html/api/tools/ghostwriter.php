@@ -19,7 +19,7 @@
 //   -> { "ok": true, "entry": {...}, "pack": {...}, "usage": {...} }
 require dirname(__DIR__) . '/_bootstrap.php';
 
-function ensureVoice to ContentSchema(): void {
+function ensureGhostwriterSchema(): void {
     db()->exec("CREATE TABLE IF NOT EXISTS ghostwriter_entries (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -168,7 +168,7 @@ requireCsrf($input);
 $subject = requireSubject();
 $isGuest = $subject['kind'] === 'guest';
 $userId = $isGuest ? 0 : (int) $subject['user']['id'];
-ensureVoice to ContentSchema();
+ensureGhostwriterSchema();
 $pdo = db();
 
 if ($action === 'list') {
