@@ -4,15 +4,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no">
-<title>Bum Bum Clips | Leave It to Bum Bum</title>
+<title>Free Screen Recorder Online | Record Your Screen in the Browser | Leave It to Bum Bum</title>
 <meta name="description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
-<meta property="og:title" content="Bum Bum Clips | Leave It to Bum Bum">
+<meta property="og:title" content="Free Screen Recorder Online | Record Your Screen in the Browser | Leave It to Bum Bum">
 <meta property="og:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/clips/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-clips.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bum Bum Clips | Leave It to Bum Bum">
+<meta name="twitter:title" content="Free Screen Recorder Online | Record Your Screen in the Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-clips.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/clips/">
@@ -20,7 +20,7 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Bum Bum Clips",
+  "name": "Screen Recorder",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": {
@@ -39,7 +39,7 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Bum Bum Clips free?",
+      "name": "Is Screen Recorder free?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished recording uses one action. Setting up and previewing costs nothing."
@@ -80,19 +80,19 @@
   ]
 }
 </script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Bum Bum Clips | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Bum Bum Clips","item":"https://leaveittobumbum.com/tools/clips/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Screen Recorder | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Screen Recorder","item":"https://leaveittobumbum.com/tools/clips/"}]}</script>
 <link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style>
 <?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?>
 </head>
 <body>
 <?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?>
-<main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Bum Bum Clips"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?>
+<main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Screen Recorder"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?>
 <p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-sunglasses.png" alt="Bum Bum looking cool">
 <h1>Show them instead of telling them</h1>
-<p class="lede">Bum Bum Clips records your screen right in your browser. Pick a tab, a window, or your whole screen, add your mic and a little camera bubble if you want to be in it, then trim and tweak the speed before you download. Nothing uploads anywhere, your video never leaves your computer. One finished recording uses one action.</p>
+<p class="lede">Screen Recorder records your screen right in your browser. Pick a tab, a window, or your whole screen, add your mic and a little camera bubble if you want to be in it, then trim and tweak the speed before you download. Nothing uploads anywhere, your video never leaves your computer. One finished recording uses one action.</p>
 <?php if (!$user && !$isGuest): ?>
-<section class="panel"><h2>Sign in to use Bum Bum Clips</h2><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Sign in or create an account</a></section>
+<section class="panel"><h2>Sign in to use Screen Recorder</h2><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Sign in or create an account</a></section>
 <?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/clips/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -571,7 +571,7 @@ if(!screenOK){
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
-<summary>Is Bum Bum Clips free?</summary>
+<summary>Is Screen Recorder free?</summary>
 <p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished recording uses one action. Setting up and previewing costs nothing.</p>
 </details>
 <details>
@@ -594,7 +594,7 @@ if(!screenOK){
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram</a> - Turn an MP3 into a captioned video.</p>
+<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video.</p>
 <p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>

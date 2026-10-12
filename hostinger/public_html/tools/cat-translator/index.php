@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Cat Translator | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Cat Translator | We Translate Your Cat's Meows (For Fun) | Leave It to Bum Bum</title>
 <meta name="description" content="Point your mic at your cat. Bum Bum listens to the meows and translates them in real time. Free, and your cat's audio never leaves your browser.">
-<meta property="og:title" content="Cat Translator | Leave It to Bum Bum">
+<meta property="og:title" content="Cat Translator | We Translate Your Cat's Meows (For Fun) | Leave It to Bum Bum">
 <meta property="og:description" content="Point your mic at your cat. Bum Bum listens to the meows and translates them in real time.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/cat-translator/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-cat-translator.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cat Translator | Leave It to Bum Bum">
+<meta name="twitter:title" content="Cat Translator | We Translate Your Cat's Meows (For Fun) | Leave It to Bum Bum">
 <meta name="twitter:description" content="Point your mic at your cat. Bum Bum listens to the meows and translates them in real time.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-cat-translator.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/cat-translator/">
@@ -15,7 +15,7 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Bum Bum Cat Translator",
+  "name": "Cat Translator",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -119,9 +119,9 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/notes/">Bum Bum Notes</a> - Think out loud, get a transcript.</p>
-<p><a href="/tools/ghostwriter/">Ghostwriter</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/purr-code/">Purr Code</a> - Your link, but cute.</p>
+<p><a href="/tools/notes/">Voice Notes to Text</a> - Think out loud, get a transcript.</p>
+<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 <script>
@@ -347,7 +347,7 @@ function flash(btnId,msg){
 function wireShare(btnId,saidEl){
   document.getElementById(btnId).addEventListener('click',function(){
     var t='Bum Bum translates: "'+currentText(null,saidEl)+'"';
-    if(navigator.share){navigator.share({title:'Bum Bum Cat Translator',text:t}).catch(function(){});}
+    if(navigator.share){navigator.share({title:'Cat Translator',text:t}).catch(function(){});}
     else fallbackCopy(t,btnId);
   });
 }

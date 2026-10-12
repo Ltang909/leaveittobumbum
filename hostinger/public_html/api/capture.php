@@ -51,31 +51,31 @@ function capture_targets(): array {
         'notes' => [
             'endpoint' => '/api/tools/notes.php',
             'action' => 'finalize',
-            'name' => 'Notes',
+            'name' => 'Voice Notes to Text',
             'url' => '/tools/notes/',
         ],
         'receipt-reader' => [
             'endpoint' => '/api/tools/receipt-reader.php',
             'action' => 'save',
-            'name' => 'Receipt Reader',
+            'name' => 'Receipt Scanner',
             'url' => '/tools/receipt-reader/',
         ],
         'corporate-bum-bum' => [
             'endpoint' => '/api/tools/corporate-bum-bum.php',
             'action' => 'add',
-            'name' => 'Corporate Bum Bum',
+            'name' => 'Job Application Tracker',
             'url' => '/tools/corporate-bum-bum/',
         ],
         'invoice-chaser' => [
             'endpoint' => '/api/tools/invoice-chaser.php',
             'action' => 'add',
-            'name' => 'Invoice Chaser',
+            'name' => 'Invoice Reminder',
             'url' => '/tools/invoice-chaser/',
         ],
         'cutline' => [
             'endpoint' => '/api/tools/cutline.php',
             'action' => 'add',
-            'name' => 'Cutline',
+            'name' => 'Subscription Tracker',
             'url' => '/tools/cutline/',
         ],
     ];
@@ -87,7 +87,7 @@ function capture_targets(): array {
 
 function capture_fast_path(string $text): ?array {
     $t = trim(preg_replace('/\s+/', ' ', $text));
-    // Subscription language always goes to the LLM router (Cutline), even
+    // Subscription language always goes to the LLM router (Subscription Tracker), even
     // with a dollar amount present. Receipts are one-time purchases only.
     if (preg_match('/subscri|membership|recurring|\bmonth(ly)?\b|\/\s*mo\b/i', $t)) return null;
     // "Starbucks $6.40" or "$6.40 at Starbucks"
@@ -133,7 +133,7 @@ function capture_task_suggest(string $text): ?array {    if (preg_match('/\bconv
         return ['name' => 'Video Trimmer', 'url' => '/tools/video-trimmer/'];
     }
     if (preg_match('/\bqr\b/i', $text)) {
-        return ['name' => 'Purr Code', 'url' => '/tools/purr-code/'];
+        return ['name' => 'QR Code Generator', 'url' => '/tools/purr-code/'];
     }
     return null;
 }
@@ -360,23 +360,23 @@ function capture_summary(string $tool, array $fields, string $text, array $resul
         case 'receipt-reader': {
             $v = trim((string) ($fields['vendor'] ?? 'Receipt'));
             $total = (string) ($fields['total'] ?? '');
-            return 'Logged ' . ($total !== '' ? '$' . $total . ' at ' : '') . $v . ' to Receipt Reader';
+            return 'Logged ' . ($total !== '' ? '$' . $total . ' at ' : '') . $v . ' to Receipt Scanner';
         }
         case 'corporate-bum-bum': {
             $c = trim((string) ($fields['company'] ?? ''));
             $r = trim((string) ($fields['role'] ?? ''));
-            return 'Added ' . ($r !== '' ? $r . ' at ' : '') . ($c !== '' ? $c : 'new application') . ' to Corporate Bum Bum';
+            return 'Added ' . ($r !== '' ? $r . ' at ' : '') . ($c !== '' ? $c : 'new application') . ' to Job Application Tracker';
         }
         case 'invoice-chaser': {
             $c = trim((string) ($fields['client_name'] ?? 'client'));
             $a = (string) ($fields['amount'] ?? '');
-            return 'Added ' . ($a !== '' ? '$' . $a . ' ' : '') . 'invoice for ' . $c . ' to Invoice Chaser';
+            return 'Added ' . ($a !== '' ? '$' . $a . ' ' : '') . 'invoice for ' . $c . ' to Invoice Reminder';
         }
         case 'cutline': {
             $n = trim((string) ($fields['name'] ?? 'subscription'));
             $p = trim((string) ($fields['price'] ?? ''));
             $cad = trim((string) ($fields['cadence'] ?? 'monthly'));
-            return 'Added ' . $n . ($p !== '' ? ' ($' . $p . '/' . $cad . ')' : '') . ' to Cutline';
+            return 'Added ' . $n . ($p !== '' ? ' ($' . $p . '/' . $cad . ')' : '') . ' to Subscription Tracker';
         }
     }
     return 'Logged it';

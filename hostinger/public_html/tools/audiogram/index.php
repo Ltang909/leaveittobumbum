@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Audiogram | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Audiogram Maker | Turn an MP3 Into a Captioned Video | Leave It to Bum Bum</title>
 <meta name="description" content="Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free to try.">
-<meta property="og:title" content="Audiogram | Leave It to Bum Bum">
+<meta property="og:title" content="Audiogram Maker | Turn an MP3 Into a Captioned Video | Leave It to Bum Bum">
 <meta property="og:description" content="Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/audiogram/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-audiogram.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Audiogram | Leave It to Bum Bum">
+<meta name="twitter:title" content="Audiogram Maker | Turn an MP3 Into a Captioned Video | Leave It to Bum Bum">
 <meta name="twitter:description" content="Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed. Free to try.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-audiogram.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/audiogram/">
@@ -15,7 +15,7 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Audiogram",
+  "name": "Audiogram Maker",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": {
@@ -34,7 +34,7 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Audiogram free?",
+      "name": "Is Audiogram Maker free?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished video uses one action."
@@ -75,9 +75,9 @@
   ]
 }
 </script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Audiogram | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Audiogram","item":"https://leaveittobumbum.com/tools/audiogram/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Audiogram","description":"Turn an MP3 into a video, with captions or without.","step":[{"@type":"HowToStep","position":1,"name":"Upload an MP3 and a background image."},{"@type":"HowToStep","position":2,"name":"Bum Bum transcribes your audio, or skips it entirely with No captions; the audio itself is never kept."},{"@type":"HowToStep","position":3,"name":"Pick a caption style (or none) and aspect ratio."},{"@type":"HowToStep","position":4,"name":"Download your video, ready for the feed."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Audiogram Maker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Audiogram Maker","item":"https://leaveittobumbum.com/tools/audiogram/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Audiogram Maker","description":"Turn an MP3 into a video, with captions or without.","step":[{"@type":"HowToStep","position":1,"name":"Upload an MP3 and a background image."},{"@type":"HowToStep","position":2,"name":"Bum Bum transcribes your audio, or skips it entirely with No captions; the audio itself is never kept."},{"@type":"HowToStep","position":3,"name":"Pick a caption style (or none) and aspect ratio."},{"@type":"HowToStep","position":4,"name":"Download your video, ready for the feed."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .ag-drop{border:2px dashed var(--line);border-radius:12px;padding:26px 18px;text-align:center;cursor:pointer;background:#fff;margin:0 0 12px}
 .ag-drop.over{border-color:var(--accent,#b3541e);background:#fff8f2}
@@ -102,8 +102,8 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 .linklike{background:none;border:0;padding:0;margin-top:14px;color:var(--accent,#b3541e);font:inherit;font-weight:700;cursor:pointer;text-decoration:underline}
 .mini{padding:8px 14px;font-size:14px}
 #agGen{font-size:18px;padding:14px 26px;margin-top:12px}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum editing video"><h1>MP3 in. Video out.</h1><p class="lede">Upload an MP3 and a background image. Bum Bum transcribes your audio (or skips it entirely with No captions), you pick a caption style or none at all, and you get a video ready for the feed. Your audio is only transcribed, it is never kept. One finished video uses one action.</p>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Audiogram</h2><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum editing video"><h1>MP3 in. Video out.</h1><p class="lede">Upload an MP3 and a background image. Bum Bum transcribes your audio (or skips it entirely with No captions), you pick a caption style or none at all, and you get a video ready for the feed. Your audio is only transcribed, it is never kept. One finished video uses one action.</p>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Audiogram Maker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a></p></div>
 <?php else: ?>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
@@ -484,7 +484,7 @@ againBtn.addEventListener('click',()=>{
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
-<summary>Is Audiogram free?</summary>
+<summary>Is Audiogram Maker free?</summary>
 <p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished video uses one action.</p>
 </details>
 <details>
@@ -506,7 +506,7 @@ againBtn.addEventListener('click',()=>{
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/clips/">Bum Bum Clips</a> - Record your screen right in your browser.</p>
+<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
 <p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
 <p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
 </section>

@@ -1,5 +1,5 @@
 <?php
-// Receipt Reader API.
+// Receipt Scanner API.
 // OCR runs entirely in the visitor's browser (Tesseract.js): receipt photos are
 // NEVER uploaded or stored. This endpoint meters scans (1 action each) and keeps
 // the structured receipt log (vendor, date, line items, totals) in a DB table.

@@ -1,5 +1,5 @@
 <?php
-// Bum Bum Invoice Chaser API. Track who owes you what, generate escalating
+// Bum Bum Invoice Reminder API. Track who owes you what, generate escalating
 // chase drafts, and email yourself a reminder digest. Scoped to the signed-in user.
 // One metered action per invoice added and per reminder email sent (one charged
 // reminder per day; same-day repeats are free). Drafts, updates, marking paid,
@@ -459,10 +459,10 @@ if ($action === 'remind') {
         $lines[] = '';
         $lines[] = $d['body'];
         $lines[] = '';
-        $lines[] = 'Want it to come from your billing assistant instead? Open Invoice Chaser and flip the voice toggle.';
+        $lines[] = 'Want it to come from your billing assistant instead? Open Invoice Reminder and flip the voice toggle.';
         $lines[] = '';
     }
-    $lines[] = 'Open Invoice Chaser to copy a chase draft for any of these:';
+    $lines[] = 'Open Invoice Reminder to copy a chase draft for any of these:';
     $lines[] = $appUrl . '/tools/invoice-chaser/';
     $lines[] = '';
     $lines[] = 'Get that money.';

@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>SOP-ify | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>SOP Generator | Turn a Messy Process Dump Into a Step-by-Step Playbook | Leave It to Bum Bum</title>
 <meta name="description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
-<meta property="og:title" content="SOP-ify | Leave It to Bum Bum">
+<meta property="og:title" content="SOP Generator | Turn a Messy Process Dump Into a Step-by-Step Playbook | Leave It to Bum Bum">
 <meta property="og:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/sop-ify/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-sop-ify.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SOP-ify | Leave It to Bum Bum">
+<meta name="twitter:title" content="SOP Generator | Turn a Messy Process Dump Into a Step-by-Step Playbook | Leave It to Bum Bum">
 <meta name="twitter:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-sop-ify.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/sop-ify/">
@@ -15,7 +15,7 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "SOP-ify",
+  "name": "SOP Generator",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": {
@@ -34,7 +34,7 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is SOP-ify free?",
+      "name": "Is SOP Generator free?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished playbook uses one action."
@@ -75,8 +75,8 @@
   ]
 }
 </script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"SOP-ify | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"SOP-ify","item":"https://leaveittobumbum.com/tools/sop-ify/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"SOP Generator | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"SOP Generator","item":"https://leaveittobumbum.com/tools/sop-ify/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .sop-field{margin:0 0 16px}
 .sop-field label{display:block;font-weight:800;margin-bottom:8px}
@@ -106,8 +106,8 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 @keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
 @media print{.site-header,.site-footer,.no-print,#sopForm{display:none!important}#sopResult{display:block!important}.shell{max-width:none}}
 .hidden{display:none!important}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"SOP-ify"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum the executive"><h1>Chaos in. Playbook out.</h1><p class="lede">Dump how you do the thing, all messy and rambling. Get back a clean step-by-step playbook a brand-new helper could follow with zero prior context.</p>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use SOP-ify</h2><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"SOP Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum the executive"><h1>Chaos in. Playbook out.</h1><p class="lede">Dump how you do the thing, all messy and rambling. Get back a clean step-by-step playbook a brand-new helper could follow with zero prior context.</p>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use SOP Generator</h2><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a></p></div>
 <?php else: ?>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
@@ -224,7 +224,7 @@ let data={};try{data=await response.json()}catch(e){}
 clearInterval(msgTimer);
 if(!response.ok){
 if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This playbook was not counted.';}
-else{statusEl.textContent=data.error||'SOP-ify hiccup. Try again.';statusEl.classList.add('error');}
+else{statusEl.textContent=data.error||'SOP Generator hiccup. Try again.';statusEl.classList.add('error');}
 return;}
 const b=data.playbook;
 document.querySelector('#pbTitle').textContent=b.title;
@@ -244,7 +244,7 @@ statusEl.textContent='';
 usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
 bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
 window._sopBook=b;
-}catch(e){clearInterval(msgTimer);statusEl.textContent='SOP-ify hiccup. Try again.';statusEl.classList.add('error');}
+}catch(e){clearInterval(msgTimer);statusEl.textContent='SOP Generator hiccup. Try again.';statusEl.classList.add('error');}
 finally{goBtn.disabled=false;}
 });
 document.querySelector('#pbCopy').addEventListener('click',()=>{
@@ -262,7 +262,7 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
-<summary>Is SOP-ify free?</summary>
+<summary>Is SOP Generator free?</summary>
 <p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished playbook uses one action.</p>
 </details>
 <details>
@@ -284,8 +284,8 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/ghostwriter/">Ghostwriter</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/notes/">Bum Bum Notes</a> - Talk it out and get a live transcript you can copy or download.</p>
-<p><a href="/tools/purr-code/">Purr Code</a> - Your link, but cute.</p>
+<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
+<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

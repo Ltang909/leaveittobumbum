@@ -1,5 +1,5 @@
 <?php
-// Doodle export: one action per saved/copied image.
+// Online Sketchpad export: one action per saved/copied image.
 require dirname(__DIR__) . '/_bootstrap.php';
 requirePost();
 $input = body();

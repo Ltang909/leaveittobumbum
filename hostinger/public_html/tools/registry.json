@@ -5,7 +5,7 @@
       "description": "Record your screen right in your browser. Download the clip, keep it forever.",
       "icon": "◉",
       "key": "clips",
-      "name": "Bum Bum Clips",
+      "name": "Screen Recorder",
       "tag": "Video",
       "url": "/tools/clips/",
       "mascot": "/bum/cat-sunglasses.png"
@@ -15,7 +15,7 @@
       "description": "Talk it out and get a live transcript you can copy or download.",
       "icon": "♪",
       "key": "notes",
-      "name": "Bum Bum Notes",
+      "name": "Voice Notes to Text",
       "tag": "Voice",
       "url": "/tools/notes/",
       "mascot": "/bum/cat-laptop.png"
@@ -25,7 +25,7 @@
       "description": "Every subscription you forgot about, in one place, with renewal reminders.",
       "icon": "✂",
       "key": "cutline",
-      "name": "Cutline",
+      "name": "Subscription Tracker",
       "tag": "Money",
       "url": "/tools/cutline/",
       "mascot": "/bum/cat-bowtie.png"
@@ -35,7 +35,7 @@
       "description": "A tiny CRM that tells you who to follow up with today and what to say.",
       "icon": "📇",
       "key": "purrsuit",
-      "name": "Purrsuit",
+      "name": "Client Follow-Up Tracker",
       "tag": "Clients",
       "url": "/tools/purrsuit/",
       "mascot": "/bum/cat-wink-blep.png"
@@ -45,14 +45,14 @@
       "description": "A job application tracker that tells you who to follow up with today and what to say.",
       "icon": "💼",
       "key": "corporate-bum-bum",
-      "name": "Corporate Bum",
+      "name": "Job Application Tracker",
       "tag": "Career",
       "url": "/tools/corporate-bum-bum/",
       "mascot": "/bum/cat-glasses.png"
     },
     {
       "key": "doodle",
-      "name": "Doodle",
+      "name": "Online Sketchpad",
       "tag": "Draw",
       "icon": "✏️",
       "description": "A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.",
@@ -62,7 +62,7 @@
     },
     {
       "key": "invoice-chaser",
-      "name": "Invoice Chaser",
+      "name": "Invoice Reminder",
       "tag": "Money",
       "icon": "🧾",
       "description": "Track who owes you what. Bum Bum can chase as your billing assistant, learns when each client usually pays, and emails you a reminder digest.",
@@ -72,7 +72,7 @@
     },
     {
       "key": "receipt-reader",
-      "name": "Receipt Reader",
+      "name": "Receipt Scanner",
       "tag": "Money",
       "icon": "📸",
       "description": "Snap photos of up to 10 receipts at once. Bum Bum reads them in your browser and hands you vendor, date, line items, tax, and total as clean editable tables.",
@@ -85,7 +85,7 @@
       "description": "Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions.",
       "icon": "🔍",
       "key": "gap-scout",
-      "name": "Gap Scout",
+      "name": "Resume Gap Checker",
       "tag": "Career",
       "url": "/tools/gap-scout/",
       "mascot": "/bum/cat-curious.png"
@@ -122,7 +122,7 @@
     },
     {
       "key": "ghostwriter",
-      "name": "Ghostwriter",
+      "name": "Voice to Content",
       "tag": "Content",
       "icon": "✍️",
       "description": "Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.",
@@ -132,7 +132,7 @@
     },
     {
       "key": "audiogram",
-      "name": "Audiogram",
+      "name": "Audiogram Maker",
       "tag": "Content",
       "icon": "🎙️",
       "description": "Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4.",
@@ -142,7 +142,7 @@
     },
     {
       "key": "purr-code",
-      "name": "Purr Code",
+      "name": "QR Code Generator",
       "tag": "Design",
       "icon": "🐾",
       "description": "Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.",
@@ -152,7 +152,7 @@
     },
     {
       "key": "sop-ify",
-      "name": "SOP-ify",
+      "name": "SOP Generator",
       "tag": "Team",
       "icon": "📋",
       "description": "Paste your chaotic process brain-dump. Get a clean step-by-step playbook a brand-new helper can follow.",
@@ -162,7 +162,7 @@
     },
     {
       "key": "hearsay",
-      "name": "Hearsay",
+      "name": "AI Brand Mention Checker",
       "tag": "Marketing",
       "icon": "👂",
       "description": "Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead.",
@@ -185,7 +185,7 @@
       "description": "Point your mic at your cat. Bum Bum reads the meows in real time and translates with total confidence.",
       "icon": "🐱",
       "key": "cat-translator",
-      "name": "Bum Bum Cat Translator",
+      "name": "Cat Translator",
       "tag": "Voice",
       "url": "/tools/cat-translator/"
     }

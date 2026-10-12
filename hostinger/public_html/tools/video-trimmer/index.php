@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Video Trimmer | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Free Video Trimmer Online | Trim Videos in Your Browser | Leave It to Bum Bum</title>
 <meta name="description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
-<meta property="og:title" content="Video Trimmer | Leave It to Bum Bum">
+<meta property="og:title" content="Free Video Trimmer Online | Trim Videos in Your Browser | Leave It to Bum Bum">
 <meta property="og:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-trimmer/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-video-trimmer.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Video Trimmer | Leave It to Bum Bum">
+<meta name="twitter:title" content="Free Video Trimmer Online | Trim Videos in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-video-trimmer.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-trimmer/">
@@ -168,8 +168,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/clips/">Bum Bum Clips</a> - Record your screen right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram</a> - Turn an MP3 into a captioned video.</p>
+<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
+<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video.</p>
 <p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
 </section>
 </main>

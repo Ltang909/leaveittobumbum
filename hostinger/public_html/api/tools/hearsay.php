@@ -1,5 +1,5 @@
 <?php
-// Bum Bum Hearsay API. An AEO (answer engine optimization) tracker.
+// Bum Bum AI Brand Mention Checker API. An AEO (answer engine optimization) tracker.
 //
 // The user gives a brand name (plus optional domain) and up to 5 questions
 // their customers ask. We ask 3 AI models each question, the way a curious
@@ -178,7 +178,7 @@ function hearsay_is_own_brand(string $name, array $variants): bool {
     return false;
 }
 
-function ensureHearsaySchema(): void {
+function ensureAI Brand Mention CheckerSchema(): void {
     db()->exec("CREATE TABLE IF NOT EXISTS hearsay_scans (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -215,7 +215,7 @@ requireCsrf($input);
 $subject = requireSubject();
 $isGuest = $subject['kind'] === 'guest';
 $userId = $isGuest ? 0 : (int) $subject['user']['id'];
-ensureHearsaySchema();
+ensureAI Brand Mention CheckerSchema();
 $pdo = db();
 
 if ($action === 'list') {
@@ -261,7 +261,7 @@ if ($action === 'scan') {
     $idempotency = hearsay_idempotency($input);
     $key = (string) (config()['groq_api_key'] ?? '');
     if ($key === '' || $key === 'replace_me') {
-        jsonResponse(['error' => 'Hearsay is not set up on the server yet.'], 503);
+        jsonResponse(['error' => 'AI Brand Mention Checker is not set up on the server yet.'], 503);
     }
     // Pre-check so a failed scan never costs an action.
     $pre = subjectUsage($subject);

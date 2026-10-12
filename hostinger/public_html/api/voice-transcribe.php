@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 /**
- * Audio transcription for Bum Bum Notes.
+ * Audio transcription for Voice Notes to Text.
  *
- * Bum Bum Notes transcribes live in the browser via SpeechRecognition, which
+ * Voice Notes to Text transcribes live in the browser via SpeechRecognition, which
  * iPhone Safari does not support. On iPhones the Notes page records audio and
  * POSTs it here after the user stops; the audio is forwarded to Groq's
  * Whisper API (free tier, whisper-large-v3-turbo) and only the transcript is

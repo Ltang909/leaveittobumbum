@@ -1,5 +1,5 @@
 <?php
-// Corporate Bum API. Job application tracker: applications,
+// Job Application Tracker API. Job application tracker: applications,
 // pipeline stages, follow-up queue, interaction timeline. Scoped to the
 // signed-in user. One metered action per new application; updates and
 // logging are free so the follow-up loop stays frictionless.

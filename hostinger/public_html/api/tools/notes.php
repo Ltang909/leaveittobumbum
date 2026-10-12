@@ -1,5 +1,5 @@
 <?php
-// Bum Bum Notes API. Transcripts are hosted in the shared DB, scoped to the
+// Voice Notes to Text API. Transcripts are hosted in the shared DB, scoped to the
 // signed-in user. One metered action covers transcribe + save.
 require dirname(__DIR__) . '/_bootstrap.php';
 

@@ -1,5 +1,5 @@
 <?php
-// Purr Code API. QR codes are rendered entirely in the visitor's browser
+// QR Code Generator API. QR codes are rendered entirely in the visitor's browser
 // (canvas); this endpoint meters exports and manages tracked short links.
 //
 //   POST /api/tools/purr-code.php  action=download   text=<link>  idempotencyKey=<uuid>

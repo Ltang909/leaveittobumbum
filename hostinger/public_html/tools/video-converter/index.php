@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Video Converter | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum</title>
 <meta name="description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
-<meta property="og:title" content="Video Converter | Leave It to Bum Bum">
+<meta property="og:title" content="Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum">
 <meta property="og:description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-converter/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-video-converter.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Video Converter | Leave It to Bum Bum">
+<meta name="twitter:title" content="Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-video-converter.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-converter/">
@@ -297,7 +297,7 @@ againBtn.addEventListener('click',()=>{
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram</a> - Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed.</p>
-<p><a href="/tools/clips/">Bum Bum Clips</a> - Record your screen right in your browser.</p>
+<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed.</p>
+<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js"></script></body></html>

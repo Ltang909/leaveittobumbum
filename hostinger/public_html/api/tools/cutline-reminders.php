@@ -1,7 +1,7 @@
 <?php
-// Cutline renewal reminders. Triggered by cron:
+// Subscription Tracker renewal reminders. Triggered by cron:
 //   GET /api/tools/cutline-reminders.php?secret=CRON_SECRET
-// Reuses the Cutline schema + renewal math from cutline.php (requiring it does
+// Reuses the Subscription Tracker schema + renewal math from cutline.php (requiring it does
 // NOT run its API dispatch; that only runs when cutline.php is hit directly).
 require __DIR__ . '/cutline.php';
 
@@ -11,7 +11,7 @@ if ($expected === '' || $expected === 'replace_me' || !hash_equals($expected, $s
     jsonResponse(['error' => 'Forbidden.'], 403);
 }
 
-ensureCutlineSchema();
+ensureSubscription TrackerSchema();
 $pdo = db();
 $sent = 0;
 $skipped = 0;
@@ -22,7 +22,7 @@ $mailConfigured = is_string($mailCfg['host'] ?? null) && $mailCfg['host'] !== ''
     && is_string($mailCfg['user'] ?? null) && $mailCfg['user'] !== '' && $mailCfg['user'] !== 'replace_me';
 
 // Dependency-free SMTP client (AUTH LOGIN + STARTTLS), ported from the
-// original Cutline mailer. Settings come from config()['mail'].
+// original Subscription Tracker mailer. Settings come from config()['mail'].
 // Returns [bool $ok, string $error].
 function cutline_send_mail(string $to, string $subject, string $body): array {
     $mail = config()['mail'] ?? [];

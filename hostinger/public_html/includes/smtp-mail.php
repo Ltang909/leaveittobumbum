@@ -3,7 +3,7 @@
 // Settings come from config()['mail']:
 //   'mail' => ['host' => ..., 'port' => 587, 'user' => ..., 'pass' => ...,
 //              'from_email' => ..., 'from_name' => ...]
-// Ported from the Cutline renewal mailer so every tool sends mail the same way.
+// Ported from the Subscription Tracker renewal mailer so every tool sends mail the same way.
 // Returns [bool $ok, string $error]. Never throws for config problems:
 // check bb_mail_configured() first and show an honest message instead.
 function bb_mail_configured(): bool {

@@ -1,5 +1,5 @@
 <?php
-// Bum Bum Audiogram API. MP3 in, word-timed captions out, MP4 rendered in the browser.
+// Bum Bum Audiogram Maker API. MP3 in, word-timed captions out, MP4 rendered in the browser.
 //
 // The browser uploads an MP3; the audio is forwarded to Groq Whisper
 // (whisper-large-v3-turbo, verbose_json with word timestamps) and only the

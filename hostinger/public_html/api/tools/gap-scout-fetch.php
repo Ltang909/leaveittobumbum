@@ -1,5 +1,5 @@
 <?php
-// Bum Bum Gap Scout fetcher. Fetches a job posting URL server-side and returns
+// Bum Bum Resume Gap Checker fetcher. Fetches a job posting URL server-side and returns
 // its readable text, so users can analyze postings that block cross-origin
 // fetches from the browser. SSRF-guarded: http/https only, no private or
 // reserved IP ranges, bounded size and time. Free (no action metering).

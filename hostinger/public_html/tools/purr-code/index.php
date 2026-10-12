@@ -3,15 +3,15 @@ require dirname(__DIR__, 2) . '/api/_bootstrap.php';
 require dirname(__DIR__, 2) . '/includes/purr-code-lib.php';
 purrcode_handle_redirect(); // /tools/purr-code/?go=CODE logs the scan and 302s.
 $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Purr Code | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>QR Code Generator | Branded QR Codes in Your Colors | Leave It to Bum Bum</title>
 <meta name="description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
-<meta property="og:title" content="Purr Code | Leave It to Bum Bum">
+<meta property="og:title" content="QR Code Generator | Branded QR Codes in Your Colors | Leave It to Bum Bum">
 <meta property="og:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/purr-code/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-purr-code.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Purr Code | Leave It to Bum Bum">
+<meta name="twitter:title" content="QR Code Generator | Branded QR Codes in Your Colors | Leave It to Bum Bum">
 <meta name="twitter:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-purr-code.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/purr-code/">
@@ -19,7 +19,7 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Purr Code",
+  "name": "QR Code Generator",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": {
@@ -38,7 +38,7 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Purr Code free?",
+      "name": "Is QR Code Generator free?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Previewing is free and unlimited. Exporting a QR code uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
@@ -57,7 +57,7 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
       "name": "Can I track how many times my code is scanned?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Turn on tracking and Purr Code counts every scan."
+        "text": "Yes. Turn on tracking and QR Code Generator counts every scan."
       }
     },
     {
@@ -79,9 +79,9 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
   ]
 }
 </script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Purr Code | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Purr Code","item":"https://leaveittobumbum.com/tools/purr-code/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Purr Code","description":"Your link, but cute.","step":[{"@type":"HowToStep","position":1,"name":"Paste the link you want the QR code to open."},{"@type":"HowToStep","position":2,"name":"Pick soft dots or classic style, colors, and size."},{"@type":"HowToStep","position":3,"name":"Preview it as much as you like, free."},{"@type":"HowToStep","position":4,"name":"Export your QR code and turn on scan tracking if you want it."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"QR Code Generator | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"QR Code Generator","item":"https://leaveittobumbum.com/tools/purr-code/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use QR Code Generator","description":"Your link, but cute.","step":[{"@type":"HowToStep","position":1,"name":"Paste the link you want the QR code to open."},{"@type":"HowToStep","position":2,"name":"Pick soft dots or classic style, colors, and size."},{"@type":"HowToStep","position":3,"name":"Preview it as much as you like, free."},{"@type":"HowToStep","position":4,"name":"Export your QR code and turn on scan tracking if you want it."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .pc-grid{display:grid;grid-template-columns:1fr;gap:18px}
 @media(min-width:900px){.pc-grid{grid-template-columns:1fr 1fr;align-items:start}}
@@ -120,8 +120,8 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 #pcCodesList .qrthumb:hover{border-color:#1E2321}
 #pcCodesList .qrthumb canvas{width:46px;height:46px;display:block}
 .hidden{display:none!important}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purr Code"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Purr Code</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"QR Code Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use QR Code Generator</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a></p></div>
 <?php else: ?>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
@@ -309,12 +309,12 @@ const response=await fetch('/api/tools/purr-code.php',{method:'POST',headers:{'C
 let data={};try{data=await response.json()}catch(e){}
 if(!response.ok){
 if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This export was not counted.';}
-else{statusEl.textContent=data.error||'Purr Code hiccup. Try again.';statusEl.classList.add('error');}
+else{statusEl.textContent=data.error||'QR Code Generator hiccup. Try again.';statusEl.classList.add('error');}
 return;}
 bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
 usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
 doExport();
-}catch(e){statusEl.textContent='Purr Code hiccup. Try again.';statusEl.classList.add('error');}
+}catch(e){statusEl.textContent='QR Code Generator hiccup. Try again.';statusEl.classList.add('error');}
 finally{dlBtn.disabled=false;copyBtn.disabled=false;}
 }
 dlBtn.addEventListener('click',()=>meteredExport('download'));
@@ -337,14 +337,14 @@ let data={};try{data=await response.json()}catch(e){}
 if(!response.ok){
 if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This code was not counted.';}
 else if(response.status===503){statusEl.textContent='Scan tracking is still being set up. Try again soon.';statusEl.classList.add('error');}
-else{statusEl.textContent=data.error||'Purr Code hiccup. Try again.';statusEl.classList.add('error');}
+else{statusEl.textContent=data.error||'QR Code Generator hiccup. Try again.';statusEl.classList.add('error');}
 return;}
 bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining,action:'create_link'});
 usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
 showTracked({code:data.code,shortUrl:data.shortUrl,target:data.target},0);
 statusEl.textContent='Tracked code ready. Downloads and copies are free from here.';
 loadMyCodes();
-}catch(e){statusEl.textContent='Purr Code hiccup. Try again.';statusEl.classList.add('error');}
+}catch(e){statusEl.textContent='QR Code Generator hiccup. Try again.';statusEl.classList.add('error');}
 finally{createBtn.disabled=false;}
 });
 copyLinkBtn.addEventListener('click',()=>{
@@ -402,7 +402,7 @@ draw();
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
-<summary>Is Purr Code free?</summary>
+<summary>Is QR Code Generator free?</summary>
 <p>Previewing is free and unlimited. Exporting a QR code uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
@@ -411,7 +411,7 @@ draw();
 </details>
 <details>
 <summary>Can I track how many times my code is scanned?</summary>
-<p>Yes. Turn on tracking and Purr Code counts every scan.</p>
+<p>Yes. Turn on tracking and QR Code Generator counts every scan.</p>
 </details>
 <details>
 <summary>Can I customize the look?</summary>
@@ -424,8 +424,8 @@ draw();
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/doodle/">Doodle</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
-<p><a href="/tools/sop-ify/">SOP-ify</a> - Paste your chaotic process brain-dump.</p>
-<p><a href="/tools/ghostwriter/">Ghostwriter</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+<p><a href="/tools/doodle/">Online Sketchpad</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
+<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
+<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
