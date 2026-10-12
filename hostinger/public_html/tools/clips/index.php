@@ -112,7 +112,7 @@
 <p style="font-size:14px;opacity:.75">Tip: your computer's own sound only comes through when you share a browser <strong>tab</strong> and tick "Share tab audio" in the picker. Window and full-screen shares cannot carry system sound on most computers.</p>
 <p><label style="display:inline-flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="camToggle" style="width:auto;margin:0"> Include my camera (floating bubble)</label></p>
 <p id="camNote" class="hidden">Camera unavailable, recording screen only.</p>
-<p id="camHint" class="hidden" style="font-size:14px;opacity:.75">While you record, your bubble floats on screen so you can see exactly where it lands.</p>
+<p id="camHint" class="hidden" style="font-size:14px;opacity:.75">Your camera lands in the bottom-right corner of the video itself. A floating self-view opens too, so you can see yourself while you record. Drag it anywhere, it is not part of the recording.</p>
 <button id="startBtn">Start recording</button>
 <div id="recordingView" class="hidden">
 <p class="lede">Recording <strong id="timer">00:00</strong></p>
@@ -237,7 +237,7 @@ if(!screenOK){
         stopButton.addEventListener('click',()=>{doStop()});
         const note=pipWin.document.createElement('p');
         note.className='bubble-note';
-        note.textContent='Keep this corner clear, your bubble sits here in the final video.';
+        note.textContent='Your bubble sits in the bottom-right corner of the video. Keep that corner of your screen clear.';
         pipWin.document.body.appendChild(bubble);
         pipWin.document.body.appendChild(bubbleTimerEl);
         pipWin.document.body.appendChild(stopButton);
@@ -265,7 +265,7 @@ if(!screenOK){
     fbStop.addEventListener('click',()=>{doStop()});
     const fbNote=document.createElement('div');
     fbNote.style.cssText='font-size:12px;opacity:.7;max-width:170px';
-    fbNote.textContent='Keep this corner clear, your bubble sits here in the final video.';
+    fbNote.textContent='Your bubble sits in the bottom-right corner of the video. Keep that corner of your screen clear.';
     fallbackBubble.appendChild(fbVid);
     fallbackBubble.appendChild(bubbleTimerEl);
     fallbackBubble.appendChild(fbStop);
@@ -348,11 +348,11 @@ if(!screenOK){
     const useCamera=!!camStream;
     const screenTrack=screenStream.getVideoTracks()[0];
     const screenSettings=(screenTrack&&screenTrack.getSettings)?screenTrack.getSettings():{};
-    const displaySurface=screenSettings.displaySurface||'';
-    // A full-screen capture already includes the floating bubble window, so
-    // only burn the bubble into the video for tab/window captures, where the
-    // floating window sits outside the recorded surface.
-    const compositeCamera=useCamera&&displaySurface!=='monitor';
+    // Always burn the bubble into the video when the camera is on. The
+    // floating bubble window is only a self-view: Chrome chooses which
+    // display it opens on, so on multi-monitor setups it can sit on a
+    // different screen than the recorded one and never appear in the video.
+    const compositeCamera=useCamera;
     let videoTracks;
     if(compositeCamera){
       try{
@@ -400,7 +400,12 @@ if(!screenOK){
     recorder.onstop=onStop;
     try{recorder.start(250)}catch(err){setError('Recording could not start. Please try again.');stopTracks();return}
     if(compositeCamera){
-      const draw=()=>{if(recorder&&recorder.state!=='inactive'){drawFrame();drawRAF=requestAnimationFrame(draw)}};
+      // Drive drawing from the captured video's own frames when possible:
+      // requestAnimationFrame stalls when this page is backgrounded, which
+      // is exactly when someone records their full screen.
+      const draw=()=>{if(!recorder||recorder.state==='inactive')return;drawFrame();
+        if(screenVideoEl&&screenVideoEl.requestVideoFrameCallback)screenVideoEl.requestVideoFrameCallback(draw);
+        else drawRAF=requestAnimationFrame(draw)};
       draw();
     }
     if(useCamera){openBubbleWindow();}
