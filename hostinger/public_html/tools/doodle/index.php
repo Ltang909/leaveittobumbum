@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Doodle | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Online Sketchpad | Draw in Your Browser, Export PNG or SVG | Leave It to Bum Bum</title>
 <meta name="description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
-<meta property="og:title" content="Doodle | Leave It to Bum Bum">
+<meta property="og:title" content="Online Sketchpad | Draw in Your Browser, Export PNG or SVG | Leave It to Bum Bum">
 <meta property="og:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/doodle/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-doodle.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Doodle | Leave It to Bum Bum">
+<meta name="twitter:title" content="Online Sketchpad | Draw in Your Browser, Export PNG or SVG | Leave It to Bum Bum">
 <meta name="twitter:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-doodle.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/doodle/">
@@ -15,7 +15,7 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Doodle",
+  "name": "Online Sketchpad",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": {
@@ -34,7 +34,7 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Doodle free?",
+      "name": "Is Online Sketchpad free?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Drawing is completely free and unlimited. Saving or copying your doodle uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
@@ -75,8 +75,8 @@
   ]
 }
 </script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Doodle | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Doodle","item":"https://leaveittobumbum.com/tools/doodle/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Online Sketchpad | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Online Sketchpad","item":"https://leaveittobumbum.com/tools/doodle/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .doodle-layout{display:grid;gap:16px;margin-top:20px}
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
@@ -101,7 +101,7 @@ input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
 .export-row .button{min-height:48px}
 .hint{font-size:13px;opacity:.7;margin:0}
 @media(max-width:560px){.tool-group{width:100%;justify-content:flex-start}}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Doodle"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum ready to doodle"><h1>A tiny canvas for big ideas.</h1><p class="lede">Doodle is a pocket sketchpad. Draw with a finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Saving or copying your doodle uses one action.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Online Sketchpad"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum ready to doodle"><h1>A tiny canvas for big ideas.</h1><p class="lede">Online Sketchpad is a pocket sketchpad. Draw with a finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Saving or copying your doodle uses one action.</p>
 <div class="doodle-layout">
 <div class="toolbar">
 <div class="tool-group"><span class="lbl">Tool</span><div class="seg" role="group" aria-label="Pen or eraser"><button type="button" id="penBtn" class="on">Pen</button><button type="button" id="eraserBtn">Eraser</button></div></div>
@@ -172,7 +172,7 @@ document.querySelector('#clearBtn').addEventListener('click',()=>{if(!strokes.le
 document.querySelectorAll('[data-bg]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-bg]').forEach(x=>x.classList.remove('on'));b.classList.add('on');bg=b.dataset.bg;redraw()}));
 document.querySelectorAll('[data-aspect]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-aspect]').forEach(x=>x.classList.remove('on'));b.classList.add('on');aspect=b.dataset.aspect;fitCanvas()}));
 function download(name,url){const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}
-async function spendDoodleAction(){
+async function spendOnline SketchpadAction(){
   try{
     const s=await fetch('/api/session.php').then(r=>r.json());
     const key='doodle-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);
@@ -189,14 +189,14 @@ async function spendDoodleAction(){
   }catch(e){alert('Could not reach Bum Bum. Check your connection and try again.');return false}
 }
 const pngBtn=document.querySelector('#pngBtn');if(pngBtn)pngBtn.addEventListener('click',async()=>{
-  if(!await spendDoodleAction())return;
+  if(!await spendOnline SketchpadAction())return;
   const w=LOGICAL_W*2,h=logicalH()*2,off=document.createElement('canvas');off.width=w;off.height=h;
   render(off.getContext('2d'),w,h);
   download('doodle.png',off.toDataURL('image/png'));
 });
 function escXml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 const svgBtn=document.querySelector('#svgBtn');if(svgBtn)svgBtn.addEventListener('click',async()=>{
-  if(!await spendDoodleAction())return;
+  if(!await spendOnline SketchpadAction())return;
   const w=LOGICAL_W,h=logicalH();
   const d=s=>'M'+s.pts.map(p=>(p.x*w).toFixed(1)+' '+(p.y*h).toFixed(1)).join(' L');
   const sw=s=>(s.size*(0.4+0.6*(s.avgP||0.5))).toFixed(1);
@@ -212,7 +212,7 @@ const svgBtn=document.querySelector('#svgBtn');if(svgBtn)svgBtn.addEventListener
 });
 const copyBtn=document.querySelector('#copyBtn');if(copyBtn)copyBtn.addEventListener('click',async()=>{
   const btn=copyBtn;
-  if(!await spendDoodleAction())return;
+  if(!await spendOnline SketchpadAction())return;
   try{
     const w=LOGICAL_W*2,h=logicalH()*2,off=document.createElement('canvas');off.width=w;off.height=h;
     render(off.getContext('2d'),w,h);
@@ -226,7 +226,7 @@ fitCanvas();
 </script><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
-<summary>Is Doodle free?</summary>
+<summary>Is Online Sketchpad free?</summary>
 <p>Drawing is completely free and unlimited. Saving or copying your doodle uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
@@ -248,8 +248,8 @@ fitCanvas();
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/purr-code/">Purr Code</a> - Your link, but cute.</p>
-<p><a href="/tools/ghostwriter/">Ghostwriter</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/sop-ify/">SOP-ify</a> - Paste your chaotic process brain-dump.</p>
+<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>
+<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

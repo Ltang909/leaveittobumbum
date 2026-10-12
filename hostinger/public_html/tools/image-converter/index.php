@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Image Converter | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Image Converter | Convert WebP, PNG, and JPG in Your Browser | Leave It to Bum Bum</title>
 <meta name="description" content="Convert images between WebP, PNG, and JPG in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
-<meta property="og:title" content="Image Converter | Leave It to Bum Bum">
+<meta property="og:title" content="Image Converter | Convert WebP, PNG, and JPG in Your Browser | Leave It to Bum Bum">
 <meta property="og:description" content="Convert images between WebP, PNG, and JPG in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/image-converter/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-image-converter.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Image Converter | Leave It to Bum Bum">
+<meta name="twitter:title" content="Image Converter | Convert WebP, PNG, and JPG in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Convert images between WebP, PNG, and JPG in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-image-converter.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/image-converter/">
@@ -160,7 +160,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/image-cropper/">Image Cropper</a> - Drag a box around the good part.</p>
 <p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/clips/">Bum Bum Clips</a> - Record your screen right in your browser.</p>
+<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
 </section>
 </main>
 <script>

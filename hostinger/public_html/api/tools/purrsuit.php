@@ -1,5 +1,5 @@
 <?php
-// Bum Bum Purrsuit API. Tiny CRM for solopreneurs: contacts, pipeline stages,
+// Bum Bum Client Follow-Up Tracker API. Tiny CRM for solopreneurs: contacts, pipeline stages,
 // follow-up queue, interaction timeline. Scoped to the signed-in user.
 // One metered action per new contact; updates and logging are free so the
 // follow-up loop stays frictionless.

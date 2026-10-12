@@ -1,5 +1,5 @@
 <?php
-// Bum Bum Ghostwriter API. Voice ramble in, content pack out.
+// Bum Bum Voice to Content API. Voice ramble in, content pack out.
 //
 // The browser records audio and transcribes it (SpeechRecognition live,
 // or the /api/voice-transcribe.php relay on iPhone). The transcript is sent
@@ -19,7 +19,7 @@
 //   -> { "ok": true, "entry": {...}, "pack": {...}, "usage": {...} }
 require dirname(__DIR__) . '/_bootstrap.php';
 
-function ensureGhostwriterSchema(): void {
+function ensureVoice to ContentSchema(): void {
     db()->exec("CREATE TABLE IF NOT EXISTS ghostwriter_entries (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -168,7 +168,7 @@ requireCsrf($input);
 $subject = requireSubject();
 $isGuest = $subject['kind'] === 'guest';
 $userId = $isGuest ? 0 : (int) $subject['user']['id'];
-ensureGhostwriterSchema();
+ensureVoice to ContentSchema();
 $pdo = db();
 
 if ($action === 'list') {

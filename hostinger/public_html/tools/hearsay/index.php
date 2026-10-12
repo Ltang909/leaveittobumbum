@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Hearsay | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>AI Brand Mention Checker | See What AI Models Say About Your Brand | Leave It to Bum Bum</title>
 <meta name="description" content="Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead. Free to try, no account needed.">
-<meta property="og:title" content="Hearsay | Leave It to Bum Bum">
+<meta property="og:title" content="AI Brand Mention Checker | See What AI Models Say About Your Brand | Leave It to Bum Bum">
 <meta property="og:description" content="Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/hearsay/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-hearsay.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Hearsay | Leave It to Bum Bum">
+<meta name="twitter:title" content="AI Brand Mention Checker | See What AI Models Say About Your Brand | Leave It to Bum Bum">
 <meta name="twitter:description" content="Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead. Free to try, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-hearsay.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/hearsay/">
@@ -15,7 +15,7 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Hearsay",
+  "name": "AI Brand Mention Checker",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": {
@@ -34,7 +34,7 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Hearsay free?",
+      "name": "Is AI Brand Mention Checker free?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished scan uses one action."
@@ -50,7 +50,7 @@
     },
     {
       "@type": "Question",
-      "name": "Which AI models does Hearsay ask?",
+      "name": "Which AI models does AI Brand Mention Checker ask?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Three open models: GPT-OSS 120B, GPT-OSS 20B, and Qwen 3.8 27B. Every question goes to every model, so a 5-question scan is 15 separate AI answers."
@@ -61,7 +61,7 @@
       "name": "How accurate are the results?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Directional, not gospel. AI answers shift with phrasing, timing, and model updates. Use Hearsay to spot trends month to month, not as a final grade."
+        "text": "Directional, not gospel. AI answers shift with phrasing, timing, and model updates. Use AI Brand Mention Checker to spot trends month to month, not as a final grade."
       }
     },
     {
@@ -75,8 +75,8 @@
   ]
 }
 </script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Hearsay | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Hearsay","item":"https://leaveittobumbum.com/tools/hearsay/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"AI Brand Mention Checker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"AI Brand Mention Checker","item":"https://leaveittobumbum.com/tools/hearsay/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 #hsScan input[type=text]{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff;margin:6px 0 12px}
 #hsScan textarea{width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff;margin:6px 0 8px;min-height:64px;resize:vertical}
@@ -100,8 +100,8 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .meterbar{height:12px;border-radius:999px;background:#eee;overflow:hidden;margin:10px 0}
 .meterbar>div{height:100%;background:var(--accent,#b3541e)}
 .compchip{display:inline-block;background:#fff;border:2px solid var(--line);border-radius:999px;padding:4px 14px;font-weight:800;margin:2px 6px 2px 0}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Hearsay"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum listening in"><h1>Find out what the AI says about your brand.</h1><p class="lede">Type your brand name and the questions your customers ask. Hearsay asks three AI models every question and reports back: how often you get mentioned, the vibe, direct quotes, and which competitors keep stealing your spotlight. One finished scan uses one action.</p>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Hearsay</h2><a class="button" href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"AI Brand Mention Checker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum listening in"><h1>Find out what the AI says about your brand.</h1><p class="lede">Type your brand name and the questions your customers ask. AI Brand Mention Checker asks three AI models every question and reports back: how often you get mentioned, the vibe, direct quotes, and which competitors keep stealing your spotlight. One finished scan uses one action.</p>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use AI Brand Mention Checker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Create a free account</a></p></div>
 <?php else: ?>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
@@ -185,14 +185,14 @@ try{
 const{response,data}=await apiCall({action:'scan',brand:brand,domain:domain,questions:questions,idempotencyKey:key});
 if(!response.ok){
 if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');usageEl.textContent='This scan was not counted.';}
-else{setStatus('Hearsay hiccup ('+(data.error||'hmm')+'). Nothing was counted, try again.',true);}
+else{setStatus('AI Brand Mention Checker hiccup ('+(data.error||'hmm')+'). Nothing was counted, try again.',true);}
 return;}
 bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining,questions:questions.length});
 renderScan(data.scan);
 setStatus('Done. Go get mentioned more.');
 usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
 loadScans();
-}catch(e){setStatus('Hearsay hiccup. Nothing was counted, try again.',true);}
+}catch(e){setStatus('AI Brand Mention Checker hiccup. Nothing was counted, try again.',true);}
 finally{goBtn.disabled=false;}
 });
 async function loadScans(){const listEl=document.querySelector('#hsList');if(!listEl)return;const{response,data}=await apiCall({action:'list'});if(!response.ok){listEl.innerHTML='<p class="error">Could not load your scans.</p>';return}const entries=data.entries||[];if(!entries.length){listEl.innerHTML='<p class="lede" style="margin:0">No scans yet. Your finished scans will land here.</p>';return}listEl.innerHTML=entries.map(e=>'<div class="req" data-id="'+e.id+'"><div style="display:flex;justify-content:space-between;gap:12px;align-items:start;flex-wrap:wrap"><div><div style="font-weight:900">'+esc(e.title)+'</div><div style="color:var(--muted);font-size:14px">'+esc(e.created_at)+'</div><div style="margin-top:6px">'+esc(e.preview||'')+'</div></div><div style="white-space:nowrap"><button type="button" class="secondary" data-open style="margin-top:0">Open</button> <button type="button" class="secondary" data-del style="margin-top:0">Delete</button></div></div></div>').join('')}
@@ -202,7 +202,7 @@ loadScans();
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
-<summary>Is Hearsay free?</summary>
+<summary>Is AI Brand Mention Checker free?</summary>
 <p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished scan uses one action.</p>
 </details>
 <details>
@@ -210,12 +210,12 @@ loadScans();
 <p>No. Scan as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
-<summary>Which AI models does Hearsay ask?</summary>
+<summary>Which AI models does AI Brand Mention Checker ask?</summary>
 <p>Three open models: GPT-OSS 120B, GPT-OSS 20B, and Qwen 3.8 27B. Every question goes to every model, so a 5-question scan is 15 separate AI answers.</p>
 </details>
 <details>
 <summary>How accurate are the results?</summary>
-<p>Directional, not gospel. AI answers shift with phrasing, timing, and model updates. Use Hearsay to spot trends month to month, not as a final grade.</p>
+<p>Directional, not gospel. AI answers shift with phrasing, timing, and model updates. Use AI Brand Mention Checker to spot trends month to month, not as a final grade.</p>
 </details>
 <details>
 <summary>What do I get in a scan?</summary>
@@ -224,8 +224,8 @@ loadScans();
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/ghostwriter/">Ghostwriter</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/notes/">Bum Bum Notes</a> - Talk it out and get a live transcript you can copy or download.</p>
-<p><a href="/tools/purr-code/">Purr Code</a> - Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.</p>
+<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
+<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

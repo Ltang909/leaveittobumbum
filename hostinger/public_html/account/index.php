@@ -56,12 +56,12 @@ foreach (($reg['tools'] ?? []) as $t) {
 }
 if (!$DASHBOARD_TOOLS) {
     $DASHBOARD_TOOLS = [
-        'clips' => ['name' => 'Bum Bum Clips', 'tag' => 'VIDEO', 'icon' => '&#9679;', 'desc' => 'Record your screen right in your browser. Download the clip, keep it forever.', 'url' => '/tools/clips/', 'cta' => 'Record a clip'],
-        'notes' => ['name' => 'Bum Bum Notes', 'tag' => 'VOICE', 'icon' => '&#9834;', 'desc' => 'Talk it out and get a live transcript you can copy or download.', 'url' => '/tools/notes/', 'cta' => 'Record a note'],
-        'cutline' => ['name' => 'Cutline', 'tag' => 'MONEY', 'icon' => '&#9986;', 'desc' => 'Every subscription you forgot about, in one place, with renewal nudges.', 'url' => '/tools/cutline/', 'cta' => 'Cut subscriptions'],
-        'purrsuit' => ['name' => 'Purrsuit', 'tag' => 'CLIENTS', 'icon' => '&#128100;', 'desc' => 'A tiny CRM that tells you who to follow up with today and what to say.', 'url' => '/tools/purrsuit/', 'cta' => 'Track every lead'],
-        'corporate-bum-bum' => ['name' => 'Corporate Bum', 'tag' => 'CAREER', 'icon' => '&#128188;', 'desc' => 'A job application tracker that tells you who to follow up with today and what to say.', 'url' => '/tools/corporate-bum-bum/', 'cta' => 'Track applications'],
-        'doodle' => ['name' => 'Doodle', 'tag' => 'DRAW', 'icon' => '&#9999;&#65039;', 'desc' => 'A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.', 'url' => '/tools/doodle/', 'cta' => 'Start doodling'],
+        'clips' => ['name' => 'Screen Recorder', 'tag' => 'VIDEO', 'icon' => '&#9679;', 'desc' => 'Record your screen right in your browser. Download the clip, keep it forever.', 'url' => '/tools/clips/', 'cta' => 'Record a clip'],
+        'notes' => ['name' => 'Voice Notes to Text', 'tag' => 'VOICE', 'icon' => '&#9834;', 'desc' => 'Talk it out and get a live transcript you can copy or download.', 'url' => '/tools/notes/', 'cta' => 'Record a note'],
+        'cutline' => ['name' => 'Subscription Tracker', 'tag' => 'MONEY', 'icon' => '&#9986;', 'desc' => 'Every subscription you forgot about, in one place, with renewal nudges.', 'url' => '/tools/cutline/', 'cta' => 'Cut subscriptions'],
+        'purrsuit' => ['name' => 'Client Follow-Up Tracker', 'tag' => 'CLIENTS', 'icon' => '&#128100;', 'desc' => 'A tiny CRM that tells you who to follow up with today and what to say.', 'url' => '/tools/purrsuit/', 'cta' => 'Track every lead'],
+        'corporate-bum-bum' => ['name' => 'Job Application Tracker', 'tag' => 'CAREER', 'icon' => '&#128188;', 'desc' => 'A job application tracker that tells you who to follow up with today and what to say.', 'url' => '/tools/corporate-bum-bum/', 'cta' => 'Track applications'],
+        'doodle' => ['name' => 'Online Sketchpad', 'tag' => 'DRAW', 'icon' => '&#9999;&#65039;', 'desc' => 'A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.', 'url' => '/tools/doodle/', 'cta' => 'Start doodling'],
     ];
 }
 $DASHBOARD_ORDER = array_keys($DASHBOARD_TOOLS);

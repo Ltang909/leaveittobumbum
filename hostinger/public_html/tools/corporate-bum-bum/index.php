@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Corporate Bum | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Job Application Tracker | Track Every Application and Follow-Up | Leave It to Bum Bum</title>
 <meta name="description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
-<meta property="og:title" content="Corporate Bum Bum | Leave It to Bum Bum">
+<meta property="og:title" content="Job Application Tracker | Track Every Application and Follow-Up | Leave It to Bum Bum">
 <meta property="og:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/corporate-bum-bum/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-corporate-bum-bum.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Corporate Bum Bum | Leave It to Bum Bum">
+<meta name="twitter:title" content="Job Application Tracker | Track Every Application and Follow-Up | Leave It to Bum Bum">
 <meta name="twitter:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-corporate-bum-bum.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/corporate-bum-bum/">
@@ -15,7 +15,7 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Corporate Bum Bum",
+  "name": "Job Application Tracker",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": {
@@ -34,7 +34,7 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Corporate Bum Bum free?",
+      "name": "Is Job Application Tracker free?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. Adding an application uses one action. Everything else is free."
@@ -75,8 +75,8 @@
   ]
 }
 </script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Corporate Bum | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Corporate Bum","item":"https://leaveittobumbum.com/tools/corporate-bum-bum/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Job Application Tracker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Job Application Tracker","item":"https://leaveittobumbum.com/tools/corporate-bum-bum/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer;font-family:inherit}
@@ -163,8 +163,8 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .fld input[type=checkbox]{accent-color:#8a7a55}
 .modal h3{font-weight:700}
 .modal-close{font-weight:700}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Corporate Bum"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum looking professional"><h1>Your job hunt, in a suit.</h1><p class="lede">Corporate Bum is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Corporate Bum</h2><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Job Application Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum looking professional"><h1>Your job hunt, in a suit.</h1><p class="lede">Job Application Tracker is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Job Application Tracker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a></p></div>
 <?php else: ?>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
@@ -174,7 +174,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="stat-row"><div class="stat-card"><b id="statActive">0</b><span>active applications</span></div><div class="stat-card"><b id="statInterviews">0</b><span>in interviews</span></div><div class="stat-card"><b id="statOffers">0</b><span>offers</span></div></div>
 <section class="panel"><div class="yp-head"><h2>Your applications</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="filterbar"><select id="stageFilter" aria-label="Filter by stage"></select><button type="button" class="chip" id="starFilter" aria-pressed="false">★ Starred</button><button type="button" class="chip" id="heldFilter" aria-pressed="false">✓ Interview held</button><input type="search" class="search" id="appSearch" placeholder="Search applications…" aria-label="Search applications" autocomplete="off"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div class="add-import-grid">
-<section class="panel"><h2 style="margin-top:0">Add an application</h2><form id="addForm"><div class="nudge-grid"><label>Company<input name="company" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Role<input name="role" type="text" maxlength="191" required placeholder="Senior Growth Manager"></label><label>Contact name<input name="contact_name" type="text" maxlength="191" placeholder="Maya Chen"></label><label>Contact email<input name="contact_email" type="email" maxlength="191" placeholder="maya@acme.co"></label><label>Job posting URL<input name="job_url" type="url" maxlength="500" placeholder="https://acme.co/jobs/123"></label><label>Location<input name="location" type="text" maxlength="191" placeholder="Remote (US)"></label><label>Salary min<input name="salary_min" type="number" min="0" step="1" placeholder="120000"></label><label>Salary max<input name="salary_max" type="number" min="0" step="1" placeholder="140000"></label><label>Currency<select name="currency"><option value="CAD" selected>CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></label><label>Where you found it<input name="source" type="text" maxlength="191" placeholder="nanoglobals"></label><label>Date applied<input name="date_applied" type="date"></label><label>Stage<select name="stage"><option value="new" selected>New</option><option value="applied">Applied</option><option value="screening">Screening</option><option value="interview_booked">Interview booked</option><option value="waiting_next">Waiting for next step</option><option value="offer">Offer</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Corporate Bum</button><p id="addError" class="error"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Add an application</h2><form id="addForm"><div class="nudge-grid"><label>Company<input name="company" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Role<input name="role" type="text" maxlength="191" required placeholder="Senior Growth Manager"></label><label>Contact name<input name="contact_name" type="text" maxlength="191" placeholder="Maya Chen"></label><label>Contact email<input name="contact_email" type="email" maxlength="191" placeholder="maya@acme.co"></label><label>Job posting URL<input name="job_url" type="url" maxlength="500" placeholder="https://acme.co/jobs/123"></label><label>Location<input name="location" type="text" maxlength="191" placeholder="Remote (US)"></label><label>Salary min<input name="salary_min" type="number" min="0" step="1" placeholder="120000"></label><label>Salary max<input name="salary_max" type="number" min="0" step="1" placeholder="140000"></label><label>Currency<select name="currency"><option value="CAD" selected>CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></label><label>Where you found it<input name="source" type="text" maxlength="191" placeholder="nanoglobals"></label><label>Date applied<input name="date_applied" type="date"></label><label>Stage<select name="stage"><option value="new" selected>New</option><option value="applied">Applied</option><option value="screening">Screening</option><option value="interview_booked">Interview booked</option><option value="waiting_next">Waiting for next step</option><option value="offer">Offer</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Job Application Tracker</button><p id="addError" class="error"></p></form></section>
 <section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>company</b> (required), role, contact name, contact email, job url, location, salary min, salary max, currency (CAD, USD, EUR, GBP, defaults to CAD), where found, date applied (YYYY-MM-DD), stage (new, applied, screening, interview_booked, waiting_next, offer, accepted, rejected, withdrawn), follow up (YYYY-MM-DD), notes, starred (1/yes), interview held (1/yes). Rows matching an existing <b>company + role</b> get <b>updated</b> (free, empty cells keep their current values); everything else gets added at one action each. The notes column fills each record's notes field. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
 </div>
 <div id="upgrade-slot"></div>
@@ -449,7 +449,7 @@ refresh().then(function(){
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
-<summary>Is Corporate Bum Bum free?</summary>
+<summary>Is Job Application Tracker free?</summary>
 <p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. Adding an application uses one action. Everything else is free.</p>
 </details>
 <details>
@@ -471,8 +471,8 @@ refresh().then(function(){
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/purrsuit/">Purrsuit</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
-<p><a href="/tools/gap-scout/">Gap Scout</a> - Upload your resume and paste in job descriptions.</p>
-<p><a href="/tools/cutline/">Cutline</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
+<p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
+<p><a href="/tools/gap-scout/">Resume Gap Checker</a> - Upload your resume and paste in job descriptions.</p>
+<p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

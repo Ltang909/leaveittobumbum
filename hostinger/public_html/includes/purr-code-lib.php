@@ -1,5 +1,5 @@
 <?php
-// Purr Code shared helpers: tracked short links and scan logging.
+// QR Code Generator shared helpers: tracked short links and scan logging.
 // Requires api/_bootstrap.php (for db()).
 // All functions degrade gracefully when the purrcode tables do not exist yet.
 

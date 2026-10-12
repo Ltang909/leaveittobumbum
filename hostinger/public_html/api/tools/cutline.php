@@ -1,5 +1,5 @@
 <?php
-// Cutline: subscription tracker API. Bum Bum port of Subscription Cut.
+// Subscription Tracker: subscription tracker API. Bum Bum port of Subscription Cut.
 // Shared schema + renewal-math helpers live here; the reminder cron endpoint
 // (cutline-reminders.php) reuses them via require. Deposits, catalog seed and
 // passwordless login from the original are intentionally not ported.
@@ -8,7 +8,7 @@ require dirname(__DIR__) . '/_bootstrap.php';
 const CUTLINE_CADENCES = ['weekly', 'monthly', 'quarterly', 'semiannual', 'annual'];
 const CUTLINE_CATEGORIES = ['streaming', 'music', 'software', 'cloud_storage', 'fitness', 'reading', 'gaming', 'food_delivery', 'other'];
 
-function ensureCutlineSchema(): void {
+function ensureSubscription TrackerSchema(): void {
     $pdo = db();
     $pdo->exec("CREATE TABLE IF NOT EXISTS cutline_subscriptions (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -153,7 +153,7 @@ if (basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === 'cutline.php') {
     $subject = requireSubject();
     $isGuest = $subject['kind'] === 'guest';
     $userId = $isGuest ? 0 : (int) $subject['user']['id'];
-    ensureCutlineSchema();
+    ensureSubscription TrackerSchema();
     $pdo = db();
     $action = (string) ($input['action'] ?? '');
 

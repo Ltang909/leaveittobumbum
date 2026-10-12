@@ -1,13 +1,13 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Purrsuit | Leave It to Bum Bum</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Client Follow-Up Tracker | A Tiny CRM That Tells You Who to Contact Today | Leave It to Bum Bum</title>
 <meta name="description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
-<meta property="og:title" content="Purrsuit | Leave It to Bum Bum">
+<meta property="og:title" content="Client Follow-Up Tracker | A Tiny CRM That Tells You Who to Contact Today | Leave It to Bum Bum">
 <meta property="og:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/purrsuit/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og-purrsuit.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Purrsuit | Leave It to Bum Bum">
+<meta name="twitter:title" content="Client Follow-Up Tracker | A Tiny CRM That Tells You Who to Contact Today | Leave It to Bum Bum">
 <meta name="twitter:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-purrsuit.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/purrsuit/">
@@ -15,7 +15,7 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Purrsuit",
+  "name": "Client Follow-Up Tracker",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": {
@@ -34,7 +34,7 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Purrsuit free?",
+      "name": "Is Client Follow-Up Tracker free?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. Adding a contact uses one action. Everything else is free."
@@ -50,7 +50,7 @@
     },
     {
       "@type": "Question",
-      "name": "How is Purrsuit different from a big CRM?",
+      "name": "How is Client Follow-Up Tracker different from a big CRM?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "It does one job: it tells you who to follow up with every morning and what to say. No pipelines to configure, no fields to customize, no training needed."
@@ -69,14 +69,14 @@
       "name": "Can I import my contacts?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Import a CSV and Purrsuit matches them up for you."
+        "text": "Yes. Import a CSV and Client Follow-Up Tracker matches them up for you."
       }
     }
   ]
 }
 </script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Purrsuit | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Purrsuit","item":"https://leaveittobumbum.com/tools/purrsuit/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Client Follow-Up Tracker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Client Follow-Up Tracker","item":"https://leaveittobumbum.com/tools/purrsuit/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer}
@@ -143,8 +143,8 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .timeline li{border-left:2px solid #d9cdae}
 .modal-close{font-weight:700}
 .quiet{box-shadow:0 2px 10px rgba(90,72,38,.08)}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Purrsuit"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-wink-blep.png" alt="Bum Bum winking"><h1>Never let a lead go cold.</h1><p class="lede">Purrsuit is a tiny CRM for people who hate CRMs. Add the humans, move them down the pipeline, and every morning Purrsuit tells you exactly who to follow up with and what to say. Adding a contact uses one action. Everything else is free.</p>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Purrsuit</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Client Follow-Up Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-wink-blep.png" alt="Bum Bum winking"><h1>Never let a lead go cold.</h1><p class="lede">Client Follow-Up Tracker is a tiny CRM for people who hate CRMs. Add the humans, move them down the pipeline, and every morning Client Follow-Up Tracker tells you exactly who to follow up with and what to say. Adding a contact uses one action. Everything else is free.</p>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Client Follow-Up Tracker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a></p></div>
 <?php else: ?>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
@@ -154,7 +154,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="stat-row"><div class="stat-card"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card"><b id="statWon">$0</b><span>won</span></div><div class="stat-card"><b id="statCount">0</b><span>contacts</span></div></div>
 <section class="panel"><div class="yp-head"><h2>Your people</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div class="add-import-grid">
-<section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Company<input name="company" type="text" maxlength="191" placeholder="Acme Inc"></label><label>Title<input name="title" type="text" maxlength="191" placeholder="Head of Growth"></label><label>Email<input name="email" type="email" maxlength="191" placeholder="jordan@acme.co"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Purrsuit</button><p id="addError" class="error"></p></form></section>
+<section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Company<input name="company" type="text" maxlength="191" placeholder="Acme Inc"></label><label>Title<input name="title" type="text" maxlength="191" placeholder="Head of Growth"></label><label>Email<input name="email" type="email" maxlength="191" placeholder="jordan@acme.co"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Client Follow-Up Tracker</button><p id="addError" class="error"></p></form></section>
 <section class="panel"><h2 style="margin-top:0">Or import a CSV</h2><p class="lede">Same fields as the form: <b>name</b> (required), company, title, email, where you met, deal value, stage (new, talking, quoted, won, lost), follow up (YYYY-MM-DD), notes. Rows matching an existing <b>name + company</b> get <b>updated</b> (free, empty cells keep their current values); everything else gets added at one action each, with notes saved to their timeline. Up to 200 rows. <a href="#" id="tplLink">Download a template</a></p><form id="csvForm"><label>Choose file<input type="file" id="csvFile" accept=".csv,text/csv"></label><div class="btnrow"><button class="button secondary" style="margin-top:10px">Import CSV</button></div><p id="csvError" class="error"></p><p id="csvResult" class="lede"></p></form></section>
 </div>
 <div id="upgrade-slot"></div>
@@ -371,7 +371,7 @@ refresh();
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
-<summary>Is Purrsuit free?</summary>
+<summary>Is Client Follow-Up Tracker free?</summary>
 <p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. Adding a contact uses one action. Everything else is free.</p>
 </details>
 <details>
@@ -379,7 +379,7 @@ refresh();
 <p>No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
-<summary>How is Purrsuit different from a big CRM?</summary>
+<summary>How is Client Follow-Up Tracker different from a big CRM?</summary>
 <p>It does one job: it tells you who to follow up with every morning and what to say. No pipelines to configure, no fields to customize, no training needed.</p>
 </details>
 <details>
@@ -388,13 +388,13 @@ refresh();
 </details>
 <details>
 <summary>Can I import my contacts?</summary>
-<p>Yes. Import a CSV and Purrsuit matches them up for you.</p>
+<p>Yes. Import a CSV and Client Follow-Up Tracker matches them up for you.</p>
 </details>
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/corporate-bum-bum/">Corporate Bum</a> - A job application tracker that tells you who to follow up with today and what to say.</p>
-<p><a href="/tools/invoice-chaser/">Invoice Chaser</a> - Track who owes you what.</p>
-<p><a href="/tools/cutline/">Cutline</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
+<p><a href="/tools/corporate-bum-bum/">Job Application Tracker</a> - A job application tracker that tells you who to follow up with today and what to say.</p>
+<p><a href="/tools/invoice-chaser/">Invoice Reminder</a> - Track who owes you what.</p>
+<p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
 </section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>

@@ -1,5 +1,5 @@
 <?php
-// SOP-ify API. Turn a chaotic process brain-dump into a clean step-by-step
+// SOP Generator API. Turn a chaotic process brain-dump into a clean step-by-step
 // playbook (SOP) a brand-new helper can follow with zero prior context.
 //
 //   POST /api/tools/sop-ify.php  action=generate  brainDump=<text>
@@ -25,7 +25,7 @@ function sopify_clean(string $s): string {
 function sopify_call_groq(string $dump, string $helperFor): array {
     $key = (string) (config()['groq_api_key'] ?? '');
     if ($key === '' || $key === 'replace_me') {
-        jsonResponse(['error' => 'SOP-ify is not set up on the server yet.'], 503);
+        jsonResponse(['error' => 'SOP Generator is not set up on the server yet.'], 503);
     }
     $who = $helperFor !== '' ? ' It will be followed by ' . $helperFor . '.' : '';
     $system = 'You are Bum Bum\'s operations helper, writing for small business owners and solopreneurs who are about to hand a task to a helper, VA, or new hire.' . $who
@@ -66,13 +66,13 @@ function sopify_call_groq(string $dump, string $helperFor): array {
     $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
     if ($raw === false || $err !== '') {
-        jsonResponse(['error' => 'SOP-ify lost the plot. Try again in a moment.'], 502);
+        jsonResponse(['error' => 'SOP Generator lost the plot. Try again in a moment.'], 502);
     }
     if ($code === 429) {
-        jsonResponse(['error' => 'SOP-ify is swamped right now. Try again in a minute.'], 429);
+        jsonResponse(['error' => 'SOP Generator is swamped right now. Try again in a minute.'], 429);
     }
     if ($code < 200 || $code >= 300) {
-        jsonResponse(['error' => 'SOP-ify tripped over its own paws. Try again.'], 502);
+        jsonResponse(['error' => 'SOP Generator tripped over its own paws. Try again.'], 502);
     }
     $data = json_decode((string) $raw, true);
     $content = $data['choices'][0]['message']['content'] ?? '';
@@ -81,7 +81,7 @@ function sopify_call_groq(string $dump, string $helperFor): array {
     }
     $book = is_string($content) ? json_decode($content, true) : null;
     if (!is_array($book)) {
-        jsonResponse(['error' => 'SOP-ify mumbled. Try again.'], 502);
+        jsonResponse(['error' => 'SOP Generator mumbled. Try again.'], 502);
     }
     $book['title'] = sopify_clean(trim((string) ($book['title'] ?? '')));
     $book['purpose'] = sopify_clean(trim((string) ($book['purpose'] ?? '')));
@@ -109,7 +109,7 @@ function sopify_call_groq(string $dump, string $helperFor): array {
     $book['tips'] = $cleanList($book['tips'] ?? [], 6, 240);
     $book['checklist'] = $cleanList($book['checklist'] ?? [], 12, 120);
     if ($book['title'] === '' || $book['purpose'] === '' || count($steps) < 2) {
-        jsonResponse(['error' => 'SOP-ify mumbled. Try again.'], 502);
+        jsonResponse(['error' => 'SOP Generator mumbled. Try again.'], 502);
     }
     return $book;
 }
