@@ -554,4 +554,4 @@ function renderLog(log){
   });
 }
 fetchLogs();
-</script></main></body></html>
+</script><section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-scan-receipts-into-a-spreadsheet/">How to scan receipts into a spreadsheet</a>.</p></section></main></body></html>

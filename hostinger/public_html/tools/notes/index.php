@@ -189,4 +189,4 @@ loadNotes();
 <p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
 <p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
+<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-turn-voice-notes-into-text/">How to turn voice notes into text</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?></body></html>
