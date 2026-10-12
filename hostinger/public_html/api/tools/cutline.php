@@ -8,7 +8,7 @@ require dirname(__DIR__) . '/_bootstrap.php';
 const CUTLINE_CADENCES = ['weekly', 'monthly', 'quarterly', 'semiannual', 'annual'];
 const CUTLINE_CATEGORIES = ['streaming', 'music', 'software', 'cloud_storage', 'fitness', 'reading', 'gaming', 'food_delivery', 'other'];
 
-function ensureSubscription TrackerSchema(): void {
+function ensureCutlineSchema(): void {
     $pdo = db();
     $pdo->exec("CREATE TABLE IF NOT EXISTS cutline_subscriptions (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -153,7 +153,7 @@ if (basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === 'cutline.php') {
     $subject = requireSubject();
     $isGuest = $subject['kind'] === 'guest';
     $userId = $isGuest ? 0 : (int) $subject['user']['id'];
-    ensureSubscription TrackerSchema();
+    ensureCutlineSchema();
     $pdo = db();
     $action = (string) ($input['action'] ?? '');
 
