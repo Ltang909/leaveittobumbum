@@ -126,6 +126,12 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .stat-card{flex:1;min-width:140px;border:2px solid var(--line);border-radius:14px;background:#fff;padding:12px;text-align:center}
 .stat-card b{font-size:22px;display:block}
 .stat-card span{font-size:12px;font-weight:700;opacity:.75}
+.stat-card{cursor:pointer;transition:box-shadow .15s ease,background .15s ease}
+.stat-card:hover{box-shadow:0 4px 14px rgba(90,72,38,.16)}
+.stat-card.on{background:#fdf3d8;border-color:#b3541e}
+.stat-card:focus-visible{outline:2px solid #b3541e;outline-offset:2px}
+.flash{animation:statflash 1.2s ease}
+@keyframes statflash{0%,100%{box-shadow:0 2px 10px rgba(90,72,38,.08)}30%{box-shadow:0 0 0 5px rgba(179,84,30,.45)}}
 /* ---- Soft UI pass: easier on the eyes ---- */
 .contact,.followup,.stat-card,.modal,.modal-close{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);color:#38332a}
 .followup .draft{border:1px solid #e2d7bf}
@@ -151,7 +157,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
-<div class="stat-row"><div class="stat-card"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card"><b id="statWon">$0</b><span>won</span></div><div class="stat-card"><b id="statCount">0</b><span>contacts</span></div></div>
+<div class="stat-row"><div class="stat-card" data-stat="pipeline" role="button" tabindex="0" aria-pressed="false"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card" data-stat="won" role="button" tabindex="0" aria-pressed="false"><b id="statWon">$0</b><span>won</span></div><div class="stat-card" data-stat="all" role="button" tabindex="0" aria-pressed="false"><b id="statCount">0</b><span>contacts</span></div></div>
 <section class="panel"><div class="yp-head"><h2>Your people</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div class="add-import-grid">
 <section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Company<input name="company" type="text" maxlength="191" placeholder="Acme Inc"></label><label>Title<input name="title" type="text" maxlength="191" placeholder="Head of Growth"></label><label>Email<input name="email" type="email" maxlength="191" placeholder="jordan@acme.co"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Client Follow-Up Tracker</button><p id="addError" class="error"></p></form></section>
@@ -166,6 +172,8 @@ const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 const STAGES=['new','talking','quoted','won','lost'];
 let DATA={contacts:[],followUpDue:[],goneQuiet:[]};
 let FILTER='all';
+const PIPELINE_STAGES=['new','talking','quoted'];
+function filterMatch(c){if(FILTER==='all')return true;if(FILTER==='pipeline')return PIPELINE_STAGES.includes(c.stage);return c.stage===FILTER}
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
 function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -191,13 +199,39 @@ function contactCard(c){
 }
 function renderContacts(){
   const el=document.querySelector('#contactList');
-  const list=DATA.contacts.filter(c=>FILTER==='all'||c.stage===FILTER);
+  const list=DATA.contacts.filter(filterMatch);
   document.querySelector('#stageChips').innerHTML=['all',...STAGES].map(s=>`<button type="button" class="chip${FILTER===s?' on':''}" data-filter="${s}">${s==='all'?'All':s} (${s==='all'?DATA.contacts.length:(DATA.counts[s]||0)})</button>`).join('');
   document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{FILTER=b.getAttribute('data-filter');renderContacts();}));
-  if(!list.length){el.innerHTML='<p class="lede">Nobody here yet. Add your first person above.</p>';return}
+  document.querySelectorAll('[data-stat]').forEach(card=>{const k=card.getAttribute('data-stat');const on=(k==='pipeline'&&FILTER==='pipeline')||(k==='won'&&FILTER==='won')||(k==='all'&&FILTER==='all');card.classList.toggle('on',on);card.setAttribute('aria-pressed',on?'true':'false');});
+  if(!list.length){el.innerHTML='<p class="lede">'+(FILTER!=='all'&&DATA.contacts.length?'Nobody matches that filter yet.':'Nobody here yet. Add your first person above.')+'</p>';return}
   el.innerHTML=list.map(contactCard).join('');
   bindCardButtons(el);
 }
+function promptAddContact(){
+  const form=document.querySelector('#addForm');
+  const panel=form.closest('section')||form;
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  panel.classList.remove('flash');void panel.offsetWidth;panel.classList.add('flash');
+  const first=form.querySelector('input[name="name"]');if(first)setTimeout(()=>first.focus({preventScroll:true}),350);
+}
+function statCardActivate(card){
+  const key=card.getAttribute('data-stat');
+  if(key==='all'){
+    if(!DATA.contacts.length){promptAddContact();return}
+    FILTER='all';renderContacts();
+    document.querySelector('#contactList').scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+  const test=key==='pipeline'?c=>PIPELINE_STAGES.includes(c.stage):c=>c.stage==='won';
+  if(!DATA.contacts.filter(test).length){promptAddContact();return}
+  FILTER=FILTER===key?'all':key;
+  renderContacts();
+  document.querySelector('#contactList').scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.querySelectorAll('[data-stat]').forEach(card=>{
+  card.addEventListener('click',()=>statCardActivate(card));
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();statCardActivate(card);}});
+});
 function bindCardButtons(root){
   root.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openDetail(parseInt(b.getAttribute('data-open'),10))));
   root.querySelectorAll('[data-clear-followup]').forEach(b=>b.addEventListener('click',async()=>{

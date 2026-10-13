@@ -144,6 +144,12 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .stat-card{flex:1;min-width:140px;border:2px solid var(--line);border-radius:14px;background:#fff;padding:12px;text-align:center}
 .stat-card b{font-size:22px;display:block}
 .stat-card span{font-size:12px;font-weight:700;opacity:.75}
+.stat-card{cursor:pointer;transition:box-shadow .15s ease,background .15s ease}
+.stat-card:hover{box-shadow:0 4px 14px rgba(90,72,38,.16)}
+.stat-card.on{background:#fdf3d8;border-color:#b3541e}
+.stat-card:focus-visible{outline:2px solid #b3541e;outline-offset:2px}
+.flash{animation:statflash 1.2s ease}
+@keyframes statflash{0%,100%{box-shadow:0 2px 10px rgba(90,72,38,.08)}30%{box-shadow:0 0 0 5px rgba(179,84,30,.45)}}
 /* ---- Soft UI pass: easier on the eyes ---- */
 .bbm-grid,.bbm-add,.modal,.follow-item{color:#38332a}
 .bbm-card,.bbm-add,.stat-card,.follow-item,.follow-draft,.modal,.modal-close{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
@@ -171,7 +177,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
-<div class="stat-row"><div class="stat-card"><b id="statActive">0</b><span>active applications</span></div><div class="stat-card"><b id="statInterviews">0</b><span>in interviews</span></div><div class="stat-card"><b id="statOffers">0</b><span>offers</span></div></div>
+<div class="stat-row"><div class="stat-card" data-stat="active" role="button" tabindex="0" aria-pressed="false"><b id="statActive">0</b><span>active applications</span></div><div class="stat-card" data-stat="interviews" role="button" tabindex="0" aria-pressed="false"><b id="statInterviews">0</b><span>in interviews</span></div><div class="stat-card" data-stat="offers" role="button" tabindex="0" aria-pressed="false"><b id="statOffers">0</b><span>offers</span></div></div>
 <section class="panel"><div class="yp-head"><h2>Your applications</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="filterbar"><select id="stageFilter" aria-label="Filter by stage"></select><button type="button" class="chip" id="starFilter" aria-pressed="false">★ Starred</button><button type="button" class="chip" id="heldFilter" aria-pressed="false">✓ Interview held</button><input type="search" class="search" id="appSearch" placeholder="Search applications…" aria-label="Search applications" autocomplete="off"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div class="add-import-grid">
 <section class="panel"><h2 style="margin-top:0">Add an application</h2><form id="addForm"><div class="nudge-grid"><label>Company<input name="company" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Role<input name="role" type="text" maxlength="191" required placeholder="Senior Growth Manager"></label><label>Contact name<input name="contact_name" type="text" maxlength="191" placeholder="Maya Chen"></label><label>Contact email<input name="contact_email" type="email" maxlength="191" placeholder="maya@acme.co"></label><label>Job posting URL<input name="job_url" type="url" maxlength="500" placeholder="https://acme.co/jobs/123"></label><label>Location<input name="location" type="text" maxlength="191" placeholder="Remote (US)"></label><label>Salary min<input name="salary_min" type="number" min="0" step="1" placeholder="120000"></label><label>Salary max<input name="salary_max" type="number" min="0" step="1" placeholder="140000"></label><label>Currency<select name="currency"><option value="CAD" selected>CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></label><label>Where you found it<input name="source" type="text" maxlength="191" placeholder="nanoglobals"></label><label>Date applied<input name="date_applied" type="date"></label><label>Stage<select name="stage"><option value="new" selected>New</option><option value="applied">Applied</option><option value="screening">Screening</option><option value="interview_booked">Interview booked</option><option value="waiting_next">Waiting for next step</option><option value="offer">Offer</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Job Application Tracker</button><p id="addError" class="error"></p></form></section>
@@ -187,7 +193,8 @@ const STAGES=['new','applied','screening','interview_booked','waiting_next','off
 const STAGE_LABELS={new:'New',applied:'Applied',screening:'Screening',interview_booked:'Interview booked',waiting_next:'Waiting for next step',offer:'Offer',accepted:'Accepted',rejected:'Rejected',withdrawn:'Withdrawn'};
 const ACTIVE_STAGES=['new','applied','screening','interview_booked','waiting_next','offer'];
 let DATA={contacts:[],followUpDue:[],goneQuiet:[]};
-let FILTER_STAGE='all',FILTER_STAR=false,FILTER_HELD=false,SEARCH='';
+let FILTER_STAGE='all',FILTER_STAR=false,FILTER_HELD=false,SEARCH='',FILTER_GROUP=null;
+const STAT_GROUPS={active:c=>ACTIVE_STAGES.includes(c.stage),interviews:c=>['screening','interview_booked','waiting_next'].includes(c.stage),offers:c=>c.stage==='offer'||c.stage==='accepted'};
 function matchesSearch(c){
   if(!SEARCH)return true;
   return [c.company,c.role,c.contact_name,c.contact_email,c.location,c.source,c.notes].some(v=>String(v||'').toLowerCase().includes(SEARCH));
@@ -227,7 +234,7 @@ function contactCard(c){
 }
 function renderContacts(){
   const el=document.querySelector('#contactList');
-  const list=DATA.contacts.filter(c=>(FILTER_STAGE==='all'||c.stage===FILTER_STAGE)&&(!FILTER_STAR||c.starred)&&(!FILTER_HELD||c.interview_held)&&matchesSearch(c));
+  const list=DATA.contacts.filter(c=>(FILTER_STAGE==='all'||c.stage===FILTER_STAGE)&&(!FILTER_GROUP||STAT_GROUPS[FILTER_GROUP](c))&&(!FILTER_STAR||c.starred)&&(!FILTER_HELD||c.interview_held)&&matchesSearch(c));
   const sel=document.querySelector('#stageFilter');
   sel.innerHTML=`<option value="all">All stages (${DATA.contacts.length})</option>`+STAGES.map(s=>`<option value="${s}"${FILTER_STAGE===s?' selected':''}>${stageLabel(s)} (${DATA.counts[s]||0})</option>`).join('');
   const starBtn=document.querySelector('#starFilter');
@@ -236,14 +243,35 @@ function renderContacts(){
   const heldBtn=document.querySelector('#heldFilter');
   heldBtn.classList.toggle('on',FILTER_HELD);
   heldBtn.setAttribute('aria-pressed',FILTER_HELD?'true':'false');
-  if(!list.length){el.innerHTML='<p class="lede">'+(SEARCH||FILTER_STAGE!=='all'||FILTER_STAR||FILTER_HELD?'No applications match those filters.':'Nothing here yet. Add your first application above.')+'</p>';return}
+  document.querySelectorAll('[data-stat]').forEach(card=>{const on=FILTER_GROUP===card.getAttribute('data-stat');card.classList.toggle('on',on);card.setAttribute('aria-pressed',on?'true':'false');});
+  if(!list.length){el.innerHTML='<p class="lede">'+(SEARCH||FILTER_STAGE!=='all'||FILTER_GROUP||FILTER_STAR||FILTER_HELD?'No applications match those filters.':'Nothing here yet. Add your first application above.')+'</p>';return}
   el.innerHTML=list.map(contactCard).join('');
   bindCardButtons(el);
 }
-document.querySelector('#stageFilter').addEventListener('change',e=>{FILTER_STAGE=e.target.value;renderContacts();});
+document.querySelector('#stageFilter').addEventListener('change',e=>{FILTER_STAGE=e.target.value;FILTER_GROUP=null;renderContacts();});
 document.querySelector('#starFilter').addEventListener('click',()=>{FILTER_STAR=!FILTER_STAR;renderContacts();});
 document.querySelector('#heldFilter').addEventListener('click',()=>{FILTER_HELD=!FILTER_HELD;renderContacts();});
 document.querySelector('#appSearch').addEventListener('input',e=>{SEARCH=e.target.value.trim().toLowerCase();renderContacts();});
+function promptAddApplication(){
+  const form=document.querySelector('#addForm');
+  const panel=form.closest('section')||form;
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  panel.classList.remove('flash');void panel.offsetWidth;panel.classList.add('flash');
+  const first=form.querySelector('input[name="company"]');if(first)setTimeout(()=>first.focus({preventScroll:true}),350);
+}
+function statCardActivate(card){
+  const group=card.getAttribute('data-stat');
+  const count=DATA.contacts.filter(STAT_GROUPS[group]).length;
+  if(!count){promptAddApplication();return}
+  FILTER_GROUP=FILTER_GROUP===group?null:group;
+  FILTER_STAGE='all';
+  renderContacts();
+  document.querySelector('#contactList').scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.querySelectorAll('[data-stat]').forEach(card=>{
+  card.addEventListener('click',()=>statCardActivate(card));
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();statCardActivate(card);}});
+});
 function bindCardButtons(root){
   root.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openDetail(parseInt(b.getAttribute('data-open'),10))));
   root.querySelectorAll('[data-star]').forEach(b=>b.addEventListener('click',async()=>{
