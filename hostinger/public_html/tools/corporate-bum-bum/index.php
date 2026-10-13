@@ -148,8 +148,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .stat-card:hover{box-shadow:0 4px 14px rgba(90,72,38,.16)}
 .stat-card.on{background:#fdf3d8;border-color:#b3541e}
 .stat-card:focus-visible{outline:2px solid #b3541e;outline-offset:2px}
-.flash{animation:statflash 1.2s ease}
-@keyframes statflash{0%,100%{box-shadow:0 2px 10px rgba(90,72,38,.08)}30%{box-shadow:0 0 0 5px rgba(179,84,30,.45)}}
+.stat-hint{margin:10px 0 0;padding:10px 14px;border:1px solid #e2d7bf;border-left:4px solid #b3541e;border-radius:10px;background:#fffdf4;font-size:14px;font-weight:700;color:#38332a}
 /* ---- Soft UI pass: easier on the eyes ---- */
 .bbm-grid,.bbm-add,.modal,.follow-item{color:#38332a}
 .bbm-card,.bbm-add,.stat-card,.follow-item,.follow-draft,.modal,.modal-close{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
@@ -177,7 +176,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
-<div class="stat-row"><div class="stat-card" data-stat="active" role="button" tabindex="0" aria-pressed="false"><b id="statActive">0</b><span>active applications</span></div><div class="stat-card" data-stat="interviews" role="button" tabindex="0" aria-pressed="false"><b id="statInterviews">0</b><span>in interviews</span></div><div class="stat-card" data-stat="offers" role="button" tabindex="0" aria-pressed="false"><b id="statOffers">0</b><span>offers</span></div></div>
+<div class="stat-row"><div class="stat-card" data-stat="active" role="button" tabindex="0" aria-pressed="false"><b id="statActive">0</b><span>active applications</span></div><div class="stat-card" data-stat="interviews" role="button" tabindex="0" aria-pressed="false"><b id="statInterviews">0</b><span>in interviews</span></div><div class="stat-card" data-stat="offers" role="button" tabindex="0" aria-pressed="false"><b id="statOffers">0</b><span>offers</span></div></div><p class="stat-hint hidden" id="statHint" role="status"></p>
 <section class="panel"><div class="yp-head"><h2>Your applications</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="filterbar"><select id="stageFilter" aria-label="Filter by stage"></select><button type="button" class="chip" id="starFilter" aria-pressed="false">★ Starred</button><button type="button" class="chip" id="heldFilter" aria-pressed="false">✓ Interview held</button><input type="search" class="search" id="appSearch" placeholder="Search applications…" aria-label="Search applications" autocomplete="off"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div class="add-import-grid">
 <section class="panel"><h2 style="margin-top:0">Add an application</h2><form id="addForm"><div class="nudge-grid"><label>Company<input name="company" type="text" maxlength="191" required placeholder="Acme Inc"></label><label>Role<input name="role" type="text" maxlength="191" required placeholder="Senior Growth Manager"></label><label>Contact name<input name="contact_name" type="text" maxlength="191" placeholder="Maya Chen"></label><label>Contact email<input name="contact_email" type="email" maxlength="191" placeholder="maya@acme.co"></label><label>Job posting URL<input name="job_url" type="url" maxlength="500" placeholder="https://acme.co/jobs/123"></label><label>Location<input name="location" type="text" maxlength="191" placeholder="Remote (US)"></label><label>Salary min<input name="salary_min" type="number" min="0" step="1" placeholder="120000"></label><label>Salary max<input name="salary_max" type="number" min="0" step="1" placeholder="140000"></label><label>Currency<select name="currency"><option value="CAD" selected>CAD</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option></select></label><label>Where you found it<input name="source" type="text" maxlength="191" placeholder="nanoglobals"></label><label>Date applied<input name="date_applied" type="date"></label><label>Stage<select name="stage"><option value="new" selected>New</option><option value="applied">Applied</option><option value="screening">Screening</option><option value="interview_booked">Interview booked</option><option value="waiting_next">Waiting for next step</option><option value="offer">Offer</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="withdrawn">Withdrawn</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Job Application Tracker</button><p id="addError" class="error"></p></form></section>
@@ -248,21 +247,18 @@ function renderContacts(){
   el.innerHTML=list.map(contactCard).join('');
   bindCardButtons(el);
 }
-document.querySelector('#stageFilter').addEventListener('change',e=>{FILTER_STAGE=e.target.value;FILTER_GROUP=null;renderContacts();});
+document.querySelector('#stageFilter').addEventListener('change',e=>{FILTER_STAGE=e.target.value;FILTER_GROUP=null;hideStatHint();renderContacts();});
 document.querySelector('#starFilter').addEventListener('click',()=>{FILTER_STAR=!FILTER_STAR;renderContacts();});
 document.querySelector('#heldFilter').addEventListener('click',()=>{FILTER_HELD=!FILTER_HELD;renderContacts();});
 document.querySelector('#appSearch').addEventListener('input',e=>{SEARCH=e.target.value.trim().toLowerCase();renderContacts();});
-function promptAddApplication(){
-  const form=document.querySelector('#addForm');
-  const panel=form.closest('section')||form;
-  panel.scrollIntoView({behavior:'smooth',block:'start'});
-  panel.classList.remove('flash');void panel.offsetWidth;panel.classList.add('flash');
-  const first=form.querySelector('input[name="company"]');if(first)setTimeout(()=>first.focus({preventScroll:true}),350);
-}
+const STAT_HINTS={active:'No active applications right now. Anything you are still chasing will show up here.',interviews:'Nobody is in interviews yet. When an application reaches screening or an interview gets booked, it lands here.',offers:'No offers yet. When one comes in, move that application to the Offer stage and it will show up here.'};
+function showStatHint(group){const h=document.querySelector('#statHint');h.textContent=STAT_HINTS[group]||'';h.classList.remove('hidden');}
+function hideStatHint(){document.querySelector('#statHint').classList.add('hidden');}
 function statCardActivate(card){
   const group=card.getAttribute('data-stat');
   const count=DATA.contacts.filter(STAT_GROUPS[group]).length;
-  if(!count){promptAddApplication();return}
+  if(!count){showStatHint(group);return}
+  hideStatHint();
   FILTER_GROUP=FILTER_GROUP===group?null:group;
   FILTER_STAGE='all';
   renderContacts();

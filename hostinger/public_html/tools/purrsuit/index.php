@@ -130,8 +130,7 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .stat-card:hover{box-shadow:0 4px 14px rgba(90,72,38,.16)}
 .stat-card.on{background:#fdf3d8;border-color:#b3541e}
 .stat-card:focus-visible{outline:2px solid #b3541e;outline-offset:2px}
-.flash{animation:statflash 1.2s ease}
-@keyframes statflash{0%,100%{box-shadow:0 2px 10px rgba(90,72,38,.08)}30%{box-shadow:0 0 0 5px rgba(179,84,30,.45)}}
+.stat-hint{margin:10px 0 0;padding:10px 14px;border:1px solid #e2d7bf;border-left:4px solid #b3541e;border-radius:10px;background:#fffdf4;font-size:14px;font-weight:700;color:#38332a}
 /* ---- Soft UI pass: easier on the eyes ---- */
 .contact,.followup,.stat-card,.modal,.modal-close{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);color:#38332a}
 .followup .draft{border:1px solid #e2d7bf}
@@ -157,7 +156,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
-<div class="stat-row"><div class="stat-card" data-stat="pipeline" role="button" tabindex="0" aria-pressed="false"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card" data-stat="won" role="button" tabindex="0" aria-pressed="false"><b id="statWon">$0</b><span>won</span></div><div class="stat-card" data-stat="all" role="button" tabindex="0" aria-pressed="false"><b id="statCount">0</b><span>contacts</span></div></div>
+<div class="stat-row"><div class="stat-card" data-stat="pipeline" role="button" tabindex="0" aria-pressed="false"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card" data-stat="won" role="button" tabindex="0" aria-pressed="false"><b id="statWon">$0</b><span>won</span></div><div class="stat-card" data-stat="all" role="button" tabindex="0" aria-pressed="false"><b id="statCount">0</b><span>contacts</span></div></div><p class="stat-hint hidden" id="statHint" role="status"></p>
 <section class="panel"><div class="yp-head"><h2>Your people</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
 <div class="add-import-grid">
 <section class="panel"><h2 style="margin-top:0">Add someone</h2><form id="addForm"><div class="nudge-grid"><label>Name<input name="name" type="text" maxlength="80" required placeholder="Jordan Lee"></label><label>Company<input name="company" type="text" maxlength="191" placeholder="Acme Inc"></label><label>Title<input name="title" type="text" maxlength="191" placeholder="Head of Growth"></label><label>Email<input name="email" type="email" maxlength="191" placeholder="jordan@acme.co"></label><label>Where you met<input name="source" type="text" maxlength="191" placeholder="Indie Hackers meetup"></label><label>Deal value<input name="deal_value" type="number" min="0" step="0.01" placeholder="2500"></label><label>Stage<select name="stage"><option value="new">New</option><option value="talking">Talking</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option></select></label><label>Follow up on<input name="follow_up_date" type="date"></label><label class="span-all">Notes<textarea name="notes" maxlength="5000" placeholder="Anything worth remembering..."></textarea></label></div><button class="button" style="margin-top:10px">Add to Client Follow-Up Tracker</button><p id="addError" class="error"></p></form></section>
@@ -201,29 +200,27 @@ function renderContacts(){
   const el=document.querySelector('#contactList');
   const list=DATA.contacts.filter(filterMatch);
   document.querySelector('#stageChips').innerHTML=['all',...STAGES].map(s=>`<button type="button" class="chip${FILTER===s?' on':''}" data-filter="${s}">${s==='all'?'All':s} (${s==='all'?DATA.contacts.length:(DATA.counts[s]||0)})</button>`).join('');
-  document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{FILTER=b.getAttribute('data-filter');renderContacts();}));
+  document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{FILTER=b.getAttribute('data-filter');hideStatHint();renderContacts();}));
   document.querySelectorAll('[data-stat]').forEach(card=>{const k=card.getAttribute('data-stat');const on=(k==='pipeline'&&FILTER==='pipeline')||(k==='won'&&FILTER==='won')||(k==='all'&&FILTER==='all');card.classList.toggle('on',on);card.setAttribute('aria-pressed',on?'true':'false');});
   if(!list.length){el.innerHTML='<p class="lede">'+(FILTER!=='all'&&DATA.contacts.length?'Nobody matches that filter yet.':'Nobody here yet. Add your first person above.')+'</p>';return}
   el.innerHTML=list.map(contactCard).join('');
   bindCardButtons(el);
 }
-function promptAddContact(){
-  const form=document.querySelector('#addForm');
-  const panel=form.closest('section')||form;
-  panel.scrollIntoView({behavior:'smooth',block:'start'});
-  panel.classList.remove('flash');void panel.offsetWidth;panel.classList.add('flash');
-  const first=form.querySelector('input[name="name"]');if(first)setTimeout(()=>first.focus({preventScroll:true}),350);
-}
+const STAT_HINTS={pipeline:'No active pipeline right now. New, talking, and quoted contacts show up here.',won:'Nothing won yet. When a client says yes, open their card and set them to won.',all:'No contacts yet. Add your first person to get started.'};
+function showStatHint(key){const h=document.querySelector('#statHint');h.textContent=STAT_HINTS[key]||'';h.classList.remove('hidden');}
+function hideStatHint(){document.querySelector('#statHint').classList.add('hidden');}
 function statCardActivate(card){
   const key=card.getAttribute('data-stat');
   if(key==='all'){
-    if(!DATA.contacts.length){promptAddContact();return}
+    if(!DATA.contacts.length){showStatHint('all');return}
+    hideStatHint();
     FILTER='all';renderContacts();
     document.querySelector('#contactList').scrollIntoView({behavior:'smooth',block:'start'});
     return;
   }
   const test=key==='pipeline'?c=>PIPELINE_STAGES.includes(c.stage):c=>c.stage==='won';
-  if(!DATA.contacts.filter(test).length){promptAddContact();return}
+  if(!DATA.contacts.filter(test).length){showStatHint(key);return}
+  hideStatHint();
   FILTER=FILTER===key?'all':key;
   renderContacts();
   document.querySelector('#contactList').scrollIntoView({behavior:'smooth',block:'start'});
