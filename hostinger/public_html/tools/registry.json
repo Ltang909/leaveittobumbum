@@ -162,7 +162,7 @@
     },
     {
       "key": "hearsay",
-      "name": "AI Brand Mention Checker",
+      "name": "AI Mention Tracker",
       "tag": "Marketing",
       "icon": "👂",
       "description": "Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead.",
