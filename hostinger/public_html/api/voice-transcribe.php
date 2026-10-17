@@ -18,6 +18,12 @@ declare(strict_types=1);
  *
  *   POST /api/voice-transcribe.php   audio=<file>  language=<bcp47, optional>
  *   -> { "ok": true, "transcript": "..." }
+ *
+ * Live mode: while a page records, it can POST short (~5 second)
+ * segments with live=1 so words appear on screen as the user talks
+ * (see /tools/live-transcribe.js). Live segments use a separate
+ * per-session daily counter (vt_live_count, cap 600) so they never
+ * eat the regular 60/day budget. Everything else is identical.
  */
 
 require __DIR__ . '/_bootstrap.php';
@@ -28,12 +34,16 @@ $subject = requireSubject();
 $isGuest = $subject['kind'] === 'guest';
 
 startSecureSession();
+$isLive = (string) ($_POST['live'] ?? '') === '1';
+$countKey = $isLive ? 'vt_live_count' : 'vt_count';
+$countCap = $isLive ? 600 : 60;
 $today = gmdate('Y-m-d');
 if (($_SESSION['vt_day'] ?? '') !== $today) {
     $_SESSION['vt_day'] = $today;
     $_SESSION['vt_count'] = 0;
+    $_SESSION['vt_live_count'] = 0;
 }
-if ((int) ($_SESSION['vt_count'] ?? 0) >= 60) {
+if ((int) ($_SESSION[$countKey] ?? 0) >= $countCap) {
     jsonResponse(['error' => 'Transcription is busy right now. Try again in a minute.'], 429);
 }
 
@@ -100,6 +110,6 @@ if ($http !== 200 || !is_array($data)) {
     }
 }
 
-$_SESSION['vt_count'] = (int) ($_SESSION['vt_count'] ?? 0) + 1;
+$_SESSION[$countKey] = (int) ($_SESSION[$countKey] ?? 0) + 1;
 $transcript = trim((string) ($data['text'] ?? ''));
 jsonResponse(['ok' => true, 'transcript' => $transcript]);

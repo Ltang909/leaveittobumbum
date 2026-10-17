@@ -151,6 +151,7 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 </ul>
 </section>
 <?php endif; ?>
+<script src="/tools/live-transcribe.js"></script>
 <script>
 (function(){
   var input = document.getElementById('captureInput');
@@ -289,6 +290,7 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
       recorder = new MediaRecorder(stream);
       recorder.ondataavailable = function(e){ if (e.data && e.data.size) chunks.push(e.data); };
       recorder.onstop = function(){
+        if (window.BBLiveTranscribe) BBLiveTranscribe.stop();
         stream.getTracks().forEach(function(t){ t.stop(); });
         recording = false;
         mic.innerHTML = '&#127908;';
@@ -298,6 +300,13 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
       recording = true;
       mic.innerHTML = '&#9632;';
       show('<p class="lede">Listening&hellip; tap again to stop.</p>');
+      if (window.BBLiveTranscribe) {
+        var sawLive = false;
+        BBLiveTranscribe.start({stream: stream, lang: 'en',
+          onMode: function(m){ if (sawLive) return; show('<p class="lede"><span class="bb-dot"></span>' + (m === 'relay' ? 'Listening... your words will appear in the box in about 5 seconds, then keep updating as you talk. Tap the mic again to stop.' : 'Listening... your words will appear in the box as you speak. Tap the mic again to stop.') + '</p>'); },
+          onText: function(f, i){ var t = (f + (i ? (f ? ' ' : '') + i : '')).trim(); if (!t) return; if (!sawLive) { sawLive = true; show('<p class="lede"><span class="bb-dot"></span>Live. Tap the mic again to stop.</p>'); } input.value = t; }
+        });
+      }
     }).catch(function(){ show('<p class="error">Microphone access was blocked.</p>'); });
   });
   function transcribe(blob){
