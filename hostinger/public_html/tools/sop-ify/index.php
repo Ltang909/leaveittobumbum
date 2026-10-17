@@ -141,6 +141,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <div id="upgrade-slot"></div>
 <?php endif; ?>
+<script src="/tools/live-transcribe.js"></script>
 <script>
 const TOOL_KEY='sop-ify';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
@@ -163,8 +164,9 @@ let genKey=crypto.randomUUID();
 const recBtn=document.querySelector('#sopRec');
 const stopBtn=document.querySelector('#sopStop');
 const recState={recording:false,stream:null,recorder:null,chunks:[]};
+let sopBase='',sopLiveSaw=false;
 function pickMime(){const c=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
-function cleanupRec(){if(recState.stream){recState.stream.getTracks().forEach(t=>t.stop());recState.stream=null;}recState.recording=false;recBtn.classList.remove('hidden');stopBtn.classList.add('hidden');dumpEl.readOnly=false;}
+function cleanupRec(){if(window.BBLiveTranscribe)BBLiveTranscribe.stop();if(recState.stream){recState.stream.getTracks().forEach(t=>t.stop());recState.stream=null;}recState.recording=false;recBtn.classList.remove('hidden');stopBtn.classList.add('hidden');dumpEl.readOnly=false;}
 async function transcribeViaRelay(blob){
 const session=await fetch('/api/session.php').then(r=>r.json());
 const m=(blob.type||'').split(';')[0];
@@ -192,6 +194,8 @@ recState.recording=true;
 recBtn.classList.add('hidden');stopBtn.classList.remove('hidden');
 dumpEl.readOnly=true;
 statusEl.textContent='Recording. Ramble away, then hit stop.';statusEl.classList.remove('error');
+sopBase=dumpEl.value.trim();sopLiveSaw=false;
+if(window.BBLiveTranscribe)BBLiveTranscribe.start({stream:recState.stream,lang:'en',onMode:function(m){if(sopLiveSaw)return;statusEl.innerHTML='<span class="bb-dot"></span>'+(m==='relay'?'Listening... your words will appear here in about 5 seconds, then keep updating as you talk.':'Listening... your words will appear here as you speak.');statusEl.classList.remove('error');},onText:function(f,i){const live=(f+(i?(f?' ':'')+i:'')).trim();if(!live)return;if(!sopLiveSaw){sopLiveSaw=true;statusEl.innerHTML='<span class="bb-dot"></span>Live. Keep talking, then hit stop when you are done.';}dumpEl.value=(sopBase?sopBase+'\n':'')+live;}});
 bbTrack('recording_started',{tool:TOOL_KEY});
 });
 stopBtn.addEventListener('click',()=>{try{recState.recorder.stop();}catch(e){cleanupRec();}});
@@ -199,6 +203,7 @@ async function onRecStop(){
 const mime=(recState.recorder&&recState.recorder.mimeType)||'audio/webm';
 const blob=new Blob(recState.chunks,{type:mime});
 cleanupRec();
+dumpEl.value=sopBase;
 if(!blob||!blob.size){statusEl.textContent='Nothing recorded. Try again.';statusEl.classList.add('error');return;}
 statusEl.textContent='Transcribing your ramble...';statusEl.classList.remove('error');
 try{

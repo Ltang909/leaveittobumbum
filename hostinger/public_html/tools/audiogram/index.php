@@ -143,11 +143,13 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p id="agStatus" class="ag-status">Have a look. When it feels right, render it.</p>
 <div class="ag-progress hidden" id="agProgWrap"><i id="agProg"></i></div>
 <p id="agProgText" style="font-weight:700"></p>
+<p id="agLive" class="ag-status hidden" aria-live="polite"></p>
 <div class="ag-step"><button id="agRender" class="button" type="button">Render video</button><a id="agDl" class="button secondary hidden" download="audiogram.mp4">Download MP4</a><button id="agAgain" class="linklike" type="button">start over</button></div>
 <p id="agRenderErr" class="error"></p>
 </section>
 <div id="upgrade-slot"></div>
 <?php endif; ?>
+<script src="/tools/live-transcribe.js"></script>
 <script>
 const TOOL_KEY='audiogram';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
@@ -167,7 +169,7 @@ const mp3Input=$('agMp3'),imgInput=$('agImg'),mp3Info=$('agMp3Info'),imgInfo=$('
 const toStyleBtn=$('agToStyle'),transcribeBtn=$('agTranscribe'),back1Btn=$('agBack1'),styleErr=$('agStyleErr');
 const canvas=$('agCanvas'),playBtn=$('agPlay'),timeEl=$('agTime'),statusEl=$('agStatus');
 const renderBtn=$('agRender'),dlLink=$('agDl'),againBtn=$('agAgain'),renderErr=$('agRenderErr');
-const progWrap=$('agProgWrap'),progBar=$('agProg'),progText=$('agProgText'),usageEl=$('agUsage');
+const progWrap=$('agProgWrap'),progBar=$('agProg'),progText=$('agProgText'),usageEl=$('agUsage'),liveEl=$('agLive');
 const FFMPEG_VENDOR='/tools/video-trimmer/vendor/';
 let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[];
 let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false;
@@ -417,6 +419,11 @@ renderBtn.addEventListener('click',async()=>{
     audioEl.currentTime=0;
     setProg(0.18,'Recording your video...');
     rec.start(250);
+    if(style!=='none'&&window.BBLiveTranscribe){
+      liveEl.classList.remove('hidden');
+      liveEl.innerHTML='<span class="bb-dot"></span>Listening... words will appear here in about 5 seconds, then keep updating while your video records.';
+      BBLiveTranscribe.start({stream:new MediaStream(dest.stream.getAudioTracks()),lang:'en',mode:'relay',onText:(f,i)=>{const t=(f+(i?(f?' ':'')+i:'')).trim();if(t)liveEl.textContent='Live words: '+t;}});
+    }
     await audioEl.play();playing=true;playBtn.textContent='Pause';
     const tick=()=>{if(rendering&&audioEl)setProg(0.18+0.6*(audioEl.currentTime/Math.max(1,duration)),'Recording your video... '+fmtT(audioEl.currentTime)+' / '+fmtT(duration));};
     const tickInt=setInterval(tick,400);
@@ -467,7 +474,7 @@ renderBtn.addEventListener('click',async()=>{
       setStatus('Render hiccup. Your files are safe, try again.',true);
     }
     progWrap.classList.add('hidden');progText.textContent='';
-  }finally{rendering=false;renderBtn.disabled=false;}
+  }finally{if(window.BBLiveTranscribe)BBLiveTranscribe.stop();rendering=false;renderBtn.disabled=false;}
 });
 againBtn.addEventListener('click',()=>{
   cancelAnimationFrame(rafId);
@@ -475,7 +482,7 @@ againBtn.addEventListener('click',()=>{
   if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null;}
   audioFile=null;bgImg=null;words=[];cues=[];peaks=[];duration=0;rendering=false;
   mp3Info.textContent='';imgInfo.textContent='';uploadErr.textContent='';renderErr.textContent='';
-  usageEl.textContent='';dlLink.classList.add('hidden');
+  usageEl.textContent='';dlLink.classList.add('hidden');liveEl.classList.add('hidden');liveEl.textContent='';
   studioSec.classList.add('hidden');styleSec.classList.add('hidden');uploadSec.classList.remove('hidden');
   toStyleBtn.disabled=true;setStatus('Have a look. When it feels right, render it.');
   uploadSec.scrollIntoView({behavior:'smooth'});
