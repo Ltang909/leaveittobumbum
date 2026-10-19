@@ -23,6 +23,9 @@ export const metadata: Metadata = {
     title: "Leave It to Bum Bum | Tiny tools for busy businesses",
     description: "Useful little tools for the annoying parts of running a small business. Start free, then pay as your business uses more.",
   },
+  other: {
+    "p:domain_verify": "3773f0aa66ddbed21dcef0b9b6a93798",
+  },
 };
 
 const organizationLd = {
