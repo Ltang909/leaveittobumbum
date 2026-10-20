@@ -41,5 +41,33 @@ $shMeter = !empty($showMeter);
 <?php if ($shUser): ?><script>
 (function(){var b=document.getElementById('bbSignOut');if(!b)return;b.addEventListener('click',async function(){b.disabled=true;try{var s=await fetch('/api/session.php').then(function(r){return r.json()});await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout',csrf:s.csrf})});}catch(e){}location.reload();});})();
 </script><?php endif; ?>
+<script>
+/* Delayed guest prompt: the in-page nudge only renders once a guest has
+   completed 2 actions. Dismissing it silences it until the guest is near
+   the limit (3 or fewer actions left), when it always shows again. */
+(function(){
+  var KEY='bb_guest_nudge_dismissed';
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest?e.target.closest('.bb-guest-nudge-dismiss'):null;
+    if(btn){
+      try{localStorage.setItem(KEY,'1');}catch(err){}
+      var nudge=btn.closest('.bb-guest-nudge');if(nudge)nudge.remove();
+      try{bbTrack('guest_nudge_dismissed',{});}catch(err){}
+      return;
+    }
+    var link=e.target.closest?e.target.closest('.bb-guest-nudge a'):null;
+    if(link){try{bbTrack('guest_nudge_signup_clicked',{});}catch(err){}}
+  });
+  document.addEventListener('DOMContentLoaded',function(){
+    var nudge=document.querySelector('.bb-guest-nudge');
+    if(!nudge)return;
+    var remaining=parseInt(nudge.getAttribute('data-remaining')||'99',10);
+    var dismissed=false;
+    try{dismissed=localStorage.getItem(KEY)==='1';}catch(err){}
+    if(dismissed&&remaining>3){nudge.remove();return;}
+    try{bbTrack('guest_nudge_shown',{remaining:remaining});}catch(err){}
+  });
+})();
+</script>
 <?php // Guest conversion modal (no-op markup when not a guest page). ?>
 <?php require __DIR__ . '/guest-convert.php'; ?>
