@@ -14,7 +14,8 @@
 //
 // Server config: 'groq_api_key' in leaveittobumbum-config.php
 // (free key from https://console.groq.com/keys). Optional 'poster_model'
-// overrides the Groq vision model (default meta-llama/llama-4-scout).
+// overrides the Groq vision model (default qwen/qwen3.8-27b; the account's
+// catalog no longer serves llama-4-scout, verified 2026-10-21).
 require dirname(__DIR__) . '/_bootstrap.php';
 
 function poster_clean(string $s): string {
@@ -88,7 +89,7 @@ function poster_call_groq(string $imageDataUrl, string $todayLocal, string $week
         . '7) NEVER use em dashes or en dashes anywhere. '
         . 'Output STRICT JSON only, no other text: {"events": [{"title": "...", "date": "YYYY-MM-DD", "startTime": "HH:MM" or null, "endTime": "HH:MM" or null, "allDay": false, "location": "...", "address": "...", "description": "...", "url": "...", "dateGuess": false, "note": "..."}]}';
     $model = trim((string) (config()['poster_model'] ?? ''));
-    if ($model === '') $model = 'meta-llama/llama-4-scout-17b-16e-instruct';
+    if ($model === '') $model = 'qwen/qwen3.8-27b';
     $payload = [
         'model' => $model,
         'messages' => [
