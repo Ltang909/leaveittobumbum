@@ -91,6 +91,16 @@
       "mascot": "/bum/cat-curious.png"
     },
     {
+      "key": "meal-scanner",
+      "name": "Meal Scanner",
+      "tag": "Health",
+      "icon": "🥗",
+      "description": "Snap a photo of your meal. Get estimated calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number.",
+      "url": "/tools/meal-scanner/",
+      "cta": "Scan a meal",
+      "mascot": "/bum/cat-excited-v2.png"
+    },
+    {
       "cta": "Find my gaps",
       "description": "Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions.",
       "icon": "🔍",
