@@ -81,6 +81,16 @@
       "mascot": "/bum/cat-glasses.png"
     },
     {
+      "key": "poster-to-calendar",
+      "name": "Poster to Calendar",
+      "tag": "Plan",
+      "icon": "🗓️",
+      "description": "Snap a photo of any event poster or flyer. Get a ready-to-save calendar event with the date, time, and place filled in.",
+      "url": "/tools/poster-to-calendar/",
+      "cta": "Snap a poster",
+      "mascot": "/bum/cat-curious.png"
+    },
+    {
       "cta": "Find my gaps",
       "description": "Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions.",
       "icon": "🔍",
