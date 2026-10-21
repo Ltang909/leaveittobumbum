@@ -121,6 +121,11 @@ function poster_call_groq(string $imageDataUrl, string $todayLocal, string $week
         jsonResponse(['error' => 'Poster to Calendar is swamped right now. Try again in a minute.'], 429);
     }
     if ($code < 200 || $code >= 300) {
+        // TEMP DIAGNOSTIC (staging only): surface Groq's own error so the
+        // failing vision call can be identified from a smoke test.
+        if (isStagingHost()) {
+            jsonResponse(['error' => 'Poster to Calendar tripped over its own paws. Try again.', 'groq_status' => $code, 'groq_body' => mb_substr((string) $raw, 0, 600)], 502);
+        }
         jsonResponse(['error' => 'Poster to Calendar tripped over its own paws. Try again.'], 502);
     }
     $data = json_decode((string) $raw, true);
