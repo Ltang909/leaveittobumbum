@@ -34,14 +34,6 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Subscription Tracker free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. Adding a subscription uses one action."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -76,7 +68,9 @@
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Subscription Tracker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Subscription Tracker","item":"https://leaveittobumbum.com/tools/cutline/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Subscription Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum&rsquo;s toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum judging your subscriptions"><h1>Cut the subscriptions you forgot about.</h1><p class="lede">Every subscription you forgot about, in one place. Bum Bum will even nudge you before each one renews. Adding one uses one action.</p>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Subscription Tracker","item":"https://leaveittobumbum.com/tools/cutline/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+</style><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Subscription Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum&rsquo;s toolbox</p><img class="tool-mascot-page" src="/bum/cat-bowtie.png" alt="Bum Bum judging your subscriptions"><h1>Cut the subscriptions you forgot about.</h1><p class="lede bb-desc">Every subscription you forgot about, in one place. Bum Bum will even nudge you before each one renews. Adding one uses one action.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Subscription Tracker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -114,10 +108,6 @@ document.querySelector('#prefs-form').addEventListener('submit',async event=>{ev
 load();
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<details>
-<summary>Is Subscription Tracker free?</summary>
-<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. Adding a subscription uses one action.</p>
-</details>
 <details>
 <summary>Do I need an account?</summary>
 <p>No. Start as a guest. A free account gets 75 actions every month and keeps your list saved across devices. <a href="/pricing/">See pricing</a>.</p>

@@ -38,14 +38,6 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is QR Code Generator free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Previewing is free and unlimited. Exporting a QR code uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -120,7 +112,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 #pcCodesList .qrthumb:hover{border-color:#1E2321}
 #pcCodesList .qrthumb canvas{width:46px;height:46px;display:block}
 .hidden{display:none!important}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"QR Code Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"QR Code Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum showing off"><h1>QR codes, but cute.</h1><p class="lede bb-desc">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use QR Code Generator</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -401,10 +395,6 @@ draw();
 <?php endif; ?>
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<details>
-<summary>Is QR Code Generator free?</summary>
-<p>Previewing is free and unlimited. Exporting a QR code uses one action. Guests get 15 free actions with no signup, and a free account gets 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
-</details>
 <details>
 <summary>Do I need an account?</summary>
 <p>No. Design as a guest. A free account gets 75 actions every month and saves your tracked codes. <a href="/pricing/">See pricing</a>.</p>
