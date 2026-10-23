@@ -34,14 +34,6 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Receipt Scanner free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One action per receipt scanned."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -127,7 +119,9 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .queue-item .meta{font-size:13px;opacity:.75}
 .receipt-card{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);border-radius:14px;background:#fff;padding:16px;margin-bottom:14px}
 .receipt-card .card-head{font-size:16px;margin-bottom:4px}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Scanner"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum with reading glasses, squinting at a receipt"><h1>Receipts in, spreadsheets out.</h1><p class="lede">Snap photos of your receipts, up to 10 at a time. Bum Bum reads them <b>right in your browser</b>, pulls out the vendor, date, line items, tax, and total, and hands you clean tables you can fix up and save to your receipt log. Download the whole log as one CSV whenever you like. Your photos never leave your device; only the typed-up numbers are saved, in your account. One action per receipt scanned. Saving and exports are free.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Scanner"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-glasses.png" alt="Bum Bum with reading glasses, squinting at a receipt"><h1>Receipts in, spreadsheets out.</h1><p class="lede bb-desc">Snap photos of your receipts, up to 10 at a time. Bum Bum reads them <b>right in your browser</b>, pulls out the vendor, date, line items, tax, and total, and hands you clean tables you can fix up and save to your receipt log. Download the whole log as one CSV whenever you like. Your photos never leave your device; only the typed-up numbers are saved, in your account. One action per receipt scanned. Saving and exports are free.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to read receipts</h2><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -170,10 +164,6 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php endif; ?>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<details>
-<summary>Is Receipt Scanner free?</summary>
-<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One action per receipt scanned.</p>
-</details>
 <details>
 <summary>Do I need an account?</summary>
 <p>No. Scan as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>

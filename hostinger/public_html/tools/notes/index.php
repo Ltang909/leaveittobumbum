@@ -34,14 +34,6 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Voice Notes to Text free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished note uses one action."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -87,7 +79,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 #notesText{min-height:170px}
 #notesActions button:disabled{opacity:.45;cursor:not-allowed}
 select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Voice Notes to Text"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum in work mode"><h1>Talk it out. We'll write it down.</h1><p class="lede">Hit record and talk it out. Your words appear as you speak, and when you stop your transcript is saved to your private library, ready to copy or download. Your recording stays in your browser so you can listen back right away, or download the audio to keep it. On iPhone your audio is sent to our server for transcription and never stored. One finished note uses one action.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Voice Notes to Text"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-laptop.png" alt="Bum Bum in work mode"><h1>Talk it out. We'll write it down.</h1><p class="lede bb-desc">Hit record and talk it out. Your words appear as you speak, and when you stop your transcript is saved to your private library, ready to copy or download. Your recording stays in your browser so you can listen back right away, or download the audio to keep it. On iPhone your audio is sent to our server for transcription and never stored. One finished note uses one action.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Voice Notes to Text</h2><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/notes/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -166,10 +160,6 @@ loadNotes();
 <?php endif; ?>
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<details>
-<summary>Is Voice Notes to Text free?</summary>
-<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished note uses one action.</p>
-</details>
 <details>
 <summary>Do I need an account?</summary>
 <p>No. Record as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>. Your transcript library is tied to your session.</p>

@@ -39,14 +39,6 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Screen Recorder free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished recording uses one action. Setting up and previewing costs nothing."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Do I need an account to record my screen?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -82,7 +74,9 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Screen Recorder | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Screen Recorder","item":"https://leaveittobumbum.com/tools/clips/"}]}</script>
-<link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style>
+<link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+</style>
 <?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?>
 </head>
 <body>
@@ -90,7 +84,7 @@
 <main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Screen Recorder"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?>
 <p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-sunglasses.png" alt="Bum Bum looking cool">
 <h1>Show them instead of telling them</h1>
-<p class="lede">Screen Recorder records your screen right in your browser. Pick a tab, a window, or your whole screen, add your mic and a little camera bubble if you want to be in it, then trim and tweak the speed before you download. Nothing uploads anywhere, your video never leaves your computer. One finished recording uses one action.</p>
+<p class="lede bb-desc">Screen Recorder records your screen right in your browser. Pick a tab, a window, or your whole screen, add your mic and a little camera bubble if you want to be in it, then trim and tweak the speed before you download. Nothing uploads anywhere, your video never leaves your computer. One finished recording uses one action.</p>
 <?php if (!$user && !$isGuest): ?>
 <section class="panel"><h2>Sign in to use Screen Recorder</h2><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Sign in or create an account</a></section>
 <?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
@@ -575,10 +569,6 @@ if(!screenOK){
 <?php endif; ?>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<details>
-<summary>Is Screen Recorder free?</summary>
-<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished recording uses one action. Setting up and previewing costs nothing.</p>
-</details>
 <details>
 <summary>Do I need an account to record my screen?</summary>
 <p>No. Record as a guest with 15 free actions. Create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>

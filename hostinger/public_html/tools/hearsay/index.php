@@ -34,14 +34,6 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is AI Brand Mention Checker free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You get 15 free actions with no signup. Create a free account and you get 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/. One finished scan uses one action."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -100,7 +92,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .meterbar{height:12px;border-radius:999px;background:#eee;overflow:hidden;margin:10px 0}
 .meterbar>div{height:100%;background:var(--accent,#b3541e)}
 .compchip{display:inline-block;background:#fff;border:2px solid var(--line);border-radius:999px;padding:4px 14px;font-weight:800;margin:2px 6px 2px 0}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"AI Brand Mention Checker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum listening in"><h1>Find out what the AI says about your brand.</h1><p class="lede">Type your brand name and the questions your customers ask. AI Brand Mention Checker asks three AI models every question and reports back: how often you get mentioned, the vibe, direct quotes, and which competitors keep stealing your spotlight. One finished scan uses one action.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"AI Brand Mention Checker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum listening in"><h1>Find out what the AI says about your brand.</h1><p class="lede bb-desc">Type your brand name and the questions your customers ask. AI Brand Mention Checker asks three AI models every question and reports back: how often you get mentioned, the vibe, direct quotes, and which competitors keep stealing your spotlight. One finished scan uses one action.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use AI Brand Mention Checker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -201,10 +195,6 @@ loadScans();
 <?php endif; ?>
 </script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<details>
-<summary>Is AI Brand Mention Checker free?</summary>
-<p>You get 15 free actions with no signup. Create a free account and you get 75 actions every month. <a href="/pricing/">See pricing</a>. One finished scan uses one action.</p>
-</details>
 <details>
 <summary>Do I need an account?</summary>
 <p>No. Scan as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>

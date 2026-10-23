@@ -28,11 +28,38 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "Is this real translation?", "acceptedAnswer": { "@type": "Answer", "text": "It is mood detection in a translator costume. Bum Bum analyzes pitch, duration, repetition, and noisiness to classify what your cat is probably feeling, then translates with total confidence and questionable accuracy." } },
-    { "@type": "Question", "name": "Does my cat's audio leave my browser?", "acceptedAnswer": { "@type": "Answer", "text": "No. Everything happens on your device. Bum Bum hears it, translates it, and forgets it immediately, like everything else you say." } },
-    { "@type": "Question", "name": "Why is Bum Bum so rude?", "acceptedAnswer": { "@type": "Answer", "text": "He is not rude. He is honest. There is a difference, and he will explain it at length." } },
-    { "@type": "Question", "name": "Does it work on dogs?", "acceptedAnswer": { "@type": "Answer", "text": "No. Dogs already understand English perfectly. They simply choose not to dignify your questions with a response." } },
-    { "@type": "Question", "name": "Is it free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Translating cats is free and unlimited. Bum Bum considers it a public service." } }
+    {
+      "@type": "Question",
+      "name": "Is this real translation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is mood detection in a translator costume. Bum Bum analyzes pitch, duration, repetition, and noisiness to classify what your cat is probably feeling, then translates with total confidence and questionable accuracy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does my cat's audio leave my browser?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Everything happens on your device. Bum Bum hears it, translates it, and forgets it immediately, like everything else you say."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is Bum Bum so rude?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "He is not rude. He is honest. There is a difference, and he will explain it at length."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work on dogs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Dogs already understand English perfectly. They simply choose not to dignify your questions with a response."
+      }
+    }
   ]
 }
 </script>
@@ -71,7 +98,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .iconbtn{border:2px solid var(--ink);border-radius:12px;background:#fff;margin:0;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;min-height:44px;display:inline-flex;align-items:center;color:var(--ink)}
 .hint{font-size:13px;opacity:.7;margin:0;text-align:center;max-width:52ch}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Cat Translator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum ready to translate"><h1>Your cat has been talking.<br>Now you'll know what about.</h1><p class="lede">Point your mic at your cat. Bum Bum listens to the meows, reads the mood in real time, and translates with total confidence. Free, unlimited, and your cat's audio never leaves your browser.</p>
+
+@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Cat Translator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-paws-up.png" alt="Bum Bum ready to translate"><h1>Your cat has been talking.<br>Now you'll know what about.</h1><p class="lede bb-desc">Point your mic at your cat. Bum Bum listens to the meows, reads the mood in real time, and translates with total confidence. Free, unlimited, and your cat's audio never leaves your browser.</p>
 <div class="ct-layout">
 <div><div class="seg" role="group" aria-label="Translator mode"><button type="button" id="tabListen" class="on">🎙️ Listen</button><button type="button" id="tabBody">🐈 Body language</button></div></div>
 
@@ -115,7 +144,6 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <details><summary>Does my cat's audio leave my browser?</summary><p>No. Everything happens on your device. Bum Bum hears it, translates it, and forgets it immediately, like everything else you say.</p></details>
 <details><summary>Why is Bum Bum so rude?</summary><p>He is not rude. He is honest. There is a difference, and he will explain it at length.</p></details>
 <details><summary>Does it work on dogs?</summary><p>No. Dogs already understand English perfectly. They simply choose not to dignify your questions with a response.</p></details>
-<details><summary>Is it free?</summary><p>Yes. Translating cats is free and unlimited. Bum Bum considers it a public service.</p></details>
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>

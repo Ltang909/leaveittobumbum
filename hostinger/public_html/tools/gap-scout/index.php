@@ -34,14 +34,6 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Is Resume Gap Checker really free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. It is completely free. No account, no actions, no catch."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -127,7 +119,9 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .jd-break summary{cursor:pointer;font-weight:800;font-size:15px;padding:8px 0}
 .ok-note{background:#eef7ee;border:1px solid #bfe0bf;border-radius:10px;padding:10px 14px;font-size:14px;margin-top:10px}
 .warn-note{background:#fdf6e3;border:1px solid #e7d08a;border-radius:10px;padding:10px 14px;font-size:14px;margin-top:10px}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Resume Gap Checker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum the curious cat detective, on the hunt for missing skills"><h1>Find the gaps before they do.</h1><p class="lede">Upload your resume, drop in up to 5 job descriptions, and Bum Bum shows you the skills they keep asking for that your resume never mentions, with the exact line from each posting as proof. Paste the text or a link and Bum Bum fetches it. Everything happens in your browser, your resume never leaves your device, and it is free.</p>
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Resume Gap Checker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/cat-curious.png" alt="Bum Bum the curious cat detective, on the hunt for missing skills"><h1>Find the gaps before they do.</h1><p class="lede bb-desc">Upload your resume, drop in up to 5 job descriptions, and Bum Bum shows you the skills they keep asking for that your resume never mentions, with the exact line from each posting as proof. Paste the text or a link and Bum Bum fetches it. Everything happens in your browser, your resume never leaves your device, and it is free.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to scout gaps</h2><a class="button" href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -508,10 +502,6 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 });
 </script><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
-<details>
-<summary>Is Resume Gap Checker really free?</summary>
-<p>Yes. It is completely free. No account, no actions, no catch.</p>
-</details>
 <details>
 <summary>Do I need an account?</summary>
 <p>No. Just open the page and start.</p>
