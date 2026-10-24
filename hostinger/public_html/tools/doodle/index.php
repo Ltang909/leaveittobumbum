@@ -150,7 +150,7 @@ function updateHistBtns(){document.querySelector('#undoBtn').disabled=!history.l
 function pushHist(entry){history.push(entry);redoHist=[];updateHistBtns()}
 let drawing=false,cur=null;
 function pt(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height,p:e.pressure||0.5}}
-canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);drawing=true;const p0=pt(e);cur={color,size,eraser,pts:[p0],avgP:p0.p};redraw()});
+canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);drawing=true;if(!canvas.dataset.bbStroked){canvas.dataset.bbStroked='1';try{bbTrack('doodle_first_stroke',{pointer_type:e.pointerType||'unknown'})}catch(x){}}const p0=pt(e);cur={color,size,eraser,pts:[p0],avgP:p0.p};redraw()});
 canvas.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];for(const ev of evs){const p=pt(ev);cur.pts.push(p);cur.avgP=(cur.avgP*(cur.pts.length-1)+p.p)/cur.pts.length}redraw()});
 function endStroke(){if(!drawing)return;drawing=false;if(cur.pts.length){strokes.push(cur);pushHist({t:'add',s:cur})}cur=null;redraw()}
 canvas.addEventListener('pointerup',endStroke);canvas.addEventListener('pointercancel',endStroke);
@@ -187,6 +187,7 @@ const pngBtn=document.querySelector('#pngBtn');if(pngBtn)pngBtn.addEventListener
   const w=LOGICAL_W*2,h=logicalH()*2,off=document.createElement('canvas');off.width=w;off.height=h;
   render(off.getContext('2d'),w,h);
   download('doodle.png',off.toDataURL('image/png'));
+  try{bbTrack('doodle_export',{how:'png',strokes:strokes.length})}catch(e){}
 });
 function escXml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 const svgBtn=document.querySelector('#svgBtn');if(svgBtn)svgBtn.addEventListener('click',async()=>{
@@ -203,6 +204,7 @@ const svgBtn=document.querySelector('#svgBtn');if(svgBtn)svgBtn.addEventListener
   svg+='</svg>';
   const blob=new Blob([svg],{type:'image/svg+xml'});
   const url=URL.createObjectURL(blob);download('doodle.svg',url);setTimeout(()=>URL.revokeObjectURL(url),4000);
+  try{bbTrack('doodle_export',{how:'svg',strokes:strokes.length})}catch(e){}
 });
 const copyBtn=document.querySelector('#copyBtn');if(copyBtn)copyBtn.addEventListener('click',async()=>{
   const btn=copyBtn;
@@ -212,11 +214,14 @@ const copyBtn=document.querySelector('#copyBtn');if(copyBtn)copyBtn.addEventList
     render(off.getContext('2d'),w,h);
     const blob=await new Promise(r=>off.toBlob(r,'image/png'));
     await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+    try{bbTrack('doodle_export',{how:'copy',strokes:strokes.length})}catch(e){}
     btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);
   }catch(e){alert('Copy is not available in this browser. Use Download PNG instead.')}
 });
 window.addEventListener('resize',fitCanvas);
 fitCanvas();
+try{bbTrack('tool_opened',{tool:'doodle'})}catch(e){}
+(function(){var ok=false,readback=false,err='';try{var t=document.createElement('canvas');t.width=2;t.height=2;var g=t.getContext('2d');if(g){g.fillStyle='#ff0000';g.fillRect(0,0,2,2);var px=g.getImageData(0,0,1,1).data;readback=(px[0]>200&&px[1]<60&&px[2]<60);ok=!!ctx&&readback}}catch(e){err=String((e&&e.name)||e)}try{bbTrack('doodle_health',{ok:ok,readback:readback,ctx:!!ctx,dpr:window.devicePixelRatio||1,max_touch:navigator.maxTouchPoints||0,pointer_events:('PointerEvent' in window),w:window.innerWidth,h:window.innerHeight,error:err||undefined})}catch(e){}})();
 </script><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
