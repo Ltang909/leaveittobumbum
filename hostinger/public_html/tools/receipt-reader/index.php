@@ -152,6 +152,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2>Here is what Bum Bum read</h2>
 <div id="saveAllWrap" class="btnrow hidden" style="margin-top:0;margin-bottom:14px">
 <button type="button" class="button" id="saveAllBtn">Save to log</button>
+<button type="button" class="button secondary" id="dlCardsCsv">Download CSV of 1 receipt</button>
 <button type="button" class="button secondary" id="newBatchBtn">New batch</button>
 </div>
 <div id="cardsWrap"></div>
@@ -205,6 +206,7 @@ const resultsPanel=document.querySelector('#resultsPanel');
 const cardsWrap=document.querySelector('#cardsWrap');
 const saveAllWrap=document.querySelector('#saveAllWrap');
 const saveAllBtn=document.querySelector('#saveAllBtn');
+const dlCardsCsvBtn=document.querySelector('#dlCardsCsv');
 
 const MAX_BATCH=10;
 let queue=[];
@@ -378,7 +380,9 @@ async function saveCard(card){
 function updateSaveAll(){
   const unsaved=[...cardsWrap.children].filter(c=>!c.dataset.saved);
   saveAllWrap.classList.toggle('hidden',!unsaved.length);
-  saveAllBtn.textContent=unsaved.length>1?'Save all '+unsaved.length+' to log':'Save to log';
+  const n=unsaved.length,word=n===1?'receipt':'receipts';
+  saveAllBtn.textContent='Save '+n+' '+word+' to log';
+  dlCardsCsvBtn.textContent='Download CSV of '+n+' '+word;
 }
 saveAllBtn.addEventListener('click',async()=>{
   saveAllBtn.disabled=true;
@@ -386,6 +390,17 @@ saveAllBtn.addEventListener('click',async()=>{
     if(!card.dataset.saved)await saveCard(card);
   }
   saveAllBtn.disabled=false;
+});
+dlCardsCsvBtn.addEventListener('click',()=>{
+  const entries=[...cardsWrap.children].filter(c=>!c.dataset.saved).map(collectCard);
+  if(!entries.length)return;
+  const blob=new Blob([buildAllCsv(entries)],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='receipts-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  bbTrack('receipt_export',{how:'batch_cards',count:entries.length});
 });
 document.querySelector('#newBatchBtn').addEventListener('click',()=>{
   queue=[];cardCount=0;cardsWrap.innerHTML='';
