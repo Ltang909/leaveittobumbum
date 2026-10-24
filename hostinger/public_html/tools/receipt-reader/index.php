@@ -309,7 +309,7 @@ function addCard(p,rawText,fileName){
   card.dataset.currency=p.currency;
   card.innerHTML=
     '<div class="card-head"><b>Receipt '+cardCount+(p.vendor?' &middot; '+esc(p.vendor):'')+'</b></div>'+
-    '<div class="read-note">Bum Bum\'s best read, not gospel. Fix anything it misread, then save.</div>'+
+    '<div class="read-note">Bum Bum\'s best read, not gospel. Fix anything it misread, then save it to your log or download the CSV.</div>'+
     '<div class="top-fields"><label>Vendor<input class="fVendor" type="text" maxlength="120" value="'+esc(p.vendor)+'" placeholder="Store name"></label>'+
     '<label>Date<input class="fDate" type="date" value="'+esc(p.date)+'"></label></div>'+
     '<table class="items-table"><thead><tr><th>Item</th><th>Amount</th><th></th></tr></thead><tbody class="itemsBody"></tbody></table>'+
@@ -317,7 +317,7 @@ function addCard(p,rawText,fileName){
     '<div class="totals-grid"><label>Subtotal<input class="fSubtotal" type="text" inputmode="decimal" placeholder="0.00" value="'+esc(p.subtotal)+'"></label>'+
     '<label><span class="taxLabel">'+esc(p.taxLabel)+'</span><input class="fTax" type="text" inputmode="decimal" placeholder="0.00" value="'+esc(p.tax)+'"></label>'+
     '<label>Total<input class="fTotal" type="text" inputmode="decimal" placeholder="0.00" value="'+esc(p.total)+'"></label></div>'+
-    '<div class="btnrow"><button type="button" class="button saveOne">Save to log</button><button type="button" class="mini removeCard">Remove</button></div>'+
+    '<div class="btnrow"><button type="button" class="button saveOne">Save to log</button><button type="button" class="mini dlCsv">Download CSV</button><button type="button" class="mini removeCard">Remove</button></div>'+
     '<p class="card-note meta" style="font-size:13px"></p>'+
     '<details class="raw"><summary>Raw OCR text</summary><pre class="rawText"></pre></details>';
   const body=card.querySelector('.itemsBody');
@@ -326,6 +326,20 @@ function addCard(p,rawText,fileName){
   card.querySelector('.addRow').addEventListener('click',()=>body.appendChild(itemRow('','')));
   card.querySelector('.removeCard').addEventListener('click',()=>{card.remove();updateSaveAll()});
   card.querySelector('.saveOne').addEventListener('click',()=>saveCard(card));
+  card.querySelector('.dlCsv').addEventListener('click',()=>{
+    const note=card.querySelector('.card-note');
+    const d=collectCard(card);
+    if(!d.items.length&&!d.total){note.textContent='Nothing to download yet.';return}
+    const blob=new Blob([buildAllCsv([d])],{type:'text/csv'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    const slug=(d.vendor||'receipt').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'receipt';
+    a.download=slug+'-'+(d.date||new Date().toISOString().slice(0,10))+'.csv';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    bbTrack('receipt_export',{how:'single_card'});
+    note.textContent='CSV downloaded. No save needed.';
+  });
   cardsWrap.appendChild(card);
   updateSaveAll();
   if(cardsWrap.children.length===1)resultsPanel.scrollIntoView({behavior:'smooth',block:'start'});
