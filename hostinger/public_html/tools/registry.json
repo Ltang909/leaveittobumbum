@@ -71,6 +71,16 @@
       "mascot": "/bum/cat-excited-v2.png"
     },
     {
+      "key": "product-spin",
+      "name": "360 Spin",
+      "tag": "Video",
+      "icon": "🔄",
+      "description": "Line up photos of your product from a few angles, or drop in one short video, and Bum Bum builds an interactive 360 spin plus a GIF and video for your listings. Your media never leaves your device.",
+      "url": "/tools/product-spin/",
+      "cta": "Spin a product",
+      "mascot": "/bum/cat-sunglasses.png"
+    },
+    {
       "key": "invoice-chaser",
       "name": "Invoice Reminder",
       "tag": "Money",
