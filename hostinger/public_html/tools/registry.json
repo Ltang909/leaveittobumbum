@@ -61,26 +61,6 @@
       "mascot": "/bum/cat-paws-up.png"
     },
     {
-      "key": "emoji-mosaic",
-      "name": "Emoji Mosaic",
-      "tag": "Design",
-      "icon": "🧩",
-      "description": "Drop in a photo and Bum Bum rebuilds it as a mosaic of emoji, right in your browser. Download the PNG or copy the emoji text.",
-      "url": "/tools/emoji-mosaic/",
-      "cta": "Make a mosaic",
-      "mascot": "/bum/cat-excited-v2.png"
-    },
-    {
-      "key": "product-spin",
-      "name": "360 Spin",
-      "tag": "Video",
-      "icon": "🔄",
-      "description": "Line up photos of your product from a few angles, or drop in one short video, and Bum Bum builds an interactive 360 spin plus a GIF and video for your listings. Your media never leaves your device.",
-      "url": "/tools/product-spin/",
-      "cta": "Spin a product",
-      "mascot": "/bum/cat-sunglasses.png"
-    },
-    {
       "key": "invoice-chaser",
       "name": "Invoice Reminder",
       "tag": "Money",
