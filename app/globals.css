@@ -152,6 +152,8 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .page-head h1 { font-size:clamp(2.8rem,6vw,5rem); margin:0; }
 .page-body { padding:28px 0 110px; }
 .prose { max-width:780px; }
+.prose.blog-wide { max-width:none; }
+.prose.blog-wide a { text-decoration:underline; text-underline-offset:3px; }
 .prose h2 { font-size:clamp(1.7rem,3vw,2.4rem); margin:2em 0 .5em; }
 .prose p, .prose li { font-size:1.05rem; }
 .prose ul { padding-left:1.3em; }
