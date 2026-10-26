@@ -334,9 +334,10 @@ cropBtn.addEventListener('click',async()=>{
     resultWrap.classList.remove('hidden');
     resultWrap.scrollIntoView({behavior:'smooth',block:'center'});
     bbTrack('crop_done',{to:formatSel.value});
+    if(window.BBDropStrip)window.BBDropStrip.show('image-cropper');
   }catch(e){
     cropError.textContent=e.message==='actions'?'Out of actions for this month.':'Something went wrong with that crop. Try again?';
   }
   cropBtn.disabled=false;
 });
-</script><script src="/tools/capture-handoff.js"></script></main></body></html>
+</script><script src="/tools/capture-handoff.js"></script></main><script src="/tools/drop-strip.js"></script></body></html>

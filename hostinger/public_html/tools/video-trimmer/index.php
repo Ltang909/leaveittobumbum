@@ -255,6 +255,7 @@ trimBtn.addEventListener('click',async()=>{
     dlLink.href=resultUrl;dlLink.download=base+'-trimmed.mp4';
     resultCard.classList.remove('hidden');barFill.style.width='100%';progText.textContent='Done.';
     bbTrack('trim_done',{seconds:Math.round(b-a)});
+    if(window.BBDropStrip)window.BBDropStrip.show('video-trimmer');
     resultCard.scrollIntoView({behavior:'smooth',block:'center'});
   }catch(e){
     console.warn('trim failed at step '+step+': '+(e&&e.message),ffLogs.slice(-6));
@@ -265,4 +266,4 @@ trimBtn.addEventListener('click',async()=>{
     else trimError.textContent='Something went wrong finishing the trim. Try again?';
   }finally{trimBtn.disabled=false;setTimeout(()=>trimProgress.classList.add('hidden'),900)}
 });
-</script><script src="/tools/capture-handoff.js"></script></main></body></html>
+</script><script src="/tools/capture-handoff.js"></script></main><script src="/tools/drop-strip.js"></script></body></html>

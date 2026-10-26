@@ -303,6 +303,7 @@ processBtn.addEventListener('click',async()=>{
     renderQueue();
     if(blocked)break;
   }
+  if(queue.some(q=>q.status==='done')&&window.BBDropStrip)window.BBDropStrip.show('meal-scanner');
   if(blocked){
     queue.forEach(q=>{if(q.status==='queued')q.status='blocked'});
     batchError.textContent='Out of actions for this month. The meals above were scanned; the rest are waiting.';
@@ -446,4 +447,4 @@ document.querySelector('#newBatchBtn').addEventListener('click',()=>{
   renderQueue();
   document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'});
 });
-</script></main></body></html>
+</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js"></script><script src="/tools/drop-strip.js"></script></body></html>

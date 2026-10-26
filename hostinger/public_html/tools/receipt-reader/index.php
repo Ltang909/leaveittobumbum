@@ -293,6 +293,7 @@ processBtn.addEventListener('click',async()=>{
     }
     barFill.style.width='100%';
     progText.textContent='Done.';
+    if(queue.some(q=>q.status==='done')&&window.BBDropStrip)window.BBDropStrip.show('receipt-reader');
   }catch(e){
     batchError.textContent='Something went wrong reading those photos. Try again?';
   }finally{
@@ -573,4 +574,4 @@ function renderLog(log){
   });
 }
 fetchLogs();
-</script><section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-scan-receipts-into-a-spreadsheet/">How to scan receipts into a spreadsheet</a>.</p></section></main></body></html>
+</script><section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-scan-receipts-into-a-spreadsheet/">How to scan receipts into a spreadsheet</a>.</p></section></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js"></script><script src="/tools/drop-strip.js"></script></body></html>
