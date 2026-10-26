@@ -17,10 +17,12 @@ import { useDeskFace } from "../lib/desk-face";
 // the delayed-prompt pattern. On top of that brain, the desk layer:
 // example jobs rotate through the placeholder, typing @name calls a
 // tool directly (fuzzy-matched dropdown, the pick pins the destination),
-// he swaps hats when he routes something, rings a bell, reads along
-// while you type (his hero portrait does the faces now), peeks once if
-// you leave him hanging, and carries your file across the screen on its
-// way to the tool.
+// he swaps hats when he routes something, reads along while you type
+// (his hero portrait does the faces now), peeks once if you leave him
+// hanging, and carries your file across the screen on its way to the
+// tool. Before any hop to a tool page the desk leaves a sessionStorage
+// marker, so the tool page can greet you with a "carried over from the
+// front desk" banner (rendered by /tools/drop-strip.js).
 
 type CaptureResponse = {
   ok?: boolean;
@@ -62,6 +64,7 @@ const FACE_PEEK = "/bum/cat-peeking.png";
 const FACE_BOX = "/bum/cat-box-v2.png";
 
 const PLACEHOLDERS = [
+  "Start with @ to pick a tool, or just describe the job…",
   "Drop a receipt, get a spreadsheet…",
   "Paste a messy email, get the reply drafted…",
   "Photo of a poster? Get the calendar events.",
@@ -75,22 +78,22 @@ const PLACEHOLDERS = [
 // "e.g. ..." in their real input shape; file-first tools get the drop
 // instruction instead, since the desk is their drop zone too.
 const PIN_PLACEHOLDERS: Record<string, string> = {
-  clips: "Hit Log it and the recorder opens, right in your browser…",
+  clips: "Hit Do it! and the recorder opens, right in your browser…",
   notes: "e.g. Idea: a loyalty card, but for dog groomers…",
   cutline: "e.g. Netflix, $15.99, monthly",
   purrsuit: "e.g. Maria at Bloom Co, last spoke Tuesday, nudge her about the quote…",
   "corporate-bum-bum": "e.g. Applied to Stripe for the Growth Lead role today",
-  doodle: "Hit Log it and the sketchpad opens. Draw it there…",
+  doodle: "Hit Do it! and the sketchpad opens. Draw it there…",
   "invoice-chaser": "e.g. hud.io, $20.00, due in 2 weeks",
   "receipt-reader": "e.g. Starbucks, $6.40",
   "poster-to-calendar": "Drop the poster photo here…",
   "meal-scanner": "Drop the meal photo here…",
-  "gap-scout": "Hit Log it to open it, then drop your resume and the job post there…",
+  "gap-scout": "Hit Do it! to open it, then drop your resume and the job post there…",
   "video-trimmer": "Drop the video here to trim it…",
   "image-converter": "Drop the image here to convert it…",
   "image-cropper": "Drop the image here to crop it…",
   ghostwriter: "e.g. Paste a ramble or transcript, get hooks, a script, and a caption…",
-  audiogram: "Hit Log it to open it, then drop your MP3 there…",
+  audiogram: "Hit Do it! to open it, then drop your MP3 there…",
   "purr-code": "e.g. https://yourshop.com, whatever the code should open…",
   "sop-ify": "e.g. First we check the inbox, then we chase anything older than a day…",
   hearsay: "e.g. Just your brand name. He checks what the AIs say about it…",
@@ -249,6 +252,30 @@ function ssSet(key: string, value: string): void {
   }
 }
 
+function toolKeyFromUrl(url: string): string {
+  const m = url.match(/\/tools\/([^/]+)\//);
+  return m ? m[1] : "";
+}
+
+// Leave a "from the front desk" marker before any hop to a tool page.
+// /tools/drop-strip.js reads it on arrival and renders the handoff
+// banner, then clears it: at most one banner per handoff.
+function markDeskHandoff(
+  toolKey: string,
+  kind: "file" | "text" | "logged",
+  extra?: { name?: string; excerpt?: string; copied?: boolean }
+): void {
+  if (!toolKey) return;
+  try {
+    window.sessionStorage.setItem(
+      "bb-desk-handoff",
+      JSON.stringify({ tool: toolKey, kind, ...(extra || {}), ts: Date.now() })
+    );
+  } catch {
+    // No marker, no banner. The handoff itself still works.
+  }
+}
+
 export default function CaptureBar() {
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -257,6 +284,8 @@ export default function CaptureBar() {
   const [dragOver, setDragOver] = useState(false);
   const [result, setResult] = useState<Result>({ kind: "idle" });
   const [ambiguous, setAmbiguous] = useState<CaptureResponse | null>(null);
+  const [otherOpen, setOtherOpen] = useState(false);
+  const [otherNote, setOtherNote] = useState("");
   const [hatLine, setHatLine] = useState<string | null>(null);
   const [pinned, setPinned] = useState<Tool | null>(null);
   const [mention, setMention] = useState<{ start: number; query: string } | null>(null);
@@ -267,6 +296,7 @@ export default function CaptureBar() {
   const [crossing, setCrossing] = useState<{ img: string; name: string } | null>(null);
   const [phIndex, setPhIndex] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const focusedRef = useRef(false);
   const pinnedRef = useRef<Tool | null>(null);
@@ -348,40 +378,6 @@ export default function CaptureBar() {
     setHatLine(null);
   }
 
-  function ringBell() {
-    try {
-      const Ctor =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (Ctor) {
-        const ctx = new Ctor();
-        const t0 = ctx.currentTime;
-        [
-          { freq: 1567.98, vol: 0.22 },
-          { freq: 2093.0, vol: 0.1 },
-        ].forEach(({ freq, vol }) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "sine";
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(vol, t0);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.1);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(t0);
-          osc.stop(t0 + 1.15);
-        });
-        window.setTimeout(() => {
-          void ctx.close();
-        }, 1400);
-      }
-    } catch {
-      // No audio, no problem. The face still does the bit.
-    }
-    flashFace(FACE_EXCITED, 1100);
-    if (!reducedMotion()) deskFace.pop();
-  }
-
   async function getSession() {
     const session = await fetch("/api/session.php", { credentials: "same-origin" }).then((r) => r.json());
     initTracking(session);
@@ -403,7 +399,7 @@ export default function CaptureBar() {
       const d = (await res.json()) as { transcript?: string; error?: string };
       if (d && d.transcript) {
         setText(d.transcript);
-        setResult({ kind: "message", text: "Heard you. Tap Log it and I will file it." });
+        setResult({ kind: "message", text: "Heard you. Tap Do it! and I will file it." });
         if (textRef.current) textRef.current.focus();
       } else {
         setResult({ kind: "error", text: (d && d.error) || "Could not transcribe that." });
@@ -468,6 +464,7 @@ export default function CaptureBar() {
   function stashAndGo(f: File, url: string, name: string, via: string) {
     bbTrack("capture_routed", { destination: name, surface: "home", via });
     const tool = tools.find((t) => t.url === url);
+    markDeskHandoff(tool ? tool.key : toolKeyFromUrl(url), "file", { name: f.name });
     wearHat(tool ? tool.key : undefined, name);
     setResult({ kind: "working", text: "Sending \"" + f.name + "\" to " + name + ". Your file never leaves your device." });
     storeHandoff(f)
@@ -572,6 +569,8 @@ export default function CaptureBar() {
     if (!value || busy) return;
     setBusy(true);
     setAmbiguous(null);
+    setOtherOpen(false);
+    setOtherNote("");
     setResult({ kind: "working", text: "Filing it…" });
     try {
       const d = await fetchCapture(value, tool, fields, key || idemRef.current || idem());
@@ -617,6 +616,7 @@ export default function CaptureBar() {
         copied = false;
       }
     }
+    markDeskHandoff(tool.key, "text", { excerpt: value.slice(0, 90), copied });
     setResult({
       kind: "message",
       text: copied
@@ -667,6 +667,33 @@ export default function CaptureBar() {
       setBusy(false);
       setResult({ kind: "error", text: "Could not reach Bum Bum. Check your connection and try again." });
     }
+  }
+
+  // The ambiguous state's "Request it" path. /requests/ takes no
+  // prefill, so the desk does what it does elsewhere: your words ride
+  // along on the clipboard, and the desk says so before it takes you
+  // there. Nothing is charged for any of this; the ambiguous state
+  // never spends an action.
+  async function requestFromDesk() {
+    bbTrack("desk_other_selected", { path: "request" });
+    const value = text.trim();
+    let copied = false;
+    if (value && typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(value);
+        copied = true;
+      } catch {
+        copied = false;
+      }
+    }
+    setOtherNote(
+      copied
+        ? "Your words are copied. Paste them into the request form on the next page."
+        : "The request form is on the next page. Take your words with you."
+    );
+    window.setTimeout(() => {
+      window.location.href = "/requests/";
+    }, copied ? 1700 : 1000);
   }
 
   // Watch the caret for an @ that starts a mention: at the start of the
@@ -779,14 +806,7 @@ export default function CaptureBar() {
     >
       <div className="capture-home-card desk-card">
         <div className="desk-head">
-          <div>
-            <p className="kicker">The front desk</p>
-            <h2 className="desk-greeting">What are we handling today?</h2>
-            <p className="capture-home-invite">Drop it here, I will handle it. One action, same as using the tool itself.</p>
-          </div>
-          <button type="button" className="desk-bell" onClick={ringBell} aria-label="Ring the front desk bell" title="Ring for service">
-            🔔
-          </button>
+          <h2 className="desk-greeting">What are we handling today?</h2>
         </div>
         <div className="desk-composer-wrap">
           <div className="desk-composer">
@@ -882,9 +902,20 @@ export default function CaptureBar() {
               >
                 🎤
               </button>
+              <button
+                type="button"
+                className="desk-icon-btn"
+                onClick={() => {
+                  if (cameraInputRef.current) cameraInputRef.current.click();
+                }}
+                aria-label="Take a photo"
+                title="Take a photo"
+              >
+                📷
+              </button>
               <span className="desk-composer-spacer" />
               <button type="button" className="button" onClick={submit} disabled={busy}>
-                Log it
+                Do it!
               </button>
             </div>
           </div>
@@ -918,6 +949,7 @@ export default function CaptureBar() {
             </div>
           )}
         </div>
+        <p className="desk-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>
         <div className="desk-chips-row">
           <div className="capture-home-chips desk-task-chips">
             <button
@@ -972,6 +1004,21 @@ export default function CaptureBar() {
             }
           }}
         />
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            const f = e.target.files && e.target.files[0];
+            e.target.value = "";
+            if (f) {
+              setFile(f);
+              routeFile(f);
+            }
+          }}
+        />
         {file && !pendingImage && (
           <p className="capture-home-filechip">
             📎 {file.name} ({(file.size / 1048576).toFixed(1)} MB){" "}
@@ -994,13 +1041,30 @@ export default function CaptureBar() {
             <p className="capture-home-note">
               {result.text}{" "}
               {result.suggestUrl && (
-                <a href={result.suggestUrl}>Open {result.suggestName || "the tool"} →</a>
+                <a
+                  href={result.suggestUrl}
+                  onClick={() => {
+                    const key = toolKeyFromUrl(result.suggestUrl || "");
+                    if (key) markDeskHandoff(key, "text", { copied: false });
+                  }}
+                >
+                  Open {result.suggestName || "the tool"} →
+                </a>
               )}
             </p>
           )}
           {result.kind === "success" && (
             <p className="capture-home-success">
-              <b>✓ {result.summary}</b> <a href={result.url}>View in {result.toolName} →</a>
+              <b>✓ {result.summary}</b>{" "}
+              <a
+                href={result.url}
+                onClick={() => {
+                  const key = toolKeyFromUrl(result.url);
+                  if (key) markDeskHandoff(key, "logged", { excerpt: result.summary });
+                }}
+              >
+                View in {result.toolName} →
+              </a>
             </p>
           )}
           {result.kind === "error" && (
@@ -1034,7 +1098,37 @@ export default function CaptureBar() {
                     {o.tool_name}
                   </button>
                 ))}
+                <button type="button" className="capture-home-chip" onClick={() => setOtherOpen((v) => !v)}>
+                  Other
+                </button>
               </div>
+              {otherOpen && (
+                <div className="desk-other">
+                  <div className="desk-other-path">
+                    <p>
+                      <b>Already exists?</b> It might be sitting in the toolbox, just not one of the guesses above.
+                    </p>
+                    <a
+                      className="capture-home-chip desk-other-btn"
+                      href="#toolbox"
+                      onClick={() => bbTrack("desk_other_selected", { path: "toolbox" })}
+                    >
+                      Check the toolbox
+                    </a>
+                  </div>
+                  <div className="desk-other-path">
+                    <p>
+                      <b>Does not exist yet?</b> Request it in the community queue. The queue is public and
+                      demand driven, so there is no promised timeline. Want it guaranteed? Operators get one
+                      built within 36 hours.
+                    </p>
+                    <button type="button" className="capture-home-chip desk-other-btn" onClick={() => void requestFromDesk()}>
+                      Request it
+                    </button>
+                    {otherNote && <p className="capture-home-note">{otherNote}</p>}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
