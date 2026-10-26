@@ -160,6 +160,11 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .prose summary { cursor:pointer; font-weight:1000; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:14px; }
 .prose summary::-webkit-details-marker { display:none; }
 .prose details p { font-size:.95rem; margin-bottom:0; }
+.prose .table-wrap { overflow-x:auto; margin:1.4em 0; border:var(--line); border-radius:12px; }
+.prose table { border-collapse:collapse; width:100%; min-width:560px; font-size:.98rem; background:#fff; }
+.prose th, .prose td { padding:.6em .75em; text-align:left; vertical-align:top; border-bottom:1px solid #e3dcc8; }
+.prose thead th { background:var(--paper); border-bottom:var(--line); font-weight:900; }
+.prose tbody tr:last-child td { border-bottom:0; }
 @media (max-width:600px){ .nap-bubble{white-space:normal; width:max-content; max-width:88vw} }
 @media (prefers-reduced-motion:reduce){ .boing,.dance{animation:none} .confetti{display:none} .ticker.zoomies .ticker-track{animation-duration:28s} }
 
