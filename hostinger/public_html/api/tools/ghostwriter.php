@@ -66,6 +66,57 @@ function ghostwriter_clean(string $s): string {
     return $s;
 }
 
+function ghostwriter_extract_json(string $content): ?array {
+    $content = trim($content);
+    // Some models wrap the JSON in markdown fences despite strict instructions.
+    if (preg_match('/```(?:json)?\s*(\{.*\})\s*```/s', $content, $m)) {
+        $content = $m[1];
+    }
+    $pack = json_decode($content, true);
+    if (is_array($pack)) return $pack;
+    // Recovery pass: the model sometimes surrounds the object with prose or
+    // reasoning text. Take the outermost object span and try once more.
+    $first = strpos($content, '{');
+    $last = strrpos($content, '}');
+    if ($first !== false && $last !== false && $last > $first) {
+        $pack = json_decode(substr($content, $first, $last - $first + 1), true);
+        if (is_array($pack)) return $pack;
+    }
+    return null;
+}
+
+function ghostwriter_groq_round(array $payload, string $key): array {
+    $ch = curl_init('https://api.groq.com/openai/v1/chat/completions');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: Bearer ' . $key],
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_TIMEOUT => 60,
+        CURLOPT_CONNECTTIMEOUT => 10,
+    ]);
+    $raw = curl_exec($ch);
+    $err = curl_error($ch);
+    $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if ($raw === false || $err !== '') {
+        jsonResponse(['error' => 'The ghostwriter lost the plot. Try again in a moment.'], 502);
+    }
+    if ($code === 429) {
+        jsonResponse(['error' => 'The ghostwriter is swamped right now. Try again in a minute.'], 429);
+    }
+    if ($code < 200 || $code >= 300) {
+        jsonResponse(['error' => 'The ghostwriter tripped over its own paws. Try again.'], 502);
+    }
+    $data = json_decode((string) $raw, true);
+    $content = $data['choices'][0]['message']['content'] ?? '';
+    return [
+        'content' => is_string($content) ? $content : '',
+        'finish' => (string) ($data['choices'][0]['finish_reason'] ?? ''),
+        'code' => $code,
+    ];
+}
+
 function ghostwriter_call_groq(string $transcript, string $tone): array {
     $key = (string) (config()['groq_api_key'] ?? '');
     if ($key === '' || $key === 'replace_me') {
@@ -93,6 +144,10 @@ function ghostwriter_call_groq(string $transcript, string $tone): array {
     // next Groq retirement is a config tweak, not a code deploy.
     $model = trim((string) (config()['ghostwriter_model'] ?? ''));
     if ($model === '') $model = 'openai/gpt-oss-120b';
+    // The completion budget also pays for the model's reasoning tokens.
+    // A finished pack is small (~550 tokens), but 1600 left thin headroom
+    // on reasoning-heavy draws; 3000 gives the same retry-protected margin
+    // as the SOP endpoint without changing actual usage.
     $payload = [
         'model' => $model,
         'messages' => [
@@ -101,64 +156,51 @@ function ghostwriter_call_groq(string $transcript, string $tone): array {
         ],
         'response_format' => ['type' => 'json_object'],
         'temperature' => 0.8,
-        'max_tokens' => 1600,
+        'max_tokens' => 3000,
     ];
-    $ch = curl_init('https://api.groq.com/openai/v1/chat/completions');
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: Bearer ' . $key],
-        CURLOPT_POSTFIELDS => json_encode($payload),
-        CURLOPT_TIMEOUT => 60,
-        CURLOPT_CONNECTTIMEOUT => 10,
-    ]);
-    $raw = curl_exec($ch);
-    $err = curl_error($ch);
-    $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    if ($raw === false || $err !== '') {
-        jsonResponse(['error' => 'The ghostwriter lost the plot. Try again in a moment.'], 502);
-    }
-    if ($code === 429) {
-        jsonResponse(['error' => 'The ghostwriter is swamped right now. Try again in a minute.'], 429);
-    }
-    if ($code < 200 || $code >= 300) {
-        jsonResponse(['error' => 'The ghostwriter tripped over its own paws. Try again.'], 502);
-    }
-    $data = json_decode((string) $raw, true);
-    $content = $data['choices'][0]['message']['content'] ?? '';
-    // Some models wrap the JSON in markdown fences despite strict instructions.
-    if (is_string($content) && preg_match('/```(?:json)?\s*(\{.*\})\s*```/s', $content, $m)) {
-        $content = $m[1];
-    }
-    $pack = is_string($content) ? json_decode($content, true) : null;
-    if (!is_array($pack)) {
-        jsonResponse(['error' => 'The ghostwriter mumbled. Try again.'], 502);
-    }
-    $hooks = $pack['hooks'] ?? null;
-    $hashtags = $pack['hashtags'] ?? null;
-    $valid = is_array($hooks) && count($hooks) === 3
-        && is_string($pack['script'] ?? null) && trim((string) $pack['script']) !== ''
-        && is_string($pack['caption'] ?? null) && trim((string) $pack['caption']) !== ''
-        && is_array($hashtags) && count($hashtags) >= 3;
-    if ($valid) {
-        foreach ($hooks as $h) {
-            if (!is_array($h) || trim((string) ($h['hook'] ?? '')) === '' || trim((string) ($h['theme'] ?? '')) === '') { $valid = false; break; }
+    // One retry on a soft failure (unparseable or incomplete pack): a fresh
+    // sample usually lands. Failed calls never consume an action, and the
+    // caller's idempotency key protects the success path, so retrying here
+    // cannot double-charge. Hard failures (transport, 429, non-2xx) keep
+    // their own exits inside ghostwriter_groq_round().
+    for ($attempt = 1; $attempt <= 2; $attempt++) {
+        $round = ghostwriter_groq_round($payload, $key);
+        $pack = ghostwriter_extract_json($round['content']);
+        if ($pack === null) {
+            error_log('ghostwriter mumbled: branch=parse attempt=' . $attempt . ' http=' . $round['code']
+                . ' finish_reason=' . ($round['finish'] !== '' ? $round['finish'] : 'none')
+                . ' content_len=' . strlen($round['content']));
+            continue;
         }
+        $hooks = $pack['hooks'] ?? null;
+        $hashtags = $pack['hashtags'] ?? null;
+        $valid = is_array($hooks) && count($hooks) === 3
+            && is_string($pack['script'] ?? null) && trim((string) $pack['script']) !== ''
+            && is_string($pack['caption'] ?? null) && trim((string) $pack['caption']) !== ''
+            && is_array($hashtags) && count($hashtags) >= 3;
+        if ($valid) {
+            foreach ($hooks as $h) {
+                if (!is_array($h) || trim((string) ($h['hook'] ?? '')) === '' || trim((string) ($h['theme'] ?? '')) === '') { $valid = false; break; }
+            }
+        }
+        if (!$valid) {
+            error_log('ghostwriter mumbled: branch=validate attempt=' . $attempt . ' http=' . $round['code']
+                . ' finish_reason=' . ($round['finish'] !== '' ? $round['finish'] : 'none')
+                . ' content_len=' . strlen($round['content']));
+            continue;
+        }
+        $pack['hooks'] = array_values(array_map(function ($h) {
+            return [
+                'hook' => ghostwriter_clean((string) ($h['hook'] ?? '')),
+                'theme' => ghostwriter_clean(mb_substr((string) ($h['theme'] ?? ''), 0, 48)),
+            ];
+        }, array_slice($hooks, 0, 3)));
+        $pack['script'] = ghostwriter_clean((string) $pack['script']);
+        $pack['caption'] = ghostwriter_clean((string) $pack['caption']);
+        $pack['hashtags'] = array_values(array_map('ghostwriter_clean', array_slice($hashtags, 0, 10)));
+        return $pack;
     }
-    if (!$valid) {
-        jsonResponse(['error' => 'The ghostwriter mumbled. Try again.'], 502);
-    }
-    $pack['hooks'] = array_values(array_map(function ($h) {
-        return [
-            'hook' => ghostwriter_clean((string) ($h['hook'] ?? '')),
-            'theme' => ghostwriter_clean(mb_substr((string) ($h['theme'] ?? ''), 0, 48)),
-        ];
-    }, array_slice($hooks, 0, 3)));
-    $pack['script'] = ghostwriter_clean((string) $pack['script']);
-    $pack['caption'] = ghostwriter_clean((string) $pack['caption']);
-    $pack['hashtags'] = array_values(array_map('ghostwriter_clean', array_slice($hashtags, 0, 10)));
-    return $pack;
+    jsonResponse(['error' => 'The ghostwriter mumbled. Try again.'], 502);
 }
 
 requirePost();

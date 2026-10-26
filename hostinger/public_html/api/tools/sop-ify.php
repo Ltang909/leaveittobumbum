@@ -22,36 +22,26 @@ function sopify_clean(string $s): string {
     return $s;
 }
 
-function sopify_call_groq(string $dump, string $helperFor): array {
-    $key = (string) (config()['groq_api_key'] ?? '');
-    if ($key === '' || $key === 'replace_me') {
-        jsonResponse(['error' => 'SOP Generator is not set up on the server yet.'], 503);
+function sopify_extract_json(string $content): ?array {
+    $content = trim($content);
+    // Some models wrap the JSON in markdown fences despite strict instructions.
+    if (preg_match('/```(?:json)?\s*(\{.*\})\s*```/s', $content, $m)) {
+        $content = $m[1];
     }
-    $who = $helperFor !== '' ? ' It will be followed by ' . $helperFor . '.' : '';
-    $system = 'You are Bum Bum\'s operations helper, writing for small business owners and solopreneurs who are about to hand a task to a helper, VA, or new hire.' . $who
-        . ' The user pasted a chaotic brain-dump describing how they do something in their business. Turn it into a clean, complete step-by-step playbook (SOP) that a brand-new helper could follow with zero prior context. '
-        . 'Rules: '
-        . '1) title: a short, clear name for this process. '
-        . '2) purpose: 1-2 sentences on what this process achieves and when to do it. '
-        . '3) steps: the full process as numbered steps, in the order they must happen. Each step has a short imperative title ("Confirm the booking") and a 1-2 sentence detail with the specifics. Fill obvious gaps with sensible defaults, but never invent prices, dates, names, passwords, or tools the user did not mention; write "ask the owner" instead of guessing those. '
-        . '4) materials: anything the helper needs before starting (tools, logins, supplies). Empty array if none are clear. '
-        . '5) tips: 2-4 gotchas or pro tips that only someone who has done this would know. Empty array if none. '
-        . '6) checklist: a short checkbox version of the steps, 5-10 items, each under 10 words. '
-        . '7) Write for a brand-new helper: define any jargon, be explicit about handoffs and anything needing the owner\'s approval. '
-        . '8) NEVER use em dashes or en dashes anywhere in the output. Use commas, colons, or parentheses instead. '
-        . 'Output STRICT JSON only, no other text: {"title": "...", "purpose": "...", "steps": [{"step": "...", "detail": "..."}], "materials": ["..."], "tips": ["..."], "checklist": ["..."]}';
-    $model = trim((string) (config()['sopify_model'] ?? ''));
-    if ($model === '') $model = 'openai/gpt-oss-120b';
-    $payload = [
-        'model' => $model,
-        'messages' => [
-            ['role' => 'system', 'content' => $system],
-            ['role' => 'user', 'content' => $dump],
-        ],
-        'response_format' => ['type' => 'json_object'],
-        'temperature' => 0.5,
-        'max_tokens' => 2000,
-    ];
+    $book = json_decode($content, true);
+    if (is_array($book)) return $book;
+    // Recovery pass: the model sometimes surrounds the object with prose or
+    // reasoning text. Take the outermost object span and try once more.
+    $first = strpos($content, '{');
+    $last = strrpos($content, '}');
+    if ($first !== false && $last !== false && $last > $first) {
+        $book = json_decode(substr($content, $first, $last - $first + 1), true);
+        if (is_array($book)) return $book;
+    }
+    return null;
+}
+
+function sopify_groq_round(array $payload, string $key): array {
     $ch = curl_init('https://api.groq.com/openai/v1/chat/completions');
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -76,13 +66,14 @@ function sopify_call_groq(string $dump, string $helperFor): array {
     }
     $data = json_decode((string) $raw, true);
     $content = $data['choices'][0]['message']['content'] ?? '';
-    if (is_string($content) && preg_match('/```(?:json)?\s*(\{.*\})\s*```/s', $content, $m)) {
-        $content = $m[1];
-    }
-    $book = is_string($content) ? json_decode($content, true) : null;
-    if (!is_array($book)) {
-        jsonResponse(['error' => 'SOP Generator mumbled. Try again.'], 502);
-    }
+    return [
+        'content' => is_string($content) ? $content : '',
+        'finish' => (string) ($data['choices'][0]['finish_reason'] ?? ''),
+        'code' => $code,
+    ];
+}
+
+function sopify_clean_book(array $book): array {
     $book['title'] = sopify_clean(trim((string) ($book['title'] ?? '')));
     $book['purpose'] = sopify_clean(trim((string) ($book['purpose'] ?? '')));
     $steps = [];
@@ -108,10 +99,67 @@ function sopify_call_groq(string $dump, string $helperFor): array {
     $book['materials'] = $cleanList($book['materials'] ?? [], 10, 160);
     $book['tips'] = $cleanList($book['tips'] ?? [], 6, 240);
     $book['checklist'] = $cleanList($book['checklist'] ?? [], 12, 120);
-    if ($book['title'] === '' || $book['purpose'] === '' || count($steps) < 2) {
-        jsonResponse(['error' => 'SOP Generator mumbled. Try again.'], 502);
-    }
     return $book;
+}
+
+function sopify_call_groq(string $dump, string $helperFor): array {
+    $key = (string) (config()['groq_api_key'] ?? '');
+    if ($key === '' || $key === 'replace_me') {
+        jsonResponse(['error' => 'SOP Generator is not set up on the server yet.'], 503);
+    }
+    $who = $helperFor !== '' ? ' It will be followed by ' . $helperFor . '.' : '';
+    $system = 'You are Bum Bum\'s operations helper, writing for small business owners and solopreneurs who are about to hand a task to a helper, VA, or new hire.' . $who
+        . ' The user pasted a chaotic brain-dump describing how they do something in their business. Turn it into a clean, complete step-by-step playbook (SOP) that a brand-new helper could follow with zero prior context. '
+        . 'Rules: '
+        . '1) title: a short, clear name for this process. '
+        . '2) purpose: 1-2 sentences on what this process achieves and when to do it. '
+        . '3) steps: the full process as numbered steps, in the order they must happen. Each step has a short imperative title ("Confirm the booking") and a 1-2 sentence detail with the specifics. Fill obvious gaps with sensible defaults, but never invent prices, dates, names, passwords, or tools the user did not mention; write "ask the owner" instead of guessing those. '
+        . '4) materials: anything the helper needs before starting (tools, logins, supplies). Empty array if none are clear. '
+        . '5) tips: 2-4 gotchas or pro tips that only someone who has done this would know. Empty array if none. '
+        . '6) checklist: a short checkbox version of the steps, 5-10 items, each under 10 words. '
+        . '7) Write for a brand-new helper: define any jargon, be explicit about handoffs and anything needing the owner\'s approval. '
+        . '8) NEVER use em dashes or en dashes anywhere in the output. Use commas, colons, or parentheses instead. '
+        . 'Output STRICT JSON only, no other text: {"title": "...", "purpose": "...", "steps": [{"step": "...", "detail": "..."}], "materials": ["..."], "tips": ["..."], "checklist": ["..."]}';
+    $model = trim((string) (config()['sopify_model'] ?? ''));
+    if ($model === '') $model = 'openai/gpt-oss-120b';
+    // The completion budget also pays for the model's reasoning tokens, and
+    // a full 30-step playbook runs long: at 2000 total, real responses were
+    // being cut off mid-JSON. 6000 leaves generous headroom over the largest
+    // playbook this endpoint can legitimately return; actual usage stays ~2k.
+    $payload = [
+        'model' => $model,
+        'messages' => [
+            ['role' => 'system', 'content' => $system],
+            ['role' => 'user', 'content' => $dump],
+        ],
+        'response_format' => ['type' => 'json_object'],
+        'temperature' => 0.5,
+        'max_tokens' => 6000,
+    ];
+    // One retry on a soft failure (unparseable or incomplete playbook): a
+    // fresh sample usually lands. Failed calls never consume an action, and
+    // the caller's idempotency key protects the success path, so retrying
+    // here cannot double-charge. Hard failures (transport, 429, non-2xx)
+    // keep their own exits inside sopify_groq_round().
+    for ($attempt = 1; $attempt <= 2; $attempt++) {
+        $round = sopify_groq_round($payload, $key);
+        $parsed = sopify_extract_json($round['content']);
+        if ($parsed === null) {
+            error_log('sop-ify mumbled: branch=parse attempt=' . $attempt . ' http=' . $round['code']
+                . ' finish_reason=' . ($round['finish'] !== '' ? $round['finish'] : 'none')
+                . ' content_len=' . strlen($round['content']));
+            continue;
+        }
+        $book = sopify_clean_book($parsed);
+        if ($book['title'] === '' || $book['purpose'] === '' || count($book['steps']) < 2) {
+            error_log('sop-ify mumbled: branch=validate attempt=' . $attempt . ' http=' . $round['code']
+                . ' finish_reason=' . ($round['finish'] !== '' ? $round['finish'] : 'none')
+                . ' content_len=' . strlen($round['content']));
+            continue;
+        }
+        return $book;
+    }
+    jsonResponse(['error' => 'SOP Generator mumbled. Try again.'], 502);
 }
 
 requirePost();
