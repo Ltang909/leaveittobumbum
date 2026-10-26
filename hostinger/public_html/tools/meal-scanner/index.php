@@ -87,7 +87,24 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .items-table td.scale{width:104px}
 .items-table td.scale select{width:100%;padding:8px 6px;border:1px solid #ddd1b8;border-radius:8px;font:inherit;background:#fff}
 .items-table td.del{width:44px;text-align:center}
-.row-del{border:1px solid #ddd1b8;background:#fff;border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;line-height:1}
+.row-del{border:1px solid #ddd1b8;background:#fff;border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;line-height:1;margin-top:0}
+/* On phones the item columns squeeze into mush, so each item becomes
+   a small card of its own: every field gets its own full-width row
+   with its label on top (the data-labels the row builder stamps),
+   and the remove button pins to the card's top corner, obviously
+   attached to its item. Desktop keeps the table exactly as it was. */
+@media(max-width:860px){
+.table-scroll{overflow-x:visible}
+.items-table{min-width:0}
+.items-table thead{display:none}
+.items-table,.items-table tbody,.items-table tr,.items-table td{display:block}
+.items-table tr{position:relative;border:1px solid #e7dcc3;border-radius:10px;background:#fff;padding:12px;margin-bottom:10px}
+.items-table td{border-bottom:none;padding:5px 0;width:auto}
+.items-table td.num,.items-table td.scale{width:auto}
+.items-table td[data-label]::before{content:attr(data-label);display:block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;opacity:.55;margin-bottom:4px}
+.items-table td:first-child{padding-right:46px}
+.items-table td.del{position:absolute;top:10px;right:10px;width:auto;padding:0}
+}
 .unc{font-weight:900;color:#b3541e;cursor:help}
 .totals-bar{background:#fdf8ef;border:1px solid #e7dcc3;border-radius:10px;padding:12px 14px;margin-top:14px;font-size:15px}
 .totals-bar b{font-size:17px}
@@ -363,13 +380,13 @@ function itemRow(it){
   tr.dataset.baseCal=it.calories||0;tr.dataset.baseLow=it.caloriesLow||0;tr.dataset.baseHigh=it.caloriesHigh||0;
   tr.dataset.baseP=it.protein||0;tr.dataset.baseC=it.carbs||0;tr.dataset.baseF=it.fat||0;
   tr.innerHTML=
-    '<td><input type="text" class="iName" maxlength="120" value="'+esc(it.name)+'" aria-label="Item name">'+(it.uncertain?' <span class="unc" title="Hard to eyeball, so this one is extra rough">~</span>':'')+'</td>'+
-    '<td><input type="text" class="iPortion" maxlength="80" value="'+esc(it.portion)+'" aria-label="Portion"></td>'+
-    '<td class="num"><input type="text" class="iCal" inputmode="numeric" value="'+(it.calories||'')+'" aria-label="Calories"></td>'+
-    '<td class="num"><input type="text" class="iP" inputmode="numeric" value="'+(it.protein||'')+'" aria-label="Protein grams"></td>'+
-    '<td class="num"><input type="text" class="iC" inputmode="numeric" value="'+(it.carbs||'')+'" aria-label="Carbs grams"></td>'+
-    '<td class="num"><input type="text" class="iF" inputmode="numeric" value="'+(it.fat||'')+'" aria-label="Fat grams"></td>'+
-    '<td class="scale"><select class="iScale" aria-label="Portion size"><option value="0.5">Half</option><option value="0.75">Bit less</option><option value="1" selected>As seen</option><option value="1.5">Bit more</option><option value="2">Double</option></select></td>'+
+    '<td data-label="Item"><input type="text" class="iName" maxlength="120" value="'+esc(it.name)+'" aria-label="Item name">'+(it.uncertain?' <span class="unc" title="Hard to eyeball, so this one is extra rough">~</span>':'')+'</td>'+
+    '<td data-label="Portion"><input type="text" class="iPortion" maxlength="80" value="'+esc(it.portion)+'" aria-label="Portion"></td>'+
+    '<td class="num" data-label="Calories"><input type="text" class="iCal" inputmode="numeric" value="'+(it.calories||'')+'" aria-label="Calories"></td>'+
+    '<td class="num" data-label="Protein g"><input type="text" class="iP" inputmode="numeric" value="'+(it.protein||'')+'" aria-label="Protein grams"></td>'+
+    '<td class="num" data-label="Carbs g"><input type="text" class="iC" inputmode="numeric" value="'+(it.carbs||'')+'" aria-label="Carbs grams"></td>'+
+    '<td class="num" data-label="Fat g"><input type="text" class="iF" inputmode="numeric" value="'+(it.fat||'')+'" aria-label="Fat grams"></td>'+
+    '<td class="scale" data-label="Size"><select class="iScale" aria-label="Portion size"><option value="0.5">Half</option><option value="0.75">Bit less</option><option value="1" selected>As seen</option><option value="1.5">Bit more</option><option value="2">Double</option></select></td>'+
     '<td class="del"><button type="button" class="row-del" aria-label="Remove item">×</button></td>';
   tr.querySelector('.row-del').addEventListener('click',()=>{const card=tr.closest('.meal-card');tr.remove();if(card)refreshTotals(card)});
   tr.querySelector('.iScale').addEventListener('change',()=>{
@@ -448,4 +465,4 @@ document.querySelector('#newBatchBtn').addEventListener('click',()=>{
   renderQueue();
   document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'});
 });
-</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r12"></script></body></html>
+</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r13"></script></body></html>
