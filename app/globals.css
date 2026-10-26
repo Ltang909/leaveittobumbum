@@ -284,6 +284,9 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .hero-top { display:grid; grid-template-columns:1.08fr .92fr; align-items:center; gap:36px; }
 .hero-desk .fine { margin-bottom:0; margin-top:10px; }
 .hero-desk .capture-home { width:100%; padding-top:2px; }
+/* The desk block breathes a little below the hero above it. Scoped to
+   the homepage front desk section itself, not the card's padding. */
+.capture-home.front-desk { margin-top:20px; }
 .hero-desk .eyebrow { margin-bottom:12px; }
 .hero-desk .lede { margin:18px 0 14px; }
 .hero-desk h1 { font-size:clamp(1.9rem, 4.3vw, 3.55rem); }
@@ -367,9 +370,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .capture-home-filechip { margin:14px 0 0; font-weight:700; display:flex; align-items:center; gap:10px; }
 .capture-home-filechip button { border:var(--line); background:white; border-radius:50%; width:26px; height:26px; cursor:pointer; font-weight:900; line-height:1; flex:none; display:grid; place-items:center; padding:0; }
 .bb-file-preview { width:48px; height:48px; object-fit:cover; border:var(--line); border-radius:10px; flex:none; background:white; }
-.bb-file-preview-lg { width:56px; height:56px; }
 .bb-file-preview-icon { display:grid; place-items:center; font-size:1.25rem; }
-.capture-home-picker-preview { margin-top:14px; }
 .desk-rec-row { display:flex; align-items:center; gap:12px; margin-top:12px; flex-wrap:wrap; }
 .desk-rec-dot { width:12px; height:12px; border-radius:50%; background:var(--orange); flex:none; animation:desk-rec-pulse 1.1s ease-in-out infinite; }
 @keyframes desk-rec-pulse { 0%,100% { opacity:1; } 50% { opacity:.25; } }
