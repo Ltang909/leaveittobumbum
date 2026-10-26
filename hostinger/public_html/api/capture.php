@@ -11,7 +11,9 @@ declare(strict_types=1);
  * misfiled: the box records things, it doesn't perform tasks.
  *
  * How it works:
- *   1. Signed-in session + CSRF (same as every other tool endpoint).
+ *   1. Session + CSRF (same as every other tool endpoint). The subject may
+ *      be a signed-in user or a guest; destinations meter either, exactly
+ *      as if the visitor had used the tool directly.
  *   2. Session rate limit: 30 captures/hour (bounds LLM spend).
  *   3. Keyword fast path for obvious receipts ("Starbucks $6.40"): no LLM.
  *   3b. Task-intent fast path ("convert mp4 to wav", "crop a picture"):
@@ -250,13 +252,19 @@ function capture_loopback(string $endpoint, array $payload): array {
     // Release the session lock first: the loopback request needs the same
     // session, and PHP would otherwise block on our own lock forever.
     session_write_close();
+    // Forward the guest cookie too: destinations resolve the visitor's guest
+    // subject from it, so a guest capture meters (and merges) as that guest.
+    $cookie = session_name() . '=' . session_id();
+    if (!empty($_COOKIE[GUEST_COOKIE_NAME])) {
+        $cookie .= '; ' . GUEST_COOKIE_NAME . '=' . $_COOKIE[GUEST_COOKIE_NAME];
+    }
     $ch = curl_init($url);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => [
             'Content-Type: application/json',
-            'Cookie: ' . session_name() . '=' . session_id(),
+            'Cookie: ' . $cookie,
         ],
         CURLOPT_POSTFIELDS => json_encode($payload),
         CURLOPT_TIMEOUT => 45,
@@ -395,7 +403,11 @@ function capture_idempotency(array $input): string {
 requirePost();
 $input = body();
 requireCsrf($input);
-$user = requireUser(); // capture box lives on the logged-in dashboard (v1)
+// Users and guests alike: the box now lives on the homepage and on tool
+// pages, not just the dashboard. Destinations meter whoever the subject is
+// (a guest capture spends one of the guest's free actions, same as using
+// the tool itself), and the delayed account prompt handles the signup ask.
+$subject = requireSubject();
 
 // Session rate limit: 30 captures/hour bounds LLM + loopback spend.
 startSecureSession();
@@ -534,7 +546,7 @@ $data = $res['data'];
 $usage = $data['usage'] ?? null;
 if ($usage === null) {
     try {
-        $usage = subjectUsage(['kind' => 'user', 'user' => $user, 'bill' => billingUser($user)]);
+        $usage = subjectUsage($subject);
     } catch (Throwable $e) {
         $usage = null;
     }

@@ -5,6 +5,7 @@ import { tools, Tool } from "./lib/tools";
 import { SiteHeader, SiteFooter } from "./components/chrome";
 import { useRequestTool } from "./components/request-tool";
 import { PlanCta } from "./components/plan-ctas";
+import CaptureBar from "./components/capture-bar";
 
 const plans = [
   { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["All current tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
@@ -135,6 +136,8 @@ export default function Home() {
           <div className="stamp">BUILT FOR<br /><b>REAL WORK</b></div>
         </div>
       </section>
+
+      <CaptureBar />
 
       <section className={`ticker${napZoom ? " zoomies" : ""}`} aria-label="Examples"><div className="ticker-track">{[0, 1].map((copy) => (<div className="ticker-chunk" key={copy} aria-hidden={copy === 1 || undefined}>{["QUOTE IT", "CHASE IT", "SORT IT", "PRICE IT", "SEND IT", "LEAVE IT TO BUM BUM"].map((t) => (<span key={t} className="ticker-item">{t}<i>✦</i></span>))}</div>))}</div></section>
 

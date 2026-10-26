@@ -189,7 +189,7 @@ convertBtn.addEventListener('click',async()=>{
   if(!files.length)return;
   convError.textContent='';convertBtn.disabled=true;convProgress.classList.remove('hidden');
   const mime=formatSel.value,ext=EXT[mime],quality=qualityRange.value/100;
-  const total=files.length;let done=0,blocked=false;
+  const total=files.length;let done=0,blocked=false,okCount=0;
   for(const f of files){
     done++;barFill.style.width=(done/total*90)+'%';progText.textContent='Converting '+done+' of '+total+'...';
     const row=document.createElement('div');row.className='conv-item';
@@ -207,14 +207,16 @@ convertBtn.addEventListener('click',async()=>{
       const a=document.createElement('a');a.className='dl';a.href=url;a.download=base+'.'+ext;a.textContent='Download';
       row.appendChild(a);resultList.appendChild(row);
       bbTrack('convert_done',{from:f.type,to:mime});
+      okCount++;
     }catch(e){
       if(e.message==='actions'){blocked=true;row.innerHTML='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Out of actions for this month.</span></div>';resultList.appendChild(row);break}
       row.innerHTML='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Bum Bum could not read that file. Try a PNG or JPG?</span></div>';resultList.appendChild(row);
     }
   }
   barFill.style.width='100%';progText.textContent=blocked?'Stopped: out of actions.':'Done.';
+  if(okCount>0&&window.BBDropStrip)window.BBDropStrip.show('image-converter');
   files=[];refreshButtons();convertBtn.disabled=false;
   setTimeout(()=>convProgress.classList.add('hidden'),900);
   resultList.scrollIntoView({behavior:'smooth',block:'center'});
 });
-</script><script src="/tools/capture-handoff.js"></script></main></body></html>
+</script><script src="/tools/capture-handoff.js"></script></main><script src="/tools/drop-strip.js"></script></body></html>
