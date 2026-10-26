@@ -131,4 +131,4 @@ load();
 <p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap photos of up to 10 receipts at once.</p>
 <p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-find-subscriptions-you-forgot-about/">How to find subscriptions you forgot about (and cancel them)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r14"></script></body></html>
+<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-find-subscriptions-you-forgot-about/">How to find subscriptions you forgot about (and cancel them)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>

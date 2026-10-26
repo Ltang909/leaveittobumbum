@@ -1536,10 +1536,80 @@
       } catch (e) {}
     }
 
+    // A second override, and this one has to wait: a homepage-desk
+    // file handoff to the Image Cropper lands on the image itself once
+    // it is on stage. The file arrives async (the IndexedDB stash, then
+    // the page probes it before unhiding the crop area), so at banner
+    // time there is usually no image to scroll to. The page unhides
+    // #cropArea in the same breath as it points #cropImg at the
+    // handed-off file, so watch for exactly that; when it lands, this
+    // scroll replaces the banner landing above (the later, deliberate
+    // scroll wins). If the image never shows, the watch expires and
+    // the banner landing stands, so nobody is left unscrolled.
+    // Dismissing the banner cancels the watch: the visitor has taken
+    // the wheel. The scroll target is #cropStage, the box that wraps
+    // the image as displayed (the img fills it; the crop box and dim
+    // overlays are positioned over it), so landing on the stage IS
+    // landing on the image.
+    var stopCropWatch = null;
+    function watchCropStage() {
+      var area = null, stage = null, img = null;
+      try {
+        area = document.querySelector("#cropArea");
+        stage = document.querySelector("#cropStage");
+        img = document.querySelector("#cropImg");
+      } catch (e) {}
+      if (!area || !stage) return;
+      var stopped = false;
+      var obs = null;
+      var timer = null;
+      function stop() {
+        if (stopped) return;
+        stopped = true;
+        if (obs) { try { obs.disconnect(); } catch (e) {} obs = null; }
+        if (timer) { try { clearTimeout(timer); } catch (e) {} timer = null; }
+        if (img) { try { img.removeEventListener("load", onStage); } catch (e) {} }
+        if (stopCropWatch === stop) stopCropWatch = null;
+      }
+      function onStage() {
+        if (stopped) return;
+        var shown = false, loaded = false;
+        try {
+          shown = !area.classList.contains("hidden");
+          loaded = !!(img && (img.getAttribute("src") || img.src));
+        } catch (e) {}
+        if (!shown || !loaded) return;
+        stop();
+        try {
+          var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+          if (typeof stage.scrollIntoView === "function") {
+            stage.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+          }
+        } catch (e) {}
+      }
+      // The handoff may have beaten the banner to the draw.
+      onStage();
+      if (stopped) return;
+      if (typeof MutationObserver === "function") {
+        try {
+          obs = new MutationObserver(onStage);
+          obs.observe(area, { attributes: true, attributeFilter: ["class"] });
+          if (img) obs.observe(img, { attributes: true, attributeFilter: ["src"] });
+        } catch (e) { obs = null; }
+      }
+      if (img) { try { img.addEventListener("load", onStage); } catch (e) {} }
+      timer = setTimeout(stop, 20000);
+      stopCropWatch = stop;
+    }
+    if (data.tool === "image-cropper" && data.origin === "desk" && data.kind === "file") {
+      watchCropStage();
+    }
+
     var gone = false;
     function remove() {
       if (gone) return;
       gone = true;
+      if (stopCropWatch) { try { stopCropWatch(); } catch (e) {} stopCropWatch = null; }
       document.removeEventListener("input", onUse, true);
       document.removeEventListener("change", onUse, true);
       document.removeEventListener("pointerdown", onUse, true);

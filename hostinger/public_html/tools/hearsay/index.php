@@ -218,4 +218,4 @@ loadScans();
 <p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
 <p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r14"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
