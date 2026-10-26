@@ -53,11 +53,10 @@
   var PLACEHOLDERS = [
     "Start with @ to pick a tool, or just describe the job\u2026",
     "Drop a receipt, get a spreadsheet\u2026",
-    "Paste a messy email, get the reply drafted\u2026",
-    "Photo of a poster? Get the calendar events.",
-    "Netflix $15.99 a month, file it\u2026",
-    "Say it out loud, get it in writing\u2026",
-    "Applied to Stripe today, log it\u2026"
+    "Photo of an event poster? Add it to your calendar",
+    "Netflix $15.99 a month, track it as part of your subscriptions",
+    "transcribe your spoken thoughts",
+    "Photo of your meal? Turn it into tracked calories and macros"
   ];
   var PIN_PLACEHOLDERS = {
     clips: "Hit Log it! and the recorder opens, right in your browser\u2026",

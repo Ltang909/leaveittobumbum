@@ -62,11 +62,10 @@ const FACE_PETPET = "/bum/petpet/box.png";
 const PLACEHOLDERS = [
   "Start with @ to pick a tool, or just describe the job…",
   "Drop a receipt, get a spreadsheet…",
-  "Paste a messy email, get the reply drafted…",
-  "Photo of a poster? Get the calendar events.",
-  "Netflix $15.99 a month, file it…",
-  "Say it out loud, get it in writing…",
-  "Applied to Stripe today, log it…",
+  "Photo of an event poster? Add it to your calendar",
+  "Netflix $15.99 a month, track it as part of your subscriptions",
+  "transcribe your spoken thoughts",
+  "Photo of your meal? Turn it into tracked calories and macros",
 ];
 
 // While a tool is pinned with @, the rotating examples step aside for a
@@ -95,6 +94,63 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   hearsay: "e.g. Just your brand name. He checks what the AIs say about it…",
   "video-converter": "Drop the video here to convert it…",
 };
+
+// The task chips under the desk: a pool of twenty, one per tool. When a
+// session starts, four are drawn at random and kept for the whole session
+// (persisted in sessionStorage), so different visitors meet different
+// tools first and the set never reshuffles mid-session. "picker" chips
+// open the file picker with the destination locked; the rest pin and
+// focus the box (type-style tools file what you type; opens-style tools
+// open on Do it! with an empty box, per their pin placeholders). "chip"
+// is the tracking identity the desk_chip event has always carried.
+type ChipDef = { key: string; chip: string; label: string; picker?: string };
+const CHIP_POOL: ChipDef[] = [
+  { key: "receipt-reader", chip: "receipts", label: "Read my receipts", picker: "image/*" },
+  { key: "invoice-chaser", chip: "invoice", label: "Chase an invoice" },
+  { key: "poster-to-calendar", chip: "poster", label: "Event posters to your calendar", picker: "image/*" },
+  { key: "notes", chip: "voice-note", label: "Transcribe a voice note", picker: "audio/*" },
+  { key: "cutline", chip: "subscription", label: "Track a subscription" },
+  { key: "corporate-bum-bum", chip: "job-application", label: "Log a job application" },
+  { key: "purrsuit", chip: "nudge", label: "Nudge a client" },
+  { key: "meal-scanner", chip: "meal", label: "Scan my meal", picker: "image/*" },
+  { key: "image-converter", chip: "image-convert", label: "Convert an image", picker: "image/*" },
+  { key: "image-cropper", chip: "image-crop", label: "Crop an image", picker: "image/*" },
+  { key: "video-trimmer", chip: "video-trim", label: "Trim a video", picker: "video/*" },
+  { key: "video-converter", chip: "video-convert", label: "Convert a video", picker: "video/*" },
+  { key: "clips", chip: "screen-record", label: "Record my screen" },
+  { key: "doodle", chip: "doodle", label: "Doodle something" },
+  { key: "gap-scout", chip: "resume-gaps", label: "Check my resume gaps" },
+  { key: "ghostwriter", chip: "ramble", label: "Turn a ramble into posts" },
+  { key: "audiogram", chip: "audiogram", label: "Make an audiogram" },
+  { key: "purr-code", chip: "qr-code", label: "Make a QR code" },
+  { key: "sop-ify", chip: "sop", label: "Turn my process into an SOP" },
+  { key: "hearsay", chip: "ai-mentions", label: "Check my AI mentions" },
+];
+// The original four: what the static HTML ships with and what first
+// paint renders, so hydration matches; the session draw swaps in on
+// mount when it differs.
+const DEFAULT_CHIP_KEYS = ["receipt-reader", "invoice-chaser", "poster-to-calendar", "notes"];
+const CHIPS_STORAGE_KEY = "bb-desk-chips";
+
+function drawChipKeys(): string[] {
+  const keys = CHIP_POOL.map((c) => c.key);
+  for (let i = keys.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = keys[i];
+    keys[i] = keys[j];
+    keys[j] = t;
+  }
+  return keys.slice(0, 4);
+}
+
+function validChipKeys(v: unknown): v is string[] {
+  return (
+    Array.isArray(v) &&
+    v.length === 4 &&
+    new Set(v).size === 4 &&
+    v.every((k) => typeof k === "string" && CHIP_POOL.some((c) => c.key === k))
+  );
+}
 
 // One line per hat, in his voice. Keys are the router's tool keys plus
 // the file destinations.
@@ -318,6 +374,7 @@ export default function CaptureBar() {
   const [peek, setPeek] = useState(false);
   const [crossing, setCrossing] = useState<{ img: string; name: string } | null>(null);
   const [phIndex, setPhIndex] = useState(0);
+  const [chipKeys, setChipKeys] = useState<string[]>(DEFAULT_CHIP_KEYS);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -341,6 +398,30 @@ export default function CaptureBar() {
   useEffect(() => {
     pinnedRef.current = pinned;
   }, [pinned]);
+
+  // The session chip draw: four prompts drawn once when a session
+  // starts and kept in sessionStorage, so every visitor meets a
+  // different set of tools and the set stays put for the whole session.
+  // First paint renders the default four (identical to the static HTML,
+  // so no hydration mismatch); this swaps in the session's draw right
+  // after mount. A missing or corrupt stored draw means a fresh draw.
+  useEffect(() => {
+    let keys: string[] | null = null;
+    const raw = ssGet(CHIPS_STORAGE_KEY);
+    if (raw) {
+      try {
+        const parsed: unknown = JSON.parse(raw);
+        if (validChipKeys(parsed)) keys = parsed;
+      } catch {
+        keys = null;
+      }
+    }
+    if (!keys) {
+      keys = drawChipKeys();
+      ssSet(CHIPS_STORAGE_KEY, JSON.stringify(keys));
+    }
+    setChipKeys(keys);
+  }, []);
 
   // Rotating example jobs in the placeholder. Pauses while the desk has
   // your attention (focused), the tab is hidden, or a tool is pinned
@@ -1187,30 +1268,20 @@ export default function CaptureBar() {
         )}
         <div className="desk-chips-row">
           <div className="capture-home-chips desk-task-chips">
-            <button
-              type="button"
-              className="capture-home-chip"
-              onClick={() => pinFromChip("receipt-reader", "receipts", "image/*")}
-            >
-              Read my receipts
-            </button>
-            <button type="button" className="capture-home-chip" onClick={() => pinFromChip("invoice-chaser", "invoice")}>
-              Chase an invoice
-            </button>
-            <button
-              type="button"
-              className="capture-home-chip"
-              onClick={() => pinFromChip("poster-to-calendar", "poster", "image/*")}
-            >
-              Event posters to your calendar
-            </button>
-            <button
-              type="button"
-              className="capture-home-chip"
-              onClick={() => pinFromChip("notes", "voice-note", "audio/*")}
-            >
-              Transcribe a voice note
-            </button>
+            {chipKeys.map((k) => {
+              const def = CHIP_POOL.find((c) => c.key === k);
+              if (!def) return null;
+              return (
+                <button
+                  key={def.key}
+                  type="button"
+                  className="capture-home-chip"
+                  onClick={() => pinFromChip(def.key, def.chip, def.picker)}
+                >
+                  {def.label}
+                </button>
+              );
+            })}
           </div>
           <a className="desk-browse" href="#toolbox">
             or browse the toolbox ↓
