@@ -6,11 +6,34 @@ import { SiteHeader, SiteFooter } from "./components/chrome";
 import { useRequestTool } from "./components/request-tool";
 import { PlanCta } from "./components/plan-ctas";
 import CaptureBar from "./components/capture-bar";
+import { DeskFaceProvider, useDeskFace } from "./lib/desk-face";
 
 const plans = [
   { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["All current tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
   { name: "Helper", price: "$12", note: "per month", credits: "1,500 actions each month", features: ["Everything in Poke around", "3 team members", "Email support", "$6 per extra 1,000 actions"], cta: "Choose Helper", plan: "helper" },
   { name: "Operator", price: "$49", note: "per month", credits: "6,000 actions each month", features: ["Everything in Helper", "10 team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
+];
+
+const QUIPS = [
+  "mrrp.",
+  "that click cost 0 actions. you're welcome.",
+  "did you try napping on it?",
+  "rude. (affectionate)",
+  "one (1) boop received.",
+  "Bum Bum has logged your curiosity.",
+  "my face? it's called range.",
+];
+
+const FACES = [
+  { src: "/bum/cat-laptop.png", alt: "Bum Bum at work" },
+  { src: "/bum/cat-curious.png", alt: "Bum Bum, just vibing" },
+  { src: "/bum/cat-wink-blep.png", alt: "Bum Bum winking" },
+  { src: "/bum/cat-licking.png", alt: "Bum Bum blepping" },
+  { src: "/bum/cat-sunglasses.png", alt: "Bum Bum looking cool" },
+  { src: "/bum/cat-excited-v2.png", alt: "Bum Bum excited" },
+  { src: "/bum/cat-bowtie.png", alt: "Bum Bum judging your tabs" },
+  { src: "/bum/cat-peeking.png", alt: "Bum Bum peeking in" },
+  { src: "/bum/cat-sleepy-v2.png", alt: "Bum Bum napping on the job" },
 ];
 
 const CONFETTI_COLORS = ["#ffd84d", "#ff6b35", "#2864dc", "#ef8ab8", "#83d6b2", "#ffffff"];
@@ -28,6 +51,63 @@ const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "Ar
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 
+// The hero portrait: this is Bum Bum. Booping cycles his faces, and the
+// front desk borrows the same portrait for its own moments (a working
+// face while you type, the routed tool's persona as a hat, a pop when
+// the bell rings) through the shared desk-face state.
+function HeroPortrait({ party }: { party: boolean }) {
+  const { mood, hat, popKey } = useDeskFace();
+  const [face, setFace] = useState(0);
+  const [quip, setQuip] = useState<string | null>(null);
+  const [boingKey, setBoingKey] = useState(0);
+  const [popAnim, setPopAnim] = useState(false);
+  const [portraitOk, setPortraitOk] = useState(true);
+
+  useEffect(() => {
+    if (!popKey) return;
+    setPopAnim(true);
+    const t = window.setTimeout(() => setPopAnim(false), 560);
+    return () => window.clearTimeout(t);
+  }, [popKey]);
+
+  function boopBumBum() {
+    setFace((f) => (f + 1) % FACES.length);
+    setBoingKey((k) => k + 1);
+    setQuip(QUIPS[Math.floor(Math.random() * QUIPS.length)]);
+    window.setTimeout(() => setQuip(null), 2600);
+  }
+
+  const override = mood || hat;
+  const src = override || FACES[face].src;
+  const alt = override ? "Bum Bum, on the job" : FACES[face].alt;
+
+  return (
+    <div className="hero-portrait" aria-label="Bum Bum, chief tiny-tool operator">
+      <div className="portrait-burst"></div>
+      <div
+        key={boingKey}
+        className={`portrait-frame boopable${boingKey && !party && !popAnim ? " boing" : ""}${popAnim ? " desk-pop-anim" : ""}${party ? " dance" : ""}`}
+        onClick={boopBumBum}
+        onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); boopBumBum(); } }}
+        role="button"
+        tabIndex={0}
+        aria-label="Boop Bum Bum"
+      >
+        <img
+          src={src}
+          alt={alt}
+          onLoad={(event) => { setPortraitOk(true); event.currentTarget.style.display = ""; }}
+          onError={(event) => { setPortraitOk(false); event.currentTarget.style.display = "none"; }}
+        />
+        {!portraitOk && <div className="photo-fallback"><span>🐈</span><small>Bum Bum’s portrait<br />is clocking in</small></div>}
+      </div>
+      {quip && <div className="quip-bubble" role="status">{quip}</div>}
+      <div className="scribble scribble-one">this is Bum Bum</div>
+      <div className="stamp">BUILT FOR<br /><b>REAL WORK</b></div>
+    </div>
+  );
+}
+
 // Homepage order: money jobs first, then the magical ones.
 const HOME_TOOL_ORDER = ["invoice-chaser", "receipt-reader", "purrsuit", "cutline", "clips", "notes", "sop-ify", "audiogram"];
 const homeTools: Tool[] = [];
@@ -44,6 +124,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log("%c🐈 psst, Bum Bum sees you.\n%cOpened devtools, huh? Respect. If you're snooping for fun: hello@leaveittobumbum.com", "font-weight:bold;font-size:14px", "font-size:12px");
+    FACES.forEach((f) => { new Image().src = f.src; });
     let pos = 0;
     let napBuf = "";
     let napTimer: number | undefined;
@@ -84,13 +165,18 @@ export default function Home() {
       <SiteHeader />
 
       <section className="hero hero-desk shell" id="top">
-        <div className="hero-copy hero-copy-desk">
-          <p className="eyebrow"><span>●</span> Small business busywork, handled</p>
-          <h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1>
-          <p className="lede">Little tools that chase unpaid invoices, sort your receipts, nudge your follow-ups, and handle the fiddly stuff stealing your afternoon. Start at the front desk: hand him the messy bit, he takes it from there.</p>
-          <p className="fine">Start free. No card. No call with a guy named Chad.</p>
-        </div>
-        <CaptureBar />
+        <DeskFaceProvider>
+          <div className="hero-top">
+            <div className="hero-copy">
+              <p className="eyebrow"><span>●</span> Small business busywork, handled</p>
+              <h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1>
+              <p className="lede">Little tools that chase unpaid invoices, sort your receipts, nudge your follow-ups, and handle the fiddly stuff stealing your afternoon. Start at the front desk: hand him the messy bit, he takes it from there.</p>
+              <p className="fine">Start free. No card. No call with a guy named Chad.</p>
+            </div>
+            <HeroPortrait party={party} />
+          </div>
+          <CaptureBar />
+        </DeskFaceProvider>
       </section>
 
       <section className={`ticker${napZoom ? " zoomies" : ""}`} aria-label="Examples"><div className="ticker-track">{[0, 1].map((copy) => (<div className="ticker-chunk" key={copy} aria-hidden={copy === 1 || undefined}>{["READ MY RECEIPTS", "CHASE THAT INVOICE", "CLIP THE GOOD PART", "FILE THE VOICE NOTE", "POSTER IN, EVENTS OUT", "LEAVE IT TO BUM BUM"].map((t) => (<span key={t} className="ticker-item">{t}<i>✦</i></span>))}</div>))}</div></section>

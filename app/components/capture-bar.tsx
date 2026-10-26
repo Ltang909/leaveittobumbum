@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { bbTrack, initTracking } from "../lib/track";
-import { tools } from "../lib/tools";
+import { tools, Tool } from "../lib/tools";
+import { useDeskFace } from "../lib/desk-face";
 
 // The front desk: the homepage "Log anything" experience. Same brain as
 // the account dashboard's capture box: text goes to /api/capture.php,
@@ -14,10 +15,12 @@ import { tools } from "../lib/tools";
 // to the tool page, which picks them up via /tools/capture-handoff.js.
 // Guests are welcome; the account prompt does its own asking later, per
 // the delayed-prompt pattern. On top of that brain, the desk layer:
-// Bum Bum sits perched on the composer, rotates example jobs through the
-// placeholder, swaps hats when he routes something, rings a bell, reads
-// along while you type, peeks once if you leave him hanging, and carries
-// your file across the screen on its way to the tool.
+// example jobs rotate through the placeholder, typing @name calls a
+// tool directly (fuzzy-matched dropdown, the pick pins the destination),
+// he swaps hats when he routes something, rings a bell, reads along
+// while you type (his hero portrait does the faces now), peeks once if
+// you leave him hanging, and carries your file across the screen on its
+// way to the tool.
 
 type CaptureResponse = {
   ok?: boolean;
@@ -53,7 +56,6 @@ const IMAGE_DESTINATIONS = [
   { name: "Meal Scanner", url: "/tools/meal-scanner/", label: "A meal" },
 ];
 
-const FACE_DEFAULT = "/bum/cat-wink-blep.png";
 const FACE_WORK = "/bum/cat-laptop.png";
 const FACE_EXCITED = "/bum/cat-excited-v2.png";
 const FACE_PEEK = "/bum/cat-peeking.png";
@@ -80,6 +82,84 @@ const HAT_LINES: Record<string, string> = {
   "poster-to-calendar": "Poster hat on. Events, coming right up.",
   "meal-scanner": "Chef hat on. Taking this to the scanner.",
 };
+
+// The tools /api/capture.php can file into natively. An @-pin on one of
+// these stays in the capture flow; the pin picks the destination and the
+// router just does the field extraction.
+const NATIVE_TOOLS = ["notes", "receipt-reader", "corporate-bum-bum", "invoice-chaser", "cutline"];
+
+// Tools whose pages receive a file straight from the desk: they define
+// window.__bbCaptureHandoff and load /tools/capture-handoff.js, so the
+// IndexedDB stash actually gets picked up on arrival. Values are the
+// file kinds each page can swallow.
+const FILE_HANDOFF_KINDS: Record<string, ("audio" | "video" | "image")[]> = {
+  notes: ["audio"],
+  "receipt-reader": ["image"],
+  "poster-to-calendar": ["image"],
+  "meal-scanner": ["image"],
+  "image-converter": ["image"],
+  "image-cropper": ["image"],
+  "video-trimmer": ["video"],
+  "video-converter": ["video"],
+};
+
+// Tiny subsequence fuzzy matcher for the @ menu. Whole-string for names
+// and keys; per-word for tags and descriptions, so a three-letter query
+// cannot "match" a whole paragraph by accident. Bonuses for consecutive
+// runs and word starts, so "rec" loves Receipt and "inv" loves Invoice.
+function fuzzyScore(query: string, target: string): number | null {
+  const q = query.toLowerCase();
+  const t = target.toLowerCase();
+  let qi = 0;
+  let score = 0;
+  let run = 0;
+  let last = -2;
+  for (let ti = 0; ti < t.length && qi < q.length; ti++) {
+    if (t[ti] === q[qi]) {
+      score += 1;
+      if (ti === last + 1) {
+        run += 1;
+        score += run;
+      } else {
+        run = 0;
+      }
+      if (ti === 0 || t[ti - 1] === " " || t[ti - 1] === "-") score += 3;
+      last = ti;
+      qi += 1;
+    }
+  }
+  return qi === q.length ? score : null;
+}
+
+function wordScore(query: string, text: string, weight: number): number | null {
+  let best: number | null = null;
+  for (const w of text.split(/[^A-Za-z0-9]+/)) {
+    if (!w) continue;
+    const s = fuzzyScore(query, w);
+    if (s !== null) best = Math.max(best === null ? -1 : best, s * weight);
+  }
+  return best;
+}
+
+function matchTools(query: string): Tool[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return tools;
+  const scored: { tool: Tool; score: number }[] = [];
+  for (const tool of tools) {
+    let best: number | null = null;
+    const nameScore = fuzzyScore(q, tool.name);
+    if (nameScore !== null) best = Math.max(best === null ? -1 : best, nameScore * 3 + (tool.name.toLowerCase().startsWith(q) ? 8 : 0));
+    const keyScore = fuzzyScore(q, tool.key);
+    if (keyScore !== null) best = Math.max(best === null ? -1 : best, keyScore * 2);
+    const tagScore = wordScore(q, tool.tag, 1.2);
+    if (tagScore !== null) best = Math.max(best === null ? -1 : best, tagScore);
+    const descScore = wordScore(q, tool.description, 1);
+    if (descScore !== null) best = Math.max(best === null ? -1 : best, descScore);
+    if (best !== null) scored.push({ tool, score: best });
+  }
+  scored.sort((a, b) => b.score - a.score);
+  return scored.map((s) => s.tool);
+}
 
 function idem(): string {
   const a = new Uint8Array(24);
@@ -150,10 +230,11 @@ export default function CaptureBar() {
   const [dragOver, setDragOver] = useState(false);
   const [result, setResult] = useState<Result>({ kind: "idle" });
   const [ambiguous, setAmbiguous] = useState<CaptureResponse | null>(null);
-  const [moodFace, setMoodFace] = useState<string | null>(null);
-  const [hatFace, setHatFace] = useState<string | null>(null);
   const [hatLine, setHatLine] = useState<string | null>(null);
-  const [popping, setPopping] = useState(false);
+  const [pinned, setPinned] = useState<Tool | null>(null);
+  const [mention, setMention] = useState<{ start: number; query: string } | null>(null);
+  const [mentionIndex, setMentionIndex] = useState(0);
+  const deskFace = useDeskFace();
   const [recording, setRecording] = useState(false);
   const [peek, setPeek] = useState(false);
   const [crossing, setCrossing] = useState<{ img: string; name: string } | null>(null);
@@ -161,7 +242,7 @@ export default function CaptureBar() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const focusedRef = useRef(false);
-  const moodTimer = useRef<number | undefined>(undefined);
+  const sessionWarmRef = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const idemRef = useRef<string>("");
@@ -219,19 +300,17 @@ export default function CaptureBar() {
   }, []);
 
   function flashFace(src: string, ms: number) {
-    setMoodFace(src);
-    window.clearTimeout(moodTimer.current);
-    moodTimer.current = window.setTimeout(() => setMoodFace(null), ms);
+    deskFace.flashMood(src, ms);
   }
 
   function wearHat(toolKey: string | undefined, toolName: string) {
     const tool = tools.find((t) => t.key === toolKey);
-    if (tool && tool.iconImg) setHatFace(tool.iconImg);
+    if (tool && tool.iconImg) deskFace.setHat(tool.iconImg);
     setHatLine(HAT_LINES[toolKey || ""] || toolName + " hat on. On it.");
   }
 
   function clearHat() {
-    setHatFace(null);
+    deskFace.setHat(null);
     setHatLine(null);
   }
 
@@ -266,10 +345,7 @@ export default function CaptureBar() {
       // No audio, no problem. The face still does the bit.
     }
     flashFace(FACE_EXCITED, 1100);
-    if (!reducedMotion()) {
-      setPopping(true);
-      window.setTimeout(() => setPopping(false), 520);
-    }
+    if (!reducedMotion()) deskFace.pop();
   }
 
   async function getSession() {
@@ -391,6 +467,22 @@ export default function CaptureBar() {
     bbTrack("capture_started", { surface: "home", kind: "file", file_kind: kind });
     setAmbiguous(null);
     clearHat();
+    if (pinned && kind !== "other") {
+      const kinds = FILE_HANDOFF_KINDS[pinned.key];
+      if (kinds && kinds.includes(kind)) {
+        // The pinned tool can swallow this file: skip the "what is it?"
+        // pick and hand it straight over.
+        stashAndGo(f, pinned.url, pinned.name, "mention");
+        return;
+      }
+      if (kinds) {
+        setResult({
+          kind: "message",
+          text: pinned.name + " cannot take a " + kind + " file. Unpin it above the box, or drop a different file.",
+        });
+        return;
+      }
+    }
     if (kind === "audio") {
       stashAndGo(f, "/tools/notes/", "Voice Notes to Text", "file");
     } else if (kind === "video") {
@@ -416,6 +508,23 @@ export default function CaptureBar() {
     stashAndGo(f, url, name, "file-picker");
   }
 
+  async function fetchCapture(value: string, tool?: string, fields?: Record<string, unknown>, key?: string): Promise<CaptureResponse> {
+    const session = await getSession();
+    const res = await fetch("/api/capture.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({
+        text: value,
+        tool: tool || "",
+        fields: fields || {},
+        csrf: session.csrf,
+        idempotencyKey: key || idem(),
+      }),
+    });
+    return (await res.json()) as CaptureResponse;
+  }
+
   async function sendText(tool?: string, fields?: Record<string, unknown>, key?: string) {
     const value = text.trim();
     if (!value || busy) return;
@@ -423,20 +532,7 @@ export default function CaptureBar() {
     setAmbiguous(null);
     setResult({ kind: "working", text: "Filing it…" });
     try {
-      const session = await getSession();
-      const res = await fetch("/api/capture.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({
-          text: value,
-          tool: tool || "",
-          fields: fields || {},
-          csrf: session.csrf,
-          idempotencyKey: key || idemRef.current || idem(),
-        }),
-      });
-      const d = (await res.json()) as CaptureResponse;
+      const d = await fetchCapture(value, tool, fields, key || idemRef.current || idem());
       setBusy(false);
       if (d.ok && d.logged === false) {
         if (d.suggest_url) {
@@ -463,9 +559,142 @@ export default function CaptureBar() {
     }
   }
 
+  // Open a pinned tool the capture box cannot file into itself. Any
+  // words the user typed ride along on the clipboard, since tool pages
+  // have no text prefill; the hat swap acknowledges the call either way.
+  async function openPinnedTool(tool: Tool) {
+    wearHat(tool.key, tool.name);
+    bbTrack("capture_routed", { destination: tool.key, surface: "home", via: "mention" });
+    const value = text.trim();
+    let copied = false;
+    if (value && typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(value);
+        copied = true;
+      } catch {
+        copied = false;
+      }
+    }
+    setResult({
+      kind: "message",
+      text: copied
+        ? "Your words are copied. Paste them into " + tool.name + " when it opens. Taking you there…"
+        : "Taking you to " + tool.name + "…",
+    });
+    window.setTimeout(() => {
+      window.location.href = tool.url;
+    }, copied ? 1500 : 900);
+  }
+
+  // A pinned native tool: the pin picks the destination, the router just
+  // extracts fields. Notes needs no router at all. If the router ever
+  // hesitates (ambiguous), the pin answers with its field guess in hand.
+  // If the router flatly declines (a task, not a log entry), the @ call
+  // wins and the tool simply opens.
+  async function pinnedNativeSubmit(tool: Tool) {
+    const value = text.trim();
+    if (!value || busy) return;
+    setBusy(true);
+    setAmbiguous(null);
+    setResult({ kind: "working", text: "Filing it…" });
+    const key = idem();
+    idemRef.current = key;
+    bbTrack("capture_started", { surface: "home", kind: "text", via: "mention", tool: tool.key });
+    try {
+      let d: CaptureResponse;
+      if (tool.key === "notes") {
+        d = await fetchCapture(value, "notes", { text: value }, key);
+      } else {
+        d = await fetchCapture(value, undefined, undefined, key);
+        if (d.ambiguous) {
+          d = await fetchCapture(value, tool.key, d.fields, key);
+        }
+      }
+      setBusy(false);
+      if (d.ok && d.logged === false) {
+        await openPinnedTool(tool);
+      } else if (d.ok) {
+        bbTrack("capture_routed", { destination: d.tool || "", surface: "home", via: d.via || "mention" });
+        wearHat(d.tool, d.tool_name || "That");
+        setText("");
+        setResult({ kind: "success", summary: d.summary || "Logged it.", url: d.url || "/tools/", toolName: d.tool_name || "the tool" });
+      } else if (d.limit_reached) {
+        setResult({ kind: "error", text: d.error || "Out of actions for this period.", limit: true });
+      } else {
+        setResult({ kind: "error", text: d.error || "Something went wrong." });
+      }
+    } catch {
+      setBusy(false);
+      setResult({ kind: "error", text: "Could not reach Bum Bum. Check your connection and try again." });
+    }
+  }
+
+  // Watch the caret for an @ that starts a mention: at the start of the
+  // box or right after whitespace, with only name-ish characters between
+  // it and the caret. Anything else (an email address, a stray @) is
+  // just text.
+  function syncMention(value: string, caret: number) {
+    let start = -1;
+    for (let i = caret - 1; i >= 0; i--) {
+      const ch = value[i];
+      if (ch === "@") {
+        start = i;
+        break;
+      }
+      if (/\s/.test(ch)) break;
+    }
+    if (start >= 0 && (start === 0 || /\s/.test(value[start - 1]))) {
+      const query = value.slice(start + 1, caret);
+      if (/^[A-Za-z0-9-]*$/.test(query)) {
+        setMention({ start, query });
+        setMentionIndex(0);
+        if (!sessionWarmRef.current) {
+          // Warm up tracking so the selection event is not dropped.
+          sessionWarmRef.current = true;
+          void getSession().catch(() => {});
+        }
+        return;
+      }
+    }
+    setMention(null);
+  }
+
+  function selectMention(tool: Tool) {
+    if (!mention) return;
+    const el = textRef.current;
+    const caret = el && el.selectionStart !== null ? el.selectionStart : text.length;
+    const next = text.slice(0, mention.start) + text.slice(caret);
+    const at = mention.start;
+    setText(next);
+    setMention(null);
+    setPinned(tool);
+    bbTrack("desk_mention_selected", { tool: tool.key });
+    window.requestAnimationFrame(() => {
+      const ta = textRef.current;
+      if (ta) {
+        ta.focus();
+        ta.setSelectionRange(at, at);
+      }
+    });
+  }
+
   function submit() {
     if (file) {
       routeFile(file);
+      return;
+    }
+    if (pinned) {
+      if (busy) return;
+      if (!text.trim()) {
+        void openPinnedTool(pinned);
+        return;
+      }
+      clearHat();
+      if (NATIVE_TOOLS.includes(pinned.key)) {
+        void pinnedNativeSubmit(pinned);
+      } else {
+        void openPinnedTool(pinned);
+      }
       return;
     }
     if (!text.trim() || busy) return;
@@ -475,7 +704,8 @@ export default function CaptureBar() {
     void sendText(undefined, undefined, idemRef.current);
   }
 
-  const faceSrc = moodFace || hatFace || FACE_DEFAULT;
+  const mentionMatches = mention ? matchTools(mention.query) : [];
+  const activeMentionIndex = mentionMatches.length ? Math.min(mentionIndex, mentionMatches.length - 1) : 0;
 
   return (
     <section
@@ -512,27 +742,41 @@ export default function CaptureBar() {
           <div>
             <p className="kicker">The front desk</p>
             <h2 className="desk-greeting">What are we handling today?</h2>
-            <p className="capture-home-invite">
-              Drop it here, I will handle it. A receipt, a subscription you keep meaning to track, an invoice
-              somebody owes you, a half-formed idea. Type it, say it, paste it, or drop a file on me, and I will
-              put it where it belongs and tell you what I did. One action, same as using the tool itself.
-            </p>
+            <p className="capture-home-invite">Drop it here, I will handle it. One action, same as using the tool itself.</p>
           </div>
           <button type="button" className="desk-bell" onClick={ringBell} aria-label="Ring the front desk bell" title="Ring for service">
             🔔
           </button>
         </div>
         <div className="desk-composer-wrap">
-          <div className={"desk-cat" + (popping ? " pop" : "")} aria-hidden="true">
-            <img src={faceSrc} alt="" width="112" height="112" />
-          </div>
           <div className="desk-composer">
+            {pinned && (
+              <div className="desk-pin-row">
+                <span className="desk-pin">
+                  {pinned.iconImg ? <img src={pinned.iconImg} alt="" /> : <span aria-hidden="true">{pinned.icon}</span>}
+                  <span>@{pinned.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPinned(null);
+                      if (textRef.current) textRef.current.focus();
+                    }}
+                    aria-label={"Unpin " + pinned.name}
+                    title="Unpin"
+                  >
+                    ×
+                  </button>
+                </span>
+                <span className="desk-pin-note">Everything you log goes to {pinned.name}.</span>
+              </div>
+            )}
             <textarea
               ref={textRef}
               rows={1}
               value={text}
               onChange={(e) => {
                 setText(e.target.value);
+                syncMention(e.target.value, e.target.selectionStart ?? e.target.value.length);
                 if (e.target.value.trim()) flashFace(FACE_WORK, 1500);
               }}
               onFocus={() => {
@@ -540,8 +784,35 @@ export default function CaptureBar() {
               }}
               onBlur={() => {
                 focusedRef.current = false;
+                window.setTimeout(() => setMention(null), 150);
+              }}
+              onSelect={(e) => {
+                syncMention(e.currentTarget.value, e.currentTarget.selectionStart ?? e.currentTarget.value.length);
               }}
               onKeyDown={(e) => {
+                if (mention && mentionMatches.length > 0) {
+                  if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setMentionIndex((i) => (i + 1) % mentionMatches.length);
+                    return;
+                  }
+                  if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setMentionIndex((i) => (i - 1 + mentionMatches.length) % mentionMatches.length);
+                    return;
+                  }
+                  if (e.key === "Enter" || e.key === "Tab") {
+                    e.preventDefault();
+                    const tool = mentionMatches[activeMentionIndex];
+                    if (tool) selectMention(tool);
+                    return;
+                  }
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    setMention(null);
+                    return;
+                  }
+                }
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   submit();
@@ -577,6 +848,35 @@ export default function CaptureBar() {
               </button>
             </div>
           </div>
+          {mention && mentionMatches.length > 0 && (
+            <div className="desk-mention-list" role="listbox" aria-label="Tools you can call with @">
+              {mentionMatches.map((tool, i) => (
+                <button
+                  key={tool.key}
+                  type="button"
+                  role="option"
+                  aria-selected={i === activeMentionIndex}
+                  className={"desk-mention-item" + (i === activeMentionIndex ? " active" : "")}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    selectMention(tool);
+                  }}
+                  onMouseEnter={() => setMentionIndex(i)}
+                >
+                  {tool.iconImg ? <img src={tool.iconImg} alt="" /> : <span className="desk-mention-emoji" aria-hidden="true">{tool.icon}</span>}
+                  <span className="desk-mention-text">
+                    <b>{tool.name}</b>
+                    <small>{tool.description}</small>
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+          {mention && mention.query.trim() !== "" && mentionMatches.length === 0 && (
+            <div className="desk-mention-list desk-mention-empty" role="status">
+              No tool matches “{mention.query}”. Bum Bum is stumped.
+            </div>
+          )}
         </div>
         <div className="desk-chips-row">
           <div className="capture-home-chips desk-task-chips">
