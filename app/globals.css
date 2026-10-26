@@ -280,10 +280,18 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 
 
 /* Homepage front desk: merged hero + "Log anything" capture */
-.hero-desk { display:block; min-height:0; padding:52px 0 6px; }
-.hero-top { display:grid; grid-template-columns:1.08fr .92fr; align-items:center; gap:54px; }
-.hero-desk .fine { margin-bottom:0; }
-.hero-desk .capture-home { width:100%; }
+.hero-desk { display:block; min-height:0; padding:30px 0 4px; }
+.hero-top { display:grid; grid-template-columns:1.08fr .92fr; align-items:center; gap:36px; }
+.hero-desk .fine { margin-bottom:0; margin-top:10px; }
+.hero-desk .capture-home { width:100%; padding-top:2px; }
+.hero-desk .eyebrow { margin-bottom:12px; }
+.hero-desk .lede { margin:18px 0 14px; }
+.hero-desk h1 { font-size:clamp(1.9rem, 4.3vw, 3.55rem); }
+.hero-desk h1 em { white-space:nowrap; }
+@media (min-width:901px){
+  .hero-desk .hero-portrait { min-height:330px; }
+  .hero-desk .portrait-frame { width:47%; }
+}
 /* The restored hero portrait keeps the old sticker treatment (burst,
    frame, "this is Bum Bum" scribble, stamp, boop), minus the tilts:
    nothing in this build rotates. */
@@ -342,7 +350,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .desk-hat-line { margin:16px 0 0; font-family:var(--font-display),serif; font-style:italic; font-weight:800; font-size:1.12rem; }
 .desk-peek { position:absolute; right:-8px; top:36%; width:96px; height:96px; object-fit:cover; border:var(--line); border-radius:50%; background:var(--cream); z-index:3; pointer-events:none; animation:desk-peek 3.4s ease forwards; }
 @keyframes desk-peek { 0% { transform:translateX(72%); opacity:0; } 12% { transform:translateX(0); opacity:1; } 78% { transform:translateX(0); opacity:1; } 100% { transform:translateX(72%); opacity:0; } }
-.desk-crossing { position:fixed; left:0; bottom:20px; z-index:120; display:flex; align-items:center; gap:12px; pointer-events:none; animation:desk-cross 4.5s linear forwards; will-change:transform; }
+.desk-crossing { position:fixed; left:0; bottom:20px; z-index:120; display:flex; align-items:center; gap:12px; pointer-events:none; animation:desk-cross 9s linear forwards; will-change:transform; }
 @keyframes desk-cross { from { transform:translateX(-42vw); } to { transform:translateX(106vw); } }
 .desk-crossing-cat { width:88px; height:88px; object-fit:cover; border:var(--line); border-radius:50%; background:var(--cream); box-shadow:4px 4px 0 var(--ink); }
 .desk-crossing-item { width:56px; height:56px; object-fit:contain; }
