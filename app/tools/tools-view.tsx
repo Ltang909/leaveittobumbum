@@ -106,8 +106,8 @@ export default function ToolsView() {
             {filtered.map((tool, index) => (
               <li key={tool.key}>
                 <a className="tool-row" href={tool.url}>
-                  <span className={`tool-row-icon card-${(index % 8) + 1}`}>
-                    {tool.iconImg ? <img src={tool.iconImg} alt={tool.name} /> : tool.icon}
+                  <span className={`tool-row-icon card-${(index % 8) + 1}`} aria-hidden="true">
+                    {tool.icon}
                   </span>
                   <span className="tool-row-main">
                     <span className="tool-row-name">{tool.name}</span>
@@ -124,9 +124,9 @@ export default function ToolsView() {
           {filtered.map((tool, index) => (
             <article className={`tool-card card-${(index % 8) + 1}`} key={tool.key}>
               <div className="tool-top">
-                <span className="tool-icon">{tool.iconImg ? <img src={tool.iconImg} alt={tool.name} /> : tool.icon}</span>
+                <span className="tool-icon">{tool.icon}</span>
                 <span className="tool-tag">{tool.tag}</span>
-                {tool.mascot && <img className="tool-mascot" src={tool.mascot} alt="" aria-hidden="true" />}
+                {(tool.iconImg || tool.mascot) && <img className="tool-mascot" src={tool.iconImg || tool.mascot} alt="" aria-hidden="true" />}
               </div>
               <h3>{tool.name}</h3>
               <p>{tool.description}</p>

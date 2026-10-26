@@ -8,7 +8,6 @@
 .tool-card:hover{transform:translate(-2px,-2px);box-shadow:10px 10px 0 var(--line)}
 .tool-card-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
 .tool-icon{width:46px;height:46px;border:2px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;font-size:20px;font-weight:900}
-.tool-icon img{width:100%;height:100%;object-fit:contain;border-radius:50%;display:block}
 .tool-tag{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
 .tool-card h3{margin:0 0 8px;font-size:30px;line-height:1.05}
 .tool-card p{margin:0 0 18px;line-height:1.5}
@@ -50,7 +49,6 @@ foreach (($reg['tools'] ?? []) as $t) {
         'name' => (string) ($t['name'] ?? $t['key']),
         'tag' => (string) ($t['tag'] ?? ''),
         'icon' => (string) ($t['icon'] ?? '🐾'),
-        'iconImg' => (string) ($t['iconImg'] ?? ''),
         'desc' => (string) ($t['description'] ?? ''),
         'url' => (string) ($t['url'] ?? '/tools/'),
         'cta' => (string) ($t['cta'] ?? 'Open'),
@@ -339,7 +337,7 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 <div class="tool-cards">
 <?php $ci = 0; foreach ($selectedKeys as $key): $t = $DASHBOARD_TOOLS[$key]; $cc = 'tc-' . ['yellow', 'pink', 'mint', 'blue', 'cream', 'orange', 'lavender', 'teal', 'rose'][$ci % 9]; $ci++; ?>
 <a class="tool-card <?= $cc ?>" href="<?= htmlspecialchars($t['url']) ?>" data-tool="<?= htmlspecialchars($key) ?>">
-<div class="tool-card-top"><span class="tool-icon"><?php if (!empty($t['iconImg'])): ?><img src="<?= htmlspecialchars($t['iconImg']) ?>" alt="<?= htmlspecialchars($t['name']) ?>"><?php else: ?><?= $t['icon'] ?><?php endif; ?></span><span class="tool-tag"><?= htmlspecialchars($t['tag']) ?></span></div>
+<div class="tool-card-top"><span class="tool-icon"><?= $t['icon'] ?></span><span class="tool-tag"><?= htmlspecialchars($t['tag']) ?></span></div>
 <h3><?= htmlspecialchars($t['name']) ?></h3>
 <p><?= htmlspecialchars($t['desc']) ?></p>
 <div class="tool-cta"><span><?= htmlspecialchars($t['cta']) ?></span><span aria-hidden="true">&#8599;</span></div>
