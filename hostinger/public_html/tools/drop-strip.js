@@ -2,8 +2,12 @@
  *
  * After a tool finishes a job (an action completes), Bum Bum shows up in
  * person: his per-tool portrait, a payoff line about the time he just
- * handed back, and a compact "Log anything" box wired to the same
- * /api/capture.php router as the dashboard and homepage boxes. One more
+ * handed back, and a capture box that works like a compact version of
+ * the homepage front desk: rotating example placeholders that teach the
+ * @ move first, the full @ tool menu (same registry the desk reads,
+ * fetched from /tools/registry.json), pins that route absolutely, the
+ * ambiguous "Hmm" choices with the Other branch, attach / camera / mic
+ * inputs, and the same /api/capture.php contract as the desk. One more
  * messy thing off the visitor's plate, one action, charged by the tool
  * that does the work.
  *
@@ -48,6 +52,81 @@
     { name: "Meal Scanner", url: "/tools/meal-scanner/", label: "A meal" }
   ];
 
+  // Desk parity data, mirrored from the homepage front desk
+  // (app/components/capture-bar.tsx). The tool list itself is NOT copied:
+  // the strip fetches /tools/registry.json, the same file the desk's
+  // registry import (app/lib/tools.ts) is built from.
+  var PLACEHOLDERS = [
+    "Start with @ to pick a tool, or just describe the job\u2026",
+    "Drop a receipt, get a spreadsheet\u2026",
+    "Paste a messy email, get the reply drafted\u2026",
+    "Photo of a poster? Get the calendar events.",
+    "Netflix $15.99 a month, file it\u2026",
+    "Say it out loud, get it in writing\u2026",
+    "Applied to Stripe today, log it\u2026"
+  ];
+  var PIN_PLACEHOLDERS = {
+    clips: "Hit Log it! and the recorder opens, right in your browser\u2026",
+    notes: "e.g. Idea: a loyalty card, but for dog groomers\u2026",
+    cutline: "e.g. Netflix, $15.99, monthly",
+    purrsuit: "e.g. Maria at Bloom Co, last spoke Tuesday, nudge her about the quote\u2026",
+    "corporate-bum-bum": "e.g. Applied to Stripe for the Growth Lead role today",
+    doodle: "Hit Log it! and the sketchpad opens. Draw it there\u2026",
+    "invoice-chaser": "e.g. hud.io, $20.00, due in 2 weeks",
+    "receipt-reader": "e.g. Starbucks, $6.40",
+    "poster-to-calendar": "Drop the poster photo here\u2026",
+    "meal-scanner": "Drop the meal photo here\u2026",
+    "gap-scout": "Hit Log it! to open it, then drop your resume and the job post there\u2026",
+    "video-trimmer": "Drop the video here to trim it\u2026",
+    "image-converter": "Drop the image here to convert it\u2026",
+    "image-cropper": "Drop the image here to crop it\u2026",
+    ghostwriter: "e.g. Paste a ramble or transcript, get hooks, a script, and a caption\u2026",
+    audiogram: "Hit Log it! to open it, then drop your MP3 there\u2026",
+    "purr-code": "e.g. https://yourshop.com, whatever the code should open\u2026",
+    "sop-ify": "e.g. First we check the inbox, then we chase anything older than a day\u2026",
+    hearsay: "e.g. Just your brand name. He checks what the AIs say about it\u2026",
+    "video-converter": "Drop the video here to convert it\u2026"
+  };
+  /* Where each tool's result lives, for completion placement (Item C):
+   * when a job finishes, the strip renders directly below the result
+   * and the page anchors to the result first. Control-like targets
+   * (textarea, canvas) are lifted to the panel that holds them. Tools
+   * mapped to "" have no identifiable result container (doodle: the
+   * canvas IS the work) and fall back to below the main work panel. */
+  var RESULT_TARGETS = {
+    "clips": "#doneView",
+    "notes": "#notesText",
+    "cutline": "#sub-list",
+    "purrsuit": "#followupPanel",
+    "corporate-bum-bum": "#followupPanel",
+    "doodle": "",
+    "invoice-chaser": "#invoiceList",
+    "receipt-reader": "#resultsPanel",
+    "poster-to-calendar": "#resultsPanel",
+    "meal-scanner": "#resultsPanel",
+    "gap-scout": "#results",
+    "video-trimmer": "#resultCard",
+    "image-converter": "#resultList",
+    "image-cropper": "#resultWrap",
+    "ghostwriter": "#gwPack",
+    "audiogram": "#agStudio",
+    "purr-code": "#pcCanvas",
+    "sop-ify": "#sopResult",
+    "hearsay": "#hsResults",
+    "video-converter": "#vcResult"
+  };
+  var NATIVE_TOOLS = ["notes", "receipt-reader", "corporate-bum-bum", "invoice-chaser", "cutline"];
+  var FILE_HANDOFF_KINDS = {
+    notes: ["audio"],
+    "receipt-reader": ["image"],
+    "poster-to-calendar": ["image"],
+    "meal-scanner": ["image"],
+    "image-converter": ["image"],
+    "image-cropper": ["image"],
+    "video-trimmer": ["video"],
+    "video-converter": ["video"]
+  };
+
   var shown = false;
   var currentTool = "";
 
@@ -70,6 +149,20 @@
   function dismiss() {
     try { sessionStorage.setItem(DISMISS_KEY, "1"); } catch (e) {}
   }
+  function toolKeyFromUrl(url) {
+    var m = String(url || "").match(/\/tools\/([^/]+)\//);
+    return m ? m[1] : "";
+  }
+  // Leave a "from the desk" marker before a hop to a tool page, same as
+  // the homepage desk: drop-strip.js's own banner reads it on arrival.
+  function markDeskHandoff(toolKey, kind, extra) {
+    if (!toolKey) return;
+    try {
+      var data = { tool: toolKey, kind: kind, ts: Date.now() };
+      if (extra) { for (var k in extra) data[k] = extra[k]; }
+      sessionStorage.setItem("bb-desk-handoff", JSON.stringify(data));
+    } catch (e) {}
+  }
 
   var CSS = [
     ".bb-strip{background:#fffdf4;border:2px solid var(--line,#1a291c);border-radius:22px;box-shadow:8px 8px 0 var(--line,#1a291c);padding:24px 26px;margin:30px 0;position:relative}",
@@ -79,20 +172,47 @@
     ".bb-strip-done{font-weight:900;text-transform:uppercase;letter-spacing:.1em;font-size:12px;margin:2px 0 6px}",
     ".bb-strip-line{font-size:19px;line-height:1.45;margin:0;font-weight:700}",
     ".bb-strip-invite{margin:8px 0 0;font-size:16px}",
-    ".bb-strip-row{display:flex;gap:10px;align-items:stretch;margin-top:16px}",
-    ".bb-strip-row input{flex:1;min-width:0;padding:14px 16px;font-size:16px;border:2px solid var(--line,#1a291c);border-radius:10px;font:inherit}",
-    ".bb-strip-row input:focus{outline:3px solid var(--lime,#d8ff62);outline-offset:1px}",
+    ".bb-strip-composer{position:relative;margin-top:16px}",
+    ".bb-strip-pinrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}",
+    ".bb-strip-pinrow[hidden]{display:none}",
+    ".bb-strip-pin{display:inline-flex;align-items:center;gap:8px;background:var(--yellow,#ffd23f);border:2px solid var(--line,#1a291c);border-radius:999px;padding:4px 6px 4px 8px;font-weight:900;box-shadow:3px 3px 0 var(--line,#1a291c)}",
+    ".bb-strip-pin img{width:22px;height:22px;object-fit:contain;display:block}",
+    ".bb-strip-pin-emoji{font-size:16px;line-height:1}",
+    ".bb-strip-unpin{border:2px solid var(--line,#1a291c);background:#fff;border-radius:50%;width:22px;height:22px;line-height:1;font-weight:900;cursor:pointer;display:grid;place-items:center;padding:0;margin:0}",
+    ".bb-strip-pin-note{font-size:13.5px;font-weight:700;opacity:.7}",
+    ".bb-strip-input{width:100%;box-sizing:border-box;padding:13px 15px;font-size:16px;line-height:1.5;border:2px solid var(--line,#1a291c);border-radius:12px;font:inherit;resize:none;background:#fff;max-height:110px;overflow-y:auto;display:block}",
+    ".bb-strip-input:focus{outline:3px solid var(--lime,#d8ff62);outline-offset:1px}",
+    ".bb-strip-bar{display:flex;align-items:center;gap:8px;margin-top:10px}",
+    ".bb-strip-icon{flex:none;width:42px;height:42px;border:2px solid var(--line,#1a291c);background:#fffdf4;color:var(--ink,#142015);border-radius:50%;font-size:18px;font-weight:900;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0;margin:0}",
+    ".bb-strip-icon.recording{background:#ff7a1a;color:#fff}",
+    ".bb-strip-spacer{flex:1}",
+    ".bb-strip-hint{margin:8px 2px 0;font-size:13.5px;font-weight:700;opacity:.75}",
+    ".bb-strip-mention{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:60;background:#fff;border:2px solid var(--line,#1a291c);border-radius:14px;box-shadow:6px 6px 0 var(--line,#1a291c);max-height:300px;overflow-y:auto;padding:6px}",
+    ".bb-strip-mention[hidden]{display:none}",
+    ".bb-strip-mention-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;border:0;border-radius:10px;padding:8px 10px;font:inherit;color:inherit;cursor:pointer;margin:0}",
+    ".bb-strip-mention-item.active{background:var(--yellow,#ffd23f)}",
+    ".bb-strip-mention-item img{width:30px;height:30px;object-fit:contain;flex:none}",
+    ".bb-strip-mention-emoji{font-size:20px;flex:none;width:30px;text-align:center}",
+    ".bb-strip-mention-text{display:flex;flex-direction:column;min-width:0}",
+    ".bb-strip-mention-text b{font-size:15px}",
+    ".bb-strip-mention-text small{opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
+    ".bb-strip-mention-empty{padding:12px 14px;font-weight:800}",
     ".bb-strip-btn{flex:none;border:2px solid var(--line,#1a291c);background:#fff;color:var(--ink,#142015);font-weight:900;padding:12px 16px;border-radius:999px;cursor:pointer;font:inherit;margin:0}",
+    ".bb-strip-btn:disabled{opacity:.6;cursor:wait}",
     ".bb-strip-go{background:var(--lime,#d8ff62)}",
     ".bb-strip-result p{margin:10px 0 0}",
     ".bb-strip-error{color:#9b2516;font-weight:700}",
     ".bb-strip-chip{margin:8px 8px 0 0}",
+    ".bb-strip-other{margin-top:12px;display:grid;gap:14px}",
+    ".bb-strip-other[hidden]{display:none}",
+    ".bb-strip-other-path p{margin:0 0 8px;font-size:15px;line-height:1.5}",
+    ".bb-strip-other-btn{display:inline-block;text-decoration:none;margin:0}",
     ".bb-strip.drag-over{background:#fff3bf}",
     ".bb-handoff{display:flex;gap:14px;align-items:center;background:#fff3bf;border:2px solid var(--line,#1a291c);border-radius:16px;padding:12px 16px;margin:18px 0 4px;position:relative}",
     ".bb-handoff-face{width:46px;height:46px;flex:none;object-fit:contain;background:#fff;border:2px solid var(--line,#1a291c);border-radius:12px;padding:3px}",
     ".bb-handoff-line{margin:0;font-size:15.5px;line-height:1.45;flex:1}",
     ".bb-handoff-close{flex:none;border:2px solid var(--line,#1a291c);background:#fff;border-radius:50%;width:28px;height:28px;font-weight:900;cursor:pointer;line-height:1;margin:0;padding:0}",
-    "@media(max-width:700px){.bb-strip{padding:20px 16px}.bb-strip-head{flex-direction:column;gap:10px}.bb-strip-row{flex-wrap:wrap}.bb-strip-row input{flex:1 1 100%}.bb-handoff{padding:10px 12px}.bb-handoff-face{width:38px;height:38px}}"
+    "@media(max-width:700px){.bb-strip{padding:20px 16px}.bb-strip-head{flex-direction:column;gap:10px}.bb-handoff{padding:10px 12px}.bb-handoff-face{width:38px;height:38px}}"
   ].join("\n");
 
   function ensureStyle() {
@@ -122,6 +242,71 @@
     });
   }
 
+  /* ---- The tool registry, shared with the desk ----
+   * Fetched once from /tools/registry.json, the same source file the
+   * homepage desk's tool list is built from, so the strip's @ menu can
+   * never drift from the desk's. */
+  var toolsCache = null;
+  var toolsLoading = null;
+  function loadTools() {
+    if (toolsCache) return Promise.resolve(toolsCache);
+    if (toolsLoading) return toolsLoading;
+    toolsLoading = fetch("/tools/registry.json", { credentials: "same-origin" })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { toolsCache = (d && d.tools) || []; return toolsCache; })
+      .catch(function () { toolsCache = []; return toolsCache; });
+    return toolsLoading;
+  }
+
+  /* Tiny subsequence fuzzy matcher, the desk's own logic: whole-string
+   * for names and keys, per-word for tags and descriptions, bonuses for
+   * consecutive runs and word starts. */
+  function fuzzyScore(query, target) {
+    var q = String(query).toLowerCase();
+    var t = String(target).toLowerCase();
+    var qi = 0, score = 0, run = 0, last = -2;
+    for (var ti = 0; ti < t.length && qi < q.length; ti++) {
+      if (t[ti] === q[qi]) {
+        score += 1;
+        if (ti === last + 1) { run += 1; score += run; } else { run = 0; }
+        if (ti === 0 || t[ti - 1] === " " || t[ti - 1] === "-") score += 3;
+        last = ti;
+        qi += 1;
+      }
+    }
+    return qi === q.length ? score : null;
+  }
+  function wordScore(query, text, weight) {
+    var best = null;
+    var words = String(text).split(/[^A-Za-z0-9]+/);
+    for (var i = 0; i < words.length; i++) {
+      if (!words[i]) continue;
+      var s = fuzzyScore(query, words[i]);
+      if (s !== null) best = Math.max(best === null ? -1 : best, s * weight);
+    }
+    return best;
+  }
+  function matchTools(query) {
+    var list = toolsCache || [];
+    var q = String(query).trim().toLowerCase();
+    if (!q) return list.slice();
+    var scored = [];
+    list.forEach(function (tool) {
+      var best = null;
+      var nameScore = fuzzyScore(q, tool.name);
+      if (nameScore !== null) best = Math.max(best === null ? -1 : best, nameScore * 3 + (tool.name.toLowerCase().indexOf(q) === 0 ? 8 : 0));
+      var keyScore = fuzzyScore(q, tool.key);
+      if (keyScore !== null) best = Math.max(best === null ? -1 : best, keyScore * 2);
+      var tagScore = wordScore(q, tool.tag, 1.2);
+      if (tagScore !== null) best = Math.max(best === null ? -1 : best, tagScore);
+      var descScore = wordScore(q, tool.description, 1);
+      if (descScore !== null) best = Math.max(best === null ? -1 : best, descScore);
+      if (best !== null) scored.push({ tool: tool, score: best });
+    });
+    scored.sort(function (a, b) { return b.score - a.score; });
+    return scored.map(function (s) { return s.tool; });
+  }
+
   function build(tool) {
     ensureStyle();
     var face = "";
@@ -140,47 +325,209 @@
       '<p class="bb-strip-line">' + esc(LINES[tool] || "Done, dusted, and off your plate. That is the Bum Bum promise working as advertised.") + "</p>" +
       '<p class="bb-strip-invite">Like, you saved all that time. Imagine what else he can take off your plate. Got something else messy? Drop it here.</p>' +
       "</div></div>" +
-      '<div class="bb-strip-row">' +
-      '<input type="text" class="bb-strip-input" placeholder="Netflix $15.99 a month &hellip; invoice Acme $400 &hellip; idea: a loyalty card for regulars" autocomplete="off" maxlength="2000" aria-label="Type anything to log it">' +
-      '<button type="button" class="bb-strip-btn bb-strip-attach" title="Attach a photo, video, or audio file">&#128206;</button>' +
+      '<div class="bb-strip-composer">' +
+      '<div class="bb-strip-pinrow" hidden>' +
+      '<span class="bb-strip-pin"><img class="bb-strip-pin-img" alt=""><span class="bb-strip-pin-emoji" aria-hidden="true"></span><span class="bb-strip-pin-name"></span>' +
+      '<button type="button" class="bb-strip-unpin" aria-label="Unpin tool" title="Unpin">&times;</button></span>' +
+      '<span class="bb-strip-pin-note"></span>' +
+      "</div>" +
+      '<textarea class="bb-strip-input" rows="1" placeholder="' + esc(PLACEHOLDERS[0]) + '" autocomplete="off" maxlength="2000" aria-label="Type anything to log it"></textarea>' +
+      '<div class="bb-strip-bar">' +
+      '<button type="button" class="bb-strip-icon bb-strip-attach" aria-label="Attach a photo, video, or audio file" title="Attach a file">+</button>' +
+      '<button type="button" class="bb-strip-icon bb-strip-mic" aria-label="Dictate instead" title="Dictate instead">&#127908;</button>' +
+      '<button type="button" class="bb-strip-icon bb-strip-cam" aria-label="Take a photo" title="Take a photo">&#128247;</button>' +
+      '<span class="bb-strip-spacer"></span>' +
       '<button type="button" class="bb-strip-btn bb-strip-go">Log it</button>' +
       "</div>" +
+      '<div class="bb-strip-mention" role="listbox" aria-label="Tools you can call with @" hidden></div>' +
+      "</div>" +
+      '<p class="bb-strip-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>' +
       '<input type="file" class="bb-strip-file" accept="image/*,video/*,audio/*" style="display:none">' +
+      '<input type="file" class="bb-strip-camera" accept="image/*" capture="environment" style="display:none">' +
       '<div class="bb-strip-result" aria-live="polite"></div>';
 
-    var main = document.querySelector("main.shell") || document.querySelector("main");
-    var firstSection = main ? main.querySelector("section") : null;
-    if (main && firstSection && firstSection.parentNode === main) {
-      main.insertBefore(strip, firstSection.nextSibling);
-    } else if (main) {
-      main.appendChild(strip);
-    } else {
-      document.body.appendChild(strip);
-    }
+    // Placement is NOT done here: placeStrip() inserts the built strip
+    // directly below the tool's result container at completion time.
 
     var input = strip.querySelector(".bb-strip-input");
     var go = strip.querySelector(".bb-strip-go");
     var attach = strip.querySelector(".bb-strip-attach");
+    var micBtn = strip.querySelector(".bb-strip-mic");
+    var camBtn = strip.querySelector(".bb-strip-cam");
     var picker = strip.querySelector(".bb-strip-file");
+    var cameraPicker = strip.querySelector(".bb-strip-camera");
     var result = strip.querySelector(".bb-strip-result");
-    var attachedFile = null;
+    var pinRow = strip.querySelector(".bb-strip-pinrow");
+    var pinImg = strip.querySelector(".bb-strip-pin-img");
+    var pinEmoji = strip.querySelector(".bb-strip-pin-emoji");
+    var pinName = strip.querySelector(".bb-strip-pin-name");
+    var pinNote = strip.querySelector(".bb-strip-pin-note");
+    var unpinBtn = strip.querySelector(".bb-strip-unpin");
+    var mentionBox = strip.querySelector(".bb-strip-mention");
+
     var pendingImage = null;
     var busy = false;
     var lastKey = "";
+    var pinned = null;
+    var mention = null;
+    var mentionMatches = [];
+    var mentionIndex = 0;
+    var phIndex = 0;
+    var focused = false;
+    var recording = false;
+    var recorder = null;
+    var chunks = [];
+
+    loadTools();
 
     function show(html) { result.innerHTML = html; }
+    function growInput() {
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 110) + "px";
+    }
+
+    /* Rotating example jobs, like the desk: pauses while the box has
+     * focus, the tab is hidden, or a tool is pinned (the pinned sample
+     * placeholder owns the box then). */
+    var rotTimer = setInterval(function () {
+      if (focused || pinned || document.hidden) return;
+      phIndex = (phIndex + 1) % PLACEHOLDERS.length;
+      input.placeholder = PLACEHOLDERS[phIndex];
+    }, 3400);
 
     strip.querySelector(".bb-strip-close").addEventListener("click", function () {
+      clearInterval(rotTimer);
       dismiss();
       strip.remove();
     });
 
+    function getSession() {
+      return fetch("/api/session.php", { credentials: "same-origin" }).then(function (r) { return r.json(); });
+    }
+    function fetchCapture(text, toolKey, fields, key) {
+      return getSession().then(function (sess) {
+        return fetch("/api/capture.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({ text: text, tool: toolKey || "", fields: fields || {}, csrf: sess.csrf, idempotencyKey: key || idem() })
+        });
+      }).then(function (r) { return r.json(); });
+    }
+    function netError() {
+      busy = false;
+      go.disabled = false;
+      show('<p class="bb-strip-error">Could not reach Bum Bum. Check your connection and try again.</p>');
+    }
+
+    /* ---- Pins and the @ menu ---- */
+    function setPinned(tool) {
+      pinned = tool;
+      pinRow.hidden = !tool;
+      if (tool) {
+        if (tool.iconImg) {
+          pinImg.src = tool.iconImg;
+          pinImg.style.display = "";
+          pinEmoji.style.display = "none";
+        } else {
+          pinImg.style.display = "none";
+          pinEmoji.style.display = "";
+          pinEmoji.textContent = tool.icon || "";
+        }
+        pinName.textContent = "@" + tool.name;
+        pinNote.textContent = "Everything you log goes to " + tool.name + ".";
+        input.placeholder = PIN_PLACEHOLDERS[tool.key] || PLACEHOLDERS[phIndex];
+      } else {
+        input.placeholder = PLACEHOLDERS[phIndex];
+      }
+    }
+    unpinBtn.addEventListener("click", function () {
+      setPinned(null);
+      input.focus();
+    });
+
+    function renderMention() {
+      if (!mention) {
+        mentionMatches = [];
+        mentionBox.hidden = true;
+        mentionBox.innerHTML = "";
+        return;
+      }
+      mentionMatches = matchTools(mention.query);
+      if (!mentionMatches.length) {
+        if (mention.query.trim() !== "") {
+          mentionBox.innerHTML = '<div class="bb-strip-mention-empty">No tool matches &ldquo;' + esc(mention.query) + '&rdquo;. Bum Bum is stumped.</div>';
+          mentionBox.hidden = false;
+        } else {
+          mentionBox.hidden = true;
+          mentionBox.innerHTML = "";
+        }
+        return;
+      }
+      if (mentionIndex >= mentionMatches.length) mentionIndex = mentionMatches.length - 1;
+      if (mentionIndex < 0) mentionIndex = 0;
+      mentionBox.innerHTML = mentionMatches.map(function (t, i) {
+        return '<button type="button" role="option" aria-selected="' + (i === mentionIndex) + '" class="bb-strip-mention-item' + (i === mentionIndex ? " active" : "") + '" data-i="' + i + '">' +
+          (t.iconImg ? '<img src="' + esc(t.iconImg) + '" alt="">' : '<span class="bb-strip-mention-emoji" aria-hidden="true">' + esc(t.icon || "") + "</span>") +
+          '<span class="bb-strip-mention-text"><b>' + esc(t.name) + "</b><small>" + esc(t.description) + "</small></span></button>";
+      }).join("");
+      mentionBox.hidden = false;
+      mentionBox.querySelectorAll(".bb-strip-mention-item").forEach(function (btn) {
+        btn.addEventListener("mousedown", function (e) {
+          e.preventDefault();
+          var t = mentionMatches[Number(btn.getAttribute("data-i"))];
+          if (t) selectMention(t);
+        });
+        btn.addEventListener("mouseenter", function () {
+          mentionIndex = Number(btn.getAttribute("data-i"));
+          mentionBox.querySelectorAll(".bb-strip-mention-item").forEach(function (b, j) {
+            b.classList.toggle("active", j === mentionIndex);
+          });
+        });
+      });
+    }
+
+    // Watch the caret for an @ that starts a mention: at the start of
+    // the box or right after whitespace, with only name-ish characters
+    // between it and the caret. Same rule as the desk.
+    function syncMention(value, caret) {
+      var start = -1;
+      for (var i = caret - 1; i >= 0; i--) {
+        var ch = value[i];
+        if (ch === "@") { start = i; break; }
+        if (/\s/.test(ch)) break;
+      }
+      if (start >= 0 && (start === 0 || /\s/.test(value[start - 1]))) {
+        var query = value.slice(start + 1, caret);
+        if (/^[A-Za-z0-9-]*$/.test(query)) {
+          mention = { start: start, query: query };
+          mentionIndex = 0;
+          renderMention();
+          return;
+        }
+      }
+      if (mention) { mention = null; renderMention(); }
+    }
+
+    function selectMention(tool) {
+      if (!mention) return;
+      var caret = input.selectionStart != null ? input.selectionStart : input.value.length;
+      var next = input.value.slice(0, mention.start) + input.value.slice(caret);
+      var at = mention.start;
+      input.value = next;
+      mention = null;
+      renderMention();
+      setPinned(tool);
+      track("desk_mention_selected", { tool: tool.key, surface: "strip" });
+      growInput();
+      input.focus();
+      try { input.setSelectionRange(at, at); } catch (e) {}
+    }
+
+    /* ---- File routing (pin-aware, same as the desk) ---- */
     function stashAndGo(file, url, name, via) {
       track("capture_routed", { destination: name, surface: "strip", via: via, tool: tool });
-      try {
-        var m = url.match(/\/tools\/([^/]+)\//);
-        sessionStorage.setItem("bb-desk-handoff", JSON.stringify({ tool: m ? m[1] : "", kind: "file", name: file.name, ts: Date.now() }));
-      } catch (e) {}
+      markDeskHandoff(toolKeyFromUrl(url), "file", { name: file.name });
       show('<p>Sending "' + esc(file.name) + '" to ' + esc(name) + ". Your file never leaves your device.</p>");
       storeHandoff(file).then(function () {
         setTimeout(function () { location.href = url + "?from=capture"; }, 700);
@@ -189,12 +536,29 @@
       });
     }
 
+    function fileKind(file) {
+      if (file.type.indexOf("audio/") === 0) return "audio";
+      if (file.type.indexOf("video/") === 0) return "video";
+      if (file.type.indexOf("image/") === 0) return "image";
+      return "other";
+    }
+
     function routeFile(file) {
       track("capture_started", { surface: "strip", kind: "file", tool: tool });
       track("drop_strip_capture", { tool: tool, kind: "file" });
-      var kind = file.type.indexOf("audio/") === 0 ? "audio"
-        : file.type.indexOf("video/") === 0 ? "video"
-        : file.type.indexOf("image/") === 0 ? "image" : "other";
+      var kind = fileKind(file);
+      if (pinned && kind !== "other") {
+        var kinds = FILE_HANDOFF_KINDS[pinned.key];
+        if (kinds && kinds.indexOf(kind) >= 0) {
+          // The pinned tool can swallow this file: no "what is it?" pick.
+          stashAndGo(file, pinned.url, pinned.name, "mention");
+          return;
+        }
+        if (kinds) {
+          show("<p>" + esc(pinned.name) + " cannot take a " + kind + " file. Unpin it above the box, or drop a different file.</p>");
+          return;
+        }
+      }
       if (kind === "audio") { stashAndGo(file, "/tools/notes/", "Voice Notes to Text", "file"); return; }
       if (kind === "video") { stashAndGo(file, "/tools/video-trimmer/", "Video Trimmer", "file"); return; }
       if (kind === "image") {
@@ -215,70 +579,289 @@
       show('<p>That file type has Bum Bum stumped. He takes photos, videos, and audio here. Anything else, <a href="/tools/">the toolbox</a> probably has a tool for it.</p>');
     }
 
-    function send(text, forcedTool, fields, key) {
-      show("<p>Filing it&hellip;</p>");
+    /* ---- Text routing ---- */
+    function wireResultLinks() {
+      result.querySelectorAll("a[data-bb-suggest]").forEach(function (a) {
+        a.addEventListener("click", function () {
+          markDeskHandoff(a.getAttribute("data-bb-suggest"), "text", { copied: false });
+        });
+      });
+      result.querySelectorAll("a[data-bb-view]").forEach(function (a) {
+        a.addEventListener("click", function () {
+          markDeskHandoff(a.getAttribute("data-bb-view"), "logged", { excerpt: a.getAttribute("data-bb-summary") || "" });
+        });
+      });
+    }
+
+    function renderAmbiguous(d) {
+      var chips = (d.options || []).map(function (o) {
+        return '<button type="button" class="bb-strip-btn bb-strip-chip" data-tool="' + esc(o.tool) + '">' + esc(o.tool_name) + "</button>";
+      }).join("");
+      chips += '<button type="button" class="bb-strip-btn bb-strip-chip" data-other="1">Other</button>';
+      show("<p>Hmm, where should this go?</p><div>" + chips + "</div>" +
+        '<div class="bb-strip-other" hidden>' +
+        '<div class="bb-strip-other-path"><p><b>Already exists?</b> It might be sitting in the toolbox, just not one of the guesses above.</p>' +
+        '<a class="bb-strip-btn bb-strip-chip bb-strip-other-btn" href="/tools/">Check the toolbox</a></div>' +
+        '<div class="bb-strip-other-path"><p><b>Does not exist yet?</b> Request it in the community queue. The queue is public and demand driven, so there is no promised timeline. Want it guaranteed? Operators get one built within 36 hours.</p>' +
+        '<button type="button" class="bb-strip-btn bb-strip-chip bb-strip-other-btn" data-req="1">Request it</button></div>' +
+        "</div>");
+      result.querySelectorAll(".bb-strip-chip[data-tool]").forEach(function (chip) {
+        chip.addEventListener("click", function () { postCapture(d.text, chip.getAttribute("data-tool"), d.fields, lastKey); });
+      });
+      var otherBtn = result.querySelector("[data-other]");
+      var otherBox = result.querySelector(".bb-strip-other");
+      if (otherBtn && otherBox) {
+        otherBtn.addEventListener("click", function () { otherBox.hidden = !otherBox.hidden; });
+      }
+      var toolboxLink = result.querySelector(".bb-strip-other a");
+      if (toolboxLink) {
+        toolboxLink.addEventListener("click", function () { track("desk_other_selected", { path: "toolbox", surface: "strip" }); });
+      }
+      var reqBtn = result.querySelector("[data-req]");
+      if (reqBtn) {
+        reqBtn.addEventListener("click", function () { requestFromStrip(d.text); });
+      }
+    }
+
+    // The ambiguous state's "Request it" path. /requests/ takes no
+    // prefill, so your words ride along on the clipboard, same as the desk.
+    function requestFromStrip(text) {
+      track("desk_other_selected", { path: "request", surface: "strip" });
+      var value = String(text || "");
+      var copied = false;
+      function go() {
+        show("<p>" + (copied
+          ? "Your words are copied. Paste them into the request form on the next page."
+          : "The request form is on the next page. Take your words with you.") + " Taking you there&hellip;</p>");
+        setTimeout(function () { location.href = "/requests/"; }, copied ? 1700 : 1000);
+      }
+      if (value && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(function () { copied = true; go(); }, function () { go(); });
+      } else {
+        go();
+      }
+    }
+
+    function handleResponse(d) {
+      busy = false;
+      go.disabled = false;
+      if (d.ok && d.logged === false) {
+        var html = "<p>" + esc(d.message || "Can't do that from here.") + "</p>";
+        if (d.suggest_url) {
+          track("capture_routed", { destination: d.suggest_name || "", surface: "strip", via: "suggest", tool: tool });
+          html += '<p><a href="' + esc(d.suggest_url) + '" data-bb-suggest="' + esc(toolKeyFromUrl(d.suggest_url)) + '">Open ' + esc(d.suggest_name || "the tool") + " &rarr;</a></p>";
+        }
+        show(html);
+      } else if (d.ok) {
+        track("capture_routed", { destination: d.tool || "", surface: "strip", via: d.via || "", tool: tool });
+        input.value = "";
+        growInput();
+        show("<p><b>&#10003; " + esc(d.summary || "Logged it.") + '</b> <a href="' + esc(d.url || "/tools/") + '" data-bb-view="' + esc(toolKeyFromUrl(d.url || "")) + '" data-bb-summary="' + esc(d.summary || "Logged it.") + '">View in ' + esc(d.tool_name || "the tool") + " &rarr;</a></p>");
+      } else if (d.ambiguous) {
+        renderAmbiguous(d);
+        return;
+      } else if (d.limit_reached) {
+        show('<p class="bb-strip-error">' + esc(d.error || "Out of actions.") + ' <a href="/account/">See your account</a></p>');
+      } else {
+        show('<p class="bb-strip-error">' + esc(d.error || "Something went wrong.") + "</p>");
+      }
+      wireResultLinks();
+    }
+
+    function postCapture(text, toolKey, fields, key) {
       busy = true;
       go.disabled = true;
-      fetch("/api/session.php").then(function (r) { return r.json(); }).then(function (sess) {
-        return fetch("/api/capture.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: text, tool: forcedTool || "", fields: fields || {}, csrf: sess.csrf, idempotencyKey: key || idem() })
-        });
-      }).then(function (r) { return r.json().then(function (d) { return { status: r.status, data: d }; }); }).then(function (res) {
-        busy = false;
-        go.disabled = false;
-        var d = res.data;
+      show("<p>Filing it&hellip;</p>");
+      fetchCapture(text, toolKey, fields, key).then(handleResponse).catch(netError);
+    }
+
+    // Open a pinned tool the capture box cannot file into itself. Any
+    // words ride along on the clipboard; the desk handoff marker makes
+    // the arrival greet the visitor, same as the desk.
+    function openPinnedTool(tool) {
+      track("capture_routed", { destination: tool.key, surface: "strip", via: "mention", tool: tool });
+      var value = input.value.trim();
+      var copied = false;
+      function go() {
+        markDeskHandoff(tool.key, "text", { excerpt: value.slice(0, 90), copied: copied });
+        show("<p>" + (copied
+          ? "Your words are copied. Paste them into " + esc(tool.name) + " when it opens. Taking you there&hellip;"
+          : "Taking you to " + esc(tool.name) + "&hellip;") + "</p>");
+        setTimeout(function () { location.href = tool.url; }, copied ? 1500 : 900);
+      }
+      if (value && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(function () { copied = true; go(); }, function () { go(); });
+      } else {
+        go();
+      }
+    }
+
+    // A pinned native tool: the pin is ABSOLUTE, same contract as the
+    // desk. One fields-less forced request with tool=<pinned>; the
+    // server files to the pinned tool and extracts fields for it alone.
+    // If the server flatly declines (a task, not a log entry), the @
+    // call wins and the tool simply opens.
+    function pinnedNativeSubmit(tool) {
+      var t = input.value.trim();
+      if (!t || busy) return;
+      busy = true;
+      go.disabled = true;
+      show("<p>Filing it&hellip;</p>");
+      var key = idem();
+      lastKey = key;
+      fetchCapture(t, tool.key, {}, key).then(function (d) {
+        if (d.ambiguous) return fetchCapture(t, tool.key, d.fields, key);
+        return d;
+      }).then(function (d) {
         if (d.ok && d.logged === false) {
-          var html = "<p>" + esc(d.message || "Can't do that from here.") + "</p>";
-          if (d.suggest_url) {
-            track("capture_routed", { destination: d.suggest_name || "", surface: "strip", via: "suggest", tool: tool });
-            html += '<p><a href="' + esc(d.suggest_url) + '">Open ' + esc(d.suggest_name || "the tool") + " &rarr;</a></p>";
-          }
-          show(html);
-        } else if (d.ok) {
-          track("capture_routed", { destination: d.tool || "", surface: "strip", via: d.via || "", tool: tool });
-          input.value = "";
-          attachedFile = null;
-          show("<p><b>&#10003; " + esc(d.summary || "Logged it.") + '</b> <a href="' + esc(d.url || "/tools/") + '">View in ' + esc(d.tool_name || "the tool") + " &rarr;</a></p>");
-        } else if (d.ambiguous) {
-          var chips = (d.options || []).map(function (o) {
-            return '<button type="button" class="bb-strip-btn bb-strip-chip" data-tool="' + esc(o.tool) + '">' + esc(o.tool_name) + "</button>";
-          }).join("");
-          show("<p>Hmm, where should this go?</p><div>" + chips + "</div>");
-          result.querySelectorAll(".bb-strip-chip").forEach(function (chip) {
-            chip.addEventListener("click", function () { send(d.text, chip.getAttribute("data-tool"), d.fields, lastKey); });
-          });
-        } else if (d.limit_reached) {
-          show('<p class="bb-strip-error">' + esc(d.error || "Out of actions.") + ' <a href="/account/">See your account</a></p>');
-        } else {
-          show('<p class="bb-strip-error">' + esc(d.error || "Something went wrong.") + "</p>");
+          busy = false;
+          go.disabled = false;
+          openPinnedTool(tool);
+          return;
         }
-      }).catch(function () {
-        busy = false;
-        go.disabled = false;
-        show('<p class="bb-strip-error">Could not reach Bum Bum. Check your connection and try again.</p>');
-      });
+        handleResponse(d);
+      }).catch(netError);
     }
 
     function submit() {
       if (busy) return;
-      if (attachedFile) { routeFile(attachedFile); return; }
       var t = input.value.trim();
+      if (pinned) {
+        track("capture_started", { surface: "strip", kind: "text", tool: tool });
+        track("drop_strip_capture", { tool: tool, kind: "text" });
+        if (!t) { openPinnedTool(pinned); return; }
+        if (NATIVE_TOOLS.indexOf(pinned.key) >= 0) { pinnedNativeSubmit(pinned); return; }
+        openPinnedTool(pinned);
+        return;
+      }
       if (!t) return;
       lastKey = idem();
       track("capture_started", { surface: "strip", kind: "text", tool: tool });
       track("drop_strip_capture", { tool: tool, kind: "text" });
-      send(t, "", null, lastKey);
+      postCapture(t, "", null, lastKey);
     }
 
+    /* ---- Mic, mirroring the desk: MediaRecorder into the same
+     * /api/voice-transcribe.php flow; the transcript lands in the box. */
+    function transcribe(blob) {
+      show("<p>Transcribing&hellip;</p>");
+      getSession().then(function (sess) {
+        var fd = new FormData();
+        fd.append("audio", blob, "capture.webm");
+        fd.append("csrf", sess.csrf);
+        return fetch("/api/voice-transcribe.php", { method: "POST", credentials: "same-origin", body: fd });
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d && d.transcript) {
+          input.value = d.transcript;
+          growInput();
+          show("<p>Heard you. Tap Log it and I will file it.</p>");
+          input.focus();
+        } else {
+          show('<p class="bb-strip-error">' + esc((d && d.error) || "Could not transcribe that.") + "</p>");
+        }
+      }).catch(function () {
+        show('<p class="bb-strip-error">Transcription failed. Try typing it.</p>');
+      });
+    }
+    function toggleMic() {
+      if (recording && recorder) { recorder.stop(); return; }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === "undefined") {
+        show('<p class="bb-strip-error">Voice input is not supported in this browser. Type it instead.</p>');
+        return;
+      }
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+        chunks = [];
+        var rec = new MediaRecorder(stream);
+        recorder = rec;
+        rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+        rec.onstop = function () {
+          stream.getTracks().forEach(function (t) { t.stop(); });
+          recording = false;
+          micBtn.classList.remove("recording");
+          micBtn.title = "Dictate instead";
+          micBtn.setAttribute("aria-label", "Dictate instead");
+          transcribe(new Blob(chunks, { type: rec.mimeType || "audio/webm" }));
+        };
+        rec.start();
+        recording = true;
+        micBtn.classList.add("recording");
+        micBtn.title = "Stop recording";
+        micBtn.setAttribute("aria-label", "Stop recording");
+        show("<p>Listening&hellip; tap the mic again to stop.</p>");
+      }).catch(function () {
+        show('<p class="bb-strip-error">Microphone access was blocked. Type it instead.</p>');
+      });
+    }
+
+    /* ---- Wiring ---- */
     go.addEventListener("click", submit);
-    input.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(); });
     attach.addEventListener("click", function () { picker.click(); });
+    camBtn.addEventListener("click", function () { cameraPicker.click(); });
+    micBtn.addEventListener("click", toggleMic);
     picker.addEventListener("change", function () {
       var f = picker.files && picker.files[0];
       picker.value = "";
       if (f) routeFile(f);
+    });
+    cameraPicker.addEventListener("change", function () {
+      var f = cameraPicker.files && cameraPicker.files[0];
+      cameraPicker.value = "";
+      if (f) routeFile(f);
+    });
+    unpinBtn.addEventListener("click", function () { setPinned(null); input.focus(); });
+    input.addEventListener("input", function () {
+      growInput();
+      syncMention(input.value, input.selectionStart != null ? input.selectionStart : input.value.length);
+    });
+    input.addEventListener("focus", function () { focused = true; });
+    input.addEventListener("blur", function () {
+      focused = false;
+      setTimeout(function () { if (mention) { mention = null; renderMention(); } }, 150);
+    });
+    input.addEventListener("click", function () {
+      syncMention(input.value, input.selectionStart != null ? input.selectionStart : input.value.length);
+    });
+    input.addEventListener("keyup", function (e) {
+      if (["ArrowLeft", "ArrowRight", "Home", "End"].indexOf(e.key) >= 0) {
+        syncMention(input.value, input.selectionStart != null ? input.selectionStart : input.value.length);
+      }
+    });
+    input.addEventListener("keydown", function (e) {
+      if (mention && mentionMatches.length > 0) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          mentionIndex = (mentionIndex + 1) % mentionMatches.length;
+          renderMention();
+          return;
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          mentionIndex = (mentionIndex - 1 + mentionMatches.length) % mentionMatches.length;
+          renderMention();
+          return;
+        }
+        if (e.key === "Enter" || e.key === "Tab") {
+          e.preventDefault();
+          var t = mentionMatches[Math.min(mentionIndex, mentionMatches.length - 1)];
+          if (t) selectMention(t);
+          return;
+        }
+        if (e.key === "Escape") {
+          e.preventDefault();
+          mention = null;
+          renderMention();
+          return;
+        }
+      } else if (mention && e.key === "Escape") {
+        e.preventDefault();
+        mention = null;
+        renderMention();
+        return;
+      }
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        submit();
+      }
     });
     strip.addEventListener("dragover", function (e) { e.preventDefault(); strip.classList.add("drag-over"); });
     strip.addEventListener("dragleave", function () { strip.classList.remove("drag-over"); });
@@ -301,8 +884,81 @@
     if (!tool || !Object.prototype.hasOwnProperty.call(LINES, tool)) return;
     shown = true;
     currentTool = tool;
-    build(tool);
-    track("drop_strip_shown", { tool: tool });
+    placeStrip(tool);
+  }
+
+  /* ---- Completion placement (Item C) ----
+   * The result comes first, the strip second: the strip is inserted
+   * directly below the tool's result/output container and the page
+   * scrolls the result into view (smooth, instant under reduced
+   * motion). Result containers can lag the completion event by a beat
+   * (the page renders, then tracks), so resolution polls briefly
+   * before falling back to below the main work panel. */
+  function resolveResultTarget(tool) {
+    var main = document.querySelector("main.shell") || document.querySelector("main");
+    if (!main) return null;
+    var sel = RESULT_TARGETS[tool];
+    var el = null;
+    if (sel) {
+      try { el = main.querySelector(sel); } catch (e) {}
+    } else if (sel !== "") {
+      // Unmapped tool: first visible element whose id says result/output.
+      var all = main.querySelectorAll("[id]");
+      for (var i = 0; i < all.length; i++) {
+        if (/result|output/i.test(all[i].id) && anchorVisible(all[i])) { el = all[i]; break; }
+      }
+    }
+    if (!el) return null;
+    var insertEl = el;
+    var tag = el.tagName;
+    if (tag === "TEXTAREA" || tag === "INPUT" || tag === "SELECT" || tag === "CANVAS") {
+      var lift = el.closest ? (el.closest(".panel") || el.closest("section")) : null;
+      if (lift && main.contains(lift)) insertEl = lift;
+    }
+    return { insertAfter: insertEl, scrollEl: el, visible: anchorVisible(el) };
+  }
+
+  function scrollToResult(el) {
+    if (!el) return;
+    try {
+      var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      if (typeof el.scrollIntoView === "function") {
+        el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      }
+    } catch (e) {}
+  }
+
+  function placeStrip(tool) {
+    var tries = 0;
+    (function attempt() {
+      var target = resolveResultTarget(tool);
+      if ((target && target.visible) || tries >= 10) {
+        var strip = build(tool);
+        var main = document.querySelector("main.shell") || document.querySelector("main");
+        var scrollEl = null;
+        var placement = "panel";
+        if (target && target.insertAfter && target.insertAfter.parentNode) {
+          target.insertAfter.parentNode.insertBefore(strip, target.insertAfter.nextSibling);
+          placement = "result";
+          scrollEl = target.visible ? target.scrollEl : workAnchor();
+        } else {
+          var panel = workAnchor();
+          if (panel && panel.parentNode) {
+            panel.parentNode.insertBefore(strip, panel.nextSibling);
+            scrollEl = panel;
+          } else if (main) {
+            main.appendChild(strip);
+          } else {
+            document.body.appendChild(strip);
+          }
+        }
+        track("drop_strip_shown", { tool: tool, placement: placement });
+        scrollToResult(scrollEl);
+        return;
+      }
+      tries++;
+      setTimeout(attempt, 150);
+    })();
   }
 
   // Pages report finished jobs through bbTrack('action_completed', {tool}).
