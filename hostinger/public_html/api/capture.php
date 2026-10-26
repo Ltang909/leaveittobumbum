@@ -291,6 +291,7 @@ function capture_llm_extract(string $text, string $tool): ?array {
         . 'The destination is already chosen by the user; never pick a different one and never refuse. '
         . 'Today is ' . date('Y-m-d') . ' (' . date('l') . '). Convert relative dates the user mentioned, like "in 2 weeks" or "Friday", into YYYY-MM-DD. '
         . 'Never invent amounts, names, or dates the user did not mention. Omit unknown optional fields. '
+        . 'Amounts are plain numbers with no currency symbol. '
         . 'Output STRICT JSON only: {"fields": {...}}. No em dashes anywhere.';
     $payload = [
         'model' => $model,
@@ -529,7 +530,7 @@ function capture_summary(string $tool, array $fields, string $text, array $resul
         }
         case 'receipt-reader': {
             $v = trim((string) ($fields['vendor'] ?? 'Receipt'));
-            $total = (string) ($fields['total'] ?? '');
+            $total = ltrim(trim((string) ($fields['total'] ?? '')), '$');
             return 'Logged ' . ($total !== '' ? '$' . $total . ' at ' : '') . $v . ' to Receipt Scanner';
         }
         case 'corporate-bum-bum': {
@@ -539,12 +540,12 @@ function capture_summary(string $tool, array $fields, string $text, array $resul
         }
         case 'invoice-chaser': {
             $c = trim((string) ($fields['client_name'] ?? 'client'));
-            $a = (string) ($fields['amount'] ?? '');
+            $a = ltrim(trim((string) ($fields['amount'] ?? '')), '$');
             return 'Added ' . ($a !== '' ? '$' . $a . ' ' : '') . 'invoice for ' . $c . ' to Invoice Reminder';
         }
         case 'cutline': {
             $n = trim((string) ($fields['name'] ?? 'subscription'));
-            $p = trim((string) ($fields['price'] ?? ''));
+            $p = ltrim(trim((string) ($fields['price'] ?? '')), '$');
             $cad = trim((string) ($fields['cadence'] ?? 'monthly'));
             return 'Added ' . $n . ($p !== '' ? ' ($' . $p . '/' . $cad . ')' : '') . ' to Subscription Tracker';
         }
