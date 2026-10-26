@@ -760,19 +760,24 @@
       fetchCapture(text, toolKey, fields, key).then(handleResponse).catch(netError);
     }
 
-    // Open a pinned tool the capture box cannot file into itself. Any
-    // words ride along on the clipboard; the desk handoff marker makes
-    // the arrival greet the visitor, same as the desk.
+    // Open a pinned tool the capture box cannot file into itself. The
+    // words ride in the handoff marker: tools in FILL_FIELDS get them
+    // dropped into their field on arrival, the rest ride along on the
+    // clipboard; the marker makes the arrival greet the visitor,
+    // same as the desk.
     function openPinnedTool(tool) {
       track("capture_routed", { destination: tool.key, surface: "strip", via: "mention", tool: tool });
       var value = input.value.trim();
       var copied = false;
       function go() {
         markDeskHandoff(tool.key, "text", { excerpt: value.slice(0, 90), copied: copied, text: value });
-        show("<p>" + (copied
+        var dropsIn = value.length > 0 && Object.prototype.hasOwnProperty.call(FILL_FIELDS, tool.key);
+        show("<p>" + (dropsIn
+          ? "Off to " + esc(tool.name) + ". Your words will be dropped in when it opens."
+          : copied
           ? "Your words are copied. Paste them into " + esc(tool.name) + " when it opens. Taking you there&hellip;"
           : "Taking you to " + esc(tool.name) + "&hellip;") + "</p>");
-        setTimeout(function () { location.href = tool.url; }, copied ? 1500 : 900);
+        setTimeout(function () { location.href = tool.url; }, dropsIn || copied ? 1500 : 900);
       }
       if (value && navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(value).then(function () { copied = true; go(); }, function () { go(); });
