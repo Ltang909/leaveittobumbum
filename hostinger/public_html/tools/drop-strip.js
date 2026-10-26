@@ -220,6 +220,12 @@
     ".bb-handoff-face{width:46px;height:46px;flex:none;object-fit:contain;background:#fff;border:2px solid var(--line,#1a291c);border-radius:12px;padding:3px}",
     ".bb-handoff-line{margin:0;font-size:15.5px;line-height:1.45;flex:1}",
     ".bb-handoff-close{flex:none;border:2px solid var(--line,#1a291c);background:#fff;border-radius:50%;width:28px;height:28px;font-weight:900;cursor:pointer;line-height:1;margin:0;padding:0}",
+    ".bb-working{display:flex;gap:12px;align-items:center;background:#fffdf4;border:2px solid var(--line,#1a291c);border-radius:14px;padding:12px 16px;margin:18px 0 4px}",
+    ".bb-working-face{width:40px;height:40px;flex:none;object-fit:contain;background:#fff;border:2px solid var(--line,#1a291c);border-radius:10px;padding:3px}",
+    ".bb-working-line{margin:0;font-size:15.5px;font-weight:700;flex:1}",
+    ".bb-working-spin{flex:none;width:18px;height:18px;border-radius:50%;border:3px solid #e7dcc3;border-top-color:var(--ink,#142015);animation:bb-working-spin .8s linear infinite}",
+    "@keyframes bb-working-spin{to{transform:rotate(360deg)}}",
+    "@media(prefers-reduced-motion:reduce){.bb-working-spin{animation:none}}",
     "@media(max-width:700px){.bb-strip{padding:20px 16px}.bb-strip-head{flex-direction:column;gap:10px}.bb-handoff{padding:10px 12px}.bb-handoff-face{width:38px;height:38px}}"
   ].join("\n");
 
@@ -439,6 +445,24 @@
     });
 
     function show(html) { result.innerHTML = html; }
+
+    /* When a submit resolves, the answer lands in this result box.
+     * If it is not fully in view (a phone viewport, the keyboard
+     * just closed), glide it into view, nearest edge first; a result
+     * already comfortably on screen never moves the page. Mirrors
+     * the homepage desk's completion anchoring. */
+    function anchorResult() {
+      try {
+        var rect = result.getBoundingClientRect();
+        if (!rect || rect.height === 0) return;
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        if (rect.top >= 0 && rect.bottom <= vh) return;
+        if (typeof result.scrollIntoView === "function") {
+          var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+          result.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" });
+        }
+      } catch (e) {}
+    }
     function growInput() {
       input.style.height = "auto";
       input.style.height = Math.min(input.scrollHeight, 110) + "px";
@@ -488,6 +512,7 @@
       busy = false;
       go.disabled = false;
       show('<p class="bb-strip-error">Could not reach Bum Bum. Check your connection and try again.</p>');
+      anchorResult();
     }
 
     /* ---- Pins and the @ menu ---- */
@@ -746,6 +771,7 @@
       if (reqBtn) {
         reqBtn.addEventListener("click", function () { requestFromStrip(d.text); });
       }
+      anchorResult();
     }
 
     // The ambiguous state's "Request it" path. /requests/ takes no
@@ -791,6 +817,7 @@
         show('<p class="bb-strip-error">' + esc(d.error || "Something went wrong.") + "</p>");
       }
       wireResultLinks();
+      anchorResult();
     }
 
     function postCapture(text, toolKey, fields, key) {
@@ -861,6 +888,7 @@
         // Never guess a photo's destination silently: teach the @ pick
         // and keep the photo staged for it.
         show("<p>That photo needs a destination first. @Receipt Reader makes it a spreadsheet, @Poster to Calendar pulls out the events, @Meal Scanner reads the plate. Pick one above the box, then Log it!</p>");
+        anchorResult();
         return;
       }
       var t = input.value.trim();
@@ -1108,6 +1136,9 @@
   }
 
   function show(tool) {
+    // A completion retires the arrival working indicator, whatever
+    // state the result zone ended in.
+    stopWorking();
     if (shown || dismissed()) return;
     if (!tool || !Object.prototype.hasOwnProperty.call(LINES, tool)) return;
     shown = true;
@@ -1199,6 +1230,7 @@
       try {
         if (event === "action_completed" && props && props.tool) show(String(props.tool));
         else if (event === "gap_analyzed") show("gap-scout");
+        else if (event === "desk_autorun" && props && props.tool) maybeStartWorking(String(props.tool));
       } catch (e) {}
     };
     wrapped.__bbStripWrapped = true;
@@ -1208,6 +1240,115 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", hook);
 
   window.BBDropStrip = { show: show };
+
+  /* ---- Desk arrival: park at the result, with a working face ----
+   * An auto-run file handoff used to leave the visitor at the top of
+   * the tool while the job ran: the banner lands them at the work
+   * panel, and the satisfying scroll to the result only happened when
+   * the strip appeared at completion. Now, the moment the handoff
+   * layer reports the run has started (bbTrack 'desk_autorun', fired
+   * by capture-handoff.js once the file is delivered and queued),
+   * the page glides straight to the tool's result zone and Bum Bum
+   * waits there, visibly on it. He retires the moment the tool's own
+   * progress or result UI takes over the zone, when the job
+   * completes (the same action_completed / BBDropStrip.show signals
+   * the strip itself lives on), when an error scene appears, or when
+   * a 60 second failsafe fires, whichever comes first. Load-only
+   * tools (cropper, trimmer) and text/drop-in arrivals never start
+   * him: their anchoring stays at the work panel, as before. */
+  var AUTO_RUN_TOOLS = ["notes", "receipt-reader", "poster-to-calendar", "meal-scanner", "image-converter", "video-converter"];
+  var workingEl = null;
+  var workingTool = "";
+  var workingTarget = null;
+  var workingObserver = null;
+  var workingTimer = 0;
+  var workingStartContent = null;
+
+  function stopWorking() {
+    if (workingTimer) { clearTimeout(workingTimer); workingTimer = 0; }
+    if (workingObserver) { try { workingObserver.disconnect(); } catch (e) {} workingObserver = null; }
+    if (workingEl && workingEl.parentNode) workingEl.parentNode.removeChild(workingEl);
+    workingEl = null;
+    workingTool = "";
+    workingTarget = null;
+    workingStartContent = null;
+  }
+
+  // A cheap fingerprint of what the result zone currently shows, so
+  // the yield check can tell "the tool's own UI woke up in the zone"
+  // apart from the zone sitting empty the way it was at arrival.
+  function resultZoneContent(el) {
+    if (!el) return "";
+    var text = "";
+    try { text = (el.textContent || "").replace(/\s+/g, " ").trim(); } catch (e) {}
+    var media = 0;
+    try { media = el.querySelectorAll("img, canvas, video, table, svg").length; } catch (e) {}
+    return text + "|" + media;
+  }
+
+  function maybeStartWorking(tool) {
+    if (!tool || AUTO_RUN_TOOLS.indexOf(tool) < 0) return;
+    if (tool !== pageToolKey()) return;
+    if (workingEl) return;
+    workingTool = tool;
+    var tries = 0;
+    (function attempt() {
+      if (workingTool !== tool) return; // retired while waiting
+      var target = resolveResultTarget(tool);
+      if (target && target.insertAfter && target.insertAfter.parentNode) {
+        showWorking(tool, target);
+        return;
+      }
+      if (++tries < 10) { setTimeout(attempt, 150); return; }
+      // No result zone to park in: wait above the work panel instead.
+      var panel = workAnchor();
+      if (panel && panel.parentNode) {
+        showWorking(tool, { insertAfter: panel, scrollEl: panel });
+      }
+    })();
+  }
+
+  function showWorking(tool, target) {
+    if (workingEl) return;
+    ensureStyle();
+    var zone = target.scrollEl || target.insertAfter;
+    workingTarget = zone;
+    workingStartContent = resultZoneContent(zone);
+    var mascot = document.querySelector(".tool-mascot-page");
+    var face = mascot ? mascot.getAttribute("src") || "" : "";
+    if (!face) face = "/bum/cat-wink-blep.png";
+    var el = document.createElement("div");
+    el.className = "bb-working";
+    el.setAttribute("role", "status");
+    el.innerHTML =
+      '<img class="bb-working-face" src="' + esc(face) + '" alt="">' +
+      '<span class="bb-working-spin" aria-hidden="true"></span>' +
+      '<p class="bb-working-line">Bum Bum is on it&hellip;</p>';
+    // Park directly above the result zone, where the answer lands.
+    target.insertAfter.parentNode.insertBefore(el, target.insertAfter);
+    workingEl = el;
+    scrollToResult(el);
+    // Yield as soon as the tool's own UI takes over the zone, and
+    // clear on any error scene, wherever the page mounts it.
+    if (typeof MutationObserver === "function" && document.body) {
+      workingObserver = new MutationObserver(function () {
+        if (!workingEl) return;
+        try { if (document.querySelector(".es-scene")) { stopWorking(); return; } } catch (e) {}
+        if (workingTarget && anchorVisible(workingTarget) &&
+            resultZoneContent(workingTarget) !== workingStartContent) {
+          stopWorking();
+        }
+      });
+      try {
+        workingObserver.observe(document.body, {
+          childList: true, subtree: true, attributes: true,
+          attributeFilter: ["class", "style", "hidden"]
+        });
+      } catch (e) {}
+    }
+    // The failsafe: he can never get stuck on the page.
+    workingTimer = setTimeout(stopWorking, 60000);
+  }
 
   /* ---- Front desk handoff banner ----
    * The homepage front desk leaves a sessionStorage marker before any

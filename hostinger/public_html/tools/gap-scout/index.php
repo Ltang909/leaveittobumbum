@@ -525,4 +525,4 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 <p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
 <p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap photos of up to 10 receipts at once.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-tailor-your-resume-to-a-job-description/">How to tailor your resume to a job description</a>.</p></section></main><script src="/tools/drop-strip.js?v=20261026r12"></script></body></html>
+<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-tailor-your-resume-to-a-job-description/">How to tailor your resume to a job description</a>.</p></section></main><script src="/tools/drop-strip.js?v=20261026r13"></script></body></html>

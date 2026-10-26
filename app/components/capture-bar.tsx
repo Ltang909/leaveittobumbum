@@ -388,6 +388,8 @@ export default function CaptureBar() {
   // not been reported as abandoned yet; null when there is nothing
   // abandonable in the box. See the draft-tracking effects below.
   const lastDraftRef = useRef<string | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
   const waveCanvasRef = useRef<HTMLCanvasElement>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -479,6 +481,33 @@ export default function CaptureBar() {
     window.addEventListener("pagehide", onHide);
     return () => window.removeEventListener("pagehide", onHide);
   }, []);
+
+  // When a submit resolves, the confirmation lives in the slot under
+  // the composer. On a phone the keyboard closing and the layout
+  // settling can leave it off-screen, so if the result block is not
+  // fully in view, glide it into view (nearest edge, so a block that
+  // is already comfortably visible never moves the page). "working"
+  // states are skipped on purpose: they change under the user's
+  // fingers (recording, sending) and must never yank the page.
+  useEffect(() => {
+    const terminal =
+      result.kind === "success" || result.kind === "error" || result.kind === "message";
+    if (!terminal && !ambiguous) return;
+    const el = resultRef.current;
+    if (!el) return;
+    const raf = window.requestAnimationFrame(() => {
+      try {
+        const rect = el.getBoundingClientRect();
+        if (rect.height === 0) return;
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        if (rect.top >= 0 && rect.bottom <= vh) return;
+        el.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "nearest" });
+      } catch {
+        /* scrolling is a nicety, never a blocker */
+      }
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [result, ambiguous]);
 
   // One peek per session if the page sits untouched for a while. Any
   // interaction re-arms the wait; once he has peeked, that is it.
@@ -739,6 +768,23 @@ export default function CaptureBar() {
   // the picker with the destination already locked, so the picked file
   // routes straight to the pinned tool and nobody gets asked what the
   // file is. Text-first chips pin and focus the composer.
+  // The chips live below the box, so on a phone a tap can pin a tool
+  // without the user ever seeing the pill land. After any chip tap,
+  // bring the desk card itself into view: the card carries a
+  // scroll-margin, so its top settles a little below the viewport top
+  // instead of jammed against it, with the pin pill and box on screen.
+  function scrollDeskToTop() {
+    const el = cardRef.current;
+    if (!el) return;
+    window.requestAnimationFrame(() => {
+      try {
+        el.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
+      } catch {
+        /* scrolling is a nicety, never a blocker */
+      }
+    });
+  }
+
   function pinFromChip(toolKey: string, chip: string, pickerAccept?: string) {
     const tool = tools.find((t) => t.key === toolKey);
     if (!tool) return;
@@ -755,6 +801,7 @@ export default function CaptureBar() {
     } else if (textRef.current) {
       textRef.current.focus();
     }
+    scrollDeskToTop();
   }
 
   function stashAndGo(f: File, url: string, name: string, via: string) {
@@ -1157,7 +1204,7 @@ export default function CaptureBar() {
         if (pasted && pasted.length > 300) flashFace(FACE_EXCITED, 1900);
       }}
     >
-      <div className="capture-home-card desk-card">
+      <div className="capture-home-card desk-card" ref={cardRef}>
         <div className="desk-head">
           <h2 className="desk-greeting">What are we handling today?</h2>
         </div>
@@ -1330,7 +1377,7 @@ export default function CaptureBar() {
               : "Photo ready. @Receipt Reader turns it into a spreadsheet, @Poster to Calendar pulls out the events, @Meal Scanner reads the plate. Pick one, then Do it!"}
           </p>
         )}
-        <div aria-live="polite">
+        <div aria-live="polite" ref={resultRef}>
           {hatLine && <p className="desk-hat-line">{hatLine}</p>}
           {result.kind === "working" && <p className="capture-home-note">{result.text}</p>}
           {result.kind === "message" && (
