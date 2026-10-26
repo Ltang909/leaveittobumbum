@@ -92,9 +92,9 @@ function HeroPortrait({ party }: { party: boolean }) {
           onError={(event) => { setPortraitOk(false); event.currentTarget.style.display = "none"; }}
         />
         {!portraitOk && <div className="photo-fallback"><span>🐈</span><small>Bum Bum’s portrait<br />is clocking in</small></div>}
+        <div className="scribble scribble-one">this is Bum Bum</div>
       </div>
       {quip && <div className="quip-bubble" role="status">{quip}</div>}
-      <div className="scribble scribble-one">this is Bum Bum</div>
       <div className="stamp">BUILT FOR<br /><b>REAL WORK</b></div>
     </div>
   );

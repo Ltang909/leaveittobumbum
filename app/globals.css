@@ -287,7 +287,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .hero-desk .eyebrow { margin-bottom:12px; }
 .hero-desk .lede { margin:18px 0 14px; }
 .hero-desk h1 { font-size:clamp(1.9rem, 4.3vw, 3.55rem); }
-.hero-desk h1 em { white-space:nowrap; }
+.hero-desk h1 em { white-space:nowrap; font-style:normal; }
 @media (min-width:901px){
   .hero-desk .hero-portrait { min-height:330px; }
   .hero-desk .portrait-frame { width:47%; }
@@ -297,7 +297,11 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
    nothing in this build rotates. */
 .hero-portrait .portrait-burst { transform:none; }
 .hero-portrait .portrait-frame { transform:none; }
-.hero-portrait .scribble-one { transform:none; }
+/* The "this is Bum Bum" label is a name tag stuck on the photo itself:
+   it lives inside the portrait frame, pinned to the photo's bottom-left,
+   with the orange top strip of a hello-my-name-is sticker. Flat, no tilt,
+   and it never takes a click (the boop belongs to the photo). */
+.hero-portrait .scribble-one { transform:none; left:14px; right:auto; top:auto; bottom:12px; z-index:4; padding:15px 13px 6px; border-radius:8px; background:linear-gradient(var(--orange) 0 9px, #fff 9px); box-shadow:3px 3px 0 var(--ink); font-style:normal; white-space:nowrap; pointer-events:none; }
 .hero-portrait .stamp { transform:none; }
 .hero-portrait .quip-bubble { transform:translateX(-50%); animation:quip-pop-flat .25s ease; }
 @keyframes quip-pop-flat { from { transform:translateX(-50%) scale(.6); opacity:0; } }
