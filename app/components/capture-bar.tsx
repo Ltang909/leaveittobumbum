@@ -1161,6 +1161,7 @@ export default function CaptureBar() {
         <div className="desk-head">
           <h2 className="desk-greeting">What are we handling today?</h2>
         </div>
+        <p className="desk-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>
         <div className="desk-composer-wrap">
           <div className="desk-composer">
             {pinned && (
@@ -1322,75 +1323,12 @@ export default function CaptureBar() {
             </div>
           )}
         </div>
-        {stagedImage ? (
+        {stagedImage && (
           <p className="desk-hint">
             {pinned
               ? "Photo ready for " + pinned.name + ". Hit Do it! and off it goes."
               : "Photo ready. @Receipt Reader turns it into a spreadsheet, @Poster to Calendar pulls out the events, @Meal Scanner reads the plate. Pick one, then Do it!"}
           </p>
-        ) : (
-          <p className="desk-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>
-        )}
-        <div className="desk-chips-row">
-          <div className="capture-home-chips desk-task-chips">
-            {chipKeys.map((k) => {
-              const def = CHIP_POOL.find((c) => c.key === k);
-              if (!def) return null;
-              return (
-                <button
-                  key={def.key}
-                  type="button"
-                  className="capture-home-chip"
-                  onClick={() => pinFromChip(def.key, def.chip, def.picker)}
-                >
-                  {def.label}
-                </button>
-              );
-            })}
-          </div>
-          <a className="desk-browse" href="#toolbox">
-            or browse the toolbox ↓
-          </a>
-        </div>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*,video/*,audio/*"
-          style={{ display: "none" }}
-          onChange={(e) => {
-            const f = e.target.files && e.target.files[0];
-            e.target.value = "";
-            if (f) {
-              setFile(f);
-              routeFile(f);
-            }
-          }}
-        />
-        <input
-          ref={cameraInputRef}
-          type="file"
-          accept="image/*"
-          capture="environment"
-          style={{ display: "none" }}
-          onChange={(e) => {
-            const f = e.target.files && e.target.files[0];
-            e.target.value = "";
-            if (f) {
-              setFile(f);
-              routeFile(f);
-            }
-          }}
-        />
-        {file && (
-          <div className="capture-home-filechip">
-            <FilePreview file={file} />
-            <span>
-              {file.name} ({(file.size / 1048576).toFixed(1)} MB)
-            </span>
-            <button type="button" onClick={removeStagedFile} aria-label={"Remove " + file.name} title="Remove file">
-              ×
-            </button>
-          </div>
         )}
         <div aria-live="polite">
           {hatLine && <p className="desk-hat-line">{hatLine}</p>}
@@ -1478,6 +1416,67 @@ export default function CaptureBar() {
             </div>
           )}
         </div>
+        <div className="desk-chips-row">
+          <div className="capture-home-chips desk-task-chips">
+            {chipKeys.map((k) => {
+              const def = CHIP_POOL.find((c) => c.key === k);
+              if (!def) return null;
+              return (
+                <button
+                  key={def.key}
+                  type="button"
+                  className="capture-home-chip"
+                  onClick={() => pinFromChip(def.key, def.chip, def.picker)}
+                >
+                  {def.label}
+                </button>
+              );
+            })}
+          </div>
+          <a className="desk-browse" href="#toolbox">
+            or browse the toolbox ↓
+          </a>
+        </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*,video/*,audio/*"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            const f = e.target.files && e.target.files[0];
+            e.target.value = "";
+            if (f) {
+              setFile(f);
+              routeFile(f);
+            }
+          }}
+        />
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            const f = e.target.files && e.target.files[0];
+            e.target.value = "";
+            if (f) {
+              setFile(f);
+              routeFile(f);
+            }
+          }}
+        />
+        {file && (
+          <div className="capture-home-filechip">
+            <FilePreview file={file} />
+            <span>
+              {file.name} ({(file.size / 1048576).toFixed(1)} MB)
+            </span>
+            <button type="button" onClick={removeStagedFile} aria-label={"Remove " + file.name} title="Remove file">
+              ×
+            </button>
+          </div>
+        )}
       </div>
       {peek && <img className="desk-peek" src={FACE_PEEK} alt="" aria-hidden="true" />}
       {crossing && (
