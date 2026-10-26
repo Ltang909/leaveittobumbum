@@ -489,4 +489,4 @@ refresh().then(function(){
 <p><a href="/tools/gap-scout/">Resume Gap Checker</a> - Upload your resume and paste in job descriptions.</p>
 <p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-track-job-applications/">How to track job applications (a system that survives 50 applications)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r4"></script></body></html>
+<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-track-job-applications/">How to track job applications (a system that survives 50 applications)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r5"></script></body></html>
