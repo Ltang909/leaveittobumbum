@@ -37,7 +37,7 @@ export default function BlogIndex() {
         <p className="lede">Comparisons and guides from the Leave It to Bum Bum team.</p>
       </section>
       <section className="shell">
-        <div className="prose">
+        <div className="prose blog-wide">
           {posts.map((p) => (
             <article key={p.href}>
               <h2><a href={p.href}>{p.title}</a></h2>
