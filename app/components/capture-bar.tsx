@@ -315,7 +315,7 @@ function toolKeyFromUrl(url: string): string {
 function markDeskHandoff(
   toolKey: string,
   kind: "file" | "text" | "logged",
-  extra?: { name?: string; excerpt?: string; copied?: boolean }
+  extra?: { name?: string; excerpt?: string; copied?: boolean; text?: string }
 ): void {
   if (!toolKey) return;
   try {
@@ -890,7 +890,11 @@ export default function CaptureBar() {
         copied = false;
       }
     }
-    markDeskHandoff(tool.key, "text", { excerpt: value.slice(0, 90), copied });
+    // The full words ride in the marker too: tools with a field that
+    // fits them (drop-strip.js keeps the map) get the words dropped
+    // straight in on arrival; the clipboard copy stays as the
+    // fallback for the tools with no field.
+    markDeskHandoff(tool.key, "text", { excerpt: value.slice(0, 90), copied, text: value });
     setResult({
       kind: "message",
       text: copied
@@ -1338,7 +1342,7 @@ export default function CaptureBar() {
                   href={result.suggestUrl}
                   onClick={() => {
                     const key = toolKeyFromUrl(result.suggestUrl || "");
-                    if (key) markDeskHandoff(key, "text", { copied: false });
+                    if (key) markDeskHandoff(key, "text", { copied: false, text: text.trim() });
                   }}
                 >
                   Open {result.suggestName || "the tool"} →
