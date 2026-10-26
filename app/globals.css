@@ -320,9 +320,8 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .desk-card { padding-top:34px; }
 .capture-home.drag-over .capture-home-card { background:var(--yellow); }
 .desk-greeting { font-family:var(--font-display),serif; font-size:clamp(1.35rem,2.4vw,1.75rem); line-height:1.15; letter-spacing:-.015em; margin:0; }
-.desk-head { position:relative; z-index:2; }
-.desk-composer-wrap { position:relative; z-index:2; margin-top:18px; }
-.desk-hint { position:relative; z-index:2; margin:10px 2px 0; font-size:.9rem; font-weight:700; opacity:.72; }
+.desk-composer-wrap { position:relative; margin-top:18px; }
+.desk-hint { margin:10px 2px 0; font-size:.9rem; font-weight:700; opacity:.72; }
 .desk-other { display:grid; gap:12px; margin-top:14px; text-align:left; }
 .desk-other-path { border:2px dashed var(--ink); border-radius:12px; padding:12px 14px; }
 .desk-other-path p { margin:0 0 10px; font-size:.96rem; line-height:1.5; }
@@ -351,7 +350,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .desk-icon-btn:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink); }
 .desk-icon-btn.recording { background:var(--orange); color:white; }
 .desk-composer-spacer { flex:1; }
-.desk-chips-row { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-top:20px; }
+.desk-chips-row { display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-top:20px; }
 .desk-task-chips { margin-top:0; }
 .desk-browse { font-weight:900; border-bottom:2px solid var(--ink); padding-bottom:2px; white-space:nowrap; }
 .desk-hat-line { margin:16px 0 0; font-family:var(--font-display),serif; font-style:italic; font-weight:800; font-size:1.12rem; }
@@ -364,10 +363,11 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
    bottom padding (64px) outweighs its top padding (2px) by 62px, so
    the card's centre sits 31px above the section's centre. Pet Pet
    trails lower and behind him, dragged along in her box. The lane
-   sits at z-index 1, above the card's white background but below the
-   card's content layer (z-index 2 on the head, composer, hint and
-   chips), so the cats pass behind the composer as they cross it. */
-.desk-crossing-lane { position:absolute; left:0; right:0; top:calc(50% - 31px); transform:translateY(-50%); height:118px; overflow:hidden; pointer-events:none; z-index:1; }
+   stays topmost in the section (z-index 6, pointer-events none):
+   the crossing only ever plays after Do it! is clicked, during the
+   file handoff wait, so the cats crossing over the card and the
+   composer itself is part of the show. */
+.desk-crossing-lane { position:absolute; left:0; right:0; top:calc(50% - 31px); transform:translateY(-50%); height:118px; overflow:hidden; pointer-events:none; z-index:6; }
 .desk-crossing { position:absolute; left:0; bottom:8px; display:flex; align-items:center; gap:12px; pointer-events:none; animation:desk-cross 4s linear forwards; will-change:left; }
 @keyframes desk-cross { from { left:-480px; } to { left:100%; } }
 .desk-crossing-cat { position:relative; z-index:2; width:88px; height:88px; object-fit:cover; border:var(--line); border-radius:50%; background:var(--cream); box-shadow:4px 4px 0 var(--ink); }
