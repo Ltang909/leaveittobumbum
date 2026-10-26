@@ -76,6 +76,8 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Screen Recorder","item":"https://leaveittobumbum.com/tools/clips/"}]}</script>
 <link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+#speedPicker button{background:#fff;color:var(--ink)}
+#speedPicker button.speed-on{background:var(--ink);color:var(--lime)}
 </style>
 <?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?>
 </head>
@@ -126,7 +128,7 @@
 <div><label for="trimStart" style="margin-bottom:2px">Start: <span id="trimStartTime">00:00</span></label><input type="range" id="trimStart" min="0" max="0" step="0.1" value="0" style="width:100%;padding:0;border:none;background:transparent"></div>
 <div><label for="trimEnd" style="margin-bottom:2px">End: <span id="trimEndTime">00:00</span></label><input type="range" id="trimEnd" min="0" max="0" step="0.1" value="0" style="width:100%;padding:0;border:none;background:transparent"></div>
 <p class="eyebrow" style="margin-top:20px">Speed</p>
-<p id="speedPicker"><button type="button" class="secondary" data-speed="0.5">0.5x</button> <button type="button" data-speed="1">1x</button> <button type="button" class="secondary" data-speed="1.5">1.5x</button> <button type="button" class="secondary" data-speed="2">2x</button></p>
+<p id="speedPicker"><button type="button" class="secondary" data-speed="0.5" aria-pressed="false">0.5x</button> <button type="button" class="speed-on" data-speed="1" aria-pressed="true">1x</button> <button type="button" class="secondary" data-speed="1.5" aria-pressed="false">1.5x</button> <button type="button" class="secondary" data-speed="2" aria-pressed="false">2x</button></p>
 <button id="editBtn">Make edited clip</button>
 <p id="editStatus" class="error"></p>
 <div id="editProgress" class="hidden"><div class="meter"><span id="editFill" style="width:0%"></span></div><p id="editText" style="font-weight:700">0%</p></div>
@@ -462,6 +464,7 @@ if(!screenOK){
     editProgress.classList.add('hidden');
     editStatus.textContent='';
     editBtn.disabled=false;
+    setSpeed(1);
     if(!canEdit||!recordedBlob)return;
     const probe=document.createElement('video');
     probe.preload='metadata';
@@ -486,10 +489,18 @@ if(!screenOK){
     }
     trimEndTime.textContent=fmt(parseFloat(trimEnd.value)*1000);
   });
+  function setSpeed(v){
+    editSpeed=v;
+    [...speedPicker.children].forEach(x=>{
+      const on=parseFloat(x.dataset.speed)===v;
+      x.classList.toggle('speed-on',on);
+      x.classList.toggle('secondary',!on);
+      x.setAttribute('aria-pressed',on?'true':'false');
+    });
+  }
   speedPicker.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b)return;
-    editSpeed=parseFloat(b.dataset.speed);
-    [...speedPicker.children].forEach(x=>x.classList.toggle('secondary',x!==b));
+    setSpeed(parseFloat(b.dataset.speed));
   });
   editBtn.addEventListener('click',async()=>{
     if(!recordedBlob)return;
