@@ -874,9 +874,15 @@ export default function CaptureBar() {
     }
   }
 
-  // Open a pinned tool the capture box cannot file into itself. Any
-  // words the user typed ride along on the clipboard, since tool pages
-  // have no text prefill; the hat swap acknowledges the call either way.
+  // Navigate-only tools whose page drops handed-off words straight
+  // into a field on arrival; drop-strip.js keeps the field map
+  // (FILL_FIELDS). Keep this list in step with it.
+  const DROP_IN_TOOLS = ["purr-code", "ghostwriter", "sop-ify", "hearsay"];
+
+  // Open a pinned tool the capture box cannot file into itself. The
+  // words ride in the handoff marker: tools with a field that fits
+  // them get the words dropped straight in on arrival; the rest keep
+  // the clipboard copy. The hat swap acknowledges the call either way.
   async function openPinnedTool(tool: Tool) {
     wearHat(tool.key, tool.name);
     bbTrack("capture_routed", { destination: tool.key, surface: "home", via: "mention" });
@@ -895,15 +901,18 @@ export default function CaptureBar() {
     // straight in on arrival; the clipboard copy stays as the
     // fallback for the tools with no field.
     markDeskHandoff(tool.key, "text", { excerpt: value.slice(0, 90), copied, text: value });
+    const dropsIn = value.length > 0 && DROP_IN_TOOLS.includes(tool.key);
     setResult({
       kind: "message",
-      text: copied
-        ? "Your words are copied. Paste them into " + tool.name + " when it opens. Taking you there…"
-        : "Taking you to " + tool.name + "…",
+      text: dropsIn
+        ? "Off to " + tool.name + ". Your words will be dropped in when it opens."
+        : copied
+          ? "Your words are copied. Paste them into " + tool.name + " when it opens. Taking you there…"
+          : "Taking you to " + tool.name + "…",
     });
     window.setTimeout(() => {
       window.location.href = tool.url;
-    }, copied ? 1500 : 900);
+    }, dropsIn || copied ? 1500 : 900);
   }
 
   // A pinned native tool: the pin is ABSOLUTE. It rides along on the
