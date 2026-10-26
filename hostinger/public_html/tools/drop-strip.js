@@ -216,7 +216,7 @@
     ".bb-strip-other-path p{margin:0 0 8px;font-size:15px;line-height:1.5}",
     ".bb-strip-other-btn{display:inline-block;text-decoration:none;margin:0}",
     ".bb-strip.drag-over{background:#fff3bf}",
-    ".bb-handoff{display:flex;gap:14px;align-items:center;background:#fff3bf;border:2px solid var(--line,#1a291c);border-radius:16px;padding:12px 16px;margin:18px 0 4px;position:relative}",
+    ".bb-handoff{display:flex;gap:14px;align-items:center;background:#fff3bf;border:2px solid var(--line,#1a291c);border-radius:16px;padding:12px 16px;margin:18px 0 4px;position:relative;grid-column:1/-1;width:100%;box-sizing:border-box}",
     ".bb-handoff-face{width:46px;height:46px;flex:none;object-fit:contain;background:#fff;border:2px solid var(--line,#1a291c);border-radius:12px;padding:3px}",
     ".bb-handoff-line{margin:0;font-size:15.5px;line-height:1.45;flex:1}",
     ".bb-handoff-close{flex:none;border:2px solid var(--line,#1a291c);background:#fff;border-radius:50%;width:28px;height:28px;font-weight:900;cursor:pointer;line-height:1;margin:0;padding:0}",
@@ -668,7 +668,7 @@
     function wireResultLinks() {
       result.querySelectorAll("a[data-bb-suggest]").forEach(function (a) {
         a.addEventListener("click", function () {
-          markDeskHandoff(a.getAttribute("data-bb-suggest"), "text", { copied: false });
+          markDeskHandoff(a.getAttribute("data-bb-suggest"), "text", { copied: false, text: input.value.trim() });
         });
       });
       result.querySelectorAll("a[data-bb-view]").forEach(function (a) {
@@ -768,7 +768,7 @@
       var value = input.value.trim();
       var copied = false;
       function go() {
-        markDeskHandoff(tool.key, "text", { excerpt: value.slice(0, 90), copied: copied });
+        markDeskHandoff(tool.key, "text", { excerpt: value.slice(0, 90), copied: copied, text: value });
         show("<p>" + (copied
           ? "Your words are copied. Paste them into " + esc(tool.name) + " when it opens. Taking you there&hellip;"
           : "Taking you to " + esc(tool.name) + "&hellip;") + "</p>");
@@ -1174,6 +1174,36 @@
    * dropzone and whatever it now holds), not at the marketing header. */
   var HANDOFF_KEY = "bb-desk-handoff";
 
+  /* A navigate-only text handoff can land IN the tool, not just on
+   * the clipboard: each mapped tool's primary field, read from the
+   * page's own markup. Tools not listed here have no single field
+   * that fits the words the desk sends (purrsuit's structured
+   * add-someone form wants name/company/email in separate boxes,
+   * clips records, doodle draws, gap-scout and audiogram take
+   * files), so those keep the clipboard path. */
+  var FILL_FIELDS = {
+    "purr-code": "#pcUrl",
+    "ghostwriter": "#gwPasteText",
+    "sop-ify": "#sopDump",
+    "hearsay": "#hsBrand"
+  };
+
+  function fillHandoffField(toolKey, text) {
+    var sel = FILL_FIELDS[toolKey];
+    if (!sel || !text) return false;
+    var el = null;
+    try { el = document.querySelector(sel); } catch (e) {}
+    if (!el || el.disabled || el.readOnly) return false;
+    el.value = text;
+    // Announce it exactly like typing, so the page's own handlers
+    // (live previews, counters, enable-on-input buttons) react.
+    try {
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+      el.dispatchEvent(new Event("change", { bubbles: true }));
+    } catch (e) {}
+    return true;
+  }
+
   function anchorVisible(el) {
     if (!el) return false;
     if (el.classList && el.classList.contains("hidden")) return false;
@@ -1250,15 +1280,40 @@
       '<button type="button" class="bb-handoff-close" aria-label="Dismiss">&times;</button>';
 
     var detail = banner.querySelector(".bb-handoff-detail");
+    var lineBold = banner.querySelector(".bb-handoff-line b");
+    // The words themselves, dropped into the tool's field before any
+    // dismissal listener exists, so nothing mistakes the fill for the
+    // visitor's first interaction. No field, no fill: the clipboard
+    // note (or the plain arrival line) carries on as before.
+    var filled = false;
+    if (data.kind === "text" && data.text) {
+      filled = fillHandoffField(data.tool, String(data.text));
+    }
     var consumedName = "";
     try { consumedName = window.__bbHandoffFileName || ""; } catch (e) {}
-    function paintDetail() { detail.textContent = handoffDetail(data, consumedName); }
+    function paintDetail() {
+      if (filled) {
+        if (lineBold) lineBold.textContent = "Bum Bum carried this over from the front desk and dropped it in for you.";
+        detail.textContent = "";
+        return;
+      }
+      detail.textContent = handoffDetail(data, consumedName);
+    }
     paintDetail();
 
     var anchor = workAnchor();
     var main = document.querySelector("main.shell") || document.querySelector("main");
-    if (anchor && anchor.parentNode) {
-      anchor.parentNode.insertBefore(banner, anchor);
+    // The banner is a full-width band, never a cell inside the tool's
+    // own layout: climb from the work panel to the top-level block
+    // inside <main> that contains it (on purr-code, the two-column
+    // grid around the settings panel) and park the banner directly
+    // above that block, spanning the whole content container.
+    var host = anchor;
+    if (anchor && main && main.contains(anchor)) {
+      while (host.parentNode && host.parentNode !== main) host = host.parentNode;
+    }
+    if (host && host.parentNode) {
+      host.parentNode.insertBefore(banner, host);
     } else if (main) {
       main.insertBefore(banner, main.firstChild);
     } else if (document.body) {
