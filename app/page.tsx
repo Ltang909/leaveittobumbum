@@ -53,22 +53,14 @@ function Arrow() { return <span aria-hidden="true">↗</span>; }
 
 // The hero portrait: this is Bum Bum. Booping cycles his faces, and the
 // front desk borrows the same portrait for its own moments (a working
-// face while you type, the routed tool's persona as a hat, a pop when
-// the bell rings) through the shared desk-face state.
+// face while you type, the routed tool's persona as a hat) through the
+// shared desk-face state.
 function HeroPortrait({ party }: { party: boolean }) {
-  const { mood, hat, popKey } = useDeskFace();
+  const { mood, hat } = useDeskFace();
   const [face, setFace] = useState(0);
   const [quip, setQuip] = useState<string | null>(null);
   const [boingKey, setBoingKey] = useState(0);
-  const [popAnim, setPopAnim] = useState(false);
   const [portraitOk, setPortraitOk] = useState(true);
-
-  useEffect(() => {
-    if (!popKey) return;
-    setPopAnim(true);
-    const t = window.setTimeout(() => setPopAnim(false), 560);
-    return () => window.clearTimeout(t);
-  }, [popKey]);
 
   function boopBumBum() {
     setFace((f) => (f + 1) % FACES.length);
@@ -86,7 +78,7 @@ function HeroPortrait({ party }: { party: boolean }) {
       <div className="portrait-burst"></div>
       <div
         key={boingKey}
-        className={`portrait-frame boopable${boingKey && !party && !popAnim ? " boing" : ""}${popAnim ? " desk-pop-anim" : ""}${party ? " dance" : ""}`}
+        className={`portrait-frame boopable${boingKey && !party ? " boing" : ""}${party ? " dance" : ""}`}
         onClick={boopBumBum}
         onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); boopBumBum(); } }}
         role="button"
@@ -170,7 +162,7 @@ export default function Home() {
             <div className="hero-copy">
               <p className="eyebrow"><span>●</span> Small business busywork, handled</p>
               <h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1>
-              <p className="lede">Little tools that chase unpaid invoices, sort your receipts, nudge your follow-ups, and handle the fiddly stuff stealing your afternoon. Start at the front desk: hand him the messy bit, he takes it from there.</p>
+              <p className="lede">Little tools that handle the fiddly stuff stealing your afternoon.</p>
               <p className="fine">Start free. No card. No call with a guy named Chad.</p>
             </div>
             <HeroPortrait party={party} />

@@ -88,8 +88,20 @@
     ".bb-strip-error{color:#9b2516;font-weight:700}",
     ".bb-strip-chip{margin:8px 8px 0 0}",
     ".bb-strip.drag-over{background:#fff3bf}",
-    "@media(max-width:700px){.bb-strip{padding:20px 16px}.bb-strip-head{flex-direction:column;gap:10px}.bb-strip-row{flex-wrap:wrap}.bb-strip-row input{flex:1 1 100%}}"
+    ".bb-handoff{display:flex;gap:14px;align-items:center;background:#fff3bf;border:2px solid var(--line,#1a291c);border-radius:16px;padding:12px 16px;margin:18px 0 4px;position:relative}",
+    ".bb-handoff-face{width:46px;height:46px;flex:none;object-fit:contain;background:#fff;border:2px solid var(--line,#1a291c);border-radius:12px;padding:3px}",
+    ".bb-handoff-line{margin:0;font-size:15.5px;line-height:1.45;flex:1}",
+    ".bb-handoff-close{flex:none;border:2px solid var(--line,#1a291c);background:#fff;border-radius:50%;width:28px;height:28px;font-weight:900;cursor:pointer;line-height:1;margin:0;padding:0}",
+    "@media(max-width:700px){.bb-strip{padding:20px 16px}.bb-strip-head{flex-direction:column;gap:10px}.bb-strip-row{flex-wrap:wrap}.bb-strip-row input{flex:1 1 100%}.bb-handoff{padding:10px 12px}.bb-handoff-face{width:38px;height:38px}}"
   ].join("\n");
+
+  function ensureStyle() {
+    if (document.getElementById("bb-strip-style")) return;
+    var style = document.createElement("style");
+    style.id = "bb-strip-style";
+    style.textContent = CSS;
+    document.head.appendChild(style);
+  }
 
   function storeHandoff(file) {
     return new Promise(function (res, rej) {
@@ -111,12 +123,7 @@
   }
 
   function build(tool) {
-    if (!document.getElementById("bb-strip-style")) {
-      var style = document.createElement("style");
-      style.id = "bb-strip-style";
-      style.textContent = CSS;
-      document.head.appendChild(style);
-    }
+    ensureStyle();
     var face = "";
     var mascot = document.querySelector(".tool-mascot-page");
     if (mascot) face = mascot.getAttribute("src") || "";
@@ -170,6 +177,10 @@
 
     function stashAndGo(file, url, name, via) {
       track("capture_routed", { destination: name, surface: "strip", via: via, tool: tool });
+      try {
+        var m = url.match(/\/tools\/([^/]+)\//);
+        sessionStorage.setItem("bb-desk-handoff", JSON.stringify({ tool: m ? m[1] : "", kind: "file", name: file.name, ts: Date.now() }));
+      } catch (e) {}
       show('<p>Sending "' + esc(file.name) + '" to ' + esc(name) + ". Your file never leaves your device.</p>");
       storeHandoff(file).then(function () {
         setTimeout(function () { location.href = url + "?from=capture"; }, 700);
@@ -313,4 +324,109 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", hook);
 
   window.BBDropStrip = { show: show };
+
+  /* ---- Front desk handoff banner ----
+   * The homepage front desk leaves a sessionStorage marker before any
+   * hop to a tool page ({tool, kind, name/excerpt, ts}). On arrival the
+   * banner makes the carry-over obvious: his face, one line in his
+   * voice, and what came along (the file name for file handoffs, the
+   * clipboard note for navigate-only arrivals). The marker is cleared
+   * when the banner shows, so it appears at most once per handoff; the
+   * × dismisses it, and it also clears the moment the visitor starts
+   * using the tool itself. In-flow only, it never overlays the tool. */
+  var HANDOFF_KEY = "bb-desk-handoff";
+
+  function pageToolKey() {
+    var m = location.pathname.match(/\/tools\/([^/]+)\//);
+    return m ? m[1] : "";
+  }
+
+  function handoffDetail(data, fileName) {
+    if (data.kind === "file") {
+      var name = fileName || data.name || "Your file";
+      return "\u201C" + name + "\u201D came with you and is ready below.";
+    }
+    if (data.kind === "logged") {
+      return data.excerpt ? "\u201C" + data.excerpt + "\u201D Already filed from the front desk." : "Already filed from the front desk.";
+    }
+    if (data.copied) return "Your words are on your clipboard, ready to paste in.";
+    return "You called this one up from the front desk.";
+  }
+
+  function showHandoffBanner() {
+    var raw = null;
+    try { raw = sessionStorage.getItem(HANDOFF_KEY); } catch (e) {}
+    if (!raw) return;
+    var data = null;
+    try { data = JSON.parse(raw); } catch (e) {}
+    // The marker is spent either way: one banner per handoff, never a repeat.
+    try { sessionStorage.removeItem(HANDOFF_KEY); } catch (e) {}
+    if (!data || !data.tool) return;
+    if (Date.now() - (data.ts || 0) > 10 * 60 * 1000) return;
+    if (data.tool !== pageToolKey()) return;
+
+    ensureStyle();
+    var face = "";
+    var mascot = document.querySelector(".tool-mascot-page");
+    if (mascot) face = mascot.getAttribute("src") || "";
+    if (!face) face = "/bum/cat-wink-blep.png";
+
+    var banner = document.createElement("section");
+    banner.className = "bb-handoff";
+    banner.setAttribute("aria-label", "Carried over from the front desk");
+    banner.innerHTML =
+      '<img class="bb-handoff-face" src="' + esc(face) + '" alt="Bum Bum">' +
+      '<p class="bb-handoff-line"><b>Bum Bum carried this over from the front desk.</b> <span class="bb-handoff-detail"></span></p>' +
+      '<button type="button" class="bb-handoff-close" aria-label="Dismiss">&times;</button>';
+
+    var detail = banner.querySelector(".bb-handoff-detail");
+    var consumedName = "";
+    try { consumedName = window.__bbHandoffFileName || ""; } catch (e) {}
+    function paintDetail() { detail.textContent = handoffDetail(data, consumedName); }
+    paintDetail();
+
+    var main = document.querySelector("main.shell") || document.querySelector("main");
+    if (main) {
+      main.insertBefore(banner, main.firstChild);
+    } else if (document.body) {
+      document.body.insertBefore(banner, document.body.firstChild);
+    } else {
+      return;
+    }
+    track("desk_handoff_banner_shown", { tool: data.tool });
+
+    var gone = false;
+    function remove() {
+      if (gone) return;
+      gone = true;
+      document.removeEventListener("input", onUse, true);
+      document.removeEventListener("change", onUse, true);
+      document.removeEventListener("pointerdown", onUse, true);
+      window.removeEventListener("bb-handoff-file", onFile);
+      if (banner.parentNode) banner.parentNode.removeChild(banner);
+    }
+    function onUse(e) {
+      if (banner.contains(e.target)) return;
+      if (e.type === "pointerdown") {
+        var t = e.target;
+        if (!(t.closest && t.closest("input, textarea, select, button, a, [role='button']"))) return;
+      }
+      remove();
+    }
+    function onFile(e) {
+      consumedName = (e && e.detail && e.detail.name) || consumedName;
+      paintDetail();
+    }
+    banner.querySelector(".bb-handoff-close").addEventListener("click", remove);
+    document.addEventListener("input", onUse, true);
+    document.addEventListener("change", onUse, true);
+    document.addEventListener("pointerdown", onUse, true);
+    window.addEventListener("bb-handoff-file", onFile);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", showHandoffBanner);
+  } else {
+    showHandoffBanner();
+  }
 })();

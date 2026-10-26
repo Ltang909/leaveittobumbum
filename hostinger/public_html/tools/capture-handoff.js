@@ -24,6 +24,12 @@
       try { store.delete('pending'); } catch (err) {}
       if (!rec || !rec.file) return;
       if (Date.now() - (rec.ts || 0) > 10 * 60 * 1000) return; // stale handoff
+      // Tell the page which file was actually consumed, so the front
+      // desk handoff banner (drop-strip.js) can name it.
+      try {
+        window.__bbHandoffFileName = rec.name || (rec.file && rec.file.name) || '';
+        window.dispatchEvent(new CustomEvent('bb-handoff-file', { detail: { name: window.__bbHandoffFileName } }));
+      } catch (err) {}
       var tries = 0;
       (function wait() {
         if (window.__bbCaptureHandoff) {
