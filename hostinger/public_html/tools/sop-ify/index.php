@@ -283,4 +283,4 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
 <p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r11"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r12"></script></body></html>

@@ -266,4 +266,4 @@ trimBtn.addEventListener('click',async()=>{
     else trimError.textContent='Something went wrong finishing the trim. Try again?';
   }finally{trimBtn.disabled=false;setTimeout(()=>trimProgress.classList.add('hidden'),900)}
 });
-</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><script src="/tools/drop-strip.js?v=20261026r11"></script></body></html>
+</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><script src="/tools/drop-strip.js?v=20261026r12"></script></body></html>

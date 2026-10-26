@@ -384,6 +384,10 @@ export default function CaptureBar() {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const idemRef = useRef<string>("");
+  // The last unsubmitted composer draft (trimmed, 3+ chars) that has
+  // not been reported as abandoned yet; null when there is nothing
+  // abandonable in the box. See the draft-tracking effects below.
+  const lastDraftRef = useRef<string | null>(null);
   const waveCanvasRef = useRef<HTMLCanvasElement>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -441,6 +445,40 @@ export default function CaptureBar() {
     el.style.height = "auto";
     el.style.height = Math.min(el.scrollHeight, 180) + "px";
   }, [text]);
+
+  // Composer draft tracking for PostHog. The latest unsubmitted draft
+  // (3+ trimmed chars) is remembered as it changes; any submit stamps
+  // its words as submitted (trackComposerSubmitted clears the ref),
+  // so only words that were never sent on can count as abandoned.
+  // Clearing the box back to empty discards the draft: report it once,
+  // with the last draft text, at the moment the box becomes empty.
+  useEffect(() => {
+    const t = text.trim();
+    if (t.length >= 3) {
+      lastDraftRef.current = t;
+    } else if (t === "") {
+      const d = lastDraftRef.current;
+      if (d) {
+        lastDraftRef.current = null;
+        bbTrack("composer_abandoned", { text: d.slice(0, 2000), surface: "desk" });
+      }
+    }
+  }, [text]);
+
+  // Leaving the page with a draft still in the box abandons it too.
+  // The ref is cleared before firing, so a draft already reported on
+  // clear can never be reported a second time here.
+  useEffect(() => {
+    const onHide = () => {
+      const d = lastDraftRef.current;
+      if (d) {
+        lastDraftRef.current = null;
+        bbTrack("composer_abandoned", { text: d.slice(0, 2000), surface: "desk" });
+      }
+    };
+    window.addEventListener("pagehide", onHide);
+    return () => window.removeEventListener("pagehide", onHide);
+  }, []);
 
   // One peek per session if the page sits untouched for a while. Any
   // interaction re-arms the wait; once he has peeked, that is it.
@@ -1032,8 +1070,19 @@ export default function CaptureBar() {
     });
   }
 
+  // Every submit that carries words reports them to PostHog, and the
+  // words stop being an abandonable draft from that moment on (later
+  // edits build a fresh draft). Empty submits report nothing.
+  function trackComposerSubmitted() {
+    const t = text.trim();
+    if (!t) return;
+    bbTrack("composer_submitted", { text: t.slice(0, 2000), surface: "desk" });
+    lastDraftRef.current = null;
+  }
+
   function submit() {
     if (stagedImage) {
+      trackComposerSubmitted();
       if (pinned) {
         // The pin is the destination: hand the photo straight over.
         routeFile(stagedImage);
@@ -1048,11 +1097,13 @@ export default function CaptureBar() {
       return;
     }
     if (file) {
+      trackComposerSubmitted();
       routeFile(file);
       return;
     }
     if (pinned) {
       if (busy) return;
+      trackComposerSubmitted();
       if (!text.trim()) {
         void openPinnedTool(pinned);
         return;
@@ -1068,6 +1119,7 @@ export default function CaptureBar() {
     if (!text.trim() || busy) return;
     clearHat();
     idemRef.current = idem();
+    trackComposerSubmitted();
     bbTrack("capture_started", { surface: "home", kind: "text" });
     void sendText(undefined, undefined, idemRef.current);
   }
