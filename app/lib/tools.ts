@@ -5,6 +5,7 @@ export type Tool = {
   name: string;
   tag: string;
   icon: string;
+  iconImg?: string;
   description: string;
   url: string;
   cta: string;
