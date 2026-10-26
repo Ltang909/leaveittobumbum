@@ -68,7 +68,6 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .card-1 { background:var(--yellow); }.card-2 { background:#f7a9ca; }.card-3 { background:var(--mint); }.card-4 { background:#8eb5ff; }.card-5 { background:#ffc59b; }.card-6 { background:#d6c9f5; }.card-7 { background:#b2e8dc; }.card-8 { background:#ffb3b3; }
 .tool-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
 .tool-icon { width:48px; height:48px; display:grid; place-items:center; background:white; border:var(--line); border-radius:50%; font-size:1.3rem; }
-.tool-icon img { width:100%; height:100%; object-fit:contain; border-radius:50%; display:block; }
 .tool-tag { font-size:.7rem; font-weight:1000; text-transform:uppercase; letter-spacing:.1em; }
 .tool-card h3 { font-family:var(--font-display),serif; font-size:1.7rem; line-height:1.12; min-height:2.24em; margin:35px 0 8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 .tool-card p { margin:0; }
@@ -83,7 +82,6 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .tool-row:hover { transform:translate(-1px,-1px); box-shadow:5px 5px 0 var(--ink); }
 .tool-row:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
 .tool-row-icon { width:44px; height:44px; flex:none; display:grid; place-items:center; border:var(--line); border-radius:50%; font-size:1.2rem; }
-.tool-row-icon img { width:100%; height:100%; object-fit:contain; border-radius:50%; display:block; }
 .tool-row-main { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
 .tool-row-name { font-weight:1000; font-size:1.05rem; }
 .tool-row-desc { font-size:.88rem; opacity:.85; }
