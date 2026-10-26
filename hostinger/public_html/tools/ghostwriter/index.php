@@ -242,4 +242,5 @@ loadPacks();
 <p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
 <p><a href="/tools/doodle/">Online Sketchpad</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
 </section>
+<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>Turning rough thoughts into content is one job among many: see where it fits in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
