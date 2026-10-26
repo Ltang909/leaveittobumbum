@@ -1480,8 +1480,8 @@ export default function CaptureBar() {
               );
             })}
           </div>
-          <a className="desk-browse" href="#toolbox">
-            or browse the toolbox ↓
+          <a className="desk-browse" href="/tools/">
+            or browse the toolbox →
           </a>
         </div>
         <input
