@@ -448,16 +448,26 @@ export default function CaptureBar() {
     input.click();
   }
 
-  function prefillInvoice() {
-    bbTrack("desk_chip", { chip: "invoice" });
+  // A task chip is a shortcut to the same call the @ menu makes: it
+  // pins the chip's tool (pill, pinned placeholder, the lot), measurably
+  // identical to picking the tool by name. File-first chips then open
+  // the picker with the destination already locked, so the picked file
+  // routes straight to the pinned tool and nobody gets asked what the
+  // file is. Text-first chips pin and focus the composer.
+  function pinFromChip(toolKey: string, chip: string, pickerAccept?: string) {
+    const tool = tools.find((t) => t.key === toolKey);
+    if (!tool) return;
+    bbTrack("desk_chip", { chip });
+    setAmbiguous(null);
+    setOtherOpen(false);
+    setPendingImage(null);
     clearHat();
-    setText("Invoice reminder: ");
-    const el = textRef.current;
-    if (el) {
-      el.focus();
-      window.setTimeout(() => {
-        el.setSelectionRange(el.value.length, el.value.length);
-      }, 0);
+    setPinned(tool);
+    bbTrack("desk_mention_selected", { tool: tool.key, via: "chip" });
+    if (pickerAccept) {
+      openFilePicker(pickerAccept);
+    } else if (textRef.current) {
+      textRef.current.focus();
     }
   }
 
@@ -955,33 +965,24 @@ export default function CaptureBar() {
             <button
               type="button"
               className="capture-home-chip"
-              onClick={() => {
-                bbTrack("desk_chip", { chip: "receipts" });
-                openFilePicker("image/*");
-              }}
+              onClick={() => pinFromChip("receipt-reader", "receipts", "image/*")}
             >
               Read my receipts
             </button>
-            <button type="button" className="capture-home-chip" onClick={prefillInvoice}>
+            <button type="button" className="capture-home-chip" onClick={() => pinFromChip("invoice-chaser", "invoice")}>
               Chase an invoice
             </button>
             <button
               type="button"
               className="capture-home-chip"
-              onClick={() => {
-                bbTrack("desk_chip", { chip: "poster" });
-                openFilePicker("image/*");
-              }}
+              onClick={() => pinFromChip("poster-to-calendar", "poster", "image/*")}
             >
-              Turn a poster into events
+              Event posters to your calendar
             </button>
             <button
               type="button"
               className="capture-home-chip"
-              onClick={() => {
-                bbTrack("desk_chip", { chip: "voice-note" });
-                openFilePicker("audio/*");
-              }}
+              onClick={() => pinFromChip("notes", "voice-note", "audio/*")}
             >
               Transcribe a voice note
             </button>
