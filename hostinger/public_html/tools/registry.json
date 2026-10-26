@@ -219,6 +219,17 @@
       "url": "/tools/video-converter/",
       "cta": "Convert a video",
       "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "video-mp3-overlay",
+      "name": "Video MP3 Overlay",
+      "tag": "Video",
+      "icon": "🎧",
+      "iconImg": "/bum/icons/video-mp3-overlay.png",
+      "description": "Drop in a video and an MP3. Snip the good bits of the song, pin each one where it should play, set the mix, and Bum Bum renders it right in your browser. Nothing gets uploaded.",
+      "url": "/tools/video-mp3-overlay/",
+      "cta": "Mix my video",
+      "mascot": "/bum/cat-laptop.png"
     }
   ]
 }
