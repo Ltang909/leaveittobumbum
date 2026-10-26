@@ -62,6 +62,7 @@ const FACE_WORK = "/bum/cat-laptop.png";
 const FACE_EXCITED = "/bum/cat-excited-v2.png";
 const FACE_PEEK = "/bum/cat-peeking.png";
 const FACE_BOX = "/bum/cat-box-v2.png";
+const FACE_PETPET = "/bum/petpet/box.png";
 
 const PLACEHOLDERS = [
   "Start with @ to pick a tool, or just describe the job…",
@@ -276,6 +277,33 @@ function markDeskHandoff(
   }
 }
 
+// Tiny staged-file preview: a thumbnail for images, a muted first
+// frame for video, an icon chip for audio and anything else. One
+// object URL per file, revoked when the file goes away or is swapped.
+function FilePreview({ file, large }: { file: File; large?: boolean }) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+      setUrl(null);
+      return;
+    }
+    const u = URL.createObjectURL(file);
+    setUrl(u);
+    return () => {
+      URL.revokeObjectURL(u);
+    };
+  }, [file]);
+  const cls = "bb-file-preview" + (large ? " bb-file-preview-lg" : "");
+  if (file.type.startsWith("image/") && url) return <img className={cls} src={url} alt="" />;
+  if (file.type.startsWith("video/") && url)
+    return <video className={cls} src={url} preload="metadata" muted playsInline aria-hidden="true" />;
+  return (
+    <span className={cls + " bb-file-preview-icon"} aria-hidden="true">
+      {file.type.startsWith("audio/") ? "🎵" : file.type.startsWith("video/") ? "🎬" : "📎"}
+    </span>
+  );
+}
+
 export default function CaptureBar() {
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -304,6 +332,15 @@ export default function CaptureBar() {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const idemRef = useRef<string>("");
+  const waveCanvasRef = useRef<HTMLCanvasElement>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const rafRef = useRef(0);
+  const recStreamRef = useRef<MediaStream | null>(null);
+  const recStartRef = useRef(0);
+  const recTimerRef = useRef(0);
+  const discardRecRef = useRef(false);
+  const [recElapsed, setRecElapsed] = useState("0:00");
 
   // Keep a ref mirror of the pin so the rotation timer can see it.
   useEffect(() => {
@@ -384,6 +421,97 @@ export default function CaptureBar() {
     return session as { csrf: string };
   }
 
+  function fmtRecTime(ms: number): string {
+    const s = Math.floor(ms / 1000);
+    return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+  }
+
+  // One frame of the recording waveform: frequency bars off the
+  // analyser, ink palette with a yellow accent bar. With no analyser
+  // (Web Audio unavailable) it draws a calm static pattern instead.
+  function drawWave() {
+    const canvas = waveCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    const bars = 28;
+    const gap = 3;
+    const bw = (w - gap * (bars - 1)) / bars;
+    let data: Uint8Array<ArrayBuffer> | null = null;
+    const analyser = analyserRef.current;
+    if (analyser) {
+      data = new Uint8Array(analyser.frequencyBinCount);
+      analyser.getByteFrequencyData(data);
+    }
+    for (let i = 0; i < bars; i++) {
+      const v = data ? data[Math.floor((i / bars) * data.length * 0.7)] / 255 : 0.3;
+      const bh = Math.max(3, v * h);
+      ctx.fillStyle = i % 5 === 4 ? "#ffd84d" : "#ff6b35";
+      ctx.fillRect(i * (bw + gap), (h - bh) / 2, bw, bh);
+    }
+  }
+
+  // Start the readout clock and the wave loop (a single static frame
+  // under reduced motion; the dot and timer still run).
+  function startRecUi() {
+    recStartRef.current = Date.now();
+    setRecElapsed("0:00");
+    if (recTimerRef.current) window.clearInterval(recTimerRef.current);
+    recTimerRef.current = window.setInterval(() => {
+      setRecElapsed(fmtRecTime(Date.now() - recStartRef.current));
+    }, 250);
+    if (reducedMotion()) {
+      window.setTimeout(drawWave, 60);
+      return;
+    }
+    const loop = () => {
+      drawWave();
+      rafRef.current = window.requestAnimationFrame(loop);
+    };
+    rafRef.current = window.requestAnimationFrame(loop);
+  }
+
+  // Tear down every piece of the recording display machinery.
+  function stopRecUi() {
+    if (rafRef.current) {
+      window.cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
+    if (recTimerRef.current) {
+      window.clearInterval(recTimerRef.current);
+      recTimerRef.current = 0;
+    }
+    if (audioCtxRef.current) {
+      const actx = audioCtxRef.current;
+      audioCtxRef.current = null;
+      void actx.close().catch(() => {});
+    }
+    analyserRef.current = null;
+  }
+
+  // Leaving mid-recording: stop everything, keep nothing.
+  useEffect(() => {
+    return () => {
+      discardRecRef.current = true;
+      if (recorderRef.current && recorderRef.current.state !== "inactive") {
+        try {
+          recorderRef.current.stop();
+        } catch {
+          // Already stopped.
+        }
+      }
+      if (recStreamRef.current) {
+        recStreamRef.current.getTracks().forEach((t) => t.stop());
+        recStreamRef.current = null;
+      }
+      stopRecUi();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function transcribe(blob: Blob) {
     setResult({ kind: "working", text: "Transcribing…" });
     try {
@@ -399,7 +527,10 @@ export default function CaptureBar() {
       const d = (await res.json()) as { transcript?: string; error?: string };
       if (d && d.transcript) {
         setText(d.transcript);
-        setResult({ kind: "message", text: "Heard you. Tap Do it! and I will file it." });
+        setResult({
+          kind: "message",
+          text: "Heard you. Tap Do it! to file it, or @ a tool first: Voice Notes to Text keeps the note, Ghostwriter (Voice to Content) makes it posts, SOP Generator makes it a procedure.",
+        });
         if (textRef.current) textRef.current.focus();
       } else {
         setResult({ kind: "error", text: (d && d.error) || "Could not transcribe that." });
@@ -418,10 +549,28 @@ export default function CaptureBar() {
       setResult({ kind: "error", text: "Voice input is not supported in this browser. Type it instead." });
       return;
     }
+    // The AudioContext is born inside the click, while the browser
+    // still counts it as a user gesture; the waveform analyser hangs
+    // off it once the stream arrives. If Web Audio is unavailable the
+    // recording itself carries on exactly as before.
+    let actx: AudioContext | null = null;
+    try {
+      const AC =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (AC) {
+        actx = new AC();
+        void actx.resume().catch(() => {});
+      }
+    } catch {
+      actx = null;
+    }
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
         chunksRef.current = [];
+        discardRecRef.current = false;
+        recStreamRef.current = stream;
         const rec = new MediaRecorder(stream);
         recorderRef.current = rec;
         rec.ondataavailable = (e) => {
@@ -429,14 +578,36 @@ export default function CaptureBar() {
         };
         rec.onstop = () => {
           stream.getTracks().forEach((t) => t.stop());
+          recStreamRef.current = null;
+          stopRecUi();
           setRecording(false);
+          if (discardRecRef.current) {
+            discardRecRef.current = false;
+            return;
+          }
           void transcribe(new Blob(chunksRef.current, { type: rec.mimeType || "audio/webm" }));
         };
+        if (actx) {
+          audioCtxRef.current = actx;
+          try {
+            const src = actx.createMediaStreamSource(stream);
+            const analyser = actx.createAnalyser();
+            analyser.fftSize = 128;
+            src.connect(analyser);
+            analyserRef.current = analyser;
+          } catch {
+            analyserRef.current = null;
+          }
+        }
         rec.start();
         setRecording(true);
-        setResult({ kind: "working", text: "Listening… tap the mic again to stop." });
+        startRecUi();
+        setResult({ kind: "working", text: "Recording… tap the mic again to stop." });
       })
       .catch(() => {
+        if (actx) {
+          void actx.close().catch(() => {});
+        }
         setResult({ kind: "error", text: "Microphone access was blocked. Type it instead." });
       });
   }
@@ -480,9 +651,10 @@ export default function CaptureBar() {
     storeHandoff(f)
       .then(() => {
         // Once per session, he personally carries the file across the
-        // screen on its way to the tool; the handoff waits for him. The
-        // walk takes ~9 seconds now (half the old speed), and any click
-        // or tap skips it and goes straight to the tool.
+        // desk on its way to the tool, Pet Pet dragged along behind
+        // him; the handoff waits for them. The trip is the width of
+        // the desk card and takes ~4 seconds, and any click or tap
+        // skips it and goes straight to the tool.
         if (!reducedMotion() && !ssGet("bb-desk-crossed")) {
           ssSet("bb-desk-crossed", "1");
           setCrossing({ img: tool && tool.iconImg ? tool.iconImg : "", name });
@@ -494,7 +666,7 @@ export default function CaptureBar() {
             window.location.href = url + "?from=capture";
           };
           window.addEventListener("pointerdown", go);
-          window.setTimeout(go, 9000);
+          window.setTimeout(go, 4000);
         } else {
           window.setTimeout(() => {
             window.location.href = url + "?from=capture";
@@ -928,6 +1100,20 @@ export default function CaptureBar() {
                 Do it!
               </button>
             </div>
+            {recording && (
+              <>
+                <div className="desk-rec-row">
+                  <span className="desk-rec-dot" aria-hidden="true" />
+                  <canvas ref={waveCanvasRef} className="desk-rec-wave" width={168} height={32} aria-hidden="true" />
+                  <span className="desk-rec-time">{recElapsed}</span>
+                  <span className="desk-rec-note">Recording… tap 🎤 to stop.</span>
+                </div>
+                <p className="desk-rec-hint">
+                  Your words land in the box when you stop. Then @ sends them on: Voice Notes to Text keeps the note,
+                  Ghostwriter (Voice to Content) makes it posts, SOP Generator makes it a procedure.
+                </p>
+              </>
+            )}
           </div>
           {mention && mentionMatches.length > 0 && (
             <div className="desk-mention-list" role="listbox" aria-label="Tools you can call with @">
@@ -1021,8 +1207,11 @@ export default function CaptureBar() {
           }}
         />
         {file && !pendingImage && (
-          <p className="capture-home-filechip">
-            📎 {file.name} ({(file.size / 1048576).toFixed(1)} MB){" "}
+          <div className="capture-home-filechip">
+            <FilePreview file={file} />
+            <span>
+              {file.name} ({(file.size / 1048576).toFixed(1)} MB)
+            </span>
             <button
               type="button"
               onClick={() => {
@@ -1033,7 +1222,7 @@ export default function CaptureBar() {
             >
               ×
             </button>
-          </p>
+          </div>
         )}
         <div aria-live="polite">
           {hatLine && <p className="desk-hat-line">{hatLine}</p>}
@@ -1075,6 +1264,9 @@ export default function CaptureBar() {
           )}
           {pendingImage && (
             <div className="capture-home-picker">
+              <div className="capture-home-picker-preview">
+                <FilePreview file={pendingImage} large />
+              </div>
               <p className="capture-home-note">Got it. What is this a photo of?</p>
               <div className="capture-home-chips">
                 {IMAGE_DESTINATIONS.map((d) => (
@@ -1136,10 +1328,13 @@ export default function CaptureBar() {
       </div>
       {peek && <img className="desk-peek" src={FACE_PEEK} alt="" aria-hidden="true" />}
       {crossing && (
-        <div className="desk-crossing" aria-hidden="true">
-          <img className="desk-crossing-cat" src={FACE_BOX} alt="" />
-          {crossing.img && <img className="desk-crossing-item" src={crossing.img} alt="" />}
-          <span className="desk-crossing-label">Taking that to {crossing.name}…</span>
+        <div className="desk-crossing-lane" aria-hidden="true">
+          <div className="desk-crossing">
+            <img className="desk-crossing-cat" src={FACE_BOX} alt="" />
+            <img className="desk-crossing-petpet" src={FACE_PETPET} alt="" />
+            {crossing.img && <img className="desk-crossing-item" src={crossing.img} alt="" />}
+            <span className="desk-crossing-label">Taking that to {crossing.name}…</span>
+          </div>
         </div>
       )}
     </section>

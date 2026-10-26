@@ -197,6 +197,18 @@
     ".bb-strip-mention-text b{font-size:15px}",
     ".bb-strip-mention-text small{opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
     ".bb-strip-mention-empty{padding:12px 14px;font-weight:800}",
+    ".bb-strip-recrow{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}",
+    ".bb-strip-recrow[hidden]{display:none}",
+    ".bb-strip-recdot{width:11px;height:11px;border-radius:50%;background:#ff6b35;flex:none;animation:bb-strip-rec-pulse 1.1s ease-in-out infinite}",
+    "@keyframes bb-strip-rec-pulse{0%,100%{opacity:1}50%{opacity:.25}}",
+    "@media(prefers-reduced-motion:reduce){.bb-strip-recdot{animation:none}}",
+    ".bb-strip-wave{width:132px;height:28px;flex:none}",
+    ".bb-strip-rectime{font-weight:900;font-variant-numeric:tabular-nums}",
+    ".bb-strip-recnote{font-size:13px;font-weight:700;opacity:.8}",
+    ".bb-strip-rechint{margin:6px 2px 0;font-size:13px;font-weight:700;opacity:.72}",
+    ".bb-strip-rechint[hidden]{display:none}",
+    ".bb-strip-preview{width:52px;height:52px;object-fit:cover;border:2px solid var(--line,#1a291c);border-radius:10px;background:#fff;flex:none}",
+    ".bb-strip-preview-row{display:flex;align-items:center;gap:10px;margin:0 0 8px}",
     ".bb-strip-btn{flex:none;border:2px solid var(--line,#1a291c);background:#fff;color:var(--ink,#142015);font-weight:900;padding:12px 16px;border-radius:999px;cursor:pointer;font:inherit;margin:0}",
     ".bb-strip-btn:disabled{opacity:.6;cursor:wait}",
     ".bb-strip-go{background:var(--lime,#d8ff62)}",
@@ -339,6 +351,8 @@
       '<span class="bb-strip-spacer"></span>' +
       '<button type="button" class="bb-strip-btn bb-strip-go">Log it</button>' +
       "</div>" +
+      '<div class="bb-strip-recrow" hidden><span class="bb-strip-recdot" aria-hidden="true"></span><canvas class="bb-strip-wave" width="132" height="28" aria-hidden="true"></canvas><span class="bb-strip-rectime">0:00</span><span class="bb-strip-recnote">Recording&hellip; tap &#127908; to stop.</span></div>' +
+      '<p class="bb-strip-rechint" hidden>Your words land in the box when you stop. Then @ sends them on: Voice Notes to Text keeps the note, Ghostwriter (Voice to Content) makes it posts, SOP Generator makes it a procedure.</p>' +
       '<div class="bb-strip-mention" role="listbox" aria-label="Tools you can call with @" hidden></div>' +
       "</div>" +
       '<p class="bb-strip-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>' +
@@ -364,6 +378,10 @@
     var pinNote = strip.querySelector(".bb-strip-pin-note");
     var unpinBtn = strip.querySelector(".bb-strip-unpin");
     var mentionBox = strip.querySelector(".bb-strip-mention");
+    var recRow = strip.querySelector(".bb-strip-recrow");
+    var recCanvas = strip.querySelector(".bb-strip-wave");
+    var recTime = strip.querySelector(".bb-strip-rectime");
+    var recHint = strip.querySelector(".bb-strip-rechint");
 
     var pendingImage = null;
     var busy = false;
@@ -377,6 +395,14 @@
     var recording = false;
     var recorder = null;
     var chunks = [];
+    var recStream = null;
+    var recCtx = null;
+    var recAnalyser = null;
+    var recRaf = 0;
+    var recTimer = 0;
+    var recStart = 0;
+    var discardRec = false;
+    var stripPreviewUrl = null;
 
     loadTools();
 
@@ -397,6 +423,12 @@
 
     strip.querySelector(".bb-strip-close").addEventListener("click", function () {
       clearInterval(rotTimer);
+      if (recording && recorder) {
+        // Dismissed mid-recording: stop everything, keep nothing.
+        discardRec = true;
+        try { recorder.stop(); } catch (e) {}
+      }
+      revokeStripPreview();
       dismiss();
       strip.remove();
     });
@@ -525,7 +557,15 @@
     }
 
     /* ---- File routing (pin-aware, same as the desk) ---- */
+    function revokeStripPreview() {
+      if (stripPreviewUrl) {
+        try { URL.revokeObjectURL(stripPreviewUrl); } catch (e) {}
+        stripPreviewUrl = null;
+      }
+    }
+
     function stashAndGo(file, url, name, via) {
+      revokeStripPreview();
       track("capture_routed", { destination: name, surface: "strip", via: via, tool: tool });
       markDeskHandoff(toolKeyFromUrl(url), "file", { name: file.name });
       show('<p>Sending "' + esc(file.name) + '" to ' + esc(name) + ". Your file never leaves your device.</p>");
@@ -544,6 +584,7 @@
     }
 
     function routeFile(file) {
+      revokeStripPreview();
       track("capture_started", { surface: "strip", kind: "file", tool: tool });
       track("drop_strip_capture", { tool: tool, kind: "file" });
       var kind = fileKind(file);
@@ -563,10 +604,15 @@
       if (kind === "video") { stashAndGo(file, "/tools/video-trimmer/", "Video Trimmer", "file"); return; }
       if (kind === "image") {
         pendingImage = file;
+        // A tiny preview of the photo being classified, so the pick is
+        // made looking at the thing itself, not its file name.
+        try { stripPreviewUrl = URL.createObjectURL(file); } catch (e) { stripPreviewUrl = null; }
         var chips = IMAGE_DESTINATIONS.map(function (d) {
           return '<button type="button" class="bb-strip-btn bb-strip-chip" data-url="' + esc(d.url) + '" data-name="' + esc(d.name) + '">' + esc(d.label) + "</button>";
         }).join("");
-        show("<p>Got it. What is this a photo of?</p><div>" + chips + "</div>");
+        show((stripPreviewUrl
+          ? '<p class="bb-strip-preview-row"><img class="bb-strip-preview" src="' + stripPreviewUrl + '" alt=""><span>Got it. What is this a photo of?</span></p>'
+          : "<p>Got it. What is this a photo of?</p>") + "<div>" + chips + "</div>");
         result.querySelectorAll(".bb-strip-chip").forEach(function (chip) {
           chip.addEventListener("click", function () {
             var f = pendingImage;
@@ -754,7 +800,7 @@
         if (d && d.transcript) {
           input.value = d.transcript;
           growInput();
-          show("<p>Heard you. Tap Log it and I will file it.</p>");
+          show("<p>Heard you. Tap Log it to file it, or @ a tool first: Voice Notes to Text keeps the note, Ghostwriter (Voice to Content) makes it posts, SOP Generator makes it a procedure.</p>");
           input.focus();
         } else {
           show('<p class="bb-strip-error">' + esc((d && d.error) || "Could not transcribe that.") + "</p>");
@@ -763,32 +809,119 @@
         show('<p class="bb-strip-error">Transcription failed. Try typing it.</p>');
       });
     }
+    /* Recording readout, mirroring the desk: a live waveform off a
+     * Web Audio analyser on the same stream, a pulsing dot, and a
+     * ticking clock. Any Web Audio failure leaves the plain recording
+     * behaviour untouched. */
+    function fmtStripRecTime(ms) {
+      var s = Math.floor(ms / 1000);
+      return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+    }
+    function drawStripWave() {
+      if (!recCanvas) return;
+      var ctx = recCanvas.getContext("2d");
+      if (!ctx) return;
+      var w = recCanvas.width, h = recCanvas.height;
+      ctx.clearRect(0, 0, w, h);
+      var bars = 24, gap = 3;
+      var bw = (w - gap * (bars - 1)) / bars;
+      var data = null;
+      if (recAnalyser) {
+        data = new Uint8Array(recAnalyser.frequencyBinCount);
+        recAnalyser.getByteFrequencyData(data);
+      }
+      for (var i = 0; i < bars; i++) {
+        var v = data ? data[Math.floor((i / bars) * data.length * 0.7)] / 255 : 0.3;
+        var bh = Math.max(3, v * h);
+        ctx.fillStyle = i % 5 === 4 ? "#ffd84d" : "#ff6b35";
+        ctx.fillRect(i * (bw + gap), (h - bh) / 2, bw, bh);
+      }
+    }
+    function startStripRecUi() {
+      recStart = Date.now();
+      recTime.textContent = "0:00";
+      if (recTimer) clearInterval(recTimer);
+      recTimer = setInterval(function () { recTime.textContent = fmtStripRecTime(Date.now() - recStart); }, 250);
+      var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      if (reduce) {
+        // Static bars under reduced motion; dot and clock still live.
+        setTimeout(drawStripWave, 60);
+        return;
+      }
+      var loop = function () {
+        drawStripWave();
+        recRaf = requestAnimationFrame(loop);
+      };
+      recRaf = requestAnimationFrame(loop);
+    }
+    function stopStripRecUi() {
+      if (recRaf) { cancelAnimationFrame(recRaf); recRaf = 0; }
+      if (recTimer) { clearInterval(recTimer); recTimer = 0; }
+      if (recCtx) {
+        var actx = recCtx;
+        recCtx = null;
+        try { var p = actx.close(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+      }
+      recAnalyser = null;
+      recRow.hidden = true;
+      recHint.hidden = true;
+    }
+
     function toggleMic() {
       if (recording && recorder) { recorder.stop(); return; }
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === "undefined") {
         show('<p class="bb-strip-error">Voice input is not supported in this browser. Type it instead.</p>');
         return;
       }
+      // The AudioContext is born inside the click, while the browser
+      // still counts it as a user gesture.
+      var actx = null;
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) {
+          actx = new AC();
+          if (actx.resume) { var rp = actx.resume(); if (rp && rp.catch) rp.catch(function () {}); }
+        }
+      } catch (e) { actx = null; }
       navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
         chunks = [];
+        discardRec = false;
+        recStream = stream;
         var rec = new MediaRecorder(stream);
         recorder = rec;
         rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
         rec.onstop = function () {
           stream.getTracks().forEach(function (t) { t.stop(); });
+          recStream = null;
+          stopStripRecUi();
           recording = false;
           micBtn.classList.remove("recording");
           micBtn.title = "Dictate instead";
           micBtn.setAttribute("aria-label", "Dictate instead");
+          if (discardRec) { discardRec = false; return; }
           transcribe(new Blob(chunks, { type: rec.mimeType || "audio/webm" }));
         };
+        if (actx) {
+          recCtx = actx;
+          try {
+            var src = actx.createMediaStreamSource(stream);
+            var analyser = actx.createAnalyser();
+            analyser.fftSize = 128;
+            src.connect(analyser);
+            recAnalyser = analyser;
+          } catch (e) { recAnalyser = null; }
+        }
         rec.start();
         recording = true;
         micBtn.classList.add("recording");
         micBtn.title = "Stop recording";
         micBtn.setAttribute("aria-label", "Stop recording");
-        show("<p>Listening&hellip; tap the mic again to stop.</p>");
+        recRow.hidden = false;
+        recHint.hidden = false;
+        startStripRecUi();
+        show("<p>Recording&hellip; tap the mic again to stop.</p>");
       }).catch(function () {
+        if (actx) { try { var cp = actx.close(); if (cp && cp.catch) cp.catch(function () {}); } catch (e) {} }
         show('<p class="bb-strip-error">Microphone access was blocked. Type it instead.</p>');
       });
     }

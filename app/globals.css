@@ -353,13 +353,30 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .desk-hat-line { margin:16px 0 0; font-family:var(--font-display),serif; font-style:italic; font-weight:800; font-size:1.12rem; }
 .desk-peek { position:absolute; right:-8px; top:36%; width:96px; height:96px; object-fit:cover; border:var(--line); border-radius:50%; background:var(--cream); z-index:3; pointer-events:none; animation:desk-peek 3.4s ease forwards; }
 @keyframes desk-peek { 0% { transform:translateX(72%); opacity:0; } 12% { transform:translateX(0); opacity:1; } 78% { transform:translateX(0); opacity:1; } 100% { transform:translateX(72%); opacity:0; } }
-.desk-crossing { position:fixed; left:0; bottom:20px; z-index:120; display:flex; align-items:center; gap:12px; pointer-events:none; animation:desk-cross 9s linear forwards; will-change:transform; }
-@keyframes desk-cross { from { transform:translateX(-42vw); } to { transform:translateX(106vw); } }
-.desk-crossing-cat { width:88px; height:88px; object-fit:cover; border:var(--line); border-radius:50%; background:var(--cream); box-shadow:4px 4px 0 var(--ink); }
-.desk-crossing-item { width:56px; height:56px; object-fit:contain; }
+/* The crossing lives in a lane clipped to the desk section: he enters
+   at the card's left edge and exits at its right edge, riding along
+   the bottom of the card, and gets nowhere else on screen. Pet Pet
+   trails lower and behind him, dragged along in her box. */
+.desk-crossing-lane { position:absolute; left:0; right:0; bottom:8px; height:118px; overflow:hidden; pointer-events:none; z-index:6; }
+.desk-crossing { position:absolute; left:0; bottom:8px; display:flex; align-items:center; gap:12px; pointer-events:none; animation:desk-cross 4s linear forwards; will-change:left; }
+@keyframes desk-cross { from { left:-480px; } to { left:100%; } }
+.desk-crossing-cat { position:relative; z-index:2; width:88px; height:88px; object-fit:cover; border:var(--line); border-radius:50%; background:var(--cream); box-shadow:4px 4px 0 var(--ink); }
+.desk-crossing-petpet { position:relative; z-index:1; width:64px; height:64px; object-fit:cover; border:var(--line); border-radius:50%; background:var(--cream); box-shadow:3px 3px 0 var(--ink); margin-left:-22px; transform:translateY(14px); }
+.desk-crossing-item { position:relative; z-index:2; width:56px; height:56px; object-fit:contain; }
 .desk-crossing-label { background:var(--ink); color:white; font-weight:900; border-radius:999px; padding:9px 16px; white-space:nowrap; box-shadow:4px 4px 0 var(--orange); }
-.capture-home-filechip { margin:14px 0 0; font-weight:700; }
-.capture-home-filechip button { border:var(--line); background:white; border-radius:50%; width:26px; height:26px; cursor:pointer; font-weight:900; line-height:1; vertical-align:middle; }
+.capture-home-filechip { margin:14px 0 0; font-weight:700; display:flex; align-items:center; gap:10px; }
+.capture-home-filechip button { border:var(--line); background:white; border-radius:50%; width:26px; height:26px; cursor:pointer; font-weight:900; line-height:1; flex:none; display:grid; place-items:center; padding:0; }
+.bb-file-preview { width:48px; height:48px; object-fit:cover; border:var(--line); border-radius:10px; flex:none; background:white; }
+.bb-file-preview-lg { width:56px; height:56px; }
+.bb-file-preview-icon { display:grid; place-items:center; font-size:1.25rem; }
+.capture-home-picker-preview { margin-top:14px; }
+.desk-rec-row { display:flex; align-items:center; gap:12px; margin-top:12px; flex-wrap:wrap; }
+.desk-rec-dot { width:12px; height:12px; border-radius:50%; background:var(--orange); flex:none; animation:desk-rec-pulse 1.1s ease-in-out infinite; }
+@keyframes desk-rec-pulse { 0%,100% { opacity:1; } 50% { opacity:.25; } }
+.desk-rec-wave { width:168px; height:32px; flex:none; }
+.desk-rec-time { font-weight:900; font-variant-numeric:tabular-nums; }
+.desk-rec-note { font-size:.9rem; font-weight:700; opacity:.8; }
+.desk-rec-hint { margin:8px 2px 0; font-size:.88rem; font-weight:700; opacity:.72; }
 .capture-home-note { margin:14px 0 0; font-size:1rem; }
 .capture-home-note a, .capture-home-success a { font-weight:900; color:inherit; }
 .capture-home-success { margin:14px 0 0; font-size:1.02rem; }
@@ -373,6 +390,8 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
   .hero-portrait .portrait-frame.boing, .hero-portrait .portrait-frame.dance { animation:none; }
   .desk-peek { animation:none; }
   .desk-crossing { animation:none; display:none; }
+  .desk-crossing-lane { display:none; }
+  .desk-rec-dot { animation:none; }
 }
 @media (max-width:700px) {
   .capture-home { padding-bottom:44px; }
@@ -383,4 +402,5 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
   .desk-chips-row { flex-direction:column; align-items:flex-start; }
   .desk-peek { width:72px; height:72px; }
   .desk-crossing-cat { width:64px; height:64px; }
+  .desk-crossing-petpet { width:48px; height:48px; }
 }
