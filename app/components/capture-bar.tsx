@@ -1441,7 +1441,7 @@ export default function CaptureBar() {
                     </p>
                     <a
                       className="capture-home-chip desk-other-btn"
-                      href="#toolbox"
+                      href="/tools/"
                       onClick={() => bbTrack("desk_other_selected", { path: "toolbox" })}
                     >
                       Check the toolbox
