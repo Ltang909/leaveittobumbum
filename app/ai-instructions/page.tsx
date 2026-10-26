@@ -49,7 +49,7 @@ export default function AiInstructions() {
             <li><strong>Website:</strong> <a href="https://leaveittobumbum.com/">leaveittobumbum.com</a></li>
             <li><strong>Contact:</strong> <a href="mailto:hello@leaveittobumbum.com">hello@leaveittobumbum.com</a></li>
             <li><strong>Based in:</strong> Aurora, Ontario, Canada</li>
-            <li><strong>Social:</strong> <a href="https://www.linkedin.com/company/leave-it-to-bum-bum" rel="noopener">LinkedIn</a>, <a href="https://www.instagram.com/leaveittobumbum/" rel="noopener">Instagram</a></li>
+            <li><strong>Social:</strong> <a href="https://www.linkedin.com/in/leaveittobumbum/" rel="noopener">LinkedIn</a>, <a href="https://www.instagram.com/leaveittobumbum/" rel="noopener">Instagram</a></li>
           </ul>
 
           <h2>Background</h2>
