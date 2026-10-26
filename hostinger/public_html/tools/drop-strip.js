@@ -400,8 +400,43 @@
     var recStart = 0;
     var discardRec = false;
     var stripPreviewUrl = null;
+    // Composer draft tracking (PostHog): the latest unsubmitted draft
+    // text (3+ trimmed chars) not yet reported as abandoned, and a
+    // kill switch for when the strip is dismissed.
+    var pendingDraft = null;
+    var draftDead = false;
 
     loadTools();
+
+    /* Composer text tracking, mirroring the desk. noteDraft() runs
+     * whenever the box content changes: a 3+ char draft is remembered,
+     * and emptying the box discards it, reported once at that moment
+     * with the last draft text. A submit stamps its words as submitted
+     * (trackComposerSubmitted), so only unsubmitted words can ever be
+     * abandoned; later edits build a fresh draft. */
+    function noteDraft() {
+      if (draftDead) return;
+      var t = input.value.trim();
+      if (t.length >= 3) { pendingDraft = t; return; }
+      if (t === "" && pendingDraft) {
+        var d = pendingDraft;
+        pendingDraft = null;
+        track("composer_abandoned", { text: d.slice(0, 2000), surface: "strip" });
+      }
+    }
+    function trackComposerSubmitted() {
+      var t = input.value.trim();
+      if (!t) return;
+      track("composer_submitted", { text: t.slice(0, 2000), surface: "strip" });
+      pendingDraft = null;
+    }
+    // Leaving the page with a draft still in the box abandons it.
+    window.addEventListener("pagehide", function () {
+      if (draftDead || !pendingDraft) return;
+      var d = pendingDraft;
+      pendingDraft = null;
+      track("composer_abandoned", { text: d.slice(0, 2000), surface: "strip" });
+    });
 
     function show(html) { result.innerHTML = html; }
     function growInput() {
@@ -421,6 +456,10 @@
     }, 3400);
 
     strip.querySelector(".bb-strip-close").addEventListener("click", function () {
+      // A dismissed strip takes its draft with it, silently: the
+      // discard was the close itself, not an abandon to report.
+      draftDead = true;
+      pendingDraft = null;
       clearInterval(rotTimer);
       if (recording && recorder) {
         // Dismissed mid-recording: stop everything, keep nothing.
@@ -564,6 +603,7 @@
       input.value = next;
       mention = null;
       renderMention();
+      noteDraft();
       setPinned(tool);
       track("desk_mention_selected", { tool: tool.key, surface: "strip" });
       growInput();
@@ -816,6 +856,7 @@
     function submit() {
       if (busy) return;
       if (stagedImage) {
+        trackComposerSubmitted();
         if (pinned) { routeFile(stagedImage); return; }
         // Never guess a photo's destination silently: teach the @ pick
         // and keep the photo staged for it.
@@ -823,6 +864,7 @@
         return;
       }
       var t = input.value.trim();
+      trackComposerSubmitted();
       if (pinned) {
         track("capture_started", { surface: "strip", kind: "text", tool: tool });
         track("drop_strip_capture", { tool: tool, kind: "text" });
@@ -851,6 +893,7 @@
         if (d && d.transcript) {
           input.value = d.transcript;
           growInput();
+          noteDraft();
           show("<p>Heard you. Tap Log it to file it, or @ a tool first: Voice Notes to Text keeps the note, Ghostwriter (Voice to Content) makes it posts, SOP Generator makes it a procedure.</p>");
           input.focus();
         } else {
@@ -995,6 +1038,7 @@
     unpinBtn.addEventListener("click", function () { setPinned(null); input.focus(); });
     input.addEventListener("input", function () {
       growInput();
+      noteDraft();
       syncMention(input.value, input.selectionStart != null ? input.selectionStart : input.value.length);
     });
     input.addEventListener("focus", function () { focused = true; });

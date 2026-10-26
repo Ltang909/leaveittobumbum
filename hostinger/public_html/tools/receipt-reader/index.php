@@ -575,4 +575,4 @@ function renderLog(log){
   });
 }
 fetchLogs();
-</script><section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-scan-receipts-into-a-spreadsheet/">How to scan receipts into a spreadsheet</a>.</p></section></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r11"></script></body></html>
+</script><section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-scan-receipts-into-a-spreadsheet/">How to scan receipts into a spreadsheet</a>.</p></section></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r12"></script></body></html>
