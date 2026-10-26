@@ -70,6 +70,33 @@ const PLACEHOLDERS = [
   "Applied to Stripe today, log it…",
 ];
 
+// While a tool is pinned with @, the rotating examples step aside for a
+// sample of what that tool actually wants. Log-style tools get an
+// "e.g. ..." in their real input shape; file-first tools get the drop
+// instruction instead, since the desk is their drop zone too.
+const PIN_PLACEHOLDERS: Record<string, string> = {
+  clips: "Hit Log it and the recorder opens, right in your browser…",
+  notes: "e.g. Idea: a loyalty card, but for dog groomers…",
+  cutline: "e.g. Netflix, $15.99, monthly",
+  purrsuit: "e.g. Maria at Bloom Co, last spoke Tuesday, nudge her about the quote…",
+  "corporate-bum-bum": "e.g. Applied to Stripe for the Growth Lead role today",
+  doodle: "Hit Log it and the sketchpad opens. Draw it there…",
+  "invoice-chaser": "e.g. hud.io, $20.00, due in 2 weeks",
+  "receipt-reader": "e.g. Starbucks, $6.40",
+  "poster-to-calendar": "Drop the poster photo here…",
+  "meal-scanner": "Drop the meal photo here…",
+  "gap-scout": "Hit Log it to open it, then drop your resume and the job post there…",
+  "video-trimmer": "Drop the video here to trim it…",
+  "image-converter": "Drop the image here to convert it…",
+  "image-cropper": "Drop the image here to crop it…",
+  ghostwriter: "e.g. Paste a ramble or transcript, get hooks, a script, and a caption…",
+  audiogram: "Hit Log it to open it, then drop your MP3 there…",
+  "purr-code": "e.g. https://yourshop.com, whatever the code should open…",
+  "sop-ify": "e.g. First we check the inbox, then we chase anything older than a day…",
+  hearsay: "e.g. Just your brand name. He checks what the AIs say about it…",
+  "video-converter": "Drop the video here to convert it…",
+};
+
 // One line per hat, in his voice. Keys are the router's tool keys plus
 // the file destinations.
 const HAT_LINES: Record<string, string> = {
@@ -242,16 +269,23 @@ export default function CaptureBar() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const focusedRef = useRef(false);
+  const pinnedRef = useRef<Tool | null>(null);
   const sessionWarmRef = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const idemRef = useRef<string>("");
 
+  // Keep a ref mirror of the pin so the rotation timer can see it.
+  useEffect(() => {
+    pinnedRef.current = pinned;
+  }, [pinned]);
+
   // Rotating example jobs in the placeholder. Pauses while the desk has
-  // your attention (focused) or the tab is hidden.
+  // your attention (focused), the tab is hidden, or a tool is pinned
+  // (the pinned sample placeholder owns the box then).
   useEffect(() => {
     const t = window.setInterval(() => {
-      if (focusedRef.current || document.hidden) return;
+      if (focusedRef.current || document.hidden || pinnedRef.current) return;
       setPhIndex((i) => (i + 1) % PLACEHOLDERS.length);
     }, 3400);
     return () => window.clearInterval(t);
@@ -439,13 +473,21 @@ export default function CaptureBar() {
     storeHandoff(f)
       .then(() => {
         // Once per session, he personally carries the file across the
-        // screen on its way to the tool; the handoff waits for him.
+        // screen on its way to the tool; the handoff waits for him. The
+        // walk takes ~9 seconds now (half the old speed), and any click
+        // or tap skips it and goes straight to the tool.
         if (!reducedMotion() && !ssGet("bb-desk-crossed")) {
           ssSet("bb-desk-crossed", "1");
           setCrossing({ img: tool && tool.iconImg ? tool.iconImg : "", name });
-          window.setTimeout(() => {
+          let gone = false;
+          const go = () => {
+            if (gone) return;
+            gone = true;
+            window.removeEventListener("pointerdown", go);
             window.location.href = url + "?from=capture";
-          }, 4500);
+          };
+          window.addEventListener("pointerdown", go);
+          window.setTimeout(go, 9000);
         } else {
           window.setTimeout(() => {
             window.location.href = url + "?from=capture";
@@ -586,11 +628,12 @@ export default function CaptureBar() {
     }, copied ? 1500 : 900);
   }
 
-  // A pinned native tool: the pin picks the destination, the router just
-  // extracts fields. Notes needs no router at all. If the router ever
-  // hesitates (ambiguous), the pin answers with its field guess in hand.
-  // If the router flatly declines (a task, not a log entry), the @ call
-  // wins and the tool simply opens.
+  // A pinned native tool: the pin is ABSOLUTE. It rides along on the
+  // first (and only) request, and the server files to the pinned tool,
+  // extracting fields for that tool alone; the receipt fast path and the
+  // router's own tool choice never get a say. If the server flatly
+  // declines (a task, not a log entry), the @ call wins and the tool
+  // simply opens.
   async function pinnedNativeSubmit(tool: Tool) {
     const value = text.trim();
     if (!value || busy) return;
@@ -601,14 +644,11 @@ export default function CaptureBar() {
     idemRef.current = key;
     bbTrack("capture_started", { surface: "home", kind: "text", via: "mention", tool: tool.key });
     try {
-      let d: CaptureResponse;
-      if (tool.key === "notes") {
-        d = await fetchCapture(value, "notes", { text: value }, key);
-      } else {
-        d = await fetchCapture(value, undefined, undefined, key);
-        if (d.ambiguous) {
-          d = await fetchCapture(value, tool.key, d.fields, key);
-        }
+      let d = await fetchCapture(value, tool.key, undefined, key);
+      if (d.ambiguous) {
+        // Should not happen with a pin (the server resolves it there),
+        // but answer with the guess in hand rather than stranding it.
+        d = await fetchCapture(value, tool.key, d.fields, key);
       }
       setBusy(false);
       if (d.ok && d.logged === false) {
@@ -818,7 +858,7 @@ export default function CaptureBar() {
                   submit();
                 }
               }}
-              placeholder={PLACEHOLDERS[phIndex]}
+              placeholder={pinned ? PIN_PLACEHOLDERS[pinned.key] || PLACEHOLDERS[phIndex] : PLACEHOLDERS[phIndex]}
               aria-label="Type anything to log it"
               autoComplete="off"
               maxLength={2000}

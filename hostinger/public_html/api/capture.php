@@ -163,6 +163,168 @@ function capture_file_target(string $kind, string $text): ?array {
     return ['ask' => true];
 }
 
+/* ------------------------------------------------------------------ */
+/* @ pin support: a pinned destination is ABSOLUTE. The fast path and  */
+/* the router's tool choice never run for a pin; the LLM may only      */
+/* extract fields for the pinned tool, and if extraction fails the     */
+/* raw text is filed to the pinned tool anyway.                        */
+/* ------------------------------------------------------------------ */
+
+function capture_parse_amount(string $text): string {
+    if (preg_match('/\$\s*([\d,]+(?:\.\d{1,2})?)/', $text, $m)) {
+        return str_replace(',', '', $m[1]);
+    }
+    return '';
+}
+
+function capture_parse_due_date(string $text): string {
+    $t = strtolower($text);
+    if (preg_match('/(\d{4})-(\d{2})-(\d{2})/', $text, $m) && checkdate((int) $m[2], (int) $m[3], (int) $m[1])) {
+        return $m[1] . '-' . $m[2] . '-' . $m[3];
+    }
+    if (preg_match('/\bin\s+(\d+)\s*(day|week|month)s?\b/', $t, $m)) {
+        $n = max(1, (int) $m[1]);
+        $unit = $m[2] === 'day' ? 'days' : ($m[2] === 'week' ? 'weeks' : 'months');
+        return date('Y-m-d', strtotime("+{$n} {$unit}"));
+    }
+    if (preg_match('/\bin\s+a\s+(week|month)\b/', $t, $m)) {
+        return date('Y-m-d', strtotime('+1 ' . $m[1]));
+    }
+    if (strpos($t, 'tomorrow') !== false) return date('Y-m-d', strtotime('+1 day'));
+    $days = ['sunday' => 0, 'monday' => 1, 'tuesday' => 2, 'wednesday' => 3, 'thursday' => 4, 'friday' => 5, 'saturday' => 6];
+    if (preg_match('/\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/', $t, $m) && isset($days[$m[1]])) {
+        $diff = ($days[$m[1]] - (int) date('w') + 7) % 7;
+        if ($diff === 0 && strpos($t, 'next') !== false) $diff = 7;
+        return date('Y-m-d', strtotime("+{$diff} days"));
+    }
+    return '';
+}
+
+/* Deterministic field guesses for a pinned tool, used when the LLM is
+   unavailable and merged UNDER whatever the LLM extracts. Every field a
+   destination strictly requires gets a value here, so a pin can always
+   be filed: the raw text itself is the last-resort value.              */
+function capture_pin_fallback_fields(string $text, string $tool): array {
+    $clean = trim((string) preg_replace('/\s+/', ' ', $text));
+    switch ($tool) {
+        case 'notes':
+            return ['text' => $text];
+        case 'receipt-reader': {
+            $fast = capture_fast_path($text);
+            if ($fast !== null) return $fast['fields'];
+            $vendor = trim((string) preg_replace('/\$\s*[\d,]+(?:\.\d{1,2})?/', '', $clean));
+            $vendor = trim((string) preg_replace('/^(paid|bought|spent|log|at|for)\s+/i', '', $vendor));
+            return [
+                'vendor' => mb_substr($vendor !== '' ? $vendor : 'Receipt', 0, 191),
+                'total' => capture_parse_amount($text),
+                'date' => date('Y-m-d'),
+                'currency' => 'USD',
+            ];
+        }
+        case 'invoice-chaser': {
+            $client = '';
+            if (preg_match('/\bfor\s+([A-Za-z0-9][A-Za-z0-9.\-]*\.[A-Za-z]{2,})/', $text, $m)) {
+                $client = $m[1];
+            } elseif (preg_match('/\bfor\s+([A-Z][A-Za-z0-9&.\-]*)/', $text, $m)) {
+                $client = $m[1];
+            }
+            if ($client === '') $client = mb_substr($clean, 0, 60);
+            $due = capture_parse_due_date($text);
+            if ($due === '') $due = date('Y-m-d', strtotime('+7 days'));
+            return [
+                'client_name' => $client,
+                'amount' => capture_parse_amount($text),
+                'due_date' => $due,
+                'invoice_no' => '',
+                'notes' => $clean,
+            ];
+        }
+        case 'corporate-bum-bum': {
+            $company = '';
+            $role = '';
+            if (preg_match('/\bapplied\s+(?:to|at)\s+([^,.;]+)/i', $text, $m)) $company = trim($m[1]);
+            if ($company === '' && preg_match('/\bapplication\s+(?:to|at)\s+([^,.;]+)/i', $text, $m)) $company = trim($m[1]);
+            if (preg_match('/\bfor\s+the\s+([^,.;]+?)\s+(?:role|position|job)\b/i', $text, $m)) $role = trim($m[1]);
+            if ($company === '') $company = mb_substr($clean, 0, 60);
+            return [
+                'company' => mb_substr($company, 0, 191),
+                'role' => mb_substr($role, 0, 191),
+            ];
+        }
+        case 'cutline': {
+            $name = (string) preg_replace('/\$\s*[\d,]+(?:\.\d{1,2})?/', '', $clean);
+            $name = (string) preg_replace('/\b(subscription|membership|recurring|monthly|per month|\/mo|a month|log|add|track)\b/i', '', $name);
+            $name = trim((string) preg_replace('/\s+/', ' ', $name), " \t,.");
+            if ($name === '') $name = mb_substr($clean, 0, 60);
+            $cadence = 'monthly';
+            if (preg_match('/\bweek/i', $text)) $cadence = 'weekly';
+            elseif (preg_match('/\b(annual|year)/i', $text)) $cadence = 'annual';
+            elseif (preg_match('/\bquarter/i', $text)) $cadence = 'quarterly';
+            return [
+                'name' => mb_substr($name, 0, 191),
+                'price' => capture_parse_amount($text),
+                'cadence' => $cadence,
+                'category' => 'other',
+            ];
+        }
+    }
+    return [];
+}
+
+/* LLM field extraction for ONE pinned tool. The destination is already
+   chosen by the user; the model only fills in that tool's fields.
+   Returns the fields array, or null when the call itself failed.      */
+function capture_llm_extract(string $text, string $tool): ?array {
+    $key = (string) (config()['groq_api_key'] ?? '');
+    if ($key === '' || $key === 'replace_me') return null;
+    $specs = [
+        'notes' => 'a thought, idea, reminder, or journal entry. fields: {"text"}',
+        'receipt-reader' => 'a one-time purchase or expense. fields: {"vendor","total","date","currency"}',
+        'corporate-bum-bum' => 'a job application or career move. fields: {"company","role","job_url","location","salary"}',
+        'invoice-chaser' => 'an invoice to chase, a client who owes money. fields: {"client_name","amount","due_date","invoice_no","notes"}',
+        'cutline' => 'a recurring subscription or membership. fields: {"name","price","cadence","category"}. cadence must be one of: weekly, monthly, quarterly, semiannual, annual. category must be one of: streaming, music, software, cloud_storage, fitness, reading, gaming, food_delivery, other',
+    ];
+    if (!isset($specs[$tool])) return null;
+    $model = trim((string) (config()['capture_model'] ?? ''));
+    if ($model === '') $model = 'openai/gpt-oss-20b';
+    $system = 'You extract fields from a quick log entry for exactly ONE tool: ' . $tool . ', which is ' . $specs[$tool] . '. '
+        . 'The destination is already chosen by the user; never pick a different one and never refuse. '
+        . 'Today is ' . date('Y-m-d') . ' (' . date('l') . '). Convert relative dates the user mentioned, like "in 2 weeks" or "Friday", into YYYY-MM-DD. '
+        . 'Never invent amounts, names, or dates the user did not mention. Omit unknown optional fields. '
+        . 'Output STRICT JSON only: {"fields": {...}}. No em dashes anywhere.';
+    $payload = [
+        'model' => $model,
+        'messages' => [
+            ['role' => 'system', 'content' => $system],
+            ['role' => 'user', 'content' => mb_substr($text, 0, 2000)],
+        ],
+        'response_format' => ['type' => 'json_object'],
+        'temperature' => 0.2,
+        'max_tokens' => 300,
+    ];
+    $ch = curl_init('https://api.groq.com/openai/v1/chat/completions');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: Bearer ' . $key],
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_CONNECTTIMEOUT => 10,
+    ]);
+    $raw = curl_exec($ch);
+    $err = curl_error($ch);
+    $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if ($raw === false || $err !== '' || $code < 200 || $code >= 300) return null;
+    $data = json_decode((string) $raw, true);
+    $content = $data['choices'][0]['message']['content'] ?? '';
+    if (is_string($content) && preg_match('/```(?:json)?\s*(\{.*\})\s*```/s', $content, $m)) $content = $m[1];
+    $parsed = is_string($content) ? json_decode($content, true) : null;
+    if (!is_array($parsed)) return null;
+    $fields = $parsed['fields'] ?? null;
+    return is_array($fields) ? $fields : null;
+}
+
 /* LLM router                                                          */
 /* ------------------------------------------------------------------ */
 
@@ -456,19 +618,65 @@ if (mb_strlen($text) > 100000) jsonResponse(['error' => 'That is a novel, not a 
 $idem = capture_idempotency($input);
 $targets = capture_targets();
 
-// Optional forced tool (from the "did you mean" chips). Skips the router.
+// Optional forced tool: an explicit pick, either from the "did you
+// mean" chips (fields in hand) or an @ pin at the front desk (no fields).
 $forced = (string) ($input['tool'] ?? '');
 $route = null;
 if ($forced !== '' && isset($targets[$forced])) {
-    // User explicitly picked a tool from the "did you mean" chips.
-    // Honor it: reuse the router's field guess, never second-guess.
     $forcedFields = $input['fields'] ?? null;
-    $route = [
-        'tool' => $forced,
-        'fields' => is_array($forcedFields) ? $forcedFields : [],
-        'confidence' => 1.0,
-        'via' => 'user',
-    ];
+    if (is_array($forcedFields) && $forcedFields !== []) {
+        // Chip pick with the router's field guess in hand: honor it
+        // exactly as before, never second-guess.
+        $route = [
+            'tool' => $forced,
+            'fields' => $forcedFields,
+            'confidence' => 1.0,
+            'via' => 'user',
+        ];
+    } else {
+        // @ pin: the pinned destination is ABSOLUTE. The receipt fast
+        // path never runs and the router's tool choice is never
+        // consulted. The LLM may only extract fields for the pinned
+        // tool, merged over deterministic guesses; if extraction fails
+        // outright, the raw text is filed to the pinned tool anyway.
+        $fields = capture_pin_fallback_fields($text, $forced);
+        $extracted = capture_llm_extract($text, $forced);
+        if (is_array($extracted)) {
+            foreach ($extracted as $k => $v) {
+                if ($v !== '' && $v !== null) $fields[$k] = $v;
+            }
+        }
+        if ($forced === 'notes') {
+            // A note is the raw words, never an LLM rewrite of them.
+            $fields['text'] = $text;
+        }
+        if ($forced === 'invoice-chaser') {
+            // The chaser strictly requires a client, an amount, and a
+            // real due date; never let a malformed extraction undo them.
+            if (trim((string) ($fields['client_name'] ?? '')) === '') {
+                $fields['client_name'] = mb_substr(trim((string) preg_replace('/\s+/', ' ', $text)), 0, 60);
+            }
+            if (preg_replace('/[^0-9.]/', '', (string) ($fields['amount'] ?? '')) === '') {
+                $fields['amount'] = capture_parse_amount($text);
+            }
+            $due = (string) ($fields['due_date'] ?? '');
+            $dueOk = preg_match('/^\d{4}-\d{2}-\d{2}$/', $due) === 1;
+            if ($dueOk) {
+                $dp = explode('-', $due);
+                $dueOk = checkdate((int) $dp[1], (int) $dp[2], (int) $dp[0]);
+            }
+            if (!$dueOk) {
+                $parsedDue = capture_parse_due_date($text);
+                $fields['due_date'] = $parsedDue !== '' ? $parsedDue : date('Y-m-d', strtotime('+7 days'));
+            }
+        }
+        $route = [
+            'tool' => $forced,
+            'fields' => $fields,
+            'confidence' => 1.0,
+            'via' => 'pin',
+        ];
+    }
 } else {
     $route = capture_fast_path($text);
     if ($route === null) {
