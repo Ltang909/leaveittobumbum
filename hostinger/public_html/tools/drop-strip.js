@@ -333,8 +333,43 @@
    * clipboard note for navigate-only arrivals). The marker is cleared
    * when the banner shows, so it appears at most once per handoff; the
    * × dismisses it, and it also clears the moment the visitor starts
-   * using the tool itself. In-flow only, it never overlays the tool. */
+   * using the tool itself. In-flow only, it never overlays the tool.
+   * The banner parks directly above the tool's primary action area and
+   * the page scrolls to it, so an arrival opens at the work (the
+   * dropzone and whatever it now holds), not at the marketing header. */
   var HANDOFF_KEY = "bb-desk-handoff";
+
+  function anchorVisible(el) {
+    if (!el) return false;
+    if (el.classList && el.classList.contains("hidden")) return false;
+    try {
+      var cs = window.getComputedStyle ? window.getComputedStyle(el) : null;
+      if (cs && (cs.display === "none" || cs.visibility === "hidden")) return false;
+    } catch (e) {}
+    return true;
+  }
+
+  // The tool's primary action area: the panel the carried item lands
+  // in. Photo and video tools mark it with a .dropzone; the rest are
+  // found by scanning for the first visible panel that holds working
+  // controls (guest sign-in panels hold none, so they are skipped).
+  function workAnchor() {
+    var main = document.querySelector("main.shell") || document.querySelector("main");
+    if (!main) return null;
+    var dz = main.querySelector(".dropzone");
+    if (dz && anchorVisible(dz)) {
+      var panel = dz.closest ? dz.closest(".panel") : null;
+      return panel || dz;
+    }
+    var panels = main.querySelectorAll(".panel");
+    for (var i = 0; i < panels.length; i++) {
+      if (!anchorVisible(panels[i])) continue;
+      if (panels[i].querySelector("input, textarea, select, form, canvas, button")) return panels[i];
+    }
+    var form = main.querySelector("form");
+    if (form) return form;
+    return null;
+  }
 
   function pageToolKey() {
     var m = location.pathname.match(/\/tools\/([^/]+)\//);
@@ -385,8 +420,11 @@
     function paintDetail() { detail.textContent = handoffDetail(data, consumedName); }
     paintDetail();
 
+    var anchor = workAnchor();
     var main = document.querySelector("main.shell") || document.querySelector("main");
-    if (main) {
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(banner, anchor);
+    } else if (main) {
       main.insertBefore(banner, main.firstChild);
     } else if (document.body) {
       document.body.insertBefore(banner, document.body.firstChild);
@@ -394,6 +432,19 @@
       return;
     }
     track("desk_handoff_banner_shown", { tool: data.tool });
+
+    // Land at the work: the banner sits directly above the tool's
+    // action area, so scrolling the banner to the top of the viewport
+    // puts the carried file and the primary action in view with it.
+    // Reduced motion gets an instant jump instead of the glide.
+    if (anchor) {
+      try {
+        var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+        if (typeof banner.scrollIntoView === "function") {
+          banner.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+        }
+      } catch (e) {}
+    }
 
     var gone = false;
     function remove() {

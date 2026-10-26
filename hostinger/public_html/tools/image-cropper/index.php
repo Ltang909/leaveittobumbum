@@ -341,4 +341,4 @@ cropBtn.addEventListener('click',async()=>{
   }
   cropBtn.disabled=false;
 });
-</script><script src="/tools/capture-handoff.js"></script></main><script src="/tools/drop-strip.js"></script></body></html>
+</script><script src="/tools/capture-handoff.js?v=20261026r4"></script></main><script src="/tools/drop-strip.js?v=20261026r4"></script></body></html>
