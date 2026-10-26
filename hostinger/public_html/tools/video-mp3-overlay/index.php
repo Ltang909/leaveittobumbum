@@ -472,4 +472,4 @@ againBtn.addEventListener('click',()=>{
 <p><a href="/tools/video-converter/">Video Converter</a> - Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser.</p>
 <p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r13"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r14"></script></body></html>
