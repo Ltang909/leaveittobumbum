@@ -90,7 +90,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .items-table input:focus{border-color:#b3a37e;box-shadow:0 0 0 3px rgba(179,163,126,.18);outline:none}
 .items-table td.amt{width:110px}
 .items-table td.del{width:44px;text-align:center}
-.row-del{border:1px solid #ddd1b8;background:#fff;border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;line-height:1}
+.row-del{border:1px solid #ddd1b8;background:#fff;border-radius:999px;width:30px;height:30px;font-size:15px;cursor:pointer;line-height:1;margin-top:0}
 .totals-grid{display:grid;gap:10px;margin-top:14px}
 @media(min-width:760px){.totals-grid{grid-template-columns:1fr 1fr 1fr}}
 .totals-grid label{font-weight:700;font-size:14px;display:block}
