@@ -18,6 +18,12 @@ declare(strict_types=1);
  *   3. Keyword fast path for obvious receipts ("Starbucks $6.40"): no LLM.
  *   3b. Task-intent fast path ("convert mp4 to wav", "crop a picture"):
  *      the box can't run tools, so it points at the right one. No LLM.
+ *   3c. Keyword layer (tool-keywords.json, the user's own keyword table):
+ *      decisive phrase matches against all 21 tools route without the
+ *      router LLM. Native destinations file via the same extraction path
+ *      a pin uses; the other tools get the suggest shape so the client
+ *      opens them with the words in hand. Weak, tied, or no matches fall
+ *      through to the LLM router completely unchanged.
  *   4. Otherwise a cheap Groq model (default openai/gpt-oss-20b) routes to
  *      one tool and extracts fields as strict JSON.
  *   5. Low confidence (< 0.6) or a forced `tool` mismatch returns options
@@ -161,6 +167,173 @@ function capture_file_target(string $kind, string $text): ?array {
         return ['name' => 'Image Converter', 'url' => '/tools/image-converter/'];
     }
     return ['ask' => true];
+}
+
+/* ------------------------------------------------------------------ */
+/* Keyword layer: decisive matches against the user's own keyword      */
+/* table (tool-keywords.json, synced from his Notion page "Fuzzy match  */
+/* against tools") route unpinned text without the router LLM. Runs     */
+/* after the receipt fast path and the task-intent suggest, before the  */
+/* LLM router. Anything less than decisive falls through untouched, so  */
+/* the worst case is exactly today's behaviour. If the table file is    */
+/* missing or unparseable the layer silently no-ops.                    */
+/* ------------------------------------------------------------------ */
+
+/* Destinations the box cannot file into itself: it points at these,     */
+/* and the client opens them with the user's words in hand (the same     */
+/* suggest shape the task-intent path uses). Names and URLs mirror       */
+/* tools/registry.json.                                                 */
+function capture_nav_destinations(): array {
+    return [
+        'clips' => ['name' => 'Screen Recorder', 'url' => '/tools/clips/'],
+        'purrsuit' => ['name' => 'Client Follow-Up Tracker', 'url' => '/tools/purrsuit/'],
+        'doodle' => ['name' => 'Online Sketchpad', 'url' => '/tools/doodle/'],
+        'poster-to-calendar' => ['name' => 'Poster to Calendar', 'url' => '/tools/poster-to-calendar/'],
+        'meal-scanner' => ['name' => 'Meal Scanner', 'url' => '/tools/meal-scanner/'],
+        'gap-scout' => ['name' => 'Resume Gap Checker', 'url' => '/tools/gap-scout/'],
+        'video-trimmer' => ['name' => 'Video Trimmer', 'url' => '/tools/video-trimmer/'],
+        'image-converter' => ['name' => 'Image Converter', 'url' => '/tools/image-converter/'],
+        'image-cropper' => ['name' => 'Image Cropper', 'url' => '/tools/image-cropper/'],
+        'ghostwriter' => ['name' => 'Voice to Content', 'url' => '/tools/ghostwriter/'],
+        'audiogram' => ['name' => 'Audiogram Maker', 'url' => '/tools/audiogram/'],
+        'purr-code' => ['name' => 'QR Code Generator', 'url' => '/tools/purr-code/'],
+        'sop-ify' => ['name' => 'SOP Generator', 'url' => '/tools/sop-ify/'],
+        'hearsay' => ['name' => 'AI Mention Tracker', 'url' => '/tools/hearsay/'],
+        'video-converter' => ['name' => 'Video Converter', 'url' => '/tools/video-converter/'],
+        'video-mp3-overlay' => ['name' => 'Video MP3 Overlay', 'url' => '/tools/video-mp3-overlay/'],
+    ];
+}
+
+/* Normalize for matching: lowercase, punctuation and whitespace         */
+/* collapse to single spaces, split into words. A trailing plural "s"    */
+/* folds on words longer than 3 chars (never "...ss"), applied to BOTH   */
+/* the table and the input, so "invoice" matches "invoices" while        */
+/* identical words always still match identically.                       */
+function capture_kw_tokens(string $s): array {
+    $s = mb_strtolower($s, 'UTF-8');
+    $s = (string) preg_replace('/[^a-z0-9]+/', ' ', $s);
+    $out = [];
+    foreach (explode(' ', $s) as $w) {
+        if ($w === '') continue;
+        if (strlen($w) > 3 && substr($w, -1) === 's' && substr($w, -2) !== 'ss') {
+            $w = substr($w, 0, -1);
+        }
+        $out[] = $w;
+    }
+    return $out;
+}
+
+/* Load and pre-tokenize the keyword table once per request. Each entry: */
+/* tokens + points + whether the hit counts as strong evidence. A        */
+/* multi-word entry is a phrase: 3 points, strong. A single-word entry   */
+/* is 2 points and strong, except the Subscription Tracker's brand list, */
+/* whose single words are 1 point and weak (they can pad a score but     */
+/* can never make one decisive on their own). Unknown tool keys in the   */
+/* file are ignored. Returns null when the table is unavailable.         */
+function capture_kw_table(): ?array {
+    static $table = false;
+    if ($table !== false) return $table;
+    $table = null;
+    $raw = @file_get_contents(__DIR__ . '/tool-keywords.json');
+    if ($raw === false) return null;
+    $data = json_decode($raw, true);
+    if (!is_array($data)) return null;
+    $known = capture_targets() + capture_nav_destinations();
+    $out = [];
+    foreach ($data as $tool => $list) {
+        if (!is_string($tool) || !isset($known[$tool]) || !is_array($list)) continue;
+        $entries = [];
+        foreach ($list as $kw) {
+            if (!is_string($kw)) continue;
+            $tokens = capture_kw_tokens($kw);
+            if ($tokens === []) continue;
+            if (count($tokens) === 1) {
+                $weak = $tool === 'cutline';
+                $entries[] = ['tokens' => $tokens, 'points' => $weak ? 1 : 2, 'strong' => !$weak];
+            } else {
+                $entries[] = ['tokens' => $tokens, 'points' => 3, 'strong' => true];
+            }
+        }
+        if ($entries !== []) $out[$tool] = $entries;
+    }
+    $table = $out === [] ? null : $out;
+    return $table;
+}
+
+/* Does the phrase appear in the text? Exact contiguous run, or the      */
+/* phrase's words in order with at most 2 words between neighbours       */
+/* (the desk-style light fuzzy tolerance, kept explainable). The         */
+/* recursive matcher backtracks over candidate positions; capture texts  */
+/* are short, so this stays cheap.                                       */
+function capture_kw_match_from(array $phrase, int $pi, array $text, int $from, int $lastPos): bool {
+    if ($pi >= count($phrase)) return true;
+    $limit = $pi === 0 ? count($text) - 1 : min(count($text) - 1, $lastPos + 3);
+    for ($i = $from; $i <= $limit; $i++) {
+        if ($text[$i] === $phrase[$pi] && capture_kw_match_from($phrase, $pi + 1, $text, $i + 1, $i)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function capture_kw_phrase_hit(array $phrase, array $text): bool {
+    if ($phrase === [] || $text === [] || count($phrase) > count($text)) return false;
+    return capture_kw_match_from($phrase, 0, $text, 0, -1);
+}
+
+/* Score every tool against the text, then route only on a decisive      */
+/* winner: top score >= 3, strictly ahead of the runner-up, and backed   */
+/* by at least one strong hit (a phrase or a distinctive single word).   */
+/* Returns a route array for a native destination (fields built by the  */
+/* same extraction path a pin uses), a 'navigate' marker for one of the */
+/* other tools, or null to fall through to the LLM router unchanged.     */
+function capture_keyword_route(string $text): ?array {
+    $table = capture_kw_table();
+    if ($table === null) return null;
+    $tokens = capture_kw_tokens($text);
+    if ($tokens === []) return null;
+    $best = null;
+    $bestScore = 0;
+    $secondScore = 0;
+    $bestStrong = false;
+    foreach ($table as $tool => $entries) {
+        $score = 0;
+        $strong = false;
+        $seen = [];
+        foreach ($entries as $e) {
+            $key = implode(' ', $e['tokens']);
+            if (isset($seen[$key])) continue;
+            $seen[$key] = true;
+            if (capture_kw_phrase_hit($e['tokens'], $tokens)) {
+                $score += $e['points'];
+                if ($e['strong']) $strong = true;
+            }
+        }
+        if ($score > $bestScore) {
+            $secondScore = $bestScore;
+            $bestScore = $score;
+            $best = $tool;
+            $bestStrong = $strong;
+        } elseif ($score > $secondScore) {
+            $secondScore = $score;
+        }
+    }
+    if ($best === null || $bestScore < 3 || $bestScore <= $secondScore || !$bestStrong) {
+        return null;
+    }
+    if (isset(capture_targets()[$best])) {
+        return [
+            'tool' => $best,
+            'fields' => capture_destination_fields($text, $best),
+            'confidence' => 1.0,
+            'via' => 'keywords',
+        ];
+    }
+    $nav = capture_nav_destinations();
+    if (isset($nav[$best])) {
+        return ['navigate' => ['tool' => $best, 'name' => $nav[$best]['name'], 'url' => $nav[$best]['url']]];
+    }
+    return null;
 }
 
 /* ------------------------------------------------------------------ */
@@ -324,6 +497,47 @@ function capture_llm_extract(string $text, string $tool): ?array {
     if (!is_array($parsed)) return null;
     $fields = $parsed['fields'] ?? null;
     return is_array($fields) ? $fields : null;
+}
+
+/* Fields for a destination that is already decided (an @ pin, or a
+   decisive keyword match): deterministic guesses merged under whatever
+   the LLM extracts for that one tool. If extraction fails outright the
+   fallback fields still file; the raw text is the last-resort value.
+   Invoice fields are sanitized so a malformed extraction can never
+   undo the strictly required client, amount, and due date.            */
+function capture_destination_fields(string $text, string $tool): array {
+    $fields = capture_pin_fallback_fields($text, $tool);
+    $extracted = capture_llm_extract($text, $tool);
+    if (is_array($extracted)) {
+        foreach ($extracted as $k => $v) {
+            if ($v !== '' && $v !== null) $fields[$k] = $v;
+        }
+    }
+    if ($tool === 'notes') {
+        // A note is the raw words, never an LLM rewrite of them.
+        $fields['text'] = $text;
+    }
+    if ($tool === 'invoice-chaser') {
+        // The chaser strictly requires a client, an amount, and a
+        // real due date; never let a malformed extraction undo them.
+        if (trim((string) ($fields['client_name'] ?? '')) === '') {
+            $fields['client_name'] = mb_substr(trim((string) preg_replace('/\s+/', ' ', $text)), 0, 60);
+        }
+        if (preg_replace('/[^0-9.]/', '', (string) ($fields['amount'] ?? '')) === '') {
+            $fields['amount'] = capture_parse_amount($text);
+        }
+        $due = (string) ($fields['due_date'] ?? '');
+        $dueOk = preg_match('/^\d{4}-\d{2}-\d{2}$/', $due) === 1;
+        if ($dueOk) {
+            $dp = explode('-', $due);
+            $dueOk = checkdate((int) $dp[1], (int) $dp[2], (int) $dp[0]);
+        }
+        if (!$dueOk) {
+            $parsedDue = capture_parse_due_date($text);
+            $fields['due_date'] = $parsedDue !== '' ? $parsedDue : date('Y-m-d', strtotime('+7 days'));
+        }
+    }
+    return $fields;
 }
 
 /* LLM router                                                          */
@@ -640,37 +854,7 @@ if ($forced !== '' && isset($targets[$forced])) {
         // consulted. The LLM may only extract fields for the pinned
         // tool, merged over deterministic guesses; if extraction fails
         // outright, the raw text is filed to the pinned tool anyway.
-        $fields = capture_pin_fallback_fields($text, $forced);
-        $extracted = capture_llm_extract($text, $forced);
-        if (is_array($extracted)) {
-            foreach ($extracted as $k => $v) {
-                if ($v !== '' && $v !== null) $fields[$k] = $v;
-            }
-        }
-        if ($forced === 'notes') {
-            // A note is the raw words, never an LLM rewrite of them.
-            $fields['text'] = $text;
-        }
-        if ($forced === 'invoice-chaser') {
-            // The chaser strictly requires a client, an amount, and a
-            // real due date; never let a malformed extraction undo them.
-            if (trim((string) ($fields['client_name'] ?? '')) === '') {
-                $fields['client_name'] = mb_substr(trim((string) preg_replace('/\s+/', ' ', $text)), 0, 60);
-            }
-            if (preg_replace('/[^0-9.]/', '', (string) ($fields['amount'] ?? '')) === '') {
-                $fields['amount'] = capture_parse_amount($text);
-            }
-            $due = (string) ($fields['due_date'] ?? '');
-            $dueOk = preg_match('/^\d{4}-\d{2}-\d{2}$/', $due) === 1;
-            if ($dueOk) {
-                $dp = explode('-', $due);
-                $dueOk = checkdate((int) $dp[1], (int) $dp[2], (int) $dp[0]);
-            }
-            if (!$dueOk) {
-                $parsedDue = capture_parse_due_date($text);
-                $fields['due_date'] = $parsedDue !== '' ? $parsedDue : date('Y-m-d', strtotime('+7 days'));
-            }
-        }
+        $fields = capture_destination_fields($text, $forced);
         $route = [
             'tool' => $forced,
             'fields' => $fields,
@@ -687,7 +871,20 @@ if ($forced !== '' && isset($targets[$forced])) {
                 'message' => 'That\'s a job for ' . $suggest['name'] . '. The log box only files text into tools, so open it there to get it done. Nothing was logged.',
                 'suggest_name' => $suggest['name'], 'suggest_url' => $suggest['url']]);
         }
-        $route = capture_llm_route($text);
+        // Keyword layer: a decisive match against the user's keyword
+        // table routes here. Native destinations file below exactly as
+        // an LLM route does; the other tools get the suggest shape so
+        // the client opens them with the words in hand, as a task
+        // suggestion does, but the payload says via=keywords.
+        $kwRoute = capture_keyword_route($text);
+        if ($kwRoute !== null && isset($kwRoute['navigate'])) {
+            $nav = $kwRoute['navigate'];
+            jsonResponse(['ok' => true, 'logged' => false,
+                'message' => 'That\'s a job for ' . $nav['name'] . '. The log box only files text into tools, so open it there to get it done. Nothing was logged.',
+                'suggest_name' => $nav['name'], 'suggest_url' => $nav['url'],
+                'tool' => $nav['tool'], 'via' => 'keywords']);
+        }
+        $route = $kwRoute ?? capture_llm_route($text);
     }
 }
 
