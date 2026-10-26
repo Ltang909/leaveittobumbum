@@ -46,12 +46,6 @@
     "hearsay": "Now you know what the robots say about you when you are not in the room.",
     "video-converter": "Converted with no sketchy website, no watermark, and no download-button roulette."
   };
-  var IMAGE_DESTINATIONS = [
-    { name: "Receipt Reader", url: "/tools/receipt-reader/", label: "A receipt" },
-    { name: "Poster to Calendar", url: "/tools/poster-to-calendar/", label: "An event poster" },
-    { name: "Meal Scanner", url: "/tools/meal-scanner/", label: "A meal" }
-  ];
-
   // Desk parity data, mirrored from the homepage front desk
   // (app/components/capture-bar.tsx). The tool list itself is NOT copied:
   // the strip fetches /tools/registry.json, the same file the desk's
@@ -208,7 +202,10 @@
     ".bb-strip-rechint{margin:6px 2px 0;font-size:13px;font-weight:700;opacity:.72}",
     ".bb-strip-rechint[hidden]{display:none}",
     ".bb-strip-preview{width:52px;height:52px;object-fit:cover;border:2px solid var(--line,#1a291c);border-radius:10px;background:#fff;flex:none}",
-    ".bb-strip-preview-row{display:flex;align-items:center;gap:10px;margin:0 0 8px}",
+    ".bb-strip-preview-icon{display:grid;place-items:center;font-size:20px}",
+    ".bb-strip-filechip{display:flex;align-items:center;gap:10px;margin-top:10px;font-weight:700}",
+    ".bb-strip-filemeta{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}",
+    ".bb-strip-filex{flex:none;border:2px solid var(--line,#1a291c);background:#fff;border-radius:50%;width:26px;height:26px;font-weight:900;cursor:pointer;line-height:1;display:grid;place-items:center;padding:0;margin:0}",
     ".bb-strip-btn{flex:none;border:2px solid var(--line,#1a291c);background:#fff;color:var(--ink,#142015);font-weight:900;padding:12px 16px;border-radius:999px;cursor:pointer;font:inherit;margin:0}",
     ".bb-strip-btn:disabled{opacity:.6;cursor:wait}",
     ".bb-strip-go{background:var(--lime,#d8ff62)}",
@@ -371,6 +368,7 @@
     var picker = strip.querySelector(".bb-strip-file");
     var cameraPicker = strip.querySelector(".bb-strip-camera");
     var result = strip.querySelector(".bb-strip-result");
+    var hint = strip.querySelector(".bb-strip-hint");
     var pinRow = strip.querySelector(".bb-strip-pinrow");
     var pinImg = strip.querySelector(".bb-strip-pin-img");
     var pinEmoji = strip.querySelector(".bb-strip-pin-emoji");
@@ -383,7 +381,7 @@
     var recTime = strip.querySelector(".bb-strip-rectime");
     var recHint = strip.querySelector(".bb-strip-rechint");
 
-    var pendingImage = null;
+    var stagedImage = null;
     var busy = false;
     var lastKey = "";
     var pinned = null;
@@ -416,7 +414,9 @@
      * focus, the tab is hidden, or a tool is pinned (the pinned sample
      * placeholder owns the box then). */
     var rotTimer = setInterval(function () {
-      if (focused || pinned || document.hidden) return;
+      // A staged photo owns the placeholder (the photo-mode line) until
+      // it is removed or routed.
+      if (focused || pinned || stagedImage || document.hidden) return;
       phIndex = (phIndex + 1) % PLACEHOLDERS.length;
       input.placeholder = PLACEHOLDERS[phIndex];
     }, 3400);
@@ -471,6 +471,22 @@
         input.placeholder = PIN_PLACEHOLDERS[tool.key] || PLACEHOLDERS[phIndex];
       } else {
         input.placeholder = PLACEHOLDERS[phIndex];
+      }
+      refreshPhotoMode();
+    }
+
+    /* Photo mode for the hint line under the box, mirroring the desk:
+     * while a photo is staged, the hint (and, unpinned, the placeholder)
+     * teaches what the photo can become instead of the generic Psst. */
+    function refreshPhotoMode() {
+      if (stagedImage) {
+        hint.textContent = pinned
+          ? "Photo ready for " + pinned.name + ". Hit Log it and off it goes."
+          : "Photo ready. @Receipt Reader turns it into a spreadsheet, @Poster to Calendar pulls out the events, @Meal Scanner reads the plate. Pick one, then Log it!";
+        if (!pinned) input.placeholder = "Photo ready. @Receipt Reader, @Poster to Calendar, or @Meal Scanner\u2026";
+      } else {
+        hint.textContent = "Psst: type @ and Bum Bum shows you everything he can do.";
+        if (!pinned) input.placeholder = PLACEHOLDERS[phIndex];
       }
     }
     unpinBtn.addEventListener("click", function () {
@@ -584,14 +600,18 @@
     }
 
     function routeFile(file) {
+      // A different file arriving retires any staged photo; the same
+      // file (re-submitted from the composer) keeps its staging.
+      if (file !== stagedImage) stagedImage = null;
       revokeStripPreview();
+      refreshPhotoMode();
       track("capture_started", { surface: "strip", kind: "file", tool: tool });
       track("drop_strip_capture", { tool: tool, kind: "file" });
       var kind = fileKind(file);
       if (pinned && kind !== "other") {
         var kinds = FILE_HANDOFF_KINDS[pinned.key];
         if (kinds && kinds.indexOf(kind) >= 0) {
-          // The pinned tool can swallow this file: no "what is it?" pick.
+          // The pinned tool can swallow this file: hand it straight over.
           stashAndGo(file, pinned.url, pinned.name, "mention");
           return;
         }
@@ -603,26 +623,46 @@
       if (kind === "audio") { stashAndGo(file, "/tools/notes/", "Voice Notes to Text", "file"); return; }
       if (kind === "video") { stashAndGo(file, "/tools/video-trimmer/", "Video Trimmer", "file"); return; }
       if (kind === "image") {
-        pendingImage = file;
-        // A tiny preview of the photo being classified, so the pick is
-        // made looking at the thing itself, not its file name.
-        try { stripPreviewUrl = URL.createObjectURL(file); } catch (e) { stripPreviewUrl = null; }
-        var chips = IMAGE_DESTINATIONS.map(function (d) {
-          return '<button type="button" class="bb-strip-btn bb-strip-chip" data-url="' + esc(d.url) + '" data-name="' + esc(d.name) + '">' + esc(d.label) + "</button>";
-        }).join("");
-        show((stripPreviewUrl
-          ? '<p class="bb-strip-preview-row"><img class="bb-strip-preview" src="' + stripPreviewUrl + '" alt=""><span>Got it. What is this a photo of?</span></p>'
-          : "<p>Got it. What is this a photo of?</p>") + "<div>" + chips + "</div>");
-        result.querySelectorAll(".bb-strip-chip").forEach(function (chip) {
-          chip.addEventListener("click", function () {
-            var f = pendingImage;
-            pendingImage = null;
-            if (f) stashAndGo(f, chip.getAttribute("data-url"), chip.getAttribute("data-name"), "file-picker");
-          });
-        });
+        if (pinned) {
+          // The pinned tool takes no files at all (the handoff-kinds
+          // cases returned above): never stage a photo behind a pin
+          // that can never receive it.
+          show("<p>" + esc(pinned.name) + " cannot take a photo. Unpin it above the box, or @ one of the photo tools: Receipt Reader, Poster to Calendar, Meal Scanner.</p>");
+          return;
+        }
+        stageStripImage(file);
         return;
       }
       show('<p>That file type has Bum Bum stumped. He takes photos, videos, and audio here. Anything else, <a href="/tools/">the toolbox</a> probably has a tool for it.</p>');
+    }
+
+    /* An unpinned photo stages in the strip: preview chip with a real
+     * remove control, and the hint under the box switches to photo
+     * mode (refreshPhotoMode). Nothing routes until a photo tool is
+     * pinned and Log it is hit. */
+    function stageStripImage(file) {
+      stagedImage = file;
+      try { stripPreviewUrl = URL.createObjectURL(file); } catch (e) { stripPreviewUrl = null; }
+      var mb = (file.size / 1048576).toFixed(1);
+      show('<div class="bb-strip-filechip">' +
+        (stripPreviewUrl
+          ? '<img class="bb-strip-preview" src="' + stripPreviewUrl + '" alt="">'
+          : '<span class="bb-strip-preview bb-strip-preview-icon" aria-hidden="true">&#128247;</span>') +
+        '<span class="bb-strip-filemeta">' + esc(file.name) + " (" + mb + " MB)</span>" +
+        '<button type="button" class="bb-strip-filex" aria-label="Remove ' + esc(file.name) + '" title="Remove file">&times;</button></div>');
+      var x = result.querySelector(".bb-strip-filex");
+      if (x) x.addEventListener("click", removeStagedImage);
+      refreshPhotoMode();
+    }
+
+    // The × on the staged preview: discard the photo completely. No
+    // charge, no navigation; focus returns to the box.
+    function removeStagedImage() {
+      stagedImage = null;
+      revokeStripPreview();
+      show("");
+      refreshPhotoMode();
+      input.focus();
     }
 
     /* ---- Text routing ---- */
@@ -771,6 +811,13 @@
 
     function submit() {
       if (busy) return;
+      if (stagedImage) {
+        if (pinned) { routeFile(stagedImage); return; }
+        // Never guess a photo's destination silently: teach the @ pick
+        // and keep the photo staged for it.
+        show("<p>That photo needs a destination first. @Receipt Reader makes it a spreadsheet, @Poster to Calendar pulls out the events, @Meal Scanner reads the plate. Pick one above the box, then Log it!</p>");
+        return;
+      }
       var t = input.value.trim();
       if (pinned) {
         track("capture_started", { surface: "strip", kind: "text", tool: tool });

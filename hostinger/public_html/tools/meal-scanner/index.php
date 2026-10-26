@@ -448,4 +448,4 @@ document.querySelector('#newBatchBtn').addEventListener('click',()=>{
   renderQueue();
   document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'});
 });
-</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r7"></script></body></html>
+</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r8"></script></body></html>

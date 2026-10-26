@@ -10,8 +10,9 @@ import { useDeskFace } from "../lib/desk-face";
 // which routes it into Notes, Receipt Reader, Job Application Tracker,
 // Invoice Reminder, or Subscription Tracker and spends exactly one
 // action, the tool's. Files never touch the server: Bum Bum routes them
-// by kind (audio to Voice Notes, video to the Trimmer, photos get a
-// one-tap "what is it?" pick), stashes them in IndexedDB, and hands them
+// by kind (audio to Voice Notes, video to the Trimmer; an unpinned
+// photo stages in the composer until the visitor @-picks one of the
+// photo tools for it), stashes them in IndexedDB, and hands them
 // to the tool page, which picks them up via /tools/capture-handoff.js.
 // Guests are welcome; the account prompt does its own asking later, per
 // the delayed-prompt pattern. On top of that brain, the desk layer:
@@ -51,12 +52,6 @@ type Result =
   | { kind: "message"; text: string; suggestName?: string; suggestUrl?: string }
   | { kind: "success"; summary: string; url: string; toolName: string }
   | { kind: "error"; text: string; limit?: boolean };
-
-const IMAGE_DESTINATIONS = [
-  { name: "Receipt Reader", url: "/tools/receipt-reader/", label: "A receipt" },
-  { name: "Poster to Calendar", url: "/tools/poster-to-calendar/", label: "An event poster" },
-  { name: "Meal Scanner", url: "/tools/meal-scanner/", label: "A meal" },
-];
 
 const FACE_WORK = "/bum/cat-laptop.png";
 const FACE_EXCITED = "/bum/cat-excited-v2.png";
@@ -280,7 +275,7 @@ function markDeskHandoff(
 // Tiny staged-file preview: a thumbnail for images, a muted first
 // frame for video, an icon chip for audio and anything else. One
 // object URL per file, revoked when the file goes away or is swapped.
-function FilePreview({ file, large }: { file: File; large?: boolean }) {
+function FilePreview({ file }: { file: File }) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
@@ -293,7 +288,7 @@ function FilePreview({ file, large }: { file: File; large?: boolean }) {
       URL.revokeObjectURL(u);
     };
   }, [file]);
-  const cls = "bb-file-preview" + (large ? " bb-file-preview-lg" : "");
+  const cls = "bb-file-preview";
   if (file.type.startsWith("image/") && url) return <img className={cls} src={url} alt="" />;
   if (file.type.startsWith("video/") && url)
     return <video className={cls} src={url} preload="metadata" muted playsInline aria-hidden="true" />;
@@ -307,7 +302,7 @@ function FilePreview({ file, large }: { file: File; large?: boolean }) {
 export default function CaptureBar() {
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [pendingImage, setPendingImage] = useState<File | null>(null);
+  const [stagedImage, setStagedImage] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [result, setResult] = useState<Result>({ kind: "idle" });
@@ -631,7 +626,8 @@ export default function CaptureBar() {
     bbTrack("desk_chip", { chip });
     setAmbiguous(null);
     setOtherOpen(false);
-    setPendingImage(null);
+    // A staged photo survives the pin on purpose: pin a photo tool and
+    // the staged photo can be submitted straight to it.
     clearHat();
     setPinned(tool);
     bbTrack("desk_mention_selected", { tool: tool.key, via: "chip" });
@@ -691,8 +687,7 @@ export default function CaptureBar() {
     if (pinned && kind !== "other") {
       const kinds = FILE_HANDOFF_KINDS[pinned.key];
       if (kinds && kinds.includes(kind)) {
-        // The pinned tool can swallow this file: skip the "what is it?"
-        // pick and hand it straight over.
+        // The pinned tool can swallow this file: hand it straight over.
         stashAndGo(f, pinned.url, pinned.name, "mention");
         return;
       }
@@ -703,13 +698,25 @@ export default function CaptureBar() {
         });
         return;
       }
+      if (kind === "image") {
+        // The pinned tool takes no files at all: do not stage a photo
+        // behind a pin that can never receive it.
+        setResult({
+          kind: "message",
+          text: pinned.name + " cannot take a photo. Unpin it above the box, or @ one of the photo tools: Receipt Reader, Poster to Calendar, Meal Scanner.",
+        });
+        return;
+      }
     }
     if (kind === "audio") {
       stashAndGo(f, "/tools/notes/", "Voice Notes to Text", "file");
     } else if (kind === "video") {
       stashAndGo(f, "/tools/video-trimmer/", "Video Trimmer", "file");
     } else if (kind === "image") {
-      setPendingImage(f);
+      // No pin: the photo stages in the composer and waits. The hint
+      // under the box teaches the @ move; nothing routes until the
+      // visitor picks a photo tool and hits Do it!.
+      setStagedImage(f);
       setResult({ kind: "idle" });
     } else {
       setResult({
@@ -721,12 +728,16 @@ export default function CaptureBar() {
     }
   }
 
-  function pickImageDestination(url: string, name: string) {
-    if (!pendingImage) return;
-    const f = pendingImage;
-    setPendingImage(null);
+  // The × on the staged file chip: throw the file away completely.
+  // No charge, no navigation, no leftover state; the FilePreview
+  // component revokes its object URL when it unmounts, and focus goes
+  // back to the box.
+  function removeStagedFile() {
     setFile(null);
-    stashAndGo(f, url, name, "file-picker");
+    setStagedImage(null);
+    setResult({ kind: "idle" });
+    clearHat();
+    if (textRef.current) textRef.current.focus();
   }
 
   async function fetchCapture(value: string, tool?: string, fields?: Record<string, unknown>, key?: string): Promise<CaptureResponse> {
@@ -928,6 +939,20 @@ export default function CaptureBar() {
   }
 
   function submit() {
+    if (stagedImage) {
+      if (pinned) {
+        // The pin is the destination: hand the photo straight over.
+        routeFile(stagedImage);
+      } else {
+        // Never guess a photo's destination silently: teach the @ pick
+        // and keep the photo staged for it.
+        setResult({
+          kind: "message",
+          text: "That photo needs a destination first. @Receipt Reader makes it a spreadsheet, @Poster to Calendar pulls out the events, @Meal Scanner reads the plate. Pick one, then Do it!",
+        });
+      }
+      return;
+    }
     if (file) {
       routeFile(file);
       return;
@@ -1060,7 +1085,13 @@ export default function CaptureBar() {
                   submit();
                 }
               }}
-              placeholder={pinned ? PIN_PLACEHOLDERS[pinned.key] || PLACEHOLDERS[phIndex] : PLACEHOLDERS[phIndex]}
+              placeholder={
+                stagedImage && !pinned
+                  ? "Photo ready. @Receipt Reader, @Poster to Calendar, or @Meal Scanner…"
+                  : pinned
+                    ? PIN_PLACEHOLDERS[pinned.key] || PLACEHOLDERS[phIndex]
+                    : PLACEHOLDERS[phIndex]
+              }
               aria-label="Type anything to log it"
               autoComplete="off"
               maxLength={2000}
@@ -1145,7 +1176,15 @@ export default function CaptureBar() {
             </div>
           )}
         </div>
-        <p className="desk-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>
+        {stagedImage ? (
+          <p className="desk-hint">
+            {pinned
+              ? "Photo ready for " + pinned.name + ". Hit Do it! and off it goes."
+              : "Photo ready. @Receipt Reader turns it into a spreadsheet, @Poster to Calendar pulls out the events, @Meal Scanner reads the plate. Pick one, then Do it!"}
+          </p>
+        ) : (
+          <p className="desk-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>
+        )}
         <div className="desk-chips-row">
           <div className="capture-home-chips desk-task-chips">
             <button
@@ -1206,20 +1245,13 @@ export default function CaptureBar() {
             }
           }}
         />
-        {file && !pendingImage && (
+        {file && (
           <div className="capture-home-filechip">
             <FilePreview file={file} />
             <span>
               {file.name} ({(file.size / 1048576).toFixed(1)} MB)
             </span>
-            <button
-              type="button"
-              onClick={() => {
-                setFile(null);
-                setPendingImage(null);
-              }}
-              aria-label="Remove file"
-            >
+            <button type="button" onClick={removeStagedFile} aria-label={"Remove " + file.name} title="Remove file">
               ×
             </button>
           </div>
@@ -1261,21 +1293,6 @@ export default function CaptureBar() {
             <p className="capture-home-error">
               {result.text} {result.limit && <a href="/account/">See your account</a>}
             </p>
-          )}
-          {pendingImage && (
-            <div className="capture-home-picker">
-              <div className="capture-home-picker-preview">
-                <FilePreview file={pendingImage} large />
-              </div>
-              <p className="capture-home-note">Got it. What is this a photo of?</p>
-              <div className="capture-home-chips">
-                {IMAGE_DESTINATIONS.map((d) => (
-                  <button key={d.url} type="button" className="capture-home-chip" onClick={() => pickImageDestination(d.url, d.name)}>
-                    {d.label}
-                  </button>
-                ))}
-              </div>
-            </div>
           )}
           {ambiguous && ambiguous.options && (
             <div className="capture-home-picker">
