@@ -144,7 +144,7 @@ export default function BestBusinessAccountSoftware() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(postingLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Blog</p>
         <h1>12 Best Business Account Software for Small Businesses in 2026</h1>
         <p className="lede">Updated October 26, 2026 · 12 tools compared · By the LeaveItToBumBum team</p>

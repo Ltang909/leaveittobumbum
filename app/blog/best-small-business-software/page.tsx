@@ -144,7 +144,7 @@ export default function BestSmallBusinessSoftware() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(postingLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Blog</p>
         <h1>12 Best Small Business Software Tools in 2026 (Free and Paid)</h1>
         <p className="lede">Updated October 26, 2026 · 12 products compared · By the LeaveItToBumBum team</p>
