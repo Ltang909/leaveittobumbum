@@ -321,7 +321,7 @@ function markDeskHandoff(
   try {
     window.sessionStorage.setItem(
       "bb-desk-handoff",
-      JSON.stringify({ tool: toolKey, kind, ...(extra || {}), ts: Date.now() })
+      JSON.stringify({ tool: toolKey, kind, origin: "desk", ...(extra || {}), ts: Date.now() })
     );
   } catch {
     // No marker, no banner. The handoff itself still works.
@@ -672,7 +672,7 @@ export default function CaptureBar() {
         setText(d.transcript);
         setResult({
           kind: "message",
-          text: "Heard you. Tap Do it! to file it, or @ a tool first: Voice Notes to Text keeps the note, Ghostwriter (Voice to Content) makes it posts, SOP Generator makes it a procedure.",
+          text: "Heard you. Tap Do it! to file it, or @ a tool first: Voice Notes to Text keeps the note, Voice to Content makes it posts, SOP Generator makes it a procedure.",
         });
         if (textRef.current) textRef.current.focus();
       } else {
@@ -1335,7 +1335,7 @@ export default function CaptureBar() {
                 </div>
                 <p className="desk-rec-hint">
                   Your words land in the box when you stop. Then @ sends them on: Voice Notes to Text keeps the note,
-                  Ghostwriter (Voice to Content) makes it posts, SOP Generator makes it a procedure.
+                  Voice to Content makes it posts, SOP Generator makes it a procedure.
                 </p>
               </>
             )}

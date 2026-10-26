@@ -151,7 +151,7 @@
   function markDeskHandoff(toolKey, kind, extra) {
     if (!toolKey) return;
     try {
-      var data = { tool: toolKey, kind: kind, ts: Date.now() };
+      var data = { tool: toolKey, kind: kind, origin: "strip", ts: Date.now() };
       if (extra) { for (var k in extra) data[k] = extra[k]; }
       sessionStorage.setItem("bb-desk-handoff", JSON.stringify(data));
     } catch (e) {}
@@ -354,7 +354,7 @@
       '<button type="button" class="bb-strip-btn bb-strip-go">Log it</button>' +
       "</div>" +
       '<div class="bb-strip-recrow" hidden><span class="bb-strip-recdot" aria-hidden="true"></span><canvas class="bb-strip-wave" width="132" height="28" aria-hidden="true"></canvas><span class="bb-strip-rectime">0:00</span><span class="bb-strip-recnote">Recording&hellip; tap &#127908; to stop.</span></div>' +
-      '<p class="bb-strip-rechint" hidden>Your words land in the box when you stop. Then @ sends them on: Voice Notes to Text keeps the note, Ghostwriter (Voice to Content) makes it posts, SOP Generator makes it a procedure.</p>' +
+      '<p class="bb-strip-rechint" hidden>Your words land in the box when you stop. Then @ sends them on: Voice Notes to Text keeps the note, Voice to Content makes it posts, SOP Generator makes it a procedure.</p>' +
       '<div class="bb-strip-mention" role="listbox" aria-label="Tools you can call with @" hidden></div>' +
       "</div>" +
       '<p class="bb-strip-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>' +
@@ -922,7 +922,7 @@
           input.value = d.transcript;
           growInput();
           noteDraft();
-          show("<p>Heard you. Tap Log it to file it, or @ a tool first: Voice Notes to Text keeps the note, Ghostwriter (Voice to Content) makes it posts, SOP Generator makes it a procedure.</p>");
+          show("<p>Heard you. Tap Log it to file it, or @ a tool first: Voice Notes to Text keeps the note, Voice to Content makes it posts, SOP Generator makes it a procedure.</p>");
           input.focus();
         } else {
           show('<p class="bb-strip-error">' + esc((d && d.error) || "Could not transcribe that.") + "</p>");
@@ -1517,11 +1517,21 @@
     // action area, so scrolling the banner to the top of the viewport
     // puts the carried file and the primary action in view with it.
     // Reduced motion gets an instant jump instead of the glide.
-    if (anchor) {
+    // One override: a homepage-desk handoff to Voice to Content lands
+    // on the transcript box instead, the field the words were dropped
+    // into. Strip origins and older origin-less markers keep the
+    // banner landing.
+    var landing = banner;
+    if (data.tool === "ghostwriter" && data.origin === "desk") {
+      var gwBox = null;
+      try { gwBox = document.querySelector("#gwPasteText"); } catch (e) {}
+      if (gwBox) landing = gwBox;
+    }
+    if (anchor || landing !== banner) {
       try {
         var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-        if (typeof banner.scrollIntoView === "function") {
-          banner.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+        if (typeof landing.scrollIntoView === "function") {
+          landing.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
         }
       } catch (e) {}
     }
