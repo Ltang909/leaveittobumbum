@@ -31,7 +31,7 @@ export default function BlogIndex() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Blog</p>
         <h1>Blog</h1>
         <p className="lede">Comparisons and guides from the Leave It to Bum Bum team.</p>
