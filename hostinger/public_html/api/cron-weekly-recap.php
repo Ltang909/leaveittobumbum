@@ -232,8 +232,9 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
             . $body
             . '</td></tr></table></td></tr>';
     }
-    $subject = 'Y
-...[truncated 26 chars]
+    $subject = 'Your week, handled: ' . $total . ($total === 1 ? ' thing' : ' things') . ' coming up';
+    return ['subject' => $subject, 'html' => recap_shell('Your week, handled.', $html, $unsubUrl), 'text' => $text];
+}
 
 function recap_quiet_variants(): array {
     return [
