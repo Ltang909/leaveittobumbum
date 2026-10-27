@@ -200,15 +200,13 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
     $total = 0;
     foreach ($sections as $s) $total += count($s['items']);
-    $html = '';
-    $text = '';
-    $firstSection = true;
+    // Leon's call: the intro line stays in the markup (it sets the
+    // spacing under the headline) but renders in a transparent color.
+    $html = '<tr><td><div style="padding:12px 32px 2px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:transparent;">'
+        . 'Here is everything your trackers say needs you this week, in one place, so none of it sneaks up on you.</div></td></tr>';
+    $text = "Here is everything your trackers say needs you this week:\n";
     foreach ($sections as $sec) {
-        if (!$firstSection) $html .= '<tr><td style="height:14px;font-size:0;line-height:0;">&nbsp;</td></tr>';
-        $firstSection = false;
-        $html .= '<tr><td style="background:#fdfaf1;padding:20px 32px 0 32px;">'
-            . '<div style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;">' . $sec['title'] . '</div></td></tr>';
-        $body = '';
+        $body = '<div style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;padding-bottom:4px;">' . $sec['title'] . '</div>';
         $text .= "\n" . strtoupper($sec['title']) . "\n";
         $shown = array_slice($sec['items'], 0, RECAP_ITEM_CAP);
         foreach ($shown as $it) {
@@ -237,9 +235,10 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
             . '<td style="padding:12px 0 2px 0;"><a href="' . $appUrl . $sec['url'] . '" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:9px 18px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">Open the ' . $sec['tool'] . '</a></td>'
             . $footCell . '</tr></table>';
         $text .= 'Open the ' . $sec['tool'] . ': ' . $appUrl . $sec['url'] . "\n";
-        $html .= '<tr><td style="background:#fdfaf1;padding:0 32px 18px 32px;">'
+        $html .= '<tr><td style="padding:16px 32px 0 32px;">'
+            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fdfaf1;border:2px solid #1a291c;border-radius:18px;"><tr><td style="padding:18px 20px 14px 20px;">'
             . $body
-            . '</td></tr>';
+            . '</td></tr></table></td></tr>';
     }
     $subject = 'Your week, handled: ' . $total . ($total === 1 ? ' thing' : ' things') . ' coming up';
     return ['subject' => $subject, 'html' => recap_shell('Your week, handled.', $html, $unsubUrl), 'text' => $text];
