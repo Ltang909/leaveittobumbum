@@ -120,6 +120,13 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 </ul>
 </section>
 <?php endif; ?>
+<?php $weeklyOff = false; try { $wq = db()->prepare('SELECT unsubscribed FROM weekly_email_state WHERE user_id = ?'); $wq->execute([(int) $user['id']]); $wr = $wq->fetch(); if ($wr) $weeklyOff = (int) $wr['unsubscribed'] === 1; } catch (Throwable $e) {} ?>
+<section class="panel" id="weekly-note" style="margin-top:28px">
+<h2 style="margin-top:0">The Monday note</h2>
+<p class="lede" style="margin-top:0">Once a week, on Monday morning, Bum Bum emails you everything your trackers say is coming due: subscription renewals, open invoices, client follow-ups, and job applications. Quiet weeks get a short all-clear instead. Never more than one email a week.</p>
+<p style="margin:10px 0 0"><strong id="weeklyState"><?= $weeklyOff ? 'You are opted out. No Monday note until you turn it back on.' : 'You are on the list for the Monday note.' ?></strong></p>
+<p style="margin-top:12px"><button id="weeklyToggle" class="button secondary"><?= $weeklyOff ? 'Opt back in' : 'Opt out' ?></button></p>
+</section>
 <section id="toolbox"><div class="toolbox-head"><h2>Your toolbox</h2><button id="customizeBtn" class="button secondary" style="margin-top:0">Customize</button></div>
 <div id="tool-picker" class="hidden"><p class="lede" style="margin:0">Pick the tools that show up here.</p><div class="tool-pick">
 <?php foreach ($DASHBOARD_ORDER as $key): $t = $DASHBOARD_TOOLS[$key]; ?>
@@ -170,6 +177,8 @@ $toronto = new DateTimeZone('America/Toronto'); ?><p class="eyebrow">Your worksp
 async function session(){return fetch('/api/session.php').then(r=>r.json())}
 document.querySelector('#billing').onclick=async()=>{const s=await session();const response=await fetch('/api/portal.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:s.csrf})});const data=await response.json();if(response.ok)location.href=data.url;else document.querySelector('#message').textContent=data.error};
 document.querySelector('#logout').onclick=async()=>{const s=await session();await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout',csrf:s.csrf})});location.reload()};
+const weeklyBtn=document.querySelector('#weeklyToggle');
+if(weeklyBtn)weeklyBtn.onclick=async()=>{const turnOff=weeklyBtn.textContent.trim()==='Opt out';weeklyBtn.disabled=true;try{const s=await session();const res=await fetch('/api/weekly-email-pref.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:s.csrf,subscribed:!turnOff})});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Could not save that.');document.querySelector('#weeklyState').textContent=data.subscribed?'You are on the list for the Monday note.':'You are opted out. No Monday note until you turn it back on.';weeklyBtn.textContent=data.subscribed?'Opt out':'Opt back in';bbTrack('weekly_note_toggled',{subscribed:data.subscribed});}catch(e){alert(e.message);}weeklyBtn.disabled=false};
 document.querySelectorAll('.switch-plan').forEach(btn=>btn.addEventListener('click',async()=>{
   const to=btn.dataset.plan==='operator'?'operator':'helper';
   const name=to==='operator'?'Operator':'Helper';
