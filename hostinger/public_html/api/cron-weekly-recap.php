@@ -181,12 +181,12 @@ function recap_shell(string $headline, string $innerHtml, string $unsubUrl): str
     . '<div style="font-family:Georgia,serif;font-size:30px;font-weight:900;color:#142015;line-height:1.15;padding-top:6px;">' . $headline . '</div>'
     . '</td></tr>'
     . $innerHtml
-    . '<tr><td style="padding:20px 32px 28px 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td>'
+    . '<tr><td style="padding:20px 32px 28px 32px;">'
     . '<div style="border-top:2px dashed #1a291c;padding-top:16px;font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#667064;" align="center">'
     . 'One note a week, only from your own trackers. Nothing else, ever.<br>'
     . 'Leave It To Bum Bum · Aurora, ON L4G, Canada · <a href="mailto:hello@leaveittobumbum.com" style="color:#667064;">hello@leaveittobumbum.com</a><br>'
     . '<a href="' . $unsubUrl . '" style="color:#667064;text-decoration:underline;">Unsubscribe from the weekly note</a>'
-    . '</div></td></tr></table></td></tr>'
+    . '</div></td></tr>'
     . '</table></td></tr></table></body></html>';
 }
 
@@ -194,8 +194,8 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
     $total = 0;
     foreach ($sections as $s) $total += count($s['items']);
-    $html = '<tr><td style="padding:12px 32px 2px 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">'
-        . 'Here is everything your trackers say needs you this week, in one place, so none of it sneaks up on you.</td></tr></table></td></tr>';
+    $html = '<tr><td><div style="padding:12px 32px 2px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">'
+        . 'Here is everything your trackers say needs you this week, in one place, so none of it sneaks up on you.</div></td></tr>';
     $text = "Here is everything your trackers say needs you this week:\n";
     foreach ($sections as $sec) {
         $body = '<div style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;padding-bottom:4px;">' . $sec['title'] . '</div>';
@@ -250,7 +250,7 @@ function recap_render_quiet(int $idx, string $unsubUrl): array {
     $variants = recap_quiet_variants();
     [$headline, $line] = $variants[$idx % count($variants)];
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
-    $html = '<tr><td style="padding:10px 32px 4px 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">' . $line . '</td></tr></table></td></tr>'
+    $html = '<tr><td><div align="center" style="padding:10px 32px 4px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">' . $line . '</div></td></tr>'
         . '<tr><td style="padding:14px 32px 6px 32px;" align="center"><a href="' . $appUrl . '/tools/" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:10px 20px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">See the toolbox</a></td></tr>';
     return ['subject' => $headline . ' Your Bum Bum note', 'html' => recap_shell($headline, $html, $unsubUrl),
         'text' => $line . "\n\nSee the toolbox: " . $appUrl . "/tools/\n"];
