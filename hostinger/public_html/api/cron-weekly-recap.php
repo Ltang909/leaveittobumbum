@@ -181,10 +181,10 @@ function recap_shell(string $headline, string $innerHtml, string $unsubUrl): str
     . '<div style="font-family:Georgia,serif;font-size:30px;font-weight:900;color:#142015;line-height:1.15;padding-top:6px;">' . $headline . '</div>'
     . '</td></tr>'
     . $innerHtml
-    . '<tr><td style="padding:8px 32px 28px 32px;">'
+    . '<tr><td style="padding:20px 32px 28px 32px;">'
     . '<div style="border-top:2px dashed #1a291c;padding-top:16px;font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#667064;" align="center">'
     . 'One note a week, only from your own trackers. Nothing else, ever.<br>'
-    . 'Leave It To Bum Bum · Toronto, Canada · <a href="mailto:hello@leaveittobumbum.com" style="color:#667064;">hello@leaveittobumbum.com</a><br>'
+    . 'Leave It To Bum Bum · Aurora, ON L4G 7N8, Canada · <a href="mailto:hello@leaveittobumbum.com" style="color:#667064;">hello@leaveittobumbum.com</a><br>'
     . '<a href="' . $unsubUrl . '" style="color:#667064;text-decoration:underline;">Unsubscribe from the weekly note</a>'
     . '</div></td></tr>'
     . '</table></td></tr></table></body></html>';
@@ -194,44 +194,46 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
     $total = 0;
     foreach ($sections as $s) $total += count($s['items']);
-    $html = '<tr><td style="padding:10px 32px 4px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;" align="center">'
+    $html = '<tr><td style="padding:12px 32px 2px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">'
         . 'Morning. Here is everything your trackers say needs you this week, in one place, so none of it sneaks up on you.</td></tr>';
     $text = "Morning. Here is everything your trackers say needs you this week:\n";
     foreach ($sections as $sec) {
-        $html .= '<tr><td style="padding:20px 32px 0 32px;">'
-            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>'
-            . '<td width="48" valign="middle"><img src="' . $appUrl . $sec['icon'] . '" width="40" alt="" style="display:block;border:0;"></td>'
-            . '<td valign="middle" style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;">' . $sec['title'] . '</td>'
-            . '</tr></table>';
+        $body = '<div style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;padding-bottom:4px;">' . $sec['title'] . '</div>';
         $text .= "\n" . strtoupper($sec['title']) . "\n";
         $shown = array_slice($sec['items'], 0, RECAP_ITEM_CAP);
         foreach ($shown as $it) {
             $day = $it['day'];
             $chipBg = $day['overdue'] ? '#ff7448' : '#d8ff62';
+            $chipText = $day['overdue'] ? 'Overdue' : $day['detail'];
+            $meta = $it['meta'] . ($day['overdue'] ? ' · was due ' . $day['detail'] : '');
             $amt = $it['amount'] !== null ? ' · ' . recap_money((float) $it['amount'], (string) ($it['currency'] ?? 'USD')) : '';
-            $html .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e7e0cb;"><tr>'
-                . '<td style="padding:10px 4px;font-family:Arial,sans-serif;font-size:15px;color:#142015;"><b>' . htmlspecialchars($it['name'], ENT_QUOTES, 'UTF-8') . '</b>'
-                . '<span style="color:#667064;"> · ' . $it['meta'] . $amt . '</span></td>'
-                . '<td align="right" width="118" style="padding:10px 0;"><span style="display:inline-block;background:' . $chipBg . ';border:2px solid #1a291c;border-radius:999px;padding:3px 10px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;color:#142015;">'
-                . ($day['overdue'] ? 'Overdue · ' : '') . $day['detail'] . '</span></td></tr></table>';
+            $body .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr>'
+                . '<td style="padding:10px 8px 10px 0;font-family:Arial,sans-serif;font-size:15px;color:#142015;"><b>' . htmlspecialchars($it['name'], ENT_QUOTES, 'UTF-8') . '</b>'
+                . '<span style="color:#667064;"> · ' . $meta . $amt . '</span></td>'
+                . '<td align="right" width="104" style="padding:10px 0;"><span style="display:inline-block;white-space:nowrap;background:' . $chipBg . ';border:2px solid #1a291c;border-radius:999px;padding:3px 10px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;color:#142015;">'
+                . $chipText . '</span></td></tr></table>';
             $text .= '- ' . $it['name'] . ' · ' . $it['meta'] . $amt . ' · ' . ($day['overdue'] ? 'OVERDUE ' : '') . $day['detail'] . "\n";
         }
         if (count($sec['items']) > RECAP_ITEM_CAP) {
             $more = count($sec['items']) - RECAP_ITEM_CAP;
-            $html .= '<div style="font-family:Arial,sans-serif;font-size:13px;color:#667064;padding:6px 4px 0 4px;">Plus ' . $more . ' more in the ' . $sec['tool'] . '.</div>';
+            $body .= '<div style="font-family:Arial,sans-serif;font-size:13px;color:#667064;padding:6px 0 0 0;">Plus ' . $more . ' more in the ' . $sec['tool'] . '.</div>';
             $text .= 'Plus ' . $more . " more in the " . $sec['tool'] . ".\n";
         }
-        if ($sec['foot'] !== '') {
-            $html .= '<div style="font-family:Arial,sans-serif;font-size:14px;font-weight:800;color:#142015;padding-top:8px;">' . $sec['foot'] . '</div>';
-            $text .= $sec['foot'] . "\n";
-        }
-        $html .= '<div style="padding:12px 0 4px 0;"><a href="' . $appUrl . $sec['url'] . '" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:9px 18px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">Open the ' . $sec['tool'] . '</a></div>'
-            . '</td></tr>';
+        $footCell = $sec['foot'] !== ''
+            ? '<td align="right" valign="middle" style="font-family:Arial,sans-serif;font-size:14px;font-weight:800;color:#142015;">' . $sec['foot'] . '</td>'
+            : '<td></td>';
+        if ($sec['foot'] !== '') $text .= $sec['foot'] . "\n";
+        $body .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr>'
+            . '<td style="padding:12px 0 2px 0;"><a href="' . $appUrl . $sec['url'] . '" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:9px 18px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">Open the ' . $sec['tool'] . '</a></td>'
+            . $footCell . '</tr></table>';
         $text .= 'Open the ' . $sec['tool'] . ': ' . $appUrl . $sec['url'] . "\n";
+        $html .= '<tr><td style="padding:16px 32px 0 32px;">'
+            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fdfaf1;border:2px solid #1a291c;border-radius:18px;"><tr><td style="padding:18px 20px 14px 20px;">'
+            . $body
+            . '</td></tr></table></td></tr>';
     }
-    $subject = 'Your week, handled: ' . $total . ($total === 1 ? ' thing' : ' things') . ' coming up';
-    return ['subject' => $subject, 'html' => recap_shell('Your week, handled.', $html, $unsubUrl), 'text' => $text];
-}
+    $subject = 'Y
+...[truncated 26 chars]
 
 function recap_quiet_variants(): array {
     return [
