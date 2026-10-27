@@ -32,6 +32,7 @@ $tz = new DateTimeZone('America/Toronto');
 $now = new DateTime('now', $tz);
 $today = $now->format('Y-m-d');
 $dow = (int) $now->format('N'); // 1 = Monday
+$monday = (clone $now)->modify('-' . ($dow - 1) . ' days')->format('Y-m-d');
 $sunday = (clone $now)->modify('+' . (7 - $dow) . ' days')->format('Y-m-d');
 $weekLabel = $now->format('M j') . ' to ' . (clone $now)->modify('+' . (7 - $dow) . ' days')->format('M j');
 
@@ -75,7 +76,7 @@ function recap_day(string $date, string $today): array {
 }
 
 // ---------- gather one user's week ----------
-function recap_gather(PDO $pdo, int $userId, string $today, string $sunday): array {
+function recap_gather(PDO $pdo, int $userId, string $today, string $sunday, string $monday): array {
     $sections = [];
 
     // Subscriptions renewing (rolled forward so stale dates read as their
@@ -89,12 +90,12 @@ function recap_gather(PDO $pdo, int $userId, string $today, string $sunday): arr
         $name = trim((string) ($s['custom_name'] ?? ''));
         if ($name === '') $name = ucwords(str_replace('_', ' ', (string) $s['category']));
         if (!empty($s['tier_name'])) $name .= ' (' . $s['tier_name'] . ')';
-        if ((int) $s['is_free_trial'] === 1 && !empty($s['trial_ends_on']) && $s['trial_ends_on'] >= $today && $s['trial_ends_on'] <= $sunday) {
+        if ((int) $s['is_free_trial'] === 1 && !empty($s['trial_ends_on']) && $s['trial_ends_on'] >= $monday && $s['trial_ends_on'] <= $sunday) {
             $items[] = ['name' => $name, 'meta' => 'Free trial ends', 'amount' => null, 'date' => $s['trial_ends_on']];
             continue;
         }
         $renewal = cutline_roll_forward((string) $s['next_renewal_on'], (string) $s['cadence']);
-        if ($renewal >= $today && $renewal <= $sunday) {
+        if ($renewal >= $monday && $renewal <= $sunday) {
             $amount = ((int) $s['price_cents']) / 100;
             $cur = strtoupper((string) ($s['currency'] ?: 'USD'));
             $totalByCurrency[$cur] = ($totalByCurrency[$cur] ?? 0) + $amount;
@@ -161,7 +162,12 @@ function recap_gather(PDO $pdo, int $userId, string $today, string $sunday): arr
     }
 
     foreach ($sections as &$sec) {
-        foreach ($sec['items'] as &$it) $it['day'] = recap_day($it['date'], $today);
+        foreach ($sec['items'] as &$it) {
+            $it['day'] = recap_day($it['date'], $today);
+            // A renewal inside the send week is never "overdue", even on
+            // a mid-week test run where its date has just passed.
+            if ($sec['key'] === 'subscriptions') $it['day']['overdue'] = false;
+        }
         unset($it);
     }
     unset($sec);
@@ -196,8 +202,13 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
     foreach ($sections as $s) $total += count($s['items']);
     $html = '';
     $text = '';
+    $firstSection = true;
     foreach ($sections as $sec) {
-        $body = '<div style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;padding-bottom:4px;">' . $sec['title'] . '</div>';
+        if (!$firstSection) $html .= '<tr><td style="height:14px;font-size:0;line-height:0;">&nbsp;</td></tr>';
+        $firstSection = false;
+        $html .= '<tr><td style="background:#fdfaf1;padding:20px 32px 0 32px;">'
+            . '<div style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;">' . $sec['title'] . '</div></td></tr>';
+        $body = '';
         $text .= "\n" . strtoupper($sec['title']) . "\n";
         $shown = array_slice($sec['items'], 0, RECAP_ITEM_CAP);
         foreach ($shown as $it) {
@@ -226,10 +237,9 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
             . '<td style="padding:12px 0 2px 0;"><a href="' . $appUrl . $sec['url'] . '" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:9px 18px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">Open the ' . $sec['tool'] . '</a></td>'
             . $footCell . '</tr></table>';
         $text .= 'Open the ' . $sec['tool'] . ': ' . $appUrl . $sec['url'] . "\n";
-        $html .= '<tr><td style="padding:16px 32px 0 32px;">'
-            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fdfaf1;border:2px solid #1a291c;border-radius:18px;"><tr><td style="padding:18px 20px 14px 20px;">'
+        $html .= '<tr><td style="background:#fdfaf1;padding:0 32px 18px 32px;">'
             . $body
-            . '</td></tr></table></td></tr>';
+            . '</td></tr>';
     }
     $subject = 'Your week, handled: ' . $total . ($total === 1 ? ' thing' : ' things') . ' coming up';
     return ['subject' => $subject, 'html' => recap_shell('Your week, handled.', $html, $unsubUrl), 'text' => $text];
@@ -335,7 +345,7 @@ foreach ($users as $u) {
     if ((int) ($state['unsubscribed'] ?? 0) === 1 && $onlyEmail === '') { $report['skipped']++; continue; }
     if ($onlyEmail === '' && (string) ($state['last_sent_on'] ?? '') === $today) { $report['skipped']++; continue; }
 
-    $sections = recap_gather($pdo, $userId, $today, $sunday);
+    $sections = recap_gather($pdo, $userId, $today, $sunday, $monday);
     $itemCount = 0;
     foreach ($sections as $s) $itemCount += count($s['items']);
 
