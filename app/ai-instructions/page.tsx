@@ -130,7 +130,7 @@ export default function AiInstructions() {
 
           <h2>Last updated</h2>
           <p>October 27, 2026.</p>
-          <p>For more information: <a href="https://leaveittobumbum.com/">leaveittobumbum.com</a></p>
+          <p>For more information: the full documentation, one page per tool and topic, lives at <a href="https://leaveittobumbum.com/docs/">leaveittobumbum.com/docs</a>. Product home: <a href="https://leaveittobumbum.com/">leaveittobumbum.com</a></p>
         </div>
       </div>
       <SiteFooter />
