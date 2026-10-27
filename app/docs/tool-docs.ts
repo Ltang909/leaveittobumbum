@@ -269,6 +269,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "One poster read uses one action, however many events it holds, up to six.",
       "Screenshots of digital posters work just as well as photos of paper ones.",
       "Relative dates get resolved for you: a poster that says Friday means the coming Friday.",
+      "No poster handy? The sample poster on the page drops three editable events in for free, so you can see the whole flow first.",
     ],
     data: "Your photo is sent to the reader, read, and discarded. It is never stored.",
     tips: [
@@ -298,6 +299,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "One photo read uses one action.",
       "Vision estimates of portions typically run 20 to 40 percent off in either direction. The range is the honest answer, not a cop-out.",
       "Your running day total is kept in your browser only.",
+      "No meal photo handy? The sample meal on the page shows the full result for free, every number editable.",
     ],
     data: "Your photo is read and discarded, never stored. The day total lives in your browser's local storage, not in your account.",
     tips: [

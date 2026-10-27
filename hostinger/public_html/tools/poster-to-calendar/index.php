@@ -99,6 +99,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .queue-item{display:flex;gap:12px;align-items:center;border:1px solid #e2d7bf;border-radius:12px;background:#fff;padding:8px 12px;margin-top:8px}
+.sample-line{text-align:center;font-size:13px;opacity:.85;margin:10px 0 0}.sample-link{background:none;border:0;padding:0;font:inherit;font-weight:800;color:inherit;text-decoration:underline;cursor:pointer}
 .queue-item img{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid #e7dcc3}
 .queue-item .meta{font-size:13px;opacity:.75}
 .mini{border:1px solid #ddd1b8;background:#fff;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer}
@@ -125,6 +126,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <button type="button" class="button secondary" id="btnGallery">Upload images</button>
 <button type="button" class="button secondary" id="btnCamera">Use camera</button>
 </div>
+<p class="meta sample-line">No poster handy? <button type="button" id="sampleBtn" class="sample-link">Try a sample poster</button> first. Free, and the events land in editable cards, just like a real read.</p>
 <div id="queueList"></div>
 <div class="btnrow"><button type="button" class="button hidden" id="processBtn">Read poster</button></div>
 <div class="progress-wrap hidden" id="batchProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Warming up...</p></div>
@@ -197,6 +199,35 @@ let cardCount=0;
 
 document.querySelector('#btnGallery').addEventListener('click',()=>fileGallery.click());
 document.querySelector('#btnCamera').addEventListener('click',()=>fileCamera.click());
+function sampleEvents(){
+  const pad=n=>String(n).padStart(2,'0');
+  const fmt=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  const now=new Date();
+  const fri=new Date(now.getFullYear(),now.getMonth(),now.getDate()+((5-now.getDay()+7)%7));
+  const sat=new Date(fri);sat.setDate(fri.getDate()+1);
+  const sun=new Date(fri);sun.setDate(fri.getDate()+2);
+  return [
+    {title:'Riverside Fall Fest: Opening Night Market',date:fmt(fri),startTime:'17:00',endTime:'21:00',allDay:false,location:'Riverside Park, Main Gates',description:'Opening night of the fall festival. Food stalls, local makers, and live music on the bandstand.'},
+    {title:'Fall Harvest Farmers Market',date:fmt(sat),startTime:'09:00',endTime:'13:00',allDay:false,location:'Riverside Park, North Lawn',description:'Over 40 local vendors with produce, baking, and preserves. Free entry, rain or shine.'},
+    {title:'Pumpkin Carving Contest',date:fmt(sun),startTime:'13:00',endTime:'15:00',allDay:false,location:'Riverside Park, Pavilion',description:'Bring your own pumpkin or buy one at the gate. Prizes for kids and grown-ups.'}
+  ];
+}
+document.querySelector('#sampleBtn').addEventListener('click',async()=>{
+  if(batchRunning)return;
+  if(queue.some(q=>q.sample)){batchError.textContent='The sample is already in your list below.';return}
+  bbTrack('sample_started',{tool:'poster-to-calendar'});
+  try{
+    const resp=await fetch('/bum/sample-poster.png');
+    if(!resp.ok)throw new Error('load');
+    const blob=await resp.blob();
+    const dataUrl=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)});
+    queue.push({id:crypto.randomUUID(),dataUrl,name:'Sample poster',status:'queued',sample:true});
+    renderQueue();
+    processBtn.click();
+  }catch(e){
+    batchError.textContent='The sample poster would not load. Try again?';
+  }
+});
 dropzone.addEventListener('click',()=>fileGallery.click());
 dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileGallery.click()}});
 dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('over')});
@@ -248,7 +279,8 @@ function renderQueue(){
   });
   const pending=queue.filter(q=>q.status==='queued');
   processBtn.classList.toggle('hidden',!pending.length||batchRunning);
-  processBtn.textContent=pending.length>1?'Read '+pending.length+' posters ('+pending.length+' actions)':'Read this poster (1 action)';
+  const paidPending=pending.filter(q=>!q.sample).length;
+  processBtn.textContent=pending.length>1?'Read '+pending.length+' posters ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')':(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this poster (1 action)');
 }
 
 function downscale(dataUrl){
@@ -290,14 +322,22 @@ processBtn.addEventListener('click',async()=>{
     q.status='reading';renderQueue();
     progText.textContent='Reading poster '+(done+1)+' of '+todo.length+'...';
     try{
-      const small=await downscale(q.dataUrl);
-      const t=localToday();
-      const{response,data}=await apiCall({action:'parse',image:small,idempotencyKey:q.id,todayLocal:t.date,weekdayLocal:t.weekday,tzName:t.tz});
-      if(response.status===402)throw new Error('actions');
-      if(!response.ok){const err=new Error(data.error||'read failed');err.serverMsg=data.error||'';throw err}
-      (data.events||[]).forEach(ev=>addCard(ev,q.name));
+      let events;
+      if(q.sample){
+        progText.textContent='Reading the sample poster...';
+        await new Promise(r=>setTimeout(r,1100));
+        events=sampleEvents();
+      }else{
+        const small=await downscale(q.dataUrl);
+        const t=localToday();
+        const{response,data}=await apiCall({action:'parse',image:small,idempotencyKey:q.id,todayLocal:t.date,weekdayLocal:t.weekday,tzName:t.tz});
+        if(response.status===402)throw new Error('actions');
+        if(!response.ok){const err=new Error(data.error||'read failed');err.serverMsg=data.error||'';throw err}
+        events=data.events||[];
+      }
+      events.forEach(ev=>addCard(ev,q.name));
       q.status='done';
-      bbTrack('poster_parsed',{events:(data.events||[]).length});
+      bbTrack('poster_parsed',{events:events.length,...(q.sample?{sample:true}:{})});
     }catch(e){
       if(e.message==='actions'){q.status='blocked';blocked=true}
       else{q.status='error';lastFail=e}

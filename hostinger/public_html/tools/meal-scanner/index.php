@@ -116,6 +116,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .queue-item{display:flex;gap:12px;align-items:center;border:1px solid #e2d7bf;border-radius:12px;background:#fff;padding:8px 12px;margin-top:8px}
+.sample-line{text-align:center;font-size:13px;opacity:.85;margin:10px 0 0}.sample-link{background:none;border:0;padding:0;font:inherit;font-weight:800;color:inherit;text-decoration:underline;cursor:pointer}
 .queue-item img{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid #e7dcc3}
 .queue-item .meta{font-size:13px;opacity:.75}
 .mini{border:1px solid #ddd1b8;background:#fff;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer}
@@ -143,6 +144,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <button type="button" class="button secondary" id="btnGallery">Upload images</button>
 <button type="button" class="button secondary" id="btnCamera">Use camera</button>
 </div>
+<p class="meta sample-line">No meal photo handy? <button type="button" id="sampleBtn" class="sample-link">Try a sample meal</button> first. Free, and every number is editable, just like a real scan.</p>
 <div id="queueList"></div>
 <div class="btnrow"><button type="button" class="button hidden" id="processBtn">Scan meal</button></div>
 <div class="progress-wrap hidden" id="batchProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Warming up...</p></div>
@@ -220,6 +222,27 @@ let cardCount=0;
 
 document.querySelector('#btnGallery').addEventListener('click',()=>fileGallery.click());
 document.querySelector('#btnCamera').addEventListener('click',()=>fileCamera.click());
+const SAMPLE_MEAL={mealName:'Salmon plate (sample)',items:[
+{name:'Grilled salmon fillet',portion:'1 fillet, about 190 g',calories:360,caloriesLow:310,caloriesHigh:430,protein:42,carbs:0,fat:20,uncertain:false},
+{name:'Quinoa with herbs',portion:'About 1 cup, cooked',calories:220,caloriesLow:190,caloriesHigh:260,protein:8,carbs:39,fat:4,uncertain:false},
+{name:'Roasted sweet potato wedges',portion:'6 wedges',calories:180,caloriesLow:150,caloriesHigh:220,protein:2,carbs:41,fat:4,uncertain:true},
+{name:'Steamed broccoli',portion:'5 florets, about 1 1/2 cups',calories:80,caloriesLow:65,caloriesHigh:100,protein:5,carbs:13,fat:1,uncertain:false}],notes:['Cooking oil and sauces swing the salmon and sweet potato numbers more than anything else on the plate.']};
+document.querySelector('#sampleBtn').addEventListener('click',async()=>{
+  if(batchRunning)return;
+  if(queue.some(q=>q.sample)){batchError.textContent='The sample is already in your list below.';return}
+  bbTrack('sample_started',{tool:'meal-scanner'});
+  try{
+    const resp=await fetch('/bum/sample-meal.jpg');
+    if(!resp.ok)throw new Error('load');
+    const blob=await resp.blob();
+    const dataUrl=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)});
+    queue.push({id:crypto.randomUUID(),dataUrl,name:'Sample meal',status:'queued',sample:true});
+    renderQueue();
+    processBtn.click();
+  }catch(e){
+    batchError.textContent='The sample meal would not load. Try again?';
+  }
+});
 dropzone.addEventListener('click',()=>fileGallery.click());
 dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileGallery.click()}});
 dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('over')});
@@ -271,7 +294,8 @@ function renderQueue(){
   });
   const pending=queue.filter(q=>q.status==='queued');
   processBtn.classList.toggle('hidden',!pending.length||batchRunning);
-  processBtn.textContent=pending.length>1?'Scan '+pending.length+' meals ('+pending.length+' actions)':'Scan this meal (1 action)';
+  const paidPending=pending.filter(q=>!q.sample).length;
+  processBtn.textContent=pending.length>1?'Scan '+pending.length+' meals ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')':(pending[0]&&pending[0].sample?'Scan this sample (free)':'Scan this meal (1 action)');
 }
 
 function downscale(dataUrl){
@@ -305,13 +329,21 @@ processBtn.addEventListener('click',async()=>{
     q.status='reading';renderQueue();
     progText.textContent='Scanning meal '+(done+1)+' of '+todo.length+'...';
     try{
-      const small=await downscale(q.dataUrl);
-      const{response,data}=await apiCall({action:'parse',image:small,idempotencyKey:q.id});
-      if(response.status===402)throw new Error('actions');
-      if(!response.ok){const err=new Error(data.error||'scan failed');err.serverMsg=data.error||'';err.noFood=data.code==='no_food';throw err}
-      addCard(data.meal,q.name);
+      let meal;
+      if(q.sample){
+        progText.textContent='Scanning the sample meal...';
+        await new Promise(r=>setTimeout(r,1100));
+        meal=SAMPLE_MEAL;
+      }else{
+        const small=await downscale(q.dataUrl);
+        const{response,data}=await apiCall({action:'parse',image:small,idempotencyKey:q.id});
+        if(response.status===402)throw new Error('actions');
+        if(!response.ok){const err=new Error(data.error||'scan failed');err.serverMsg=data.error||'';err.noFood=data.code==='no_food';throw err}
+        meal=data.meal;
+      }
+      addCard(meal,q.name);
       q.status='done';
-      bbTrack('meal_scanned',{items:(data.meal.items||[]).length});
+      bbTrack('meal_scanned',{items:(meal.items||[]).length,...(q.sample?{sample:true}:{})});
     }catch(e){
       if(e.message==='actions'){q.status='blocked';blocked=true}
       else{q.status='error';q.noFood=!!e.noFood;if(e.noFood)sawNoFood=true;else lastFail=e}
