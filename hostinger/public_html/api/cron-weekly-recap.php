@@ -180,16 +180,14 @@ function recap_shell(string $headline, string $innerHtml, string $unsubUrl): str
     $style = '<style>'
         . 'body{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}'
         . 'table{border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;}'
+        . '.em-mob{display:none;}'
         . '@media only screen and (max-width:640px){'
         . '.em-outer{padding:16px 6px !important;}'
         . '.em-pad{padding-left:16px !important;padding-right:16px !important;}'
         . '.em-cardpad{padding:14px 14px 10px 14px !important;}'
         . '.em-headline{font-size:26px !important;}'
-        . '.stack-cell{display:block !important;width:100% !important;max-width:100% !important;}'
-        . '.em-item-text{padding:10px 0 4px 0 !important;}'
-        . '.em-pill-cell{text-align:left !important;padding:0 0 10px 0 !important;}'
-        . '.em-btn{display:block !important;text-align:center !important;}'
-        . '.em-foot{text-align:left !important;padding:10px 0 2px 0 !important;}'
+        . '.em-desk{display:none !important;}'
+        . '.em-mob{display:block !important;}'
         . '}'
         . '@media (prefers-color-scheme: dark){'
         . '.em-outer{background:#f6f0df !important;}'
@@ -240,11 +238,17 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
             $chipClass = $day['overdue'] ? 'em-chip-red' : 'em-chip-lime';
             $meta = $it['meta'] . ($day['overdue'] ? ' · was due ' . $day['detail'] : '');
             $amt = $it['amount'] !== null ? ' · ' . recap_money((float) $it['amount'], (string) ($it['currency'] ?? 'USD')) : '';
-            $body .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr>'
-                . '<td class="stack-cell em-item-text em-ink" style="padding:10px 8px 10px 0;font-family:Arial,sans-serif;font-size:15px;color:#142015;"><b>' . htmlspecialchars($it['name'], ENT_QUOTES, 'UTF-8') . '</b>'
+            $pill = '<span class="' . $chipClass . ' em-ink" style="display:inline-block;white-space:nowrap;background:' . $chipBg . ';border:2px solid #1a291c;border-radius:999px;padding:3px 10px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;color:#142015;">' . $chipText . '</span>';
+            $nameHtml = htmlspecialchars($it['name'], ENT_QUOTES, 'UTF-8');
+            $body .= '<div class="em-desk"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr>'
+                . '<td class="em-ink" style="padding:10px 8px 10px 0;font-family:Arial,sans-serif;font-size:15px;color:#142015;"><b>' . $nameHtml . '</b>'
                 . '<span class="em-mute" style="color:#667064;"> · ' . $meta . $amt . '</span></td>'
-                . '<td align="right" width="104" class="stack-cell em-pill-cell" style="padding:10px 0;"><span class="' . $chipClass . ' em-ink" style="display:inline-block;white-space:nowrap;background:' . $chipBg . ';border:2px solid #1a291c;border-radius:999px;padding:3px 10px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;color:#142015;">'
-                . $chipText . '</span></td></tr></table>';
+                . '<td align="right" width="104" style="padding:10px 0;">' . $pill . '</td></tr></table></div>'
+                . '<div class="em-mob" style="display:none;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr><td style="padding:10px 0;font-family:Arial,sans-serif;">'
+                . '<div class="em-ink" style="font-size:15px;color:#142015;"><b>' . $nameHtml . '</b></div>'
+                . '<div class="em-mute" style="font-size:14px;color:#667064;padding-top:2px;">' . $meta . $amt . '</div>'
+                . '<div style="padding-top:7px;">' . $pill . '</div>'
+                . '</td></tr></table></div>';
             $text .= '- ' . $it['name'] . ' · ' . $it['meta'] . $amt . ' · ' . ($day['overdue'] ? 'OVERDUE ' : '') . $day['detail'] . "\n";
         }
         if (count($sec['items']) > RECAP_ITEM_CAP) {
@@ -253,12 +257,17 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
             $text .= 'Plus ' . $more . " more in the " . $sec['tool'] . ".\n";
         }
         $footCell = $sec['foot'] !== ''
-            ? '<td align="right" valign="middle" class="stack-cell em-foot em-ink" style="font-family:Arial,sans-serif;font-size:14px;font-weight:800;color:#142015;">' . $sec['foot'] . '</td>'
+            ? '<td align="right" valign="middle" class="em-ink" style="font-family:Arial,sans-serif;font-size:14px;font-weight:800;color:#142015;">' . $sec['foot'] . '</td>'
             : '<td></td>';
         if ($sec['foot'] !== '') $text .= $sec['foot'] . "\n";
-        $body .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr>'
-            . '<td class="stack-cell" style="padding:12px 0 2px 0;"><a class="em-btn em-chip-lime em-ink" href="' . $appUrl . $sec['url'] . '" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:9px 18px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">Open the ' . $sec['tool'] . '</a></td>'
-            . $footCell . '</tr></table>';
+        $btnStyle = 'background:#d8ff62;border:2px solid #1a291c;border-radius:999px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;';
+        $body .= '<div class="em-desk"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr>'
+            . '<td style="padding:12px 0 2px 0;"><a class="em-chip-lime em-ink" href="' . $appUrl . $sec['url'] . '" style="display:inline-block;padding:9px 18px;' . $btnStyle . '">Open the ' . $sec['tool'] . '</a></td>'
+            . $footCell . '</tr></table></div>'
+            . '<div class="em-mob" style="display:none;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr><td style="padding:12px 0 2px 0;">'
+            . ($sec['foot'] !== '' ? '<div class="em-ink" style="font-family:Arial,sans-serif;font-size:14px;font-weight:800;color:#142015;padding-bottom:10px;">' . $sec['foot'] . '</div>' : '')
+            . '<a class="em-chip-lime em-ink" href="' . $appUrl . $sec['url'] . '" style="display:block;text-align:center;padding:10px 18px;' . $btnStyle . '">Open the ' . $sec['tool'] . '</a>'
+            . '</td></tr></table></div>';
         $text .= 'Open the ' . $sec['tool'] . ': ' . $appUrl . $sec['url'] . "\n";
         $html .= '<tr><td class="em-pad" style="padding:16px 32px 0 32px;">'
             . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="em-card" style="background:#fdfaf1;border:2px solid #1a291c;border-radius:18px;"><tr><td class="em-cardpad" style="padding:18px 20px 14px 20px;">'
@@ -284,7 +293,7 @@ function recap_render_quiet(int $idx, string $unsubUrl): array {
     [$headline, $line] = $variants[$idx % count($variants)];
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
     $html = '<tr><td class="em-pad"><div class="em-ink" align="center" style="padding:10px 32px 4px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">' . $line . '</div></td></tr>'
-        . '<tr><td class="em-pad" style="padding:14px 32px 6px 32px;" align="center"><a class="em-btn em-chip-lime em-ink" href="' . $appUrl . '/tools/" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:10px 20px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">See the toolbox</a></td></tr>';
+        . '<tr><td class="em-pad" style="padding:14px 32px 6px 32px;" align="center"><a class="em-chip-lime em-ink" href="' . $appUrl . '/tools/" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:10px 20px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">See the toolbox</a></td></tr>';
     return ['subject' => $headline . ' Your Bum Bum note', 'html' => recap_shell($headline, $html, $unsubUrl),
         'text' => $line . "\n\nSee the toolbox: " . $appUrl . "/tools/\n"];
 }
