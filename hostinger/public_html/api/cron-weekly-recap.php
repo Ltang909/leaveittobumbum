@@ -194,9 +194,8 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
     $total = 0;
     foreach ($sections as $s) $total += count($s['items']);
-    $html = '<tr><td><div style="padding:12px 32px 2px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">'
-        . 'Here is everything your trackers say needs you this week, in one place, so none of it sneaks up on you.</div></td></tr>';
-    $text = "Here is everything your trackers say needs you this week:\n";
+    $html = '';
+    $text = '';
     foreach ($sections as $sec) {
         $body = '<div style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;padding-bottom:4px;">' . $sec['title'] . '</div>';
         $text .= "\n" . strtoupper($sec['title']) . "\n";
