@@ -164,10 +164,22 @@ if (basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === 'cutline.php') {
         $stmt->execute([$userId]);
         $subs = [];
         $total = 0.0;
+        $rollStmt = $pdo->prepare('UPDATE cutline_subscriptions SET next_renewal_on = ? WHERE id = ?');
         foreach ($stmt->fetchAll() as $row) {
+            // A recurring subscription is assumed to have renewed: roll a
+            // past renewal date forward to its next cycle and persist it,
+            // so the list never shows a stale "Overdue" for a sub that
+            // simply renewed. (Add/update already roll; this covers subs
+            // that have just been sitting here.)
+            $rolled = cutline_roll_forward((string) $row['next_renewal_on'], (string) $row['cadence']);
+            if ($rolled !== $row['next_renewal_on']) {
+                $rollStmt->execute([$rolled, $row['id']]);
+                $row['next_renewal_on'] = $rolled;
+            }
             $total += cutline_monthly_cents((int) $row['price_cents'], $row['cadence']);
             $subs[] = cutline_public_row($row);
         }
+        usort($subs, fn($a, $b) => strcmp((string) $a['next_renewal_on'], (string) $b['next_renewal_on']));
         $prefStmt = $pdo->prepare('SELECT notify_days_before FROM cutline_prefs WHERE user_id = ?');
         $prefStmt->execute([$userId]);
         $prefVal = $prefStmt->fetchColumn();
