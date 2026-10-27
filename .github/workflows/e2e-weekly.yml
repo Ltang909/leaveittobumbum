@@ -1,0 +1,84 @@
+name: E2E (weekly, staging)
+
+# Weekly full-suite run against STAGING only, plus manual dispatch.
+# Deliberately NOT wired to any deploy workflow: deploys ship on their
+# own cadence; this suite is the Monday-morning health check.
+# See docs/e2e-test-plan-2026-10-26.md and tests-e2e/README.md.
+
+on:
+  schedule:
+    - cron: '0 14 * * 1' # Mondays 14:00 UTC
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 'Which projects to run'
+        type: choice
+        options: [smoke, weekly, all]
+        default: weekly
+      billable:
+        description: 'Also run the gated billable tier (real Groq calls + Stripe test checkout)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      BASE_URL: https://staging.leaveittobumbum.com
+      E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tests-e2e/package-lock.json
+
+      - name: Install test dependencies
+        working-directory: tests-e2e
+        run: npm ci
+
+      - name: Install Chromium
+        working-directory: tests-e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: Generate media fixtures
+        working-directory: tests-e2e
+        run: npm run fixtures
+
+      - name: Select projects
+        id: pick
+        run: |
+          SUITE="${{ github.event.inputs.suite || 'weekly' }}"
+          BILLABLE="${{ github.event.inputs.billable || 'false' }}"
+          case "$SUITE" in
+            smoke)  PROJECTS="--project=smoke --project=smoke-mobile" ;;
+            weekly) PROJECTS="--project=smoke --project=smoke-mobile --project=weekly" ;;
+            all)    PROJECTS="--project=smoke --project=smoke-mobile --project=weekly" ;;
+          esac
+          if [ "$BILLABLE" = "true" ]; then
+            PROJECTS="$PROJECTS --project=billable"
+            echo "E2E_BILLABLE=1" >> "$GITHUB_ENV"
+          fi
+          echo "projects=$PROJECTS" >> "$GITHUB_OUTPUT"
+
+      - name: Run Playwright
+        working-directory: tests-e2e
+        run: npx playwright test ${{ steps.pick.outputs.projects }}
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: |
+            tests-e2e/playwright-report
+            tests-e2e/test-results
+          retention-days: 30
+          if-no-files-found: ignore
