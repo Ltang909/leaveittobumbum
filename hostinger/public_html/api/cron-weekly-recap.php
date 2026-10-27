@@ -200,9 +200,7 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
     $total = 0;
     foreach ($sections as $s) $total += count($s['items']);
-    // Leon's call: the intro line stays in the markup (it sets the
-    // spacing under the headline) but renders in a transparent color.
-    $html = '<tr><td><div style="padding:12px 32px 2px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:transparent;">'
+    $html = '<tr><td style="padding:16px 32px 0 32px;"><div style="font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">'
         . 'Here is everything your trackers say needs you this week, in one place, so none of it sneaks up on you.</div></td></tr>';
     $text = "Here is everything your trackers say needs you this week:\n";
     foreach ($sections as $sec) {
@@ -278,9 +276,16 @@ function recap_send_mail(string $to, string $subject, string $html, string $text
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) return [false, 'invalid recipient'];
     $subject = trim(preg_replace('/[\r\n]+/', ' ', $subject));
     $boundary = 'bb_' . bin2hex(random_bytes(12));
-    $body = "--{$boundary}\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n" . $text
-        . "\r\n--{$boundary}\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n" . $html
-        . "\r\n--{$boundary}--";
+    // The HTML part goes out base64-encoded. Sent raw, it is a single
+    // unbroken line of many KB, and SMTP folds lines near 1000 chars;
+    // a fold that lands inside a tag corrupts it (one send reached the
+    // inbox with a '</table>' split across the fold, printed as text
+    // and breaking that section's table). Base64 chunks at 76 chars
+    // make that impossible.
+    $body = "--{$boundary}\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" . $text
+        . "\r\n--{$boundary}\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+        . chunk_split(base64_encode($html))
+        . "--{$boundary}--";
     $fp = @stream_socket_client("tcp://{$host}:{$port}", $errno, $errstr, 15);
     if (!$fp) return [false, "connect failed: {$errstr} ({$errno})"];
     stream_set_timeout($fp, 15);
