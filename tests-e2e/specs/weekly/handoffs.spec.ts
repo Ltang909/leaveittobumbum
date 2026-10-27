@@ -64,7 +64,12 @@ test.describe('desk text drop-ins', () => {
       await pinToolViaMention(page, fill.query, fill.toolName);
       await desk.box(page).fill(fill.text);
       await desk.doIt(page).click();
-      await page.waitForURL(`**${fill.urlPart}**`, { timeout: 30_000 });
+      // domcontentloaded + a generous ceiling: staging tool pages keep
+      // long-lived resources trickling (see the file-handoff note below),
+      // and through a slow proxy the document lifecycle can take well
+      // over 30s even though the page has navigated and rendered. The
+      // assertions below poll the DOM, so DCL is all this wait needs.
+      await page.waitForURL(`**${fill.urlPart}**`, { timeout: 90_000, waitUntil: 'domcontentloaded' });
       await expectFullWidthBanner(page);
       await expect(page.locator('.bb-handoff-line b')).toContainText('dropped it in for you');
       await expect(page.locator(fill.field)).toHaveValue(fill.text);
@@ -82,7 +87,9 @@ test.describe('desk file handoff auto-run', () => {
     // hop by up to ~4s; waitForURL absorbs it without a fixed sleep.
     // domcontentloaded, not load: the tool page keeps long-lived
     // resources trickling, and the assertions below poll the DOM anyway.
-    await page.waitForURL('**/tools/receipt-reader/**', { timeout: 30_000, waitUntil: 'domcontentloaded' });
+    // 90s ceiling: through a slow proxy the lifecycle event itself can
+    // take well over 30s even after the page has navigated and rendered.
+    await page.waitForURL('**/tools/receipt-reader/**', { timeout: 90_000, waitUntil: 'domcontentloaded' });
     expect(page.url()).toContain('from=capture');
     // Proof the auto-run fired: the strip's working indicator appeared,
     // or the run already resolved into results or an error scene.
