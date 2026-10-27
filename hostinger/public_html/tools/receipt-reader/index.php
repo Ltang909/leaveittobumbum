@@ -120,7 +120,7 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .queue-item .meta{font-size:13px;opacity:.75}
 .receipt-card{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08);border-radius:14px;background:#fff;padding:16px;margin-bottom:14px}
 .receipt-card .card-head{font-size:16px;margin-bottom:4px}
-details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}.sample-line{text-align:center;font-size:13px;opacity:.85;margin:10px 0 0}.sample-link{background:none;border:0;padding:0;font:inherit;font-weight:800;color:inherit;text-decoration:underline;cursor:pointer}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Scanner"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/receipt-reader.png" alt="Receipt Scanner"><h1>Receipts in, spreadsheets out.</h1><p class="lede bb-desc">Snap photos of your receipts, up to 10 at a time. Bum Bum reads them <b>right in your browser</b>, pulls out the vendor, date, line items, tax, and total, and hands you clean tables you can fix up and save to your receipt log. Download the whole log as one CSV whenever you like. Your photos never leave your device; only the typed-up numbers are saved, in your account. One action per receipt scanned. Saving and exports are free.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to read receipts</h2><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
@@ -143,6 +143,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <button type="button" class="button secondary" id="btnGallery">Upload images</button>
 <button type="button" class="button secondary" id="btnCamera">Use camera</button>
 </div>
+<p class="meta sample-line">No receipt handy? <button type="button" id="sampleBtn" class="sample-link">Try a sample receipt</button> first. Free, and it runs the real reader on a real receipt.</p>
 <div id="queueList"></div>
 <div class="btnrow"><button type="button" class="button hidden" id="processBtn">Read receipts</button></div>
 <div class="progress-wrap hidden" id="batchProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Warming up...</p></div>
@@ -216,6 +217,22 @@ let cardCount=0;
 
 document.querySelector('#btnGallery').addEventListener('click',()=>fileGallery.click());
 document.querySelector('#btnCamera').addEventListener('click',()=>fileCamera.click());
+document.querySelector('#sampleBtn').addEventListener('click',async()=>{
+  if(batchRunning)return;
+  if(queue.some(q=>q.sample)){batchError.textContent='The sample is already in your list below.';return}
+  bbTrack('sample_started',{tool:'receipt-reader'});
+  try{
+    const resp=await fetch('/bum/sample-receipt.png');
+    if(!resp.ok)throw new Error('load');
+    const blob=await resp.blob();
+    const dataUrl=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)});
+    queue.push({id:crypto.randomUUID(),dataUrl,name:'Sample receipt',status:'queued',sample:true});
+    renderQueue();
+    processBtn.click();
+  }catch(e){
+    batchError.textContent='The sample receipt would not load. Try again?';
+  }
+});
 dropzone.addEventListener('click',()=>fileGallery.click());
 dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileGallery.click()}});
 dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('over')});
@@ -250,7 +267,10 @@ function renderQueue(){
   });
   const pending=queue.filter(q=>q.status==='queued');
   processBtn.classList.toggle('hidden',!pending.length||batchRunning);
-  processBtn.textContent=pending.length>1?'Read '+pending.length+' receipts ('+pending.length+' actions)':'Read this receipt (1 action)';
+  const paidPending=pending.filter(q=>!q.sample).length;
+  processBtn.textContent=pending.length>1
+    ?'Read '+pending.length+' receipts ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')'
+    :(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this receipt (1 action)');
 }
 
 processBtn.addEventListener('click',async()=>{
@@ -272,12 +292,15 @@ processBtn.addEventListener('click',async()=>{
         const canvas=await preprocess(q.dataUrl);
         const{data:{text}}=await worker.recognize(canvas);
         if(!text||text.replace(/\s/g,'').length<10)throw new Error('empty');
-        const{response,data}=await apiCall({action:'scan',idempotencyKey:q.id});
-        if(response.status===402)throw new Error('actions');
-        if(!response.ok)throw new Error(data.error||'metering failed');
+        if(!q.sample){
+          const{response,data}=await apiCall({action:'scan',idempotencyKey:q.id});
+          if(response.status===402)throw new Error('actions');
+          if(!response.ok)throw new Error(data.error||'metering failed');
+        }
         addCard(parseReceiptText(text),text,q.name);
         q.status='done';
-        bbTrack('scan_done',{batch:true});
+        if(q.sample)bbTrack('scan_done',{batch:true,sample:true});
+        else bbTrack('scan_done',{batch:true});
       }catch(e){
         q.status=e.message==='actions'?'blocked':e.message==='empty'?'error':'error';
         if(e.message==='actions')blocked=true;
