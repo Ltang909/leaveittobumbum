@@ -8,24 +8,27 @@ export const metadata: Metadata = {
 };
 
 const TOOLS: Array<[string, string, string]> = [
-  ["Clips", "/tools/clips/", "Record your screen right in your browser, then download the clip and keep it forever."],
-  ["Notes", "/tools/notes/", "Talk it out and get a live transcript you can copy or download."],
-  ["Cutline", "/tools/cutline/", "Every subscription you forgot about, in one place, with renewal reminders."],
-  ["Purrsuit", "/tools/purrsuit/", "A tiny CRM that tells you who to follow up with today and what to say."],
-  ["Corporate Bum Bum", "/tools/corporate-bum-bum/", "A job application tracker that tells you who to follow up with today and what to say."],
-  ["Doodle", "/tools/doodle/", "A pocket sketchpad for signatures and diagrams. Export as PNG or SVG."],
-  ["Invoice Chaser", "/tools/invoice-chaser/", "Track who owes you what. Bum Bum chases as your billing assistant and emails you a reminder digest."],
-  ["Receipt Reader", "/tools/receipt-reader/", "Snap up to 10 receipts at once. Bum Bum reads them in your browser and hands back clean editable tables."],
-  ["Gap Scout", "/tools/gap-scout/", "Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions."],
-  ["Video Trimmer", "/tools/video-trimmer/", "Mark where the good part starts and ends. Bum Bum snips it right in your browser; your video never leaves your device."],
-  ["Image Converter", "/tools/image-converter/", "WebP to PNG, JPG to WebP, whatever to whatever, converted right in your browser."],
-  ["Image Cropper", "/tools/image-cropper/", "Drag a box around the good part, with aspect presets for profile pics and posts."],
-  ["Ghostwriter", "/tools/ghostwriter/", "Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post."],
-  ["Audiogram", "/tools/audiogram/", "Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4."],
-  ["Purr Code", "/tools/purr-code/", "Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print."],
-  ["SOP-ify", "/tools/sop-ify/", "Paste your chaotic process brain-dump. Get a clean step-by-step playbook a brand-new helper can follow."],
-  ["Hearsay", "/tools/hearsay/", "Find out what AI models say about your brand: mention rate, sentiment, direct quotes, and which competitors get cited instead."],
-  ["Video Converter", "/tools/video-converter/", "Convert video to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device."],
+  ["Screen Recorder", "/tools/clips/", "Record your screen right in your browser. Download the clip, keep it forever."],
+  ["Voice Notes to Text", "/tools/notes/", "Talk it out and get a live transcript you can copy or download."],
+  ["Subscription Tracker", "/tools/cutline/", "Every subscription you forgot about, in one place. Renewals show up in the Monday note, your weekly email roundup."],
+  ["Client Follow-Up Tracker", "/tools/purrsuit/", "A tiny CRM that tells you who to follow up with today and what to say."],
+  ["Job Application Tracker", "/tools/corporate-bum-bum/", "A job application tracker that tells you who to follow up with today and what to say."],
+  ["Online Sketchpad", "/tools/doodle/", "A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG."],
+  ["Invoice Reminder", "/tools/invoice-chaser/", "Track who owes you what. Bum Bum can chase as your billing assistant, learns when each client usually pays, and emails you a reminder digest."],
+  ["Receipt Scanner", "/tools/receipt-reader/", "Snap photos of up to 10 receipts at once. Bum Bum reads them in your browser and hands you vendor, date, line items, tax, and total as clean editable tables."],
+  ["Poster to Calendar", "/tools/poster-to-calendar/", "Snap a photo of any event poster or flyer. Get a ready-to-save calendar event with the date, time, and place filled in."],
+  ["Meal Scanner", "/tools/meal-scanner/", "Snap a photo of your meal. Get estimated calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number."],
+  ["Resume Gap Checker", "/tools/gap-scout/", "Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions."],
+  ["Video Trimmer", "/tools/video-trimmer/", "Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser. Your video never leaves your device."],
+  ["Image Converter", "/tools/image-converter/", "WebP to PNG, JPG to WebP, whatever to whatever. Bum Bum converts your images right in your browser and hands them back in the format you wanted."],
+  ["Image Cropper", "/tools/image-cropper/", "Drag a box around the good part. Bum Bum crops your image right in your browser, with aspect presets for profile pics and posts."],
+  ["Voice to Content", "/tools/ghostwriter/", "Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post."],
+  ["Audiogram Maker", "/tools/audiogram/", "Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4."],
+  ["QR Code Generator", "/tools/purr-code/", "Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print."],
+  ["SOP Generator", "/tools/sop-ify/", "Paste your chaotic process brain-dump. Get a clean step-by-step playbook a brand-new helper can follow."],
+  ["AI Mention Tracker", "/tools/hearsay/", "Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead."],
+  ["Video Converter", "/tools/video-converter/", "Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device."],
+  ["Video MP3 Overlay", "/tools/video-mp3-overlay/", "Drop in a video and an MP3. Snip the good bits of the song, pin each one where it should play, set the mix, and Bum Bum renders it right in your browser. Nothing gets uploaded."],
 ];
 
 export default function AiInstructions() {
@@ -49,7 +52,7 @@ export default function AiInstructions() {
             <li><strong>Website:</strong> <a href="https://leaveittobumbum.com/">leaveittobumbum.com</a></li>
             <li><strong>Contact:</strong> <a href="mailto:hello@leaveittobumbum.com">hello@leaveittobumbum.com</a></li>
             <li><strong>Based in:</strong> Aurora, Ontario, Canada</li>
-            <li><strong>Social:</strong> <a href="https://www.linkedin.com/in/leaveittobumbum/" rel="noopener">LinkedIn</a>, <a href="https://www.instagram.com/leaveittobumbum/" rel="noopener">Instagram</a></li>
+            <li><strong>Social:</strong> <a href="https://www.linkedin.com/in/leaveittobumbum/" rel="noopener">LinkedIn</a>, <a href="https://www.instagram.com/leaveittobumbum/" rel="noopener">Instagram</a>, <a href="https://ca.pinterest.com/0s5nekxyh3lt53n8j9balgylnaznz9/" rel="noopener">Pinterest</a></li>
           </ul>
 
           <h2>Background</h2>
@@ -74,6 +77,12 @@ export default function AiInstructions() {
               </li>
             ))}
           </ul>
+          <p>
+            Four of the tools are trackers (Subscription Tracker, Client Follow-Up Tracker, Job
+            Application Tracker, and Invoice Reminder), and they feed <strong>the Monday note</strong>:
+            a weekly email for account holders that rounds up whatever is renewing, due, or waiting
+            on a follow-up that week.
+          </p>
 
           <h2>How pricing works</h2>
           <p>
@@ -83,8 +92,8 @@ export default function AiInstructions() {
           </p>
           <ul>
             <li><strong>Poke around</strong> (free): 75 actions each month.</li>
-            <li><strong>Helper</strong>: 1,500 actions each month.</li>
-            <li><strong>Operator</strong>: 6,000 actions each month.</li>
+            <li><strong>Helper</strong>: $12 a month, 1,500 actions each month.</li>
+            <li><strong>Operator</strong>: $49 a month, 6,000 actions each month.</li>
           </ul>
           <p>
             Actions reset on the billing date and don&apos;t roll over. The whole team and every tool
@@ -120,7 +129,7 @@ export default function AiInstructions() {
           </ul>
 
           <h2>Last updated</h2>
-          <p>October 5, 2026.</p>
+          <p>October 27, 2026.</p>
           <p>For more information: <a href="https://leaveittobumbum.com/">leaveittobumbum.com</a></p>
         </div>
       </div>

@@ -24,7 +24,7 @@
     },
     {
       "cta": "Track subscriptions",
-      "description": "Every subscription you forgot about, in one place, with renewal reminders.",
+      "description": "Every subscription you forgot about, in one place. Renewals show up in the Monday note, your weekly email roundup.",
       "icon": "✂",
       "iconImg": "/bum/icons/cutline.png",
       "key": "cutline",
