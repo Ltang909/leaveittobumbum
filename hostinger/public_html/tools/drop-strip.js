@@ -1641,3 +1641,113 @@
     showHandoffBanner();
   }
 })();
+/* Bum Bum mascot variant unlocks.
+ *
+ * The per-tool mascot portrait at the top of every tool page is clickable.
+ * Each click swaps in a random Bum Bum variant (Super, Detective, Wizard,
+ * and friends) with a speech bubble announcing the unlock, then reverts
+ * to the tool's own portrait after a few seconds. In-the-moment only:
+ * no saving, no collection, no streaks. The bubble never covers the tool
+ * (it sits above the portrait, in the header whitespace) and clicking the
+ * cat never blocks the tool itself.
+ */
+(function () {
+  var VARIANTS = [
+    { img: "/bum/icons/variants/super.png", name: "Super Bum Bum", line: "You've unlocked Super Bum Bum!" },
+    { img: "/bum/icons/variants/detective.png", name: "Detective Bum Bum", line: "Detective Bum Bum is on standby." },
+    { img: "/bum/icons/variants/wizard.png", name: "Wizard Bum Bum", line: "You've unlocked Wizard Bum Bum. Busywork, be gone." },
+    { img: "/bum/icons/variants/gamer.png", name: "Gamer Bum Bum", line: "Gamer Bum Bum has joined the party." },
+    { img: "/bum/icons/variants/agent.png", name: "Agent Bum Bum", line: "Agent Bum Bum. Licensed to handle it." },
+    { img: "/bum/icons/variants/chef.png", name: "Chef Bum Bum", line: "Chef Bum Bum is cooking up your afternoon back." },
+    { img: "/bum/icons/variants/skater.png", name: "Skater Bum Bum", line: "Skater Bum Bum just dropped in." },
+    { img: "/bum/icons/variants/gym.png", name: "Gym Bum Bum", line: "Gym Bum Bum. Here for the heavy lifting." },
+    { img: "/bum/icons/variants/rockstar.png", name: "Rockstar Bum Bum", line: "Rockstar Bum Bum has entered the chat." },
+    { img: "/bum/icons/variants/astronaut.png", name: "Astronaut Bum Bum", line: "Astronaut Bum Bum reporting for duty." },
+    { img: "/bum/icons/variants/doctor.png", name: "Doctor Bum Bum", line: "Doctor Bum Bum will see you now." },
+    { img: "/bum/icons/variants/boss.png", name: "CEO Bum Bum", line: "You've unlocked CEO Bum Bum." }
+  ];
+
+  function init() {
+    var mascot = document.querySelector("img.tool-mascot-page");
+    if (!mascot || mascot.dataset.bbVariants) return;
+    mascot.dataset.bbVariants = "1";
+
+    var style = document.createElement("style");
+    style.textContent =
+      ".bb-mascot-wrap{position:relative;display:inline-block;margin:8px 0 4px}" +
+      ".bb-mascot-wrap .tool-mascot-page{margin:0;cursor:pointer}" +
+      ".bb-mascot-bubble{position:absolute;left:50%;bottom:calc(100% + 12px);transform:translateX(-50%);background:#fff;border:2px solid var(--line,#222);border-radius:14px;box-shadow:4px 4px 0 var(--line,#222);padding:8px 12px;font-size:14px;font-weight:700;line-height:1.3;text-align:center;width:max-content;max-width:230px;opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:30}" +
+      ".bb-mascot-bubble:after{content:'';position:absolute;left:50%;top:100%;margin-left:-7px;border:7px solid transparent;border-top-color:var(--line,#222)}" +
+      ".bb-mascot-bubble.bb-show{opacity:1}" +
+      "@keyframes bbMascotPop{0%{transform:rotate(-3deg) scale(1)}40%{transform:rotate(-3deg) scale(1.1)}100%{transform:rotate(-3deg) scale(1)}}" +
+      ".bb-mascot-pop{animation:bbMascotPop .3s ease}" +
+      "@media (prefers-reduced-motion: reduce){.bb-mascot-pop{animation:none}.bb-mascot-bubble{transition:none}}";
+    document.head.appendChild(style);
+
+    var wrap = document.createElement("span");
+    wrap.className = "bb-mascot-wrap";
+    mascot.parentNode.insertBefore(wrap, mascot);
+    wrap.appendChild(mascot);
+
+    var bubble = document.createElement("span");
+    bubble.className = "bb-mascot-bubble";
+    bubble.setAttribute("role", "status");
+    wrap.appendChild(bubble);
+
+    var originalSrc = mascot.getAttribute("src");
+    var lastIdx = -1;
+    var revertTimer = null;
+    var hideTimer = null;
+    var preloaded = false;
+
+    mascot.setAttribute("title", "Psst. Click Bum Bum.");
+    mascot.setAttribute("tabindex", "0");
+    mascot.setAttribute("role", "button");
+    mascot.setAttribute("aria-label", "Click Bum Bum for a surprise");
+
+    function preload() {
+      if (preloaded) return;
+      preloaded = true;
+      VARIANTS.forEach(function (v) { var i = new Image(); i.src = v.img; });
+    }
+
+    function roll() {
+      preload();
+      var idx;
+      do { idx = Math.floor(Math.random() * VARIANTS.length); } while (idx === lastIdx);
+      lastIdx = idx;
+      var v = VARIANTS[idx];
+      mascot.src = v.img;
+      mascot.alt = v.name;
+      bubble.textContent = v.line;
+      bubble.classList.add("bb-show");
+      mascot.classList.remove("bb-mascot-pop");
+      void mascot.offsetWidth;
+      mascot.classList.add("bb-mascot-pop");
+      try {
+        if (window.posthog && window.posthog.capture) {
+          window.posthog.capture("mascot_variant_shown", { variant: v.name, tool: location.pathname });
+        }
+      } catch (e) {}
+      if (hideTimer) clearTimeout(hideTimer);
+      if (revertTimer) clearTimeout(revertTimer);
+      hideTimer = setTimeout(function () { bubble.classList.remove("bb-show"); }, 3200);
+      revertTimer = setTimeout(function () {
+        mascot.src = originalSrc;
+        mascot.alt = originalAlt;
+      }, 4200);
+    }
+
+    var originalAlt = mascot.getAttribute("alt") || "";
+    mascot.addEventListener("click", roll);
+    mascot.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); roll(); }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

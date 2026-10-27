@@ -419,4 +419,4 @@ refresh();
 <p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
 </section>
 <section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>We compared the field: <a href="/blog/best-free-crm-small-business/">comparing free CRMs for a small business</a>, from full sales pipelines to tiny follow-up trackers like this one.</p></section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261027r1"></script></body></html>
