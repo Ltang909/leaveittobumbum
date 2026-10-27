@@ -184,7 +184,7 @@ function recap_shell(string $headline, string $innerHtml, string $unsubUrl): str
     . '<tr><td style="padding:20px 32px 28px 32px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td>'
     . '<div style="border-top:2px dashed #1a291c;padding-top:16px;font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#667064;" align="center">'
     . 'One note a week, only from your own trackers. Nothing else, ever.<br>'
-    . 'Leave It To Bum Bum · Aurora, ON L4G 7N8, Canada · <a href="mailto:hello@leaveittobumbum.com" style="color:#667064;">hello@leaveittobumbum.com</a><br>'
+    . 'Leave It To Bum Bum · Aurora, ON L4G, Canada · <a href="mailto:hello@leaveittobumbum.com" style="color:#667064;">hello@leaveittobumbum.com</a><br>'
     . '<a href="' . $unsubUrl . '" style="color:#667064;text-decoration:underline;">Unsubscribe from the weekly note</a>'
     . '</div></td></tr></table></td></tr>'
     . '</table></td></tr></table></body></html>';
