@@ -177,18 +177,44 @@ function recap_gather(PDO $pdo, int $userId, string $today, string $sunday, stri
 // ---------- email rendering ----------
 function recap_shell(string $headline, string $innerHtml, string $unsubUrl): string {
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
-    return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+    $style = '<style>'
+        . 'body{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}'
+        . 'table{border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;}'
+        . '@media only screen and (max-width:640px){'
+        . '.em-outer{padding:16px 6px !important;}'
+        . '.em-pad{padding-left:16px !important;padding-right:16px !important;}'
+        . '.em-cardpad{padding:14px 14px 10px 14px !important;}'
+        . '.em-headline{font-size:26px !important;}'
+        . '.stack-cell{display:block !important;width:100% !important;max-width:100% !important;}'
+        . '.em-item-text{padding:10px 0 4px 0 !important;}'
+        . '.em-pill-cell{text-align:left !important;padding:0 0 10px 0 !important;}'
+        . '.em-btn{display:block !important;text-align:center !important;}'
+        . '.em-foot{text-align:left !important;padding:10px 0 2px 0 !important;}'
+        . '}'
+        . '@media (prefers-color-scheme: dark){'
+        . '.em-outer{background:#f6f0df !important;}'
+        . '.em-shell{background:#ffffff !important;}'
+        . '.em-card{background:#fdfaf1 !important;}'
+        . '.em-ink{color:#142015 !important;}'
+        . '.em-mute{color:#667064 !important;}'
+        . '.em-chip-lime{background:#d8ff62 !important;}'
+        . '.em-chip-red{background:#ff7448 !important;}'
+        . '}'
+        . '</style>';
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+    . '<meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light">'
+    . $style . '</head>'
     . '<body style="margin:0;padding:0;background:#f6f0df;">'
-    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f0df;padding:28px 12px;"><tr><td align="center">'
-    . '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border:2px solid #1a291c;border-radius:22px;">'
-    . '<tr><td style="padding:28px 32px 8px 32px;" align="center">'
+    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="em-outer" style="background:#f6f0df;padding:28px 12px;"><tr><td align="center">'
+    . '<table role="presentation" width="600" cellpadding="0" cellspacing="0" class="em-shell" style="max-width:600px;width:100%;background:#ffffff;border:2px solid #1a291c;border-radius:22px;">'
+    . '<tr><td class="em-pad" style="padding:28px 32px 8px 32px;" align="center">'
     . '<img src="' . $appUrl . '/bum-bum.png" width="104" alt="Bum Bum" style="display:block;border:0;">'
-    . '<div style="font-family:Arial,sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:#667064;text-transform:uppercase;padding-top:10px;">Leave It To Bum Bum</div>'
-    . '<div style="font-family:Georgia,serif;font-size:30px;font-weight:900;color:#142015;line-height:1.15;padding-top:6px;">' . $headline . '</div>'
+    . '<div class="em-mute" style="font-family:Arial,sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:#667064;text-transform:uppercase;padding-top:10px;">Leave It To Bum Bum</div>'
+    . '<div class="em-headline em-ink" style="font-family:Georgia,serif;font-size:30px;font-weight:900;color:#142015;line-height:1.15;padding-top:6px;">' . $headline . '</div>'
     . '</td></tr>'
     . $innerHtml
-    . '<tr><td style="padding:20px 32px 28px 32px;">'
-    . '<div style="border-top:2px dashed #1a291c;padding-top:16px;font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#667064;" align="center">'
+    . '<tr><td class="em-pad" style="padding:20px 32px 28px 32px;">'
+    . '<div class="em-mute" style="border-top:2px dashed #1a291c;padding-top:16px;font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#667064;" align="center">'
     . 'One note a week, only from your own trackers. Nothing else, ever.<br>'
     . 'Leave It To Bum Bum · Aurora, ON L4G, Canada · <a href="mailto:hello@leaveittobumbum.com" style="color:#667064;">hello@leaveittobumbum.com</a><br>'
     . '<a href="' . $unsubUrl . '" style="color:#667064;text-decoration:underline;">Unsubscribe from the weekly note</a>'
@@ -200,41 +226,42 @@ function recap_render(array $sections, string $unsubUrl, string $today): array {
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
     $total = 0;
     foreach ($sections as $s) $total += count($s['items']);
-    $html = '<tr><td style="padding:16px 32px 0 32px;"><div style="font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">'
+    $html = '<tr><td class="em-pad" style="padding:16px 32px 0 32px;"><div class="em-ink" style="font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">'
         . 'Here is everything your trackers say needs you this week, in one place, so none of it sneaks up on you.</div></td></tr>';
     $text = "Here is everything your trackers say needs you this week:\n";
     foreach ($sections as $sec) {
-        $body = '<div style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;padding-bottom:4px;">' . $sec['title'] . '</div>';
+        $body = '<div class="em-ink" style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;letter-spacing:1.5px;color:#142015;text-transform:uppercase;padding-bottom:4px;">' . $sec['title'] . '</div>';
         $text .= "\n" . strtoupper($sec['title']) . "\n";
         $shown = array_slice($sec['items'], 0, RECAP_ITEM_CAP);
         foreach ($shown as $it) {
             $day = $it['day'];
             $chipBg = $day['overdue'] ? '#ff7448' : '#d8ff62';
             $chipText = $day['overdue'] ? 'Overdue' : $day['detail'];
+            $chipClass = $day['overdue'] ? 'em-chip-red' : 'em-chip-lime';
             $meta = $it['meta'] . ($day['overdue'] ? ' · was due ' . $day['detail'] : '');
             $amt = $it['amount'] !== null ? ' · ' . recap_money((float) $it['amount'], (string) ($it['currency'] ?? 'USD')) : '';
             $body .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr>'
-                . '<td style="padding:10px 8px 10px 0;font-family:Arial,sans-serif;font-size:15px;color:#142015;"><b>' . htmlspecialchars($it['name'], ENT_QUOTES, 'UTF-8') . '</b>'
-                . '<span style="color:#667064;"> · ' . $meta . $amt . '</span></td>'
-                . '<td align="right" width="104" style="padding:10px 0;"><span style="display:inline-block;white-space:nowrap;background:' . $chipBg . ';border:2px solid #1a291c;border-radius:999px;padding:3px 10px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;color:#142015;">'
+                . '<td class="stack-cell em-item-text em-ink" style="padding:10px 8px 10px 0;font-family:Arial,sans-serif;font-size:15px;color:#142015;"><b>' . htmlspecialchars($it['name'], ENT_QUOTES, 'UTF-8') . '</b>'
+                . '<span class="em-mute" style="color:#667064;"> · ' . $meta . $amt . '</span></td>'
+                . '<td align="right" width="104" class="stack-cell em-pill-cell" style="padding:10px 0;"><span class="' . $chipClass . ' em-ink" style="display:inline-block;white-space:nowrap;background:' . $chipBg . ';border:2px solid #1a291c;border-radius:999px;padding:3px 10px;font-family:Arial,sans-serif;font-size:12px;font-weight:800;color:#142015;">'
                 . $chipText . '</span></td></tr></table>';
             $text .= '- ' . $it['name'] . ' · ' . $it['meta'] . $amt . ' · ' . ($day['overdue'] ? 'OVERDUE ' : '') . $day['detail'] . "\n";
         }
         if (count($sec['items']) > RECAP_ITEM_CAP) {
             $more = count($sec['items']) - RECAP_ITEM_CAP;
-            $body .= '<div style="font-family:Arial,sans-serif;font-size:13px;color:#667064;padding:6px 0 0 0;">Plus ' . $more . ' more in the ' . $sec['tool'] . '.</div>';
+            $body .= '<div class="em-mute" style="font-family:Arial,sans-serif;font-size:13px;color:#667064;padding:6px 0 0 0;">Plus ' . $more . ' more in the ' . $sec['tool'] . '.</div>';
             $text .= 'Plus ' . $more . " more in the " . $sec['tool'] . ".\n";
         }
         $footCell = $sec['foot'] !== ''
-            ? '<td align="right" valign="middle" style="font-family:Arial,sans-serif;font-size:14px;font-weight:800;color:#142015;">' . $sec['foot'] . '</td>'
+            ? '<td align="right" valign="middle" class="stack-cell em-foot em-ink" style="font-family:Arial,sans-serif;font-size:14px;font-weight:800;color:#142015;">' . $sec['foot'] . '</td>'
             : '<td></td>';
         if ($sec['foot'] !== '') $text .= $sec['foot'] . "\n";
         $body .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ddd3b8;"><tr>'
-            . '<td style="padding:12px 0 2px 0;"><a href="' . $appUrl . $sec['url'] . '" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:9px 18px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">Open the ' . $sec['tool'] . '</a></td>'
+            . '<td class="stack-cell" style="padding:12px 0 2px 0;"><a class="em-btn em-chip-lime em-ink" href="' . $appUrl . $sec['url'] . '" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:9px 18px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">Open the ' . $sec['tool'] . '</a></td>'
             . $footCell . '</tr></table>';
         $text .= 'Open the ' . $sec['tool'] . ': ' . $appUrl . $sec['url'] . "\n";
-        $html .= '<tr><td style="padding:16px 32px 0 32px;">'
-            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fdfaf1;border:2px solid #1a291c;border-radius:18px;"><tr><td style="padding:18px 20px 14px 20px;">'
+        $html .= '<tr><td class="em-pad" style="padding:16px 32px 0 32px;">'
+            . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="em-card" style="background:#fdfaf1;border:2px solid #1a291c;border-radius:18px;"><tr><td class="em-cardpad" style="padding:18px 20px 14px 20px;">'
             . $body
             . '</td></tr></table></td></tr>';
     }
@@ -256,8 +283,8 @@ function recap_render_quiet(int $idx, string $unsubUrl): array {
     $variants = recap_quiet_variants();
     [$headline, $line] = $variants[$idx % count($variants)];
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
-    $html = '<tr><td><div align="center" style="padding:10px 32px 4px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">' . $line . '</div></td></tr>'
-        . '<tr><td style="padding:14px 32px 6px 32px;" align="center"><a href="' . $appUrl . '/tools/" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:10px 20px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">See the toolbox</a></td></tr>';
+    $html = '<tr><td class="em-pad"><div class="em-ink" align="center" style="padding:10px 32px 4px 32px;font-family:Arial,sans-serif;font-size:16px;line-height:1.55;color:#142015;">' . $line . '</div></td></tr>'
+        . '<tr><td class="em-pad" style="padding:14px 32px 6px 32px;" align="center"><a class="em-btn em-chip-lime em-ink" href="' . $appUrl . '/tools/" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:10px 20px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">See the toolbox</a></td></tr>';
     return ['subject' => $headline . ' Your Bum Bum note', 'html' => recap_shell($headline, $html, $unsubUrl),
         'text' => $line . "\n\nSee the toolbox: " . $appUrl . "/tools/\n"];
 }
