@@ -129,7 +129,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 
 <section class="panel hidden" id="resultPanel">
-<div class="filed-head"><h2 style="margin:0">Filed. Here is your day in jot notes.</h2><button type="button" class="mini-btn" id="filedToggle">Show</button></div>
+<div class="filed-head"><h2 style="margin:0">Your day, summarized</h2><button type="button" class="mini-btn" id="filedToggle">Show</button></div>
 <div id="resultCollapse" class="hidden">
 <div class="jot" id="resultBody" style="margin-top:12px"></div>
 <p class="read-note" id="emailNote"></p>
