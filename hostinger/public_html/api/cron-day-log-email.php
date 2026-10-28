@@ -29,6 +29,10 @@ if ($sendMode && !bb_mail_configured()) {
     jsonResponse(['error' => 'Mail is not configured on this server.'], 503);
 }
 $onlyEmail = strtolower(trim((string) ($_GET['only'] ?? '')));
+// Test mode (only=) also previews today's log and never writes state,
+// so a test send does not disturb the real weekday-morning loop.
+$testMode = $onlyEmail !== '';
+$latestCutoff = $testMode ? date('Y-m-d', strtotime('+1 day')) : $today;
 
 $tz = new DateTimeZone('America/Toronto');
 $now = new DateTime('now', $tz);
@@ -113,7 +117,7 @@ foreach ($users as $u) {
 
     $stateStmt->execute([$userId]);
     $st = $stateStmt->fetch() ?: ['last_recap_log_date' => null, 'last_recap_sent_on' => null, 'last_nudge_on' => null];
-    $latestStmt->execute([$userId, $today]);
+    $latestStmt->execute([$userId, $latestCutoff]);
     $latest = $latestStmt->fetch();
     if (!$latest) { $counts['skip']++; continue; }
     $latestDate = (string) $latest['log_date'];
@@ -144,15 +148,15 @@ foreach ($users as $u) {
     if ($action === 'recap') {
         $dateLabel = date('D M j', strtotime($latestDate));
         $res = bb_send_mail($email, 'Your day, filed: ' . $dateLabel, dle_body($structured, $dateLabel));
-        if (!empty($res['ok'])) {
+        if (!empty($res['ok']) && !$testMode) {
             $saveState->execute([$userId, $latestDate, $today, $st['last_nudge_on']]);
         }
     } elseif ($action === 'nudge') {
         $res = bb_send_mail($email, 'Bum Bum kept your seat warm', dle_nudge_body());
-        if (!empty($res['ok'])) {
+        if (!empty($res['ok']) && !$testMode) {
             $saveState->execute([$userId, $st['last_recap_log_date'], $st['last_recap_sent_on'], $today]);
         }
-    } elseif ($action === 'armed') {
+    } elseif ($action === 'armed' && !$testMode) {
         $saveState->execute([$userId, $latestDate, $today, $today]);
     }
 }
