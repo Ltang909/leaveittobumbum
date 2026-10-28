@@ -648,7 +648,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     goodToKnow: [
       "One action per day filed. Re-filing the same day replaces the earlier version and costs no extra action.",
       "Week and month summaries cost one action when freshly generated. Re-opening the same stretch of logs is free.",
-      "Advanced settings can copy every filed day to a Notion page, using your own Notion integration token. Bum Bum stays the source of truth; re-filing a day replaces its Notion copy.",
+      "Advanced settings can file each day as its own Notion page inside a page or database you pick, using your own Notion integration token. Bum Bum stays the source of truth; re-filing a day rewrites its Notion page.",
       "Day Log needs a free account: the scorecard only works if yesterday's list is filed under you.",
       "Transcription tries your browser's live transcription first. On browsers without it, your recording is transcribed by Whisper and then discarded.",
       "Skip any prompt that does not fit the day. One answered prompt is enough to file.",
