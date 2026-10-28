@@ -223,8 +223,14 @@ function startSR(){
   recog.onend=()=>{if(activeRec===a&&!a.stopped){try{recog.start()}catch(e){}}};
   recog.onerror=e=>{
     if(e.error==='not-allowed'||e.error==='service-not-allowed'){
+      // SpeechRecognition can report not-allowed WITHOUT ever showing a
+      // permission prompt (notably iOS Safari), while a plain getUserMedia
+      // call prompts properly, which is why Notes works on the same phone.
+      // Try the recorder before declaring the mic blocked; if the recorder
+      // is refused too, its own message says so.
       a.stopped=true; if(activeRec===a)activeRec=null; setBtn(false); hideWave();
-      setStatus('Mic is blocked. Allow the microphone, or type instead.');
+      try{recog.stop()}catch(err){}
+      startMR(false);
       return;
     }
     if(e.error==='aborted'||e.error==='no-speech')return;
