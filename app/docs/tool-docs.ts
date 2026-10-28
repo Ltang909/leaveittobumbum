@@ -240,6 +240,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Up to 10 receipts in one batch. One action per receipt read.",
       "Reading works best with the receipt flat, well lit, and filling the frame.",
       "Saving to your log and CSV exports are free.",
+      "If a photo holds no receipt at all, Bum Bum says so and skips it without charging an action, instead of handing back a blank card.",
     ],
     data: "Your photos never leave your device. The reading happens in your browser, and only the typed-up numbers are saved, in your account, when you save a card to your log.",
     tips: [
@@ -270,6 +271,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Screenshots of digital posters work just as well as photos of paper ones.",
       "Relative dates get resolved for you: a poster that says Friday means the coming Friday.",
       "No poster handy? The sample poster on the page drops three editable events in for free, so you can see the whole flow first.",
+      "If a photo holds no event at all (a pet, a selfie, a menu), Bum Bum says so instead of guessing. It only reads posters and flyers.",
     ],
     data: "Your photo is sent to the reader, read, and discarded. It is never stored.",
     tips: [
