@@ -89,7 +89,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .wave-strip{display:flex;align-items:center;gap:12px;margin-top:10px;padding:14px;border:1px dashed #d9c9a3;border-radius:12px;background:#fffdf6;font-weight:600}
 .wave-strip.big{padding:30px 14px;justify-content:center;font-size:16px}
 .wave-bars{display:flex;align-items:center;gap:4px;height:34px}
-.wave-bars span{display:block;width:5px;height:10px;border-radius:3px;background:#b3541e}
+.wave-bars span{display:block;width:6px;height:10px;border-radius:3px;background:#b3541e}
 .wave-strip.anim .wave-bars span{animation:wavePulse 1s ease-in-out infinite}
 .wave-strip.anim .wave-bars span:nth-child(2){animation-delay:.1s}.wave-strip.anim .wave-bars span:nth-child(3){animation-delay:.22s}.wave-strip.anim .wave-bars span:nth-child(4){animation-delay:.34s}.wave-strip.anim .wave-bars span:nth-child(5){animation-delay:.46s}.wave-strip.anim .wave-bars span:nth-child(6){animation-delay:.58s}.wave-strip.anim .wave-bars span:nth-child(7){animation-delay:.7s}
 @keyframes wavePulse{0%,100%{height:8px}50%{height:30px}}
@@ -223,14 +223,22 @@ function startSR(){
   recog.onend=()=>{if(activeRec===a&&!a.stopped){try{recog.start()}catch(e){}}};
   recog.onerror=e=>{
     if(e.error==='not-allowed'||e.error==='service-not-allowed'){
+      // SpeechRecognition can report not-allowed WITHOUT ever showing a
+      // permission prompt (notably iOS Safari), while a plain getUserMedia
+      // call prompts properly, which is why Notes works on the same phone.
+      // Try the recorder before declaring the mic blocked; if the recorder
+      // is refused too, its own message says so.
       a.stopped=true; if(activeRec===a)activeRec=null; setBtn(false); hideWave();
-      setStatus('Mic is blocked. Allow the microphone, or type instead.');
+      try{recog.stop()}catch(err){}
+      startMR(false);
       return;
     }
     if(e.error==='aborted'||e.error==='no-speech')return;
-    // Live transcription failed (audio-capture, network, ...): record instead.
+    // Live transcription failed (audio-capture, network, ...): record instead,
+    // and remember it so this browser goes straight to recording next time.
     a.stopped=true; if(activeRec===a)activeRec=null; setBtn(false); hideWave();
     try{recog.stop()}catch(err){}
+    try{localStorage.setItem('bbDayLogRecOnly','1')}catch(err){}
     startMR(true);
   };
   try{recog.start();setBtn(true);showWave('Listening. Your words land in the box as you talk.',true);setStatus('')}
@@ -249,10 +257,11 @@ async function startMR(fellBack){
       const Ctx=window.AudioContext||window.webkitAudioContext;
       const ctx=new Ctx();
       const srcNode=ctx.createMediaStreamSource(stream);
-      const analyser=ctx.createAnalyser(); analyser.fftSize=64; srcNode.connect(analyser);
+      const analyser=ctx.createAnalyser(); analyser.fftSize=64; analyser.smoothingTimeConstant=0.75; srcNode.connect(analyser);
+      if(ctx.state==='suspended'){ctx.resume().catch(()=>{})}
       const data=new Uint8Array(analyser.frequencyBinCount);
       a.ctx=ctx;
-      const tick=()=>{if(activeRec!==a)return;analyser.getByteFrequencyData(data);waveBars.forEach((bar,i)=>{const v=(data[2+i*2]||0)/255;bar.style.height=(6+v*28)+'px'});a.raf=requestAnimationFrame(tick)};
+      const tick=()=>{if(activeRec!==a)return;if(ctx.state==='suspended'&&!a._resumed){a._resumed=true;ctx.resume().catch(()=>{})}analyser.getByteFrequencyData(data);waveBars.forEach((bar,i)=>{const v=(data[2+i*2]||0)/255;bar.style.height=(6+v*28)+'px'});a.raf=requestAnimationFrame(tick)};
       tick();
     }catch(e){}
     recorder.ondataavailable=e=>{if(e.data&&e.data.size)a.chunks.push(e.data)};
@@ -282,7 +291,9 @@ async function startMR(fellBack){
 
 micBtn.addEventListener('click',()=>{
   if(activeRec){stopActive();return}
-  if(SR){startSR()}else{startMR(false)}
+  let recOnly=false;
+  try{recOnly=localStorage.getItem('bbDayLogRecOnly')==='1'}catch(e){}
+  if(SR&&!recOnly){startSR()}else{startMR(false)}
 });
 
 /* --- Rendering structured jot notes --- */
