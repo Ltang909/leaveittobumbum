@@ -132,7 +132,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 
 <section class="panel" id="advancedPanel">
-<h2>Advanced settings</h2>
+<details style="border-top:0;border-bottom:0;padding:0">
+<summary style="font-size:21px;font-weight:900">Advanced settings</summary>
 <h3 style="margin:14px 0 4px">A new Notion page for each filed day</h3>
 <p class="meta" style="margin-top:0">Pick a page or a database in Notion. Every day you file becomes its own page there, titled with the date, holding that day’s jot notes. Re-filing a day rewrites its page. Bum Bum stays the source of truth.</p>
 <div id="notionState"><p class="meta">Checking your connections...</p></div>
@@ -147,6 +148,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </div>
 <p id="notionMsg" class="mic-status" style="margin-top:8px"></p>
 <p id="notionError" class="error"></p>
+</details>
 </section>
 <?php endif; ?>
 
