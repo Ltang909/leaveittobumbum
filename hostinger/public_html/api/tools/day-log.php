@@ -406,9 +406,14 @@ function dl_notion_destination(int $userId): ?array {
 
 function dl_notion_page_id(string $raw): ?string {
     $raw = trim($raw);
-    if (preg_match('/([0-9a-fA-F]{32})(?:[?#]|$)/', $raw, $m)) return strtolower($m[1]);
-    $hex = preg_replace('/[^0-9a-fA-F]/', '', $raw);
-    if (strlen($hex) === 32) return strtolower($hex);
+    if (preg_match('/([0-9a-fA-F]{8})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{12})/', $raw, $m)) {
+        return strtolower($m[1] . $m[2] . $m[3] . $m[4] . $m[5]);
+    }
+    if (preg_match('/(?:^|[^0-9a-fA-F])([0-9a-fA-F]{32})(?:[^0-9a-fA-F]|$)/', $raw, $m)) return strtolower($m[1]);
+    if (preg_match('/^[0-9a-fA-F-]+$/', $raw)) {
+        $hex = preg_replace('/[^0-9a-fA-F]/', '', $raw);
+        if (strlen($hex) === 32) return strtolower($hex);
+    }
     return null;
 }
 
