@@ -90,7 +90,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .edit-row{display:flex;gap:6px;align-items:center;margin:5px 0}
 .edit-row input[type=text]{flex:1;padding:8px 10px;border:1px solid #d9c9a3;border-radius:8px;font:inherit;font-size:14.5px;background:#fff;min-width:0}
 .edit-row select{padding:8px;border:1px solid #d9c9a3;border-radius:8px;font:inherit;font-size:13.5px;background:#fff}
-.edit-row .x{border:1px solid #d9c9a3;background:#fff;border-radius:8px;width:32px;height:32px;cursor:pointer;font-weight:900;flex:none}
+.edit-row .x{border:1px solid #d9c9a3;background:#fff;border-radius:8px;width:32px;height:32px;cursor:pointer;font-weight:900;flex:none;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;font-size:15px}
 .mini-btn{border:1px solid #d9c9a3;background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13.5px;font-weight:700}
 .edit-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
 .del-log{color:#a33327}
@@ -131,7 +131,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2>Filed. Here is your day in jot notes.</h2>
 <div class="jot" id="resultBody"></div>
 <p class="read-note" id="emailNote"></p>
-<div class="edit-actions"><button type="button" class="button secondary" id="editTodayBtn">Edit jot notes</button></div>
+<p class="read-note">Want to fix a line? This day lives in Past logs below, where you can edit or delete it.</p>
 </section>
 
 <section class="panel" id="historyPanel">
@@ -380,14 +380,6 @@ function bindEditor(container,date,structured,onRefresh){
     }
   });
 }
-document.querySelector('#editTodayBtn').addEventListener('click',()=>{
-  if(!dlResult)return;
-  bindEditor(document.querySelector('#resultBody'),dlResult.date,dlResult.structured,(saved,structured,note)=>{
-    renderResult(saved?structured:dlResult.structured,saved?note:dlResult.note,dlResult.date);
-    if(saved)loadHistory();
-  });
-});
-
 /* --- File the day --- */
 const fileBtn=document.querySelector('#fileBtn');
 fileBtn.addEventListener('click',async()=>{
