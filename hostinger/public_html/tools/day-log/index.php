@@ -95,6 +95,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .edit-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
 .del-log{color:#a33327}
 .del-log.armed{background:#a33327;color:#fff;border-color:#a33327}
+.filed-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .wave-strip{display:flex;align-items:center;gap:12px;margin-top:10px;padding:14px;border:1px dashed #d9c9a3;border-radius:12px;background:#fffdf6;font-weight:600}
 .wave-strip.big{padding:30px 14px;justify-content:center;font-size:16px}
 .wave-bars{display:flex;align-items:center;gap:4px;height:34px}
@@ -128,10 +129,12 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 
 <section class="panel hidden" id="resultPanel">
-<h2>Filed. Here is your day in jot notes.</h2>
-<div class="jot" id="resultBody"></div>
+<div class="filed-head"><h2 style="margin:0">Filed. Here is your day in jot notes.</h2><button type="button" class="mini-btn" id="filedToggle">Show</button></div>
+<div id="resultCollapse" class="hidden">
+<div class="jot" id="resultBody" style="margin-top:12px"></div>
 <p class="read-note" id="emailNote"></p>
 <p class="read-note">Want to fix a line? This day lives in Past logs below, where you can edit or delete it.</p>
+</div>
 </section>
 
 <section class="panel" id="historyPanel">
@@ -324,6 +327,11 @@ function reflectionHtml(reflection){
   return '<h4>Yesterday\u2019s list, scored</h4>'+reflection.map(r=>'<div class="score-item">'+tag(r.status)+'<span>'+esc(r.item)+'</span></div>').join('');
 }
 let dlResult=null;
+document.querySelector('#filedToggle').addEventListener('click',()=>{
+  const c=document.querySelector('#resultCollapse');
+  const open=c.classList.toggle('hidden')===false;
+  document.querySelector('#filedToggle').textContent=open?'Minimize':'Show';
+});
 function renderResult(structured,emailNote,date){
   dlResult={structured:structured,note:emailNote||'',date:date||localToday()};
   const body=document.querySelector('#resultBody');
