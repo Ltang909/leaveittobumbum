@@ -634,7 +634,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     key: "day-log",
     name: "Day Log",
     href: "/tools/day-log/",
-    icon: "/bum/icons/day-log.png",
+    icon: "/bum/icons/day-log-sticker.png",
     summary:
       "Day Log closes your day in a few minutes of talking. Three prompts above one box cover what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns your ramble into clean jot notes, scores yesterday's top list against what you actually did, files the day in your account, and emails you the notes with tomorrow's priorities on top. When a stretch of days piles up, week and month summaries pull out the accomplishments, learnings, and growth.",
     steps: [
