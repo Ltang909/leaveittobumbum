@@ -319,5 +319,13 @@
   "add song to video",
   "combine audio and video",
   "video sound mixer"
+ ],
+ "day-log": [
+  "Day log",
+  "Productivity log",
+  "Diary",
+  "What did I do today",
+  "Goals",
+  "Progress"
  ]
 }
