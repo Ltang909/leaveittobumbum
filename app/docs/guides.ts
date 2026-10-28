@@ -140,6 +140,29 @@ export const GUIDES: GuideDoc[] = [
     ],
   },
   {
+    slug: "the-day-log-recap",
+    section: "Trackers and email",
+    title: "The Day Log recap",
+    summary:
+      "The Day Log recap is a weekday-morning email. Once you have filed a log in Day Log, the next weekday morning brings your most recent log back as clean jot notes: the previous list scored, what got done, and your next top priorities. Monday's recap covers Friday.",
+    updated: U,
+    blocks: [
+      { h: "How the loop starts" },
+      { p: "No log, no emails, ever. The loop starts the first time you file a day in [Day Log](/docs/tools/day-log/), and every recap is built from your own filed logs, never from anything else." },
+      { h: "When it sends" },
+      { ul: [
+        "**Weekday mornings only**, Monday to Friday. Nothing sends on weekends.",
+        "**Monday recaps Friday.** Each run covers your most recent log that has not been emailed yet, so Friday's log lands in your inbox on Monday morning.",
+        "**The latest log wins.** If two logs pile up before a weekday morning (say, Saturday and Sunday), the recap covers the newest one. The other stays in Past logs on the site; it just is not emailed.",
+      ] },
+      { h: "Missing a day" },
+      { p: "Miss a day and the next weekday morning brings one short nudge instead of a recap. If you still have not logged by that evening, the emails stop entirely. No streak guilt, no daily nagging. File a log any night and the recaps pick right back up the next weekday morning." },
+      { h: "How to stop it" },
+      { p: "There is no separate switch, because there is nothing to switch off: stop filing logs and the emails stop on their own, after the single nudge. The recap goes only to your own account address." },
+      { note: "Your words only, on weekday mornings, driven entirely by what you filed. That is the whole program." },
+    ],
+  },
+  {
     slug: "requesting-a-tool",
     section: "Getting a tool built",
     title: "Requesting a tool",
