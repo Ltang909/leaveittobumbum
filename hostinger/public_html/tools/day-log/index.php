@@ -41,8 +41,18 @@
     },
     {
       "@type": "Question",
+      "name": "How does the scorecard work?",
+      "acceptedAnswer": { "@type": "Answer", "text": "When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone." }
+    },
+    {
+      "@type": "Question",
       "name": "Can I type instead of talking?",
       "acceptedAnswer": { "@type": "Answer", "text": "Yes. The one big box takes typing too. Talk, type, or mix both in the same log." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I fix a day after filing it?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action." }
     },
     {
       "@type": "Question",
@@ -177,8 +187,9 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <details><summary>Where does my voice go?</summary><p>Your words are kept, your voice is not. Recordings are transcribed and then discarded. Only the text of your log is stored, in your account.</p></details>
 <details><summary>What lands in the email?</summary><p>A recap on weekday mornings: your most recent log in clean jot notes, yesterday's list scored, and your next top priorities. Monday's recap covers Friday. Miss a day and you get one gentle nudge; after that, no emails until you log again.</p></details>
 <details><summary>What if I skip a day?</summary><p>Nothing breaks. The scorecard compares against your most recent filed day, whenever that was.</p></details>
+<details><summary>How does the scorecard work?</summary><p>When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone.</p></details>
 <details><summary>Can I type instead of talking?</summary><p>Yes. The one big box takes typing too. Talk, type, or mix both in the same log.</p></details>
-<details><summary>Can I fix a day after filing it?</summary><p>Yes. File again the same day and the new version replaces the old one. Re-filing the same day does not cost another action.</p></details>
+<details><summary>Can I fix a day after filing it?</summary><p>Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action.</p></details>
 <details><summary>Can Day Log copy my logs to Notion?</summary><p>Yes. In Advanced settings, connect a Notion page or database with your own integration token and each filed day becomes its own Notion page of jot notes, titled with the date. Re-filing a day rewrites its page.</p></details>
 </section>
 

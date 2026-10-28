@@ -664,6 +664,8 @@ export const TOOL_DOCS: ToolDoc[] = [
     faq: [
       ["Where does my voice go?", "Nowhere it stays. Recordings are transcribed and discarded; only text is kept."],
       ["What if I skip a day?", "Nothing breaks. The scorecard compares against your most recent filed day, whenever that was."],
+      ["How does the scorecard work?", "When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone."],
+      ["Can I fix a day after filing it?", "Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action."],
       ["Can I type instead of talking?", "Yes. The one big box takes typing too, and you can mix talking and typing in the same log."],
     ],
     updated: "October 28, 2026",
