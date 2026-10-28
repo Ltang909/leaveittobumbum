@@ -86,6 +86,13 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .log-table .log-row:hover{background:#fffdf6}
 .log-table .log-detail td{background:#fffdf8}
 .log-table .chev{font-weight:900;text-align:right;white-space:nowrap}
+.wave-strip{display:flex;align-items:center;gap:12px;margin-top:10px;padding:14px;border:1px dashed #d9c9a3;border-radius:12px;background:#fffdf6;font-weight:600}
+.wave-strip.big{padding:30px 14px;justify-content:center;font-size:16px}
+.wave-bars{display:flex;align-items:center;gap:4px;height:34px}
+.wave-bars span{display:block;width:5px;height:10px;border-radius:3px;background:#b3541e}
+.wave-strip.anim .wave-bars span{animation:wavePulse 1s ease-in-out infinite}
+.wave-strip.anim .wave-bars span:nth-child(2){animation-delay:.1s}.wave-strip.anim .wave-bars span:nth-child(3){animation-delay:.22s}.wave-strip.anim .wave-bars span:nth-child(4){animation-delay:.34s}.wave-strip.anim .wave-bars span:nth-child(5){animation-delay:.46s}.wave-strip.anim .wave-bars span:nth-child(6){animation-delay:.58s}.wave-strip.anim .wave-bars span:nth-child(7){animation-delay:.7s}
+@keyframes wavePulse{0%,100%{height:8px}50%{height:30px}}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/day-log-sticker.png" alt="Day Log"><h1>5 min/day. Increase your productivity.</h1><p class="lede bb-desc">You're busy out there working on your business. Sometimes things get forgotten or deprioritized; when you look back, you forget what you did the past week. Spend 5 min every evening with Bum Bum, brain dump what you did, challenges faced, lessons learned and what to achieve. Bum bum reads what you've logged and sends you a daily email keeping you on track! He also summarizes highlights and growth on a weekly and monthly basis.</p>
 <?php if (!$user): ?>
@@ -105,6 +112,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </ul>
 </div>
 <textarea id="logText" placeholder="Tap Record and talk through your day, or start typing..." style="width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;resize:vertical;min-height:170px"></textarea>
+<div id="waveStrip" class="wave-strip hidden"><div class="wave-bars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><span id="waveLabel"></span></div>
 <div class="mic-row"><button type="button" class="mic-btn" id="micBtn">Record</button><button type="button" class="button" id="fileBtn" disabled style="opacity:.45">File my day</button><span class="mic-status" id="micStatus"></span></div>
 <p id="fileStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="batchError" class="error"></p>
@@ -183,60 +191,98 @@ function newKey(){try{return crypto.randomUUID()}catch(e){return 'k'+Date.now()+
 /* --- Recording: live browser transcription first (the loom-ish cascade),
        recorded audio to server Whisper when live transcription is absent. --- */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-let activeRec=null; // {mode, recog|recorder, chunks, stream, base, stopped}
+let activeRec=null; // {mode, recog|recorder, chunks, stream, base, stopped, raf, ctx}
 
 function setStatus(msg){document.querySelector('#micStatus').textContent=msg||''}
 function setBtn(recording){micBtn.textContent=recording?'Stop':'Record';micBtn.classList.toggle('recording',!!recording)}
+const waveStrip=document.querySelector('#waveStrip');
+const waveLabel=document.querySelector('#waveLabel');
+const waveBars=Array.from(waveStrip.querySelectorAll('.wave-bars span'));
+function showWave(label,anim){waveStrip.classList.remove('hidden');waveStrip.classList.toggle('anim',!!anim);waveLabel.textContent=label||''}
+function hideWave(){waveStrip.classList.add('hidden');waveStrip.classList.remove('anim','big')}
+function stopLevels(a){if(a&&a.raf)cancelAnimationFrame(a.raf)}
 
 async function stopActive(){
   const a=activeRec; if(!a) return; activeRec=null;
-  setBtn(false);
-  if(a.mode==='sr'){a.stopped=true;try{a.recog.stop()}catch(e){}setStatus('');return}
+  setBtn(false); stopLevels(a);
+  if(a.mode==='sr'){a.stopped=true;try{a.recog.stop()}catch(e){}hideWave();setStatus('');return}
   if(a.mode==='mr'){try{a.recorder.stop()}catch(e){}}
 }
 
-micBtn.addEventListener('click',async()=>{
-    if(activeRec){stopActive();return}
-    if(SR){
-      const recog=new SR();
-      recog.continuous=true; recog.interimResults=true;
-      recog.lang=navigator.language||'en-US';
-      const a={mode:'sr',recog,base:ta.value,stopped:false};
-      activeRec=a;
-      recog.onresult=e=>{
-        let finalText='';
-        for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)finalText+=e.results[i][0].transcript}
-        if(finalText){a.base=(a.base?a.base.replace(/\s+$/,'')+' ':'')+finalText.trim();ta.value=a.base;refreshFile()}
-      };
-      recog.onend=()=>{if(activeRec===a&&!a.stopped){try{recog.start()}catch(e){}}};
-      recog.onerror=e=>{if(e.error==='not-allowed'){setStatus('Mic is blocked. Allow the microphone, or type instead.');stopActive()}else if(e.error!=='aborted'&&e.error!=='no-speech'){setStatus('Listening hiccup: '+e.error+'. Type instead if it keeps happening.')}};
-      try{recog.start();setBtn(true);setStatus('Listening. Talk away, then tap Stop.')}catch(e){setStatus('Could not start listening. Type instead.');activeRec=null}
+function startSR(){
+  const recog=new SR();
+  recog.continuous=true; recog.interimResults=true;
+  recog.lang=navigator.language||'en-US';
+  const a={mode:'sr',recog,base:ta.value,stopped:false};
+  activeRec=a;
+  recog.onresult=e=>{
+    let finalText='';
+    for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)finalText+=e.results[i][0].transcript}
+    if(finalText){a.base=(a.base?a.base.replace(/\s+$/,'')+' ':'')+finalText.trim();ta.value=a.base;refreshFile()}
+  };
+  recog.onend=()=>{if(activeRec===a&&!a.stopped){try{recog.start()}catch(e){}}};
+  recog.onerror=e=>{
+    if(e.error==='not-allowed'||e.error==='service-not-allowed'){
+      a.stopped=true; if(activeRec===a)activeRec=null; setBtn(false); hideWave();
+      setStatus('Mic is blocked. Allow the microphone, or type instead.');
       return;
     }
-    if(!navigator.mediaDevices||!window.MediaRecorder){setStatus('This browser cannot record here. Type instead.');return}
+    if(e.error==='aborted'||e.error==='no-speech')return;
+    // Live transcription failed (audio-capture, network, ...): record instead.
+    a.stopped=true; if(activeRec===a)activeRec=null; setBtn(false); hideWave();
+    try{recog.stop()}catch(err){}
+    startMR(true);
+  };
+  try{recog.start();setBtn(true);showWave('Listening. Your words land in the box as you talk.',true);setStatus('')}
+  catch(e){if(activeRec===a)activeRec=null;startMR(true)}
+}
+
+async function startMR(fellBack){
+  if(!navigator.mediaDevices||!window.MediaRecorder){hideWave();setStatus('This browser cannot record here. Type instead.');return}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const mime=MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':(MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'');
+    const recorder=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
+    const a={mode:'mr',recorder,stream,chunks:[],base:ta.value,raf:0,ctx:null};
+    activeRec=a;
     try{
-      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-      const mime=MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':(MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'');
-      const recorder=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
-      const a={mode:'mr',recorder,stream,chunks:[],base:ta.value};
-      activeRec=a;
-      recorder.ondataavailable=e=>{if(e.data&&e.data.size)a.chunks.push(e.data)};
-      recorder.onstop=async()=>{
-        stream.getTracks().forEach(t=>t.stop());
-        if(activeRec===a)activeRec=null;
-        setBtn(false);
-        if(!a.chunks.length){setStatus('Nothing was captured. Try again, or type.');return}
-        setStatus('Transcribing...');
-        const blob=new Blob(a.chunks,{type:recorder.mimeType||'audio/webm'});
-        const dataUrl=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res('');r.readAsDataURL(blob)});
-        if(!dataUrl){setStatus('Recording could not be read. Type instead.');return}
-        const{response,data}=await apiCall({action:'transcribe',audio:dataUrl});
-        if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;refreshFile();setStatus('Transcribed. Fix anything, then file when ready.')}
-        else setStatus((data&&data.error)||'Transcription failed. Type instead.');
-      };
-      recorder.start();
-      setBtn(true);setStatus('Recording. Tap Stop when done.');
-    }catch(e){setStatus('Mic is blocked. Allow the microphone, or type instead.')}
+      const Ctx=window.AudioContext||window.webkitAudioContext;
+      const ctx=new Ctx();
+      const srcNode=ctx.createMediaStreamSource(stream);
+      const analyser=ctx.createAnalyser(); analyser.fftSize=64; srcNode.connect(analyser);
+      const data=new Uint8Array(analyser.frequencyBinCount);
+      a.ctx=ctx;
+      const tick=()=>{if(activeRec!==a)return;analyser.getByteFrequencyData(data);waveBars.forEach((bar,i)=>{const v=(data[2+i*2]||0)/255;bar.style.height=(6+v*28)+'px'});a.raf=requestAnimationFrame(tick)};
+      tick();
+    }catch(e){}
+    recorder.ondataavailable=e=>{if(e.data&&e.data.size)a.chunks.push(e.data)};
+    recorder.onstop=async()=>{
+      stream.getTracks().forEach(t=>t.stop()); stopLevels(a);
+      if(a.ctx){try{a.ctx.close()}catch(e){}}
+      if(activeRec===a)activeRec=null;
+      setBtn(false);
+      if(!a.chunks.length){hideWave();ta.classList.remove('hidden');setStatus('Nothing was captured. Try again, or type.');return}
+      showWave('Transcribing your ramble...',true); setStatus('');
+      const blob=new Blob(a.chunks,{type:recorder.mimeType||'audio/webm'});
+      const dataUrl=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res('');r.readAsDataURL(blob)});
+      hideWave(); ta.classList.remove('hidden');
+      if(!dataUrl){setStatus('Recording could not be read. Type instead.');return}
+      const{response,data}=await apiCall({action:'transcribe',audio:dataUrl});
+      if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;refreshFile();setStatus('Transcribed. Fix anything, then file when ready.')}
+      else setStatus((data&&data.error)||'Transcription failed. Type instead.');
+    };
+    recorder.start();
+    setBtn(true);
+    ta.classList.add('hidden');
+    waveStrip.classList.add('big');
+    showWave(fellBack?'Live transcription could not reach a mic here, so I am recording instead. Keep talking; your words appear when you press Stop.':'Recording. Keep talking; your words appear when you press Stop.',false);
+    setStatus('');
+  }catch(e){hideWave();ta.classList.remove('hidden');setStatus('Mic is blocked or busy. Allow the microphone, and check no other app is using it, or type instead.')}
+}
+
+micBtn.addEventListener('click',()=>{
+  if(activeRec){stopActive();return}
+  if(SR){startSR()}else{startMR(false)}
 });
 
 /* --- Rendering structured jot notes --- */
