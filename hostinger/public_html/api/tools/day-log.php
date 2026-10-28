@@ -677,17 +677,14 @@ if ($action === 'save') {
         if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
         $usage = subjectUsage($subject);
     }
-    $emailSent = false;
-    if ($isFirstToday && !empty($user['email'])) {
-        $dateLabel = date('D M j', strtotime($today));
-        $emailSent = bbSendEmail((string) $user['email'], 'Your day, filed: ' . $dateLabel, dl_email_body($structured, $dateLabel));
-    }
+    // No instant email: recaps go out on weekday mornings via
+    // api/cron-day-log-email.php (Monday's run recaps Friday's log).
     $notion = dl_notion_push($userId, $today, $structured);
     jsonResponse([
         'ok' => true,
         'structured' => $structured,
         'reflection' => $structured['reflection'] ?? [],
-        'email_sent' => $emailSent,
+        'email_sent' => false,
         'first_today' => $isFirstToday,
         'usage' => $usage,
         'notion' => $notion,

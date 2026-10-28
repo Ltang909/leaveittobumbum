@@ -32,7 +32,7 @@
     {
       "@type": "Question",
       "name": "What lands in the email?",
-      "acceptedAnswer": { "@type": "Answer", "text": "One email each day you file: yesterday's list scored against today, your done list, challenges, and tomorrow's top priorities in clean jot notes." }
+      "acceptedAnswer": { "@type": "Answer", "text": "A recap on weekday mornings: your most recent log in clean jot notes, yesterday's list scored, and your next top priorities. Monday's recap covers Friday. Miss a day and you get one gentle nudge; after that, no emails until you log again." }
     },
     {
       "@type": "Question",
@@ -97,13 +97,12 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" id="logPanel">
 <h2>Today's log</h2>
 <div class="read-note" style="margin-top:0">
-<b>talk through these in any order, brain dump is fine!</b>
+<b>Talk through these in any order, brain dump is fine!</b>
 <ul style="margin:8px 0;padding-left:20px">
 <li>What did you do today, what challenges did you face and how do you plan to overcome them?</li>
 <li>What did you learn today?</li>
 <li>What do you plan on achieving tomorrow?</li>
 </ul>
-<p style="margin:0">One record button, one ramble. Bum Bum sorts it into jot notes when you file.</p>
 </div>
 <textarea id="logText" placeholder="Tap Record and talk through your day, or start typing..." style="width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;resize:vertical;min-height:170px"></textarea>
 <div class="mic-row"><button type="button" class="mic-btn" id="micBtn">Record</button><button type="button" class="button" id="fileBtn" disabled style="opacity:.45">File my day</button><span class="mic-status" id="micStatus"></span></div>
@@ -155,7 +154,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section id="faq">
 <h2>Day Log questions</h2>
 <details><summary>Where does my voice go?</summary><p>Your words are kept, your voice is not. Recordings are transcribed and then discarded. Only the text of your log is stored, in your account.</p></details>
-<details><summary>What lands in the email?</summary><p>One email each day you file: yesterday's list scored against today, your done list, challenges, and tomorrow's top priorities in clean jot notes. No log, no email.</p></details>
+<details><summary>What lands in the email?</summary><p>A recap on weekday mornings: your most recent log in clean jot notes, yesterday's list scored, and your next top priorities. Monday's recap covers Friday. Miss a day and you get one gentle nudge; after that, no emails until you log again.</p></details>
 <details><summary>What if I skip a day?</summary><p>Nothing breaks. The scorecard compares against your most recent filed day, whenever that was.</p></details>
 <details><summary>Can I type instead of talking?</summary><p>Yes. The one big box takes typing too. Talk, type, or mix both in the same log.</p></details>
 <details><summary>Can I fix a day after filing it?</summary><p>Yes. File again the same day and the new version replaces the old one. Re-filing the same day does not cost another action.</p></details>
@@ -280,7 +279,7 @@ fileBtn.addEventListener('click',async()=>{
   if(!response.ok){err.textContent=(data&&data.error)||'Filing tripped. Your words are still in the box; try once more.';return}
   bbTrack('daylog_filed',{first_today:!!data.first_today,reflection:(data.reflection||[]).length});
   let metaMsg=data.first_today
-    ? (data.email_sent?'These jot notes were just emailed to you. Tomorrow, this list is the scorecard.':'Filed. The email copy is not switched on in this environment, but your log is saved below and in Past logs.')
+    ? 'Filed. Your recap lands the next weekday morning; Monday recaps Friday. Tomorrow, this list is the scorecard.'
     : 'Updated. Re-filing the same day replaces the earlier version and costs no extra action.';
   if(data.notion&&data.notion.connected){
     metaMsg+= data.notion.ok ? (data.notion.created?' A Notion page was made for today.':' Today’s Notion page was updated.') : ' '+(data.notion.error||'');

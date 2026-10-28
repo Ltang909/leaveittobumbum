@@ -636,24 +636,25 @@ export const TOOL_DOCS: ToolDoc[] = [
     href: "/tools/day-log/",
     icon: "/bum/icons/day-log-sticker.png",
     summary:
-      "Day Log closes your day in a few minutes of talking. Three prompts above one box cover what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns your ramble into clean jot notes, scores yesterday's top list against what you actually did, files the day in your account, and emails you the notes with tomorrow's priorities on top. When a stretch of days piles up, week and month summaries pull out the accomplishments, learnings, and growth.",
+      "Day Log closes your day in a few minutes of talking. Three prompts above one box cover what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns your ramble into clean jot notes, scores yesterday's top list against what you actually did, files the day in your account, and recaps it by email the next weekday morning with tomorrow's priorities on top. When a stretch of days piles up, week and month summaries pull out the accomplishments, learnings, and growth.",
     steps: [
       "Open Day Log at the end of your day. The three prompts sit above one box: talk through all of them in one go, in any order, or type.",
       "If yesterday had a list, it sits above the box. Say honestly what landed and what did not.",
       "Press File my day. Bum Bum structures your words into jot notes and scores yesterday's list.",
-      "Read the filed day on screen, and check your inbox: the same jot notes arrive by email with tomorrow's top list.",
+      "Read the filed day on screen. The same jot notes land in your inbox the next weekday morning with tomorrow's top list.",
       "Come back tomorrow. Today's list becomes the scorecard.",
       "Any time, open Look back and summarize your week or month into highlights.",
     ],
     goodToKnow: [
       "One action per day filed. Re-filing the same day replaces the earlier version and costs no extra action.",
+      "Recap emails go out on weekday mornings only, and only once you have filed a log. Monday's recap covers Friday. Miss a day and you get a single nudge; after that, no emails until you log again.",
       "Week and month summaries cost one action when freshly generated. Re-opening the same stretch of logs is free.",
       "Advanced settings can file each day as its own Notion page inside a page or database you pick, using your own Notion integration token. Bum Bum stays the source of truth; re-filing a day rewrites its Notion page.",
       "Day Log needs a free account: the scorecard only works if yesterday's list is filed under you.",
       "Transcription tries your browser's live transcription first. On browsers without it, your recording is transcribed by Whisper and then discarded.",
       "Skip any prompt that does not fit the day. One answered prompt is enough to file.",
     ],
-    data: "We keep your words, never your voice. Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. The daily email goes only to your own account address.",
+    data: "We keep your words, never your voice. Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Recap emails go only to your own account address.",
     tips: [
       "Make tomorrow's items countable. 'Send the proposal' scores cleanly tomorrow; 'work on business stuff' never does.",
       "Do the brain-dump prompt out loud and unfiltered. The structure step is good at finding the plan inside a ramble.",
@@ -662,7 +663,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     faq: [
       ["Where does my voice go?", "Nowhere it stays. Recordings are transcribed and discarded; only text is kept."],
       ["What if I skip a day?", "Nothing breaks. The scorecard compares against your most recent filed day, whenever that was."],
-      ["Can I type instead of talking?", "Yes. Every prompt has a text box, and you can mix talking and typing in the same log."],
+      ["Can I type instead of talking?", "Yes. The one big box takes typing too, and you can mix talking and typing in the same log."],
     ],
     updated: "October 28, 2026",
   },
