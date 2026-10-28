@@ -86,6 +86,15 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .log-table .log-row:hover{background:#fffdf6}
 .log-table .log-detail td{background:#fffdf8}
 .log-table .chev{font-weight:900;text-align:right;white-space:nowrap}
+.editor h4{margin:14px 0 4px;font-size:15px}
+.edit-row{display:flex;gap:6px;align-items:center;margin:5px 0}
+.edit-row input[type=text]{flex:1;padding:8px 10px;border:1px solid #d9c9a3;border-radius:8px;font:inherit;font-size:14.5px;background:#fff;min-width:0}
+.edit-row select{padding:8px;border:1px solid #d9c9a3;border-radius:8px;font:inherit;font-size:13.5px;background:#fff}
+.edit-row .x{border:1px solid #d9c9a3;background:#fff;border-radius:8px;width:32px;height:32px;cursor:pointer;font-weight:900;flex:none}
+.mini-btn{border:1px solid #d9c9a3;background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13.5px;font-weight:700}
+.edit-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.del-log{color:#a33327}
+.del-log.armed{background:#a33327;color:#fff;border-color:#a33327}
 .wave-strip{display:flex;align-items:center;gap:12px;margin-top:10px;padding:14px;border:1px dashed #d9c9a3;border-radius:12px;background:#fffdf6;font-weight:600}
 .wave-strip.big{padding:30px 14px;justify-content:center;font-size:16px}
 .wave-bars{display:flex;align-items:center;gap:4px;height:34px}
@@ -122,6 +131,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2>Filed. Here is your day in jot notes.</h2>
 <div class="jot" id="resultBody"></div>
 <p class="read-note" id="emailNote"></p>
+<div class="edit-actions"><button type="button" class="button secondary" id="editTodayBtn">Edit jot notes</button></div>
 </section>
 
 <section class="panel" id="historyPanel">
@@ -313,7 +323,9 @@ function reflectionHtml(reflection){
   const tag=s=>s==='done'?'<span class="score-tag score-done">done</span>':s==='partial'?'<span class="score-tag score-partial">partial</span>':'<span class="score-tag score-not">not mentioned</span>';
   return '<h4>Yesterday\u2019s list, scored</h4>'+reflection.map(r=>'<div class="score-item">'+tag(r.status)+'<span>'+esc(r.item)+'</span></div>').join('');
 }
-function renderResult(structured,emailNote){
+let dlResult=null;
+function renderResult(structured,emailNote,date){
+  dlResult={structured:structured,note:emailNote||'',date:date||localToday()};
   const body=document.querySelector('#resultBody');
   body.innerHTML=reflectionHtml(structured.reflection)
     +sectionHtml('Done today',structured.done)
@@ -327,6 +339,54 @@ function renderResult(structured,emailNote){
   panel.classList.remove('hidden');
   panel.scrollIntoView({behavior:'smooth'});
 }
+
+/* --- Edit / delete a filed day --- */
+const EDIT_SECTIONS=[['done','Done today'],['missed','Set out but did not happen'],['challenges','Challenges'],['overcome','Beating them'],['tomorrow','Tomorrow\u2019s top list'],['learnings','Learnings']];
+function editRowHtml(v){return '<div class="edit-row"><input type="text" value="'+esc(v)+'"><button type="button" class="x" aria-label="Remove item">&times;</button></div>'}
+function editorHtml(s){
+  let h='<div class="editor">';
+  if(s.reflection&&s.reflection.length){
+    h+='<h4>Yesterday\u2019s list, scored</h4>'+s.reflection.map(r=>'<div class="edit-row" data-refl="1"><select class="refl-status"><option value="done"'+(r.status==='done'?' selected':'')+'>done</option><option value="partial"'+(r.status==='partial'?' selected':'')+'>partial</option><option value="not_mentioned"'+(r.status==='not_mentioned'?' selected':'')+'>not mentioned</option></select><input type="text" class="refl-item" value="'+esc(r.item)+'"><button type="button" class="x" aria-label="Remove item">&times;</button></div>').join('');
+  }
+  EDIT_SECTIONS.forEach(([key,label])=>{
+    h+='<h4>'+label+'</h4><div class="edit-sec" data-sec="'+key+'">'+((s[key]||[]).map(editRowHtml).join(''))+'</div><button type="button" class="mini-btn add-item" data-sec="'+key+'">+ Add</button>';
+  });
+  h+='<div class="edit-actions"><button type="button" class="button save-edit">Save changes</button><button type="button" class="button secondary cancel-edit">Cancel</button><span class="mic-status edit-status"></span></div></div>';
+  return h;
+}
+function collectEditor(ed){
+  const s={reflection:[],done:[],missed:[],challenges:[],overcome:[],tomorrow:[],learnings:[]};
+  ed.querySelectorAll('[data-refl]').forEach(row=>{const item=row.querySelector('.refl-item').value.trim();if(item)s.reflection.push({item,status:row.querySelector('.refl-status').value})});
+  ed.querySelectorAll('.edit-sec').forEach(sec=>{sec.querySelectorAll('input').forEach(inp=>{const v=inp.value.trim();if(v)s[sec.dataset.sec].push(v)})});
+  return s;
+}
+function bindEditor(container,date,structured,onRefresh){
+  container.innerHTML=editorHtml(structured);
+  const ed=container.querySelector('.editor');
+  ed.addEventListener('click',async e=>{
+    const x=e.target.closest('.x');
+    if(x){x.closest('.edit-row').remove();return}
+    const add=e.target.closest('.add-item');
+    if(add){const sec=ed.querySelector('.edit-sec[data-sec="'+add.dataset.sec+'"]');sec.insertAdjacentHTML('beforeend',editRowHtml(''));sec.querySelector('.edit-row:last-child input').focus();return}
+    if(e.target.closest('.cancel-edit')){onRefresh(false);return}
+    if(e.target.closest('.save-edit')){
+      const status=ed.querySelector('.edit-status');
+      status.textContent='Saving...';
+      const{response,data}=await apiCall({action:'update',date,structured:collectEditor(ed)});
+      if(!response.ok){status.textContent=(data&&data.error)||'Saving tripped. Try once more.';return}
+      let note='Edits saved.';
+      if(data.notion&&data.notion.connected&&data.notion.ok)note+=' Your Notion page was updated to match.';
+      onRefresh(true,data.structured,note);
+    }
+  });
+}
+document.querySelector('#editTodayBtn').addEventListener('click',()=>{
+  if(!dlResult)return;
+  bindEditor(document.querySelector('#resultBody'),dlResult.date,dlResult.structured,(saved,structured,note)=>{
+    renderResult(saved?structured:dlResult.structured,saved?note:dlResult.note,dlResult.date);
+    if(saved)loadHistory();
+  });
+});
 
 /* --- File the day --- */
 const fileBtn=document.querySelector('#fileBtn');
@@ -348,7 +408,8 @@ fileBtn.addEventListener('click',async()=>{
   if(data.notion&&data.notion.connected){
     metaMsg+= data.notion.ok ? (data.notion.created?' A Notion page was made for today.':' Today’s Notion page was updated.') : ' '+(data.notion.error||'');
   }
-  renderResult(data.structured, metaMsg);
+  ta.value=''; refreshFile();
+  renderResult(data.structured, metaMsg, localToday());
   if(window.BBDropStrip)window.BBDropStrip.show('day-log');
   loadHistory();
 });
@@ -373,8 +434,9 @@ async function loadHistory(){
     const refl=s.reflection||[];
     const kept=refl.filter(r=>r.status==='done').length;
     const score=refl.length?kept+' of '+refl.length+' kept':'';
-    const inner='<div class="jot">'+reflectionHtml(s.reflection)+sectionHtml('Done today',s.done)+sectionHtml('Set out but did not happen',s.missed)+sectionHtml('Challenges',s.challenges)+sectionHtml('Beating them',s.overcome)+sectionHtml('Tomorrow\u2019s top list',s.tomorrow)+sectionHtml('Learnings',s.learnings)+'</div>';
-    return '<tr class="log-row" data-i="'+i+'"><td><b>'+esc(l.date)+'</b></td><td>'+(s.done?s.done.length:0)+' done</td><td>'+(s.tomorrow?s.tomorrow.length:0)+' planned</td><td>'+esc(score)+'</td><td class="chev" id="chev-'+i+'">+</td></tr>'
+    const inner='<div class="jot">'+reflectionHtml(s.reflection)+sectionHtml('Done today',s.done)+sectionHtml('Set out but did not happen',s.missed)+sectionHtml('Challenges',s.challenges)+sectionHtml('Beating them',s.overcome)+sectionHtml('Tomorrow\u2019s top list',s.tomorrow)+sectionHtml('Learnings',s.learnings)+'</div>'
+      +'<div class="edit-actions"><button type="button" class="button secondary edit-log" data-date="'+esc(l.date)+'">Edit jot notes</button><button type="button" class="mini-btn del-log" data-date="'+esc(l.date)+'">Delete this day</button></div>';
+    return '<tr class="log-row" data-i="'+i+'" data-date="'+esc(l.date)+'"><td><b>'+esc(l.date)+'</b></td><td>'+(s.done?s.done.length:0)+' done</td><td>'+(s.tomorrow?s.tomorrow.length:0)+' planned</td><td>'+esc(score)+'</td><td class="chev" id="chev-'+i+'">+</td></tr>'
       +'<tr class="log-detail hidden" id="detail-'+i+'"><td colspan="5">'+inner+'</td></tr>';
   }).join('');
   list.innerHTML='<table class="log-table"><thead><tr><th>Date</th><th>Done</th><th>Planned</th><th>Scorecard</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
@@ -384,6 +446,35 @@ async function loadHistory(){
       const det=document.querySelector('#detail-'+i);
       const open=det.classList.toggle('hidden')===false;
       document.querySelector('#chev-'+i).textContent=open?'\u2212':'+';
+    });
+  });
+  const reopen=date=>{
+    list.querySelectorAll('.log-row').forEach(r=>{if(r.dataset.date===date)r.click()});
+  };
+  list.querySelectorAll('.edit-log').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const date=btn.dataset.date;
+      const rowEl=list.querySelector('.log-row[data-date="'+date+'"]');
+      const s=(data.logs[Number(rowEl.dataset.i)]||{}).structured||{};
+      const cell=btn.closest('td');
+      bindEditor(cell,date,s,async()=>{await loadHistory();reopen(date)});
+    });
+  });
+  list.querySelectorAll('.del-log').forEach(btn=>{
+    let armed=null;
+    btn.addEventListener('click',async()=>{
+      if(!armed){
+        btn.textContent='Tap again to delete this day';
+        btn.classList.add('armed');
+        armed=setTimeout(()=>{btn.textContent='Delete this day';btn.classList.remove('armed');armed=null},3000);
+        return;
+      }
+      clearTimeout(armed);
+      btn.disabled=true; btn.textContent='Deleting...';
+      const{response,data}=await apiCall({action:'delete',date:btn.dataset.date});
+      if(!response.ok){btn.disabled=false;btn.textContent='Delete this day';btn.classList.remove('armed');armed=null;return}
+      if(btn.dataset.date===localToday()){document.querySelector('#resultPanel').classList.add('hidden');dlResult=null}
+      loadHistory();
     });
   });
 }

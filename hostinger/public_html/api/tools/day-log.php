@@ -697,4 +697,56 @@ if ($action === 'save') {
     ]);
 }
 
+/* Edit or delete a filed day. Free, and Notion follows both. */
+if ($action === 'update' || $action === 'delete') {
+    $date = trim((string) ($input['date'] ?? ''));
+    if (!dl_valid_date($date)) jsonResponse(['error' => 'Invalid date.'], 422);
+    if (dl_fetch_log($userId, $date) === null) jsonResponse(['error' => 'No log filed for that day.'], 404);
+
+    if ($action === 'delete') {
+        // Archive the day's Notion page too, if one was made (best effort).
+        try {
+            $cfg = dl_notion_destination($userId);
+            if ($cfg !== null) {
+                $stmt = db()->prepare('SELECT block_ids FROM day_log_notion_pushes WHERE user_id = ? AND log_date = ?');
+                $stmt->execute([$userId, $date]);
+                $prev = $stmt->fetch();
+                $stored = $prev ? json_decode((string) $prev['block_ids'], true) : null;
+                if (is_array($stored) && !empty($stored['page_id'])) {
+                    dl_notion_call('DELETE', '/v1/blocks/' . $stored['page_id'], (string) $cfg['token']);
+                }
+            }
+        } catch (Throwable $e) { /* best effort */ }
+        db()->prepare('DELETE FROM day_log_notion_pushes WHERE user_id = ? AND log_date = ?')->execute([$userId, $date]);
+        db()->prepare('DELETE FROM day_logs WHERE user_id = ? AND log_date = ?')->execute([$userId, $date]);
+        // If the email loop's recap pointer names this day, reset the loop.
+        try { db()->prepare('DELETE FROM day_log_email_state WHERE user_id = ? AND last_recap_log_date = ?')->execute([$userId, $date]); } catch (Throwable $e) { /* state table may not exist yet */ }
+        jsonResponse(['ok' => true]);
+    }
+
+    $in = is_array($input['structured'] ?? null) ? $input['structured'] : [];
+    $structured = [
+        'done' => dl_clean_list($in['done'] ?? []),
+        'missed' => dl_clean_list($in['missed'] ?? []),
+        'challenges' => dl_clean_list($in['challenges'] ?? []),
+        'overcome' => dl_clean_list($in['overcome'] ?? []),
+        'tomorrow' => dl_clean_list($in['tomorrow'] ?? [], 5),
+        'learnings' => dl_clean_list($in['learnings'] ?? []),
+        'reflection' => [],
+    ];
+    foreach ((array) ($in['reflection'] ?? []) as $r) {
+        if (!is_array($r)) continue;
+        $item = dl_clean((string) ($r['item'] ?? ''));
+        $status = (string) ($r['status'] ?? '');
+        if ($item !== '' && in_array($status, ['done', 'partial', 'not_mentioned'], true)) {
+            $structured['reflection'][] = ['item' => $item, 'status' => $status];
+        }
+        if (count($structured['reflection']) >= 8) break;
+    }
+    $stmt = db()->prepare('UPDATE day_logs SET structured = ? WHERE user_id = ? AND log_date = ?');
+    $stmt->execute([json_encode($structured), $userId, $date]);
+    $notion = dl_notion_push($userId, $date, $structured);
+    jsonResponse(['ok' => true, 'structured' => $structured, 'notion' => $notion]);
+}
+
 jsonResponse(['error' => 'Unknown action.'], 400);
