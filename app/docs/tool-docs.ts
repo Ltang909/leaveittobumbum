@@ -647,6 +647,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     goodToKnow: [
       "One action per day filed. Re-filing the same day replaces the earlier version and costs no extra action.",
+      "Filed a day and spotted a mistake? Open it in Past logs and edit any jot note, including the scorecard marks. Saving is free, and your Notion page updates to match. Delete this day removes a log entirely and archives its Notion page.",
       "Recap emails go out on weekday mornings only, and only once you have filed a log. Monday's recap covers Friday. Miss a day and you get a single nudge; after that, no emails until you log again.",
       "Week and month summaries cost one action when freshly generated. Re-opening the same stretch of logs is free.",
       "Advanced settings can file each day as its own Notion page inside a page or database you pick, using your own Notion integration token. Bum Bum stays the source of truth; re-filing a day rewrites its Notion page.",
