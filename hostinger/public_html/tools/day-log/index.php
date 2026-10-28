@@ -42,7 +42,7 @@
     {
       "@type": "Question",
       "name": "Can I type instead of talking?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every prompt has a text box. Talk, type, or mix both in the same log." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. The one big box takes typing too. Talk, type, or mix both in the same log." }
     }
   ]
 }
@@ -132,7 +132,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <details><summary>Where does my voice go?</summary><p>Your words are kept, your voice is not. Recordings are transcribed and then discarded. Only the text of your log is stored, in your account.</p></details>
 <details><summary>What lands in the email?</summary><p>One email each day you file: yesterday's list scored against today, your done list, challenges, and tomorrow's top priorities in clean jot notes. No log, no email.</p></details>
 <details><summary>What if I skip a day?</summary><p>Nothing breaks. The scorecard compares against your most recent filed day, whenever that was.</p></details>
-<details><summary>Can I type instead of talking?</summary><p>Yes. Every prompt has a text box. Talk, type, or mix both in the same log.</p></details>
+<details><summary>Can I type instead of talking?</summary><p>Yes. The one big box takes typing too. Talk, type, or mix both in the same log.</p></details>
 <details><summary>Can I fix a day after filing it?</summary><p>Yes. File again the same day and the new version replaces the old one. Re-filing the same day does not cost another action.</p></details>
 </section>
 
@@ -140,7 +140,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2>More tiny tools</h2>
 <p class="lede">Day Log is one of the tools in Bum Bum's toolbox. <a href="/tools/">See the whole toolbox</a>.</p>
 </section>
-</main>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 <?php if ($user): ?>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}

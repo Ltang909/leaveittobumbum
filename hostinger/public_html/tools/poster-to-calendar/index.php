@@ -172,7 +172,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
 <p><a href="/tools/sop-ify/">SOP Generator</a> - Turn a chaotic process brain-dump into a clean step-by-step playbook.</p>
 </section>
-</main>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 <script src="/tools/error-scenes.js"></script>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/poster-to-calendar.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}bbTrack('tool_opened',{tool:'poster-to-calendar'});
