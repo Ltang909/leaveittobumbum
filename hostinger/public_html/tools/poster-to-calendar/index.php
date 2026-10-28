@@ -273,7 +273,7 @@ function renderQueue(){
   queueList.innerHTML='';
   queue.forEach(q=>{
     const div=document.createElement('div');div.className='queue-item';
-    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?'Could not read it':q.status==='blocked'?'Waiting on actions':'Queued';
+    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?(q.noEvents?'No events found':'Could not read it'):q.status==='blocked'?'Waiting on actions':'Queued';
     div.innerHTML='<img src="'+q.dataUrl+'" alt=""><div><b>'+esc(q.name)+'</b><div class="meta">'+label+'</div></div>';
     queueList.appendChild(div);
   });
@@ -317,7 +317,7 @@ processBtn.addEventListener('click',async()=>{
   batchProgress.classList.remove('hidden');
   barFill.style.width='5%';
   const todo=queue.filter(q=>q.status==='queued');
-  let done=0,blocked=false,lastFail=null;
+  let done=0,blocked=false,lastFail=null,sawNoEvents=false,noEventsMsg='';
   for(const q of todo){
     q.status='reading';renderQueue();
     progText.textContent='Reading poster '+(done+1)+' of '+todo.length+'...';
@@ -332,7 +332,7 @@ processBtn.addEventListener('click',async()=>{
         const t=localToday();
         const{response,data}=await apiCall({action:'parse',image:small,idempotencyKey:q.id,todayLocal:t.date,weekdayLocal:t.weekday,tzName:t.tz});
         if(response.status===402)throw new Error('actions');
-        if(!response.ok){const err=new Error(data.error||'read failed');err.serverMsg=data.error||'';throw err}
+        if(!response.ok){const err=new Error(data.error||'read failed');err.serverMsg=data.error||'';err.noEvents=data.code==='no_events';throw err}
         events=data.events||[];
       }
       events.forEach(ev=>addCard(ev,q.name));
@@ -340,7 +340,7 @@ processBtn.addEventListener('click',async()=>{
       bbTrack('poster_parsed',{events:events.length,...(q.sample?{sample:true}:{})});
     }catch(e){
       if(e.message==='actions'){q.status='blocked';blocked=true}
-      else{q.status='error';lastFail=e}
+      else{q.status='error';q.noEvents=!!e.noEvents;if(e.noEvents){sawNoEvents=true;noEventsMsg=e.serverMsg||''}else lastFail=e}
     }
     done++;
     barFill.style.width=(5+done/todo.length*90)+'%';
@@ -352,8 +352,11 @@ processBtn.addEventListener('click',async()=>{
     queue.forEach(q=>{if(q.status==='queued')q.status='blocked'});
     batchError.textContent='Out of actions for this month. The posters above were read; the rest are waiting.';
     renderQueue();
+  }else if(sawNoEvents&&!lastFail){
+    showScene('empty_input',{petpet:'I sniffed it twice. Nothing poster-shaped.',bumbum:'This tool reads event posters and flyers. If yours is in that photo, try it straight on, whole poster in frame, no glare.',cta:'Try another photo',onCta:()=>{clearScene();document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'})}});
+    if(noEventsMsg)batchError.textContent=noEventsMsg;
   }else if(lastFail&&done===todo.length&&queue.some(q=>q.status==='error')){
-    showScene('processing_failed',{onCta:()=>{queue.forEach(q=>{if(q.status==='error')q.status='queued'});clearScene();renderQueue();processBtn.click()}});
+    showScene('processing_failed',{onCta:()=>{queue.forEach(q=>{if(q.status==='error'&&!q.noEvents)q.status='queued'});clearScene();renderQueue();processBtn.click()}});
     if(lastFail.serverMsg)batchError.textContent=lastFail.serverMsg;
   }
   barFill.style.width='100%';

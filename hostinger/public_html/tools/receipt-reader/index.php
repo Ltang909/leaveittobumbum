@@ -261,7 +261,7 @@ function renderQueue(){
   queueList.innerHTML='';
   queue.forEach(q=>{
     const div=document.createElement('div');div.className='queue-item';
-    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?'Could not read it':q.status==='blocked'?'Waiting on actions':'Queued';
+    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?(q.notReceipt?'No receipt found':'Could not read it'):q.status==='blocked'?'Waiting on actions':'Queued';
     div.innerHTML='<img src="'+q.dataUrl+'" alt=""><div><b>'+esc(q.name)+'</b><div class="meta">'+label+'</div></div>';
     queueList.appendChild(div);
   });
@@ -284,7 +284,7 @@ processBtn.addEventListener('click',async()=>{
     progText.textContent='Loading the reader (first scan downloads it, about 15 MB)...';
     worker=await Tesseract.createWorker('eng',1,{logger:()=>{}});
     const todo=queue.filter(q=>q.status==='queued');
-    let done=0,blocked=false;
+    let done=0,blocked=false,sawNotReceipt=false;
     for(const q of todo){
       q.status='reading';renderQueue();
       progText.textContent='Reading receipt '+(done+1)+' of '+todo.length+'...';
@@ -292,17 +292,20 @@ processBtn.addEventListener('click',async()=>{
         const canvas=await preprocess(q.dataUrl);
         const{data:{text}}=await worker.recognize(canvas);
         if(!text||text.replace(/\s/g,'').length<10)throw new Error('empty');
+        const parsed=parseReceiptText(text);
+        if(!parsed.items.length&&!parsed.total&&!parsed.vendor)throw new Error('not_receipt');
         if(!q.sample){
           const{response,data}=await apiCall({action:'scan',idempotencyKey:q.id});
           if(response.status===402)throw new Error('actions');
           if(!response.ok)throw new Error(data.error||'metering failed');
         }
-        addCard(parseReceiptText(text),text,q.name);
+        addCard(parsed,text,q.name);
         q.status='done';
         if(q.sample)bbTrack('scan_done',{batch:true,sample:true});
         else bbTrack('scan_done',{batch:true});
       }catch(e){
-        q.status=e.message==='actions'?'blocked':e.message==='empty'?'error':'error';
+        q.status=e.message==='actions'?'blocked':'error';
+        if(e.message==='not_receipt'){q.notReceipt=true;sawNotReceipt=true}
         if(e.message==='actions')blocked=true;
       }
       done++;
@@ -314,6 +317,9 @@ processBtn.addEventListener('click',async()=>{
       queue.forEach(q=>{if(q.status==='queued')q.status='blocked'});
       batchError.textContent='Out of actions for this month. The receipts above were read; the rest are waiting.';
       renderQueue();
+    }
+    if(sawNotReceipt&&!blocked){
+      batchError.textContent='A photo in that batch does not look like a receipt, so Bum Bum skipped it and charged no action. This tool reads receipts and invoices. If yours is in the photo, lay it flat, straight on, whole receipt in frame.';
     }
     barFill.style.width='100%';
     progText.textContent='Done.';

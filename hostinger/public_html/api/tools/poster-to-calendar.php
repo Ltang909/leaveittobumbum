@@ -140,7 +140,7 @@ function poster_call_groq(string $imageDataUrl, string $todayLocal, string $week
     $decoded = is_string($content) ? json_decode($content, true) : null;
     $events = poster_clean_events($decoded);
     if (count($events) === 0) {
-        jsonResponse(['error' => 'Bum Bum could not find an event on that poster. Try a clearer photo, taken straight on.'], 422);
+        jsonResponse(['error' => 'No event found there. This tool reads event posters and flyers, so check the photo is one of those.', 'code' => 'no_events'], 422);
     }
     return $events;
 }
