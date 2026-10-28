@@ -230,6 +230,17 @@
       "url": "/tools/video-mp3-overlay/",
       "cta": "Mix my video",
       "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "day-log",
+      "name": "Day Log",
+      "tag": "Plan",
+      "icon": "✎",
+      "iconImg": "/bum/icons/notes.png",
+      "description": "Talk through your day in a few minutes. Bum Bum turns it into jot notes, scores yesterday's list against today, and emails you tomorrow's top priorities.",
+      "url": "/tools/day-log/",
+      "cta": "File my day",
+      "mascot": "/bum/cat-curious.png"
     }
   ]
 }
