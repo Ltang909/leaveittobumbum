@@ -43,6 +43,11 @@
       "@type": "Question",
       "name": "Can I type instead of talking?",
       "acceptedAnswer": { "@type": "Answer", "text": "Yes. The one big box takes typing too. Talk, type, or mix both in the same log." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can Day Log copy my logs to Notion?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. In Advanced settings, connect a Notion page with your own integration token and each filed day is appended there as jot notes. Re-filing a day replaces its copy." }
     }
   ]
 }
@@ -125,6 +130,24 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p id="sumError" class="error"></p>
 <div id="sumBody"></div>
 </section>
+
+<section class="panel" id="advancedPanel">
+<h2>Advanced settings</h2>
+<h3 style="margin:14px 0 4px">Copy each filed day to Notion</h3>
+<p class="meta" style="margin-top:0">Bum Bum stays the source of truth; Notion gets a copy of every day you file, appended to one page in your workspace. Re-filing a day replaces its copy.</p>
+<div id="notionState"><p class="meta">Checking your connections...</p></div>
+<div id="notionForm">
+<label style="display:block;font-weight:700;margin:10px 0 4px">Notion integration token</label>
+<input type="password" id="notionToken" placeholder="ntn_... or secret_..." autocomplete="off" style="width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff">
+<p class="meta" style="margin:4px 0 0">Create one free under your Notion settings, in Integrations: make an internal integration for your workspace, then copy its secret.</p>
+<label style="display:block;font-weight:700;margin:12px 0 4px">Notion page link</label>
+<input type="text" id="notionPage" placeholder="https://www.notion.so/... your page" autocomplete="off" style="width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff">
+<p class="meta" style="margin:4px 0 0">Open the page in Notion, invite your integration from the page's Share menu, then paste the page link here.</p>
+<div class="btnrow"><button type="button" class="button secondary" id="notionSave">Connect Notion</button></div>
+</div>
+<p id="notionMsg" class="mic-status" style="margin-top:8px"></p>
+<p id="notionError" class="error"></p>
+</section>
 <?php endif; ?>
 
 <section id="faq">
@@ -134,6 +157,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <details><summary>What if I skip a day?</summary><p>Nothing breaks. The scorecard compares against your most recent filed day, whenever that was.</p></details>
 <details><summary>Can I type instead of talking?</summary><p>Yes. The one big box takes typing too. Talk, type, or mix both in the same log.</p></details>
 <details><summary>Can I fix a day after filing it?</summary><p>Yes. File again the same day and the new version replaces the old one. Re-filing the same day does not cost another action.</p></details>
+<details><summary>Can Day Log copy my logs to Notion?</summary><p>Yes. In Advanced settings, connect a Notion page with your own integration token and each filed day is appended there as jot notes. Bum Bum stays the source of truth; Notion gets a copy, and re-filing a day replaces its copy.</p></details>
 </section>
 
 <section aria-label="More tiny tools">
@@ -253,9 +277,13 @@ fileBtn.addEventListener('click',async()=>{
   fileBtn.disabled=false; status.textContent=''; refreshFile();
   if(!response.ok){err.textContent=(data&&data.error)||'Filing tripped. Your words are still in the box; try once more.';return}
   bbTrack('daylog_filed',{first_today:!!data.first_today,reflection:(data.reflection||[]).length});
-  renderResult(data.structured, data.first_today
+  let metaMsg=data.first_today
     ? (data.email_sent?'These jot notes were just emailed to you. Tomorrow, this list is the scorecard.':'Filed. The email copy is not switched on in this environment, but your log is saved below and in Past logs.')
-    : 'Updated. Re-filing the same day replaces the earlier version and costs no extra action.');
+    : 'Updated. Re-filing the same day replaces the earlier version and costs no extra action.';
+  if(data.notion&&data.notion.connected){
+    metaMsg+= data.notion.ok ? ' Copied to your Notion page.' : ' '+(data.notion.error||'');
+  }
+  renderResult(data.structured, metaMsg);
   if(window.BBDropStrip)window.BBDropStrip.show('day-log');
   loadHistory();
 });
@@ -330,6 +358,39 @@ document.querySelector('#sumMonth').addEventListener('click',()=>runSummary('mon
     document.querySelector('#sumBody').innerHTML=data.summaries.map(summaryHtml).join('');
   }
 })();
+
+/* --- Advanced settings: Notion destination --- */
+const notionState=document.querySelector('#notionState');
+const notionForm=document.querySelector('#notionForm');
+const notionMsg=document.querySelector('#notionMsg');
+const notionError=document.querySelector('#notionError');
+function renderNotion(notion){
+  if(notion&&notion.page_id){
+    notionState.innerHTML='<p class="meta" style="margin:0">Connected. Every day you file is copied to your Notion page.</p><div class="btnrow"><button type="button" class="button secondary" id="notionOff">Disconnect Notion</button></div>';
+    notionForm.classList.add('hidden');
+    document.querySelector('#notionOff').addEventListener('click',async()=>{
+      await apiCall({action:'destination_disconnect'});
+      notionMsg.textContent='Notion disconnected. Past copies stay in Notion; new filings will not be copied.';
+      renderNotion(null);
+    });
+  } else {
+    notionState.innerHTML='';
+    notionForm.classList.remove('hidden');
+  }
+}
+(async()=>{
+  const{response,data}=await apiCall({action:'destination_get'});
+  renderNotion(response.ok?data.notion:null);
+})();
+document.querySelector('#notionSave').addEventListener('click',async()=>{
+  notionError.textContent=''; notionMsg.textContent='Checking the connection with Notion...';
+  const{response,data}=await apiCall({action:'destination_save',token:document.querySelector('#notionToken').value,page:document.querySelector('#notionPage').value});
+  notionMsg.textContent='';
+  if(!response.ok){notionError.textContent=(data&&data.error)||'That connection tripped. Try once more.';return}
+  notionMsg.textContent='Connected. The next day you file will land on that page.';
+  document.querySelector('#notionToken').value='';
+  renderNotion(data.notion);
+});
 </script>
 <?php endif; ?>
 <script src="/tools/drop-strip.js?v=20261027r2"></script></body></html>

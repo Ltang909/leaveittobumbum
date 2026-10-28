@@ -363,6 +363,173 @@ if ($action === 'summarize') {
     jsonResponse(['ok' => true, 'range' => $range, 'window_start' => $start, 'window_end' => $today, 'summary' => $summary, 'tallies' => $tallies, 'cached' => false, 'usage' => subjectUsage($subject)]);
 }
 
+/* --- Extra destinations (Advanced settings): Notion copy --- */
+
+function dl_ensure_destinations(): void {
+    db()->exec("CREATE TABLE IF NOT EXISTS tool_destinations (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id BIGINT UNSIGNED NOT NULL,
+        tool VARCHAR(40) NOT NULL,
+        kind VARCHAR(20) NOT NULL,
+        config MEDIUMTEXT NOT NULL,
+        enabled TINYINT NOT NULL DEFAULT 1,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        UNIQUE KEY uq_user_tool_kind (user_id, tool, kind)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    db()->exec("CREATE TABLE IF NOT EXISTS day_log_notion_pushes (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id BIGINT UNSIGNED NOT NULL,
+        log_date DATE NOT NULL,
+        block_ids MEDIUMTEXT NOT NULL,
+        pushed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        UNIQUE KEY uq_user_date (user_id, log_date)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+function dl_notion_destination(int $userId): ?array {
+    try {
+        dl_ensure_destinations();
+        $stmt = db()->prepare("SELECT config FROM tool_destinations WHERE user_id = ? AND tool = 'day-log' AND kind = 'notion' AND enabled = 1");
+        $stmt->execute([$userId]);
+        $row = $stmt->fetch();
+        if (!$row) return null;
+        $cfg = json_decode((string) $row['config'], true);
+        if (!is_array($cfg) || empty($cfg['token']) || empty($cfg['page_id'])) return null;
+        return $cfg;
+    } catch (Throwable $e) {
+        return null;
+    }
+}
+
+function dl_notion_page_id(string $raw): ?string {
+    $raw = trim($raw);
+    if (preg_match('/([0-9a-fA-F]{32})(?:[?#]|$)/', $raw, $m)) return strtolower($m[1]);
+    $hex = preg_replace('/[^0-9a-fA-F]/', '', $raw);
+    if (strlen($hex) === 32) return strtolower($hex);
+    return null;
+}
+
+function dl_notion_call(string $method, string $path, string $token, ?array $body = null): array {
+    $ch = curl_init('https://api.notion.com' . $path);
+    $headers = ['Authorization: Bearer ' . $token, 'Notion-Version: 2022-06-28', 'Content-Type: application/json'];
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => $method,
+        CURLOPT_HTTPHEADER => $headers,
+        CURLOPT_TIMEOUT => 20,
+    ]);
+    if ($body !== null) curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+    $raw = curl_exec($ch);
+    $code = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+    curl_close($ch);
+    $decoded = is_string($raw) ? json_decode($raw, true) : null;
+    return ['code' => $code, 'data' => is_array($decoded) ? $decoded : []];
+}
+
+function dl_notion_rich(string $text): array {
+    return [['type' => 'text', 'text' => ['content' => mb_substr($text, 0, 1900)]]];
+}
+
+function dl_notion_blocks(array $s, string $date): array {
+    $blocks = [];
+    $blocks[] = ['object' => 'block', 'type' => 'heading_2', 'heading_2' => ['rich_text' => dl_notion_rich('Day Log: ' . $date)]];
+    $addSection = function (string $label, array $items) use (&$blocks): void {
+        if (!$items) return;
+        $blocks[] = ['object' => 'block', 'type' => 'heading_3', 'heading_3' => ['rich_text' => dl_notion_rich($label)]];
+        foreach ($items as $item) {
+            $blocks[] = ['object' => 'block', 'type' => 'bulleted_list_item', 'bulleted_list_item' => ['rich_text' => dl_notion_rich($item)]];
+        }
+    };
+    if (!empty($s['reflection'])) {
+        $blocks[] = ['object' => 'block', 'type' => 'heading_3', 'heading_3' => ['rich_text' => dl_notion_rich('Yesterday\'s list, scored')]];
+        foreach ($s['reflection'] as $r) {
+            $mark = $r['status'] === 'done' ? 'Done' : ($r['status'] === 'partial' ? 'Partial' : 'Not mentioned');
+            $blocks[] = ['object' => 'block', 'type' => 'bulleted_list_item', 'bulleted_list_item' => ['rich_text' => dl_notion_rich($mark . ': ' . $r['item'])]];
+        }
+    }
+    $addSection('Done today', $s['done'] ?? []);
+    $addSection('Set out but did not happen', $s['missed'] ?? []);
+    $addSection('Challenges', $s['challenges'] ?? []);
+    $addSection('Beating them', $s['overcome'] ?? []);
+    $addSection('Tomorrow\'s top list', $s['tomorrow'] ?? []);
+    $addSection('Learnings', $s['learnings'] ?? []);
+    $blocks[] = ['object' => 'block', 'type' => 'divider', 'divider' => new stdClass()];
+    return $blocks;
+}
+
+/* Push the filed day to the user's Notion page. Best-effort: never blocks filing. */
+function dl_notion_push(int $userId, string $date, array $structured): array {
+    $cfg = dl_notion_destination($userId);
+    if ($cfg === null) return ['connected' => false];
+    $token = (string) $cfg['token'];
+    $pageId = (string) $cfg['page_id'];
+    // Re-file: delete the previous copy's blocks first so the page holds one version.
+    try {
+        $stmt = db()->prepare('SELECT block_ids FROM day_log_notion_pushes WHERE user_id = ? AND log_date = ?');
+        $stmt->execute([$userId, $date]);
+        $prev = $stmt->fetch();
+        if ($prev) {
+            foreach ((json_decode((string) $prev['block_ids'], true) ?: []) as $bid) {
+                dl_notion_call('DELETE', '/v1/blocks/' . $bid, $token);
+            }
+        }
+    } catch (Throwable $e) { /* best effort */ }
+    $blocks = dl_notion_blocks($structured, $date);
+    $ids = [];
+    foreach (array_chunk($blocks, 90) as $chunk) {
+        $res = dl_notion_call('PATCH', '/v1/blocks/' . $pageId . '/children', $token, ['children' => $chunk]);
+        if ($res['code'] < 200 || $res['code'] >= 300) {
+            return ['connected' => true, 'ok' => false, 'error' => 'Notion said no (' . $res['code'] . '). Your log is safe here; check the connection in Advanced settings.'];
+        }
+        foreach (($res['data']['results'] ?? []) as $b) {
+            if (!empty($b['id'])) $ids[] = $b['id'];
+        }
+    }
+    try {
+        $stmt = db()->prepare('INSERT INTO day_log_notion_pushes (user_id, log_date, block_ids) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE block_ids = VALUES(block_ids)');
+        $stmt->execute([$userId, $date, json_encode($ids)]);
+    } catch (Throwable $e) { /* best effort */ }
+    return ['connected' => true, 'ok' => true];
+}
+
+if ($action === 'destination_get') {
+    $cfg = dl_notion_destination($userId);
+    jsonResponse(['ok' => true, 'notion' => $cfg === null ? null : ['page_id' => $cfg['page_id']]]);
+}
+
+if ($action === 'destination_save') {
+    $token = trim((string) ($input['token'] ?? ''));
+    $pageRaw = (string) ($input['page'] ?? '');
+    $pageId = dl_notion_page_id($pageRaw);
+    if ($token === '') jsonResponse(['error' => 'Paste your Notion integration token first.'], 422);
+    if ($pageId === null) jsonResponse(['error' => 'That page link does not carry a Notion page ID. Copy the full link to the page.'], 422);
+    $check = dl_notion_call('GET', '/v1/pages/' . $pageId, $token);
+    if ($check['code'] === 401) jsonResponse(['error' => 'Notion rejected that token. Copy the integration secret again.'], 422);
+    if ($check['code'] === 404) jsonResponse(['error' => 'Notion cannot see that page. Open the page, use its Share menu, and invite your integration first.'], 422);
+    if ($check['code'] < 200 || $check['code'] >= 300) jsonResponse(['error' => 'Notion check failed (' . $check['code'] . '). Try once more.'], 502);
+    if (($check['data']['object'] ?? '') === 'database') jsonResponse(['error' => 'That link points at a database. For now the copy goes to a page; pick a page inside Notion.'], 422);
+    try {
+        dl_ensure_destinations();
+        $stmt = db()->prepare("INSERT INTO tool_destinations (user_id, tool, kind, config, enabled) VALUES (?, 'day-log', 'notion', ?, 1) ON DUPLICATE KEY UPDATE config = VALUES(config), enabled = 1");
+        $stmt->execute([$userId, json_encode(['token' => $token, 'page_id' => $pageId])]);
+    } catch (Throwable $e) {
+        jsonResponse(['error' => 'Could not save the connection. Try once more.'], 500);
+    }
+    jsonResponse(['ok' => true, 'notion' => ['page_id' => $pageId]]);
+}
+
+if ($action === 'destination_disconnect') {
+    try {
+        dl_ensure_destinations();
+        $stmt = db()->prepare("DELETE FROM tool_destinations WHERE user_id = ? AND tool = 'day-log' AND kind = 'notion'");
+        $stmt->execute([$userId]);
+    } catch (Throwable $e) { /* best effort */ }
+    jsonResponse(['ok' => true]);
+}
+
 if ($action === 'transcribe') {
     $audio = (string) ($input['audio'] ?? '');
     if (!preg_match('#^data:audio/(webm|ogg|mp3|mpeg|m4a|mp4|wav|x-wav);base64,#', $audio, $mm)) {
@@ -455,6 +622,7 @@ if ($action === 'save') {
         $dateLabel = date('D M j', strtotime($today));
         $emailSent = bbSendEmail((string) $user['email'], 'Your day, filed: ' . $dateLabel, dl_email_body($structured, $dateLabel));
     }
+    $notion = dl_notion_push($userId, $today, $structured);
     jsonResponse([
         'ok' => true,
         'structured' => $structured,
@@ -462,6 +630,7 @@ if ($action === 'save') {
         'email_sent' => $emailSent,
         'first_today' => $isFirstToday,
         'usage' => $usage,
+        'notion' => $notion,
     ]);
 }
 
