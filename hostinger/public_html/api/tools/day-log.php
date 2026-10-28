@@ -592,7 +592,13 @@ if ($action === 'destination_disconnect') {
 
 if ($action === 'transcribe') {
     $audio = (string) ($input['audio'] ?? '');
-    if (!preg_match('#^data:audio/(webm|ogg|mp3|mpeg|m4a|mp4|wav|x-wav);base64,#', $audio, $mm)) {
+    // Tolerate codec parameters (iOS sends data:audio/mp4;codecs=...;base64,)
+    // and the wider family of types mobile browsers report (x-m4a, aac, ...).
+    if (!preg_match('#^data:audio/([a-z0-9.+-]+)(?:;[^;,]+)*;base64,#i', $audio, $mm)) {
+        jsonResponse(['error' => 'That recording format will not transcribe. Try again.'], 422);
+    }
+    $subtype = strtolower($mm[1]);
+    if (!in_array($subtype, ['webm', 'ogg', 'mp3', 'mpeg', 'mpga', 'm4a', 'x-m4a', 'mp4', 'aac', 'wav', 'x-wav', 'flac', 'x-flac'], true)) {
         jsonResponse(['error' => 'That recording format will not transcribe. Try again.'], 422);
     }
     $b64 = substr($audio, strpos($audio, ',') + 1);
@@ -606,7 +612,7 @@ if ($action === 'transcribe') {
     $cfg = config();
     $key = (string) ($cfg['groq_api_key'] ?? '');
     if ($key === '') jsonResponse(['error' => 'Transcription is not switched on yet. Type your answer instead.'], 503);
-    $ext = ['webm' => 'webm', 'ogg' => 'ogg', 'mp3' => 'mp3', 'mpeg' => 'mp3', 'm4a' => 'm4a', 'mp4' => 'm4a', 'wav' => 'wav', 'x-wav' => 'wav'][$mm[1]] ?? 'webm';
+    $ext = ['webm' => 'webm', 'ogg' => 'ogg', 'mp3' => 'mp3', 'mpeg' => 'mp3', 'mpga' => 'mp3', 'm4a' => 'm4a', 'x-m4a' => 'm4a', 'mp4' => 'm4a', 'aac' => 'm4a', 'wav' => 'wav', 'x-wav' => 'wav', 'flac' => 'flac', 'x-flac' => 'flac'][$subtype] ?? 'webm';
     $tmp = tempnam(sys_get_temp_dir(), 'dl_audio_') . '.' . $ext;
     file_put_contents($tmp, $bin);
     $ch = curl_init('https://api.groq.com/openai/v1/audio/transcriptions');

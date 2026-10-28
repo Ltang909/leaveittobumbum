@@ -220,4 +220,4 @@ convertBtn.addEventListener('click',async()=>{
   setTimeout(()=>convProgress.classList.add('hidden'),900);
   resultList.scrollIntoView({behavior:'smooth',block:'center'});
 });
-</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><script src="/tools/drop-strip.js?v=20261027r2"></script></body></html>
+</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><script src="/tools/drop-strip.js?v=20261028r1"></script></body></html>

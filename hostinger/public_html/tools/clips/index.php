@@ -604,5 +604,5 @@ if(!screenOK){
 <p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
 </section>
 <section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-record-your-screen-for-free/">How to record your screen for free (no software to install)</a>.</p><p>Screen recording is one of the everyday jobs we rounded up in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
-<script src="/tools/drop-strip.js?v=20261027r2"></script></body>
+<script src="/tools/drop-strip.js?v=20261028r1"></script></body>
 </html>

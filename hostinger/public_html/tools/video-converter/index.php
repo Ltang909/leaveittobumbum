@@ -290,4 +290,4 @@ againBtn.addEventListener('click',()=>{
 <p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed.</p>
 <p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261027r2"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261028r1"></script></body></html>

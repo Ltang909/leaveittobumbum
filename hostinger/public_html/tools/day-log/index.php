@@ -273,7 +273,14 @@ async function startMR(fellBack){
       if(!a.chunks.length){hideWave();ta.classList.remove('hidden');setStatus('Nothing was captured. Try again, or type.');return}
       showWave('Transcribing your ramble...',true); setStatus('');
       const blob=new Blob(a.chunks,{type:recorder.mimeType||'audio/webm'});
-      const dataUrl=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res('');r.readAsDataURL(blob)});
+      let dataUrl=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res('');r.readAsDataURL(blob)});
+      if(dataUrl){
+        // Normalize to a clean base type: iOS reports things like
+        // audio/mp4;codecs=... or audio/x-m4a, which strict checks reject.
+        let base=((recorder.mimeType||'audio/mp4').split(';')[0]||'audio/mp4').trim().toLowerCase();
+        if(base==='audio/x-m4a'||base==='audio/m4a'||base==='audio/aac')base='audio/mp4';
+        dataUrl=dataUrl.replace(/^data:[^;,]+/,'data:'+base);
+      }
       hideWave(); ta.classList.remove('hidden');
       if(!dataUrl){setStatus('Recording could not be read. Type instead.');return}
       const{response,data}=await apiCall({action:'transcribe',audio:dataUrl});
@@ -451,4 +458,4 @@ document.querySelector('#notionSave').addEventListener('click',async()=>{
 });
 </script>
 <?php endif; ?>
-<script src="/tools/drop-strip.js?v=20261027r2"></script></body></html>
+<script src="/tools/drop-strip.js?v=20261028r1"></script></body></html>
