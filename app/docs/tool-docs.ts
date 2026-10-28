@@ -638,7 +638,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     summary:
       "Day Log closes your day in a few minutes of talking. Six short prompts walk you through what got done, what got in the way, and what tomorrow needs. Bum Bum turns your words into clean jot notes, scores yesterday's top list against what you actually did, files the day in your account, and emails you the notes with tomorrow's priorities on top.",
     steps: [
-      "Open Day Log at the end of your day and answer the six prompts, talking or typing, in any order.",
+      "Open Day Log at the end of your day. The six prompts sit above one box: talk through all of them in one go, in any order, or type.",
       "If yesterday had a list, it sits above the first prompt. Say honestly what landed and what did not.",
       "Press File my day. Bum Bum structures your words into jot notes and scores yesterday's list.",
       "Read the filed day on screen, and check your inbox: the same jot notes arrive by email with tomorrow's top list.",

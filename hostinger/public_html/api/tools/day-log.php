@@ -121,32 +121,22 @@ function dl_clean_list($v, int $cap = 12, int $len = 300): array {
     return $out;
 }
 
-// Structure the day's answers into jot notes and score yesterday's plan.
-// The reflection is rebuilt server-side from yesterday's actual list so the
-// model can only assign statuses, never invent items.
-function dl_structure(array $answers, array $yesterdayPlan): ?array {
-    $system = 'You turn a person\'s end-of-day voice notes into jot notes for their day log. '
+// Structure the day's single free-form log into jot notes and score
+// yesterday's plan. The reflection is rebuilt server-side from yesterday's
+// actual list so the model can only assign statuses, never invent items.
+function dl_structure(string $text, array $yesterdayPlan): ?array {
+    $system = 'You turn a person\'s end-of-day voice note into jot notes for their day log. '
+        . 'The note is ONE unstructured ramble covering their whole day in any order: what they did, what they set out to do, challenges, ideas for beating them, plans for tomorrow, lessons. Sorting it is your job. '
         . 'Output STRICT JSON only, no other text: {"done": [], "missed": [], "challenges": [], "overcome": [], "tomorrow": [], "learnings": [], "reflection": [{"item": "...", "status": "done|partial|not_mentioned"}]}. '
-        . 'Jot notes: short fragments, the person\'s own words tightened, first person kept. Never invent anything they did not say. '
+        . 'Jot notes: short fragments, the person\'s own words tightened, first person kept. Never invent anything they did not say. If they said nothing for a section, leave it empty. '
         . 'done: what they got done today. missed: what they set out to do that did not happen (only if they said so). '
         . 'challenges: problems they named. overcome: their ideas for beating the challenges. '
         . 'tomorrow: the items they named for tomorrow, 3 to 5, in their words. learnings: what they said they learned. '
-        . 'reflection: YESTERDAY\'S PLAN is given in the input. For each planned item, judge from TODAY\'S answers only: "done" if today\'s notes clearly say it happened, "partial" if partly done or in progress, "not_mentioned" whenever today\'s notes do not clearly cover it. Never mark anything done from the plan itself. Echo each planned item word for word in "item". If the plan is empty, reflection is []. '
+        . 'reflection: YESTERDAY\'S PLAN is given in the input. For each planned item, judge from TODAY\'S LOG only: "done" if the log clearly says it happened, "partial" if partly done or in progress, "not_mentioned" whenever the log does not clearly cover it. Never mark anything done from the plan itself. Echo each planned item word for word in "item". If the plan is empty, reflection is []. '
         . 'No em dashes anywhere.';
     $parts = [];
     $parts[] = "YESTERDAY'S PLAN:\n" . (count($yesterdayPlan) ? implode("\n", array_map(fn($s) => '- ' . $s, $yesterdayPlan)) : '(none)');
-    $labels = [
-        'done' => 'WHAT THEY DID TODAY (including what they set out to do and what got done)',
-        'challenges' => 'CHALLENGES FACED TODAY',
-        'overcome' => 'BRAIN-DUMP: HOW TO OVERCOME THEM',
-        'tomorrow' => 'TOP THINGS FOR TOMORROW',
-        'learnings' => 'WHAT THEY LEARNED TODAY',
-        'extra' => 'ANYTHING ELSE ON THEIR MIND',
-    ];
-    foreach ($labels as $k => $label) {
-        $v = trim((string) ($answers[$k] ?? ''));
-        if ($v !== '') $parts[] = $label . ":\n" . $v;
-    }
+    $parts[] = "TODAY'S LOG:\n" . $text;
     $decoded = dl_groq_json($system, implode("\n\n", $parts));
     if ($decoded === null) return null;
     $structured = [
@@ -291,19 +281,12 @@ if ($action === 'transcribe') {
 }
 
 if ($action === 'save') {
-    $answersIn = $input['answers'] ?? [];
-    if (!is_array($answersIn)) jsonResponse(['error' => 'Answers arrived scrambled.'], 422);
-    $answers = [];
-    $totalLen = 0;
-    foreach (['done', 'challenges', 'overcome', 'tomorrow', 'learnings', 'extra'] as $k) {
-        $v = trim((string) ($answersIn[$k] ?? ''));
-        $v = mb_substr($v, 0, 6000);
-        $answers[$k] = $v;
-        $totalLen += mb_strlen($v);
+    $text = trim((string) ($input['text'] ?? ''));
+    $text = mb_substr($text, 0, 15000);
+    if (mb_strlen($text) < 10) {
+        jsonResponse(['error' => 'There is nothing to file yet. Talk or type a little about your day first.'], 422);
     }
-    if ($totalLen < 10) {
-        jsonResponse(['error' => 'There is nothing to file yet. Say or type a little for at least one prompt.'], 422);
-    }
+    $answers = ['log' => $text];
     $today = trim((string) ($input['todayLocal'] ?? ''));
     if (!dl_valid_date($today)) jsonResponse(['error' => 'Invalid log date.'], 422);
     $key = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($input['idempotencyKey'] ?? ''));
@@ -321,11 +304,11 @@ if ($action === 'save') {
     $prevStructured = dl_structured($prev);
     $yesterdayPlan = $prevStructured['tomorrow'] ?? [];
 
-    $structured = dl_structure($answers, $yesterdayPlan);
+    $structured = dl_structure($text, $yesterdayPlan);
     if ($structured === null) {
         // One retry with a bigger runway before giving up (reasoning models
         // can starve their own JSON, the SOP/Ghostwriter lesson).
-        $structured = dl_structure($answers, $yesterdayPlan);
+        $structured = dl_structure($text, $yesterdayPlan);
     }
     if ($structured === null) {
         jsonResponse(['error' => 'Bum Bum could not structure that. Your words are still on the page; try filing once more.'], 502);

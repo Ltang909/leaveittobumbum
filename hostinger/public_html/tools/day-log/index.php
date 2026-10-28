@@ -75,7 +75,7 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .score-done{background:#d8ff62}.score-partial{background:#ffe9b8}.score-not{background:#fff;opacity:.75}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/notes.png" alt="Day Log"><h1>Close the day. Queue up tomorrow.</h1><p class="lede bb-desc">End the day with a few minutes of talking. Bum Bum walks you through six short prompts, turns your words into clean jot notes, and files the day in your account. Yesterday's top list gets scored against what you actually did, and the whole thing lands in your inbox with tomorrow's priorities on top. One action per day filed. We keep your words, never your voice: recordings are transcribed, then discarded.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/notes.png" alt="Day Log"><h1>Close the day. Queue up tomorrow.</h1><p class="lede bb-desc">End the day with a few minutes of talking. Bum Bum gives you six short prompts and one record button, turns your ramble into clean jot notes, and files the day in your account. Yesterday's top list gets scored against what you actually did, and the whole thing lands in your inbox with tomorrow's priorities on top. One action per day filed. We keep your words, never your voice: recordings are transcribed, then discarded.</p>
 <?php if (!$user): ?>
 <section class="panel"><h2>Day Log lives in your account</h2><p class="lede">The scorecard only works if yesterday's list is waiting for you, so Day Log needs a free account to file into. Your logs, your words, nobody else's.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/day-log/') ?>">Sign in or create a free account</a></p></section>
 <?php else: ?>
@@ -84,8 +84,20 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 
 <section class="panel" id="logPanel">
 <h2>Today's log</h2>
-<p class="meta" style="margin-top:0">Talk or type, prompt by prompt. Skip any prompt that does not fit the day. Messy is fine, Bum Bum tidies it into jot notes when you file.</p>
-<div id="prompts"></div>
+<div class="read-note" style="margin-top:0">
+<b>Talk through these, in any order, all in one go:</b>
+<ul style="margin:8px 0;padding-left:20px">
+<li><b>What did you do today?</b> Start with what you set out to do; say what landed and what did not.</li>
+<li><b>What challenges did you face today?</b> Name them plainly, solutions come next.</li>
+<li><b>Brain-dump: how will you overcome them?</b> No filter. Messy is fine.</li>
+<li><b>Your top 3 to 5 for tomorrow.</b> These become tomorrow's scorecard, so make them countable.</li>
+<li><b>What did you learn today?</b> One line is plenty.</li>
+<li><b>Anything else on your mind?</b> Optional. Get it out of your head and into the log.</li>
+</ul>
+<p style="margin:0">One record button, one ramble. Bum Bum sorts it into jot notes when you file.</p>
+</div>
+<textarea id="logText" placeholder="Tap Record and talk through your day, or start typing..." style="width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;resize:vertical;min-height:170px"></textarea>
+<div class="mic-row"><button type="button" class="mic-btn" id="micBtn">Record</button><span class="mic-status" id="micStatus"></span></div>
 <div class="btnrow"><button type="button" class="button" id="fileBtn">File my day</button></div>
 <p id="fileStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="batchError" class="error"></p>
@@ -123,26 +135,8 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/day-log.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
 bbTrack('tool_opened',{tool:'day-log'});
 
-const PROMPTS=[
-  {key:'done',title:'What did you do today?',hint:'Start with what you set out to do. Say what landed and what did not.'},
-  {key:'challenges',title:'What challenges did you face today?',hint:'Name them plainly. Solutions come next.'},
-  {key:'overcome',title:'Brain-dump: how will you overcome them?',hint:'No filter. Messy is fine, Bum Bum tidies it.'},
-  {key:'tomorrow',title:'Your top 3 to 5 for tomorrow',hint:'These become tomorrow\u2019s scorecard, so make them countable.'},
-  {key:'learnings',title:'What did you learn today?',hint:'One line is plenty. Future you says thanks.'},
-  {key:'extra',title:'Anything else on your mind?',hint:'Optional. Get it out of your head and into the log.'}
-];
-const promptsEl=document.querySelector('#prompts');
-const boxes={};
-PROMPTS.forEach(p=>{
-  const card=document.createElement('div');
-  card.className='prompt-card';
-  card.innerHTML='<h3>'+esc(p.title)+'</h3><p class="hint">'+esc(p.hint)+'</p>'
-    +(p.key==='done'?'<div id="planSlot"></div>':'')
-    +'<textarea id="ta-'+p.key+'" placeholder="Talk or type here..."></textarea>'
-    +'<div class="mic-row"><button type="button" class="mic-btn" data-key="'+p.key+'">Record</button><span class="mic-status" id="ms-'+p.key+'"></span></div>';
-  promptsEl.appendChild(card);
-  boxes[p.key]=card.querySelector('textarea');
-});
+const ta=document.querySelector('#logText');
+const micBtn=document.querySelector('#micBtn');
 
 function localToday(){const d=new Date();const pad=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function newKey(){try{return crypto.randomUUID()}catch(e){return 'k'+Date.now()+'-'+Math.random().toString(36).slice(2,12)}}
@@ -150,29 +144,25 @@ function newKey(){try{return crypto.randomUUID()}catch(e){return 'k'+Date.now()+
 /* --- Recording: live browser transcription first (the loom-ish cascade),
        recorded audio to server Whisper when live transcription is absent. --- */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-let activeRec=null; // {key, mode, recog|recorder, chunks, stream, base, stopped}
+let activeRec=null; // {mode, recog|recorder, chunks, stream, base, stopped}
 
-function setStatus(key,msg){const el=document.querySelector('#ms-'+key);if(el)el.textContent=msg||''}
-function setBtn(key,recording){document.querySelectorAll('.mic-btn').forEach(b=>{if(b.dataset.key===key){b.textContent=recording?'Stop':'Record';b.classList.toggle('recording',!!recording)}})}
+function setStatus(msg){document.querySelector('#micStatus').textContent=msg||''}
+function setBtn(recording){micBtn.textContent=recording?'Stop':'Record';micBtn.classList.toggle('recording',!!recording)}
 
 async function stopActive(){
   const a=activeRec; if(!a) return; activeRec=null;
-  setBtn(a.key,false);
-  if(a.mode==='sr'){a.stopped=true;try{a.recog.stop()}catch(e){}setStatus(a.key,'');return}
+  setBtn(false);
+  if(a.mode==='sr'){a.stopped=true;try{a.recog.stop()}catch(e){}setStatus('');return}
   if(a.mode==='mr'){try{a.recorder.stop()}catch(e){}}
 }
 
-document.querySelectorAll('.mic-btn').forEach(btn=>{
-  btn.addEventListener('click',async()=>{
-    const key=btn.dataset.key;
-    if(activeRec&&activeRec.key===key){stopActive();return}
-    if(activeRec)await stopActive();
-    const ta=boxes[key];
+micBtn.addEventListener('click',async()=>{
+    if(activeRec){stopActive();return}
     if(SR){
       const recog=new SR();
       recog.continuous=true; recog.interimResults=true;
       recog.lang=navigator.language||'en-US';
-      const a={key,mode:'sr',recog,base:ta.value,stopped:false};
+      const a={mode:'sr',recog,base:ta.value,stopped:false};
       activeRec=a;
       recog.onresult=e=>{
         let finalText='';
@@ -180,35 +170,34 @@ document.querySelectorAll('.mic-btn').forEach(btn=>{
         if(finalText){a.base=(a.base?a.base.replace(/\s+$/,'')+' ':'')+finalText.trim();ta.value=a.base}
       };
       recog.onend=()=>{if(activeRec===a&&!a.stopped){try{recog.start()}catch(e){}}};
-      recog.onerror=e=>{if(e.error==='not-allowed'){setStatus(key,'Mic is blocked. Allow the microphone, or type instead.');stopActive()}else if(e.error!=='aborted'&&e.error!=='no-speech'){setStatus(key,'Listening hiccup: '+e.error+'. Type instead if it keeps happening.')}};
-      try{recog.start();setBtn(key,true);setStatus(key,'Listening. Talk away, then tap Stop.')}catch(e){setStatus(key,'Could not start listening. Type instead.');activeRec=null}
+      recog.onerror=e=>{if(e.error==='not-allowed'){setStatus('Mic is blocked. Allow the microphone, or type instead.');stopActive()}else if(e.error!=='aborted'&&e.error!=='no-speech'){setStatus('Listening hiccup: '+e.error+'. Type instead if it keeps happening.')}};
+      try{recog.start();setBtn(true);setStatus('Listening. Talk away, then tap Stop.')}catch(e){setStatus('Could not start listening. Type instead.');activeRec=null}
       return;
     }
-    if(!navigator.mediaDevices||!window.MediaRecorder){setStatus(key,'This browser cannot record here. Type instead.');return}
+    if(!navigator.mediaDevices||!window.MediaRecorder){setStatus('This browser cannot record here. Type instead.');return}
     try{
       const stream=await navigator.mediaDevices.getUserMedia({audio:true});
       const mime=MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':(MediaRecorder.isTypeSupported('audio/mp4')?'audio/mp4':'');
       const recorder=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
-      const a={key,mode:'mr',recorder,stream,chunks:[],base:ta.value};
+      const a={mode:'mr',recorder,stream,chunks:[],base:ta.value};
       activeRec=a;
       recorder.ondataavailable=e=>{if(e.data&&e.data.size)a.chunks.push(e.data)};
       recorder.onstop=async()=>{
         stream.getTracks().forEach(t=>t.stop());
         if(activeRec===a)activeRec=null;
-        setBtn(key,false);
-        if(!a.chunks.length){setStatus(key,'Nothing was captured. Try again, or type.');return}
-        setStatus(key,'Transcribing...');
+        setBtn(false);
+        if(!a.chunks.length){setStatus('Nothing was captured. Try again, or type.');return}
+        setStatus('Transcribing...');
         const blob=new Blob(a.chunks,{type:recorder.mimeType||'audio/webm'});
         const dataUrl=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res('');r.readAsDataURL(blob)});
-        if(!dataUrl){setStatus(key,'Recording could not be read. Type instead.');return}
+        if(!dataUrl){setStatus('Recording could not be read. Type instead.');return}
         const{response,data}=await apiCall({action:'transcribe',audio:dataUrl});
-        if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;setStatus(key,'Transcribed. Fix anything, then file when ready.')}
-        else setStatus(key,(data&&data.error)||'Transcription failed. Type instead.');
+        if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;setStatus('Transcribed. Fix anything, then file when ready.')}
+        else setStatus((data&&data.error)||'Transcription failed. Type instead.');
       };
       recorder.start();
-      setBtn(key,true);setStatus(key,'Recording. Tap Stop when done.');
-    }catch(e){setStatus(key,'Mic is blocked. Allow the microphone, or type instead.')}
-  });
+      setBtn(true);setStatus('Recording. Tap Stop when done.');
+    }catch(e){setStatus('Mic is blocked. Allow the microphone, or type instead.')}
 });
 
 /* --- Rendering structured jot notes --- */
@@ -240,17 +229,15 @@ function renderResult(structured,emailNote){
 const fileBtn=document.querySelector('#fileBtn');
 fileBtn.addEventListener('click',async()=>{
   if(activeRec)await stopActive();
-  const answers={};
-  let total=0;
-  PROMPTS.forEach(p=>{answers[p.key]=boxes[p.key].value.trim();total+=answers[p.key].length});
+  const text=ta.value.trim();
   const err=document.querySelector('#batchError');
   const status=document.querySelector('#fileStatus');
   err.textContent='';
-  if(total<10){err.textContent='There is nothing to file yet. Say or type a little for at least one prompt.';return}
+  if(text.length<10){err.textContent='There is nothing to file yet. Talk or type a little about your day first.';return}
   fileBtn.disabled=true; status.textContent='Bum Bum is structuring your day...';
-  const{response,data}=await apiCall({action:'save',answers,todayLocal:localToday(),tzName:(Intl.DateTimeFormat().resolvedOptions().timeZone||''),idempotencyKey:newKey()});
+  const{response,data}=await apiCall({action:'save',text,todayLocal:localToday(),tzName:(Intl.DateTimeFormat().resolvedOptions().timeZone||''),idempotencyKey:newKey()});
   fileBtn.disabled=false; status.textContent='';
-  if(!response.ok){err.textContent=(data&&data.error)||'Filing tripped. Your words are still in the boxes; try once more.';return}
+  if(!response.ok){err.textContent=(data&&data.error)||'Filing tripped. Your words are still in the box; try once more.';return}
   bbTrack('daylog_filed',{first_today:!!data.first_today,reflection:(data.reflection||[]).length});
   renderResult(data.structured, data.first_today
     ? (data.email_sent?'These jot notes were just emailed to you. Tomorrow, this list is the scorecard.':'Filed. The email copy is not switched on in this environment, but your log is saved below and in Past logs.')
