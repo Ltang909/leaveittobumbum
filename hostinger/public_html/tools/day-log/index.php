@@ -74,8 +74,15 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .score-tag{flex:none;font-size:12px;font-weight:900;border:1.5px solid #1a291c;border-radius:999px;padding:2px 10px}
 .score-done{background:#d8ff62}.score-partial{background:#ffe9b8}.score-not{background:#fff;opacity:.75}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+.log-table{width:100%;border-collapse:collapse;font-size:14.5px}
+.log-table th{text-align:left;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;opacity:.65;padding:6px 8px;border-bottom:2px solid #e2d7bf}
+.log-table td{padding:9px 8px;border-bottom:1px solid #eee3cb;vertical-align:top}
+.log-table .log-row{cursor:pointer}
+.log-table .log-row:hover{background:#fffdf6}
+.log-table .log-detail td{background:#fffdf8}
+.log-table .chev{font-weight:900;text-align:right;white-space:nowrap}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/notes.png" alt="Day Log"><h1>Close the day. Queue up tomorrow.</h1><p class="lede bb-desc">End the day with a few minutes of talking. Bum Bum gives you six short prompts and one record button, turns your ramble into clean jot notes, and files the day in your account. Yesterday's top list gets scored against what you actually did, and the whole thing lands in your inbox with tomorrow's priorities on top. One action per day filed. We keep your words, never your voice: recordings are transcribed, then discarded.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/notes.png" alt="Day Log"><h1>Close the day. Queue up tomorrow.</h1><p class="lede bb-desc">End the day with a few minutes of talking. Bum Bum gives you three prompts and one record button, turns your ramble into clean jot notes, and files the day in your account. Yesterday's top list gets scored against what you actually did, and the whole thing lands in your inbox with tomorrow's priorities on top. One action per day filed. We keep your words, never your voice: recordings are transcribed, then discarded.</p>
 <?php if (!$user): ?>
 <section class="panel"><h2>Day Log lives in your account</h2><p class="lede">The scorecard only works if yesterday's list is waiting for you, so Day Log needs a free account to file into. Your logs, your words, nobody else's.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/day-log/') ?>">Sign in or create a free account</a></p></section>
 <?php else: ?>
@@ -85,20 +92,16 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" id="logPanel">
 <h2>Today's log</h2>
 <div class="read-note" style="margin-top:0">
-<b>Talk through these, in any order, all in one go:</b>
+<b>talk through these in any order, brain dump is fine!</b>
 <ul style="margin:8px 0;padding-left:20px">
-<li><b>What did you do today?</b> Start with what you set out to do; say what landed and what did not.</li>
-<li><b>What challenges did you face today?</b> Name them plainly, solutions come next.</li>
-<li><b>Brain-dump: how will you overcome them?</b> No filter. Messy is fine.</li>
-<li><b>Your top 3 to 5 for tomorrow.</b> These become tomorrow's scorecard, so make them countable.</li>
-<li><b>What did you learn today?</b> One line is plenty.</li>
-<li><b>Anything else on your mind?</b> Optional. Get it out of your head and into the log.</li>
+<li>What did you do today, what challenges did you face and how do you plan to overcome them?</li>
+<li>What did you learn today?</li>
+<li>What do you plan on achieving tomorrow?</li>
 </ul>
 <p style="margin:0">One record button, one ramble. Bum Bum sorts it into jot notes when you file.</p>
 </div>
 <textarea id="logText" placeholder="Tap Record and talk through your day, or start typing..." style="width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;resize:vertical;min-height:170px"></textarea>
-<div class="mic-row"><button type="button" class="mic-btn" id="micBtn">Record</button><span class="mic-status" id="micStatus"></span></div>
-<div class="btnrow"><button type="button" class="button" id="fileBtn">File my day</button></div>
+<div class="mic-row"><button type="button" class="mic-btn" id="micBtn">Record</button><button type="button" class="button" id="fileBtn" disabled style="opacity:.45">File my day</button><span class="mic-status" id="micStatus"></span></div>
 <p id="fileStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="batchError" class="error"></p>
 </section>
@@ -112,6 +115,15 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" id="historyPanel">
 <h2>Past logs</h2>
 <div id="historyList"><p class="meta">Loading your past logs...</p></div>
+</section>
+
+<section class="panel" id="lookbackPanel">
+<h2>Look back</h2>
+<p class="meta" style="margin-top:0">Turn a stretch of logs into highlights: accomplishments, learnings, and how you are growing over time. One action per fresh summary; re-opening the same stretch is free.</p>
+<div class="btnrow"><button type="button" class="button secondary" id="sumWeek">Summarize my week</button><button type="button" class="button secondary" id="sumMonth">Summarize my month</button></div>
+<p id="sumStatus" class="mic-status" style="margin-top:8px"></p>
+<p id="sumError" class="error"></p>
+<div id="sumBody"></div>
 </section>
 <?php endif; ?>
 
@@ -137,6 +149,8 @@ bbTrack('tool_opened',{tool:'day-log'});
 
 const ta=document.querySelector('#logText');
 const micBtn=document.querySelector('#micBtn');
+function refreshFile(){const has=ta.value.trim().length>0;fileBtn.disabled=!has;fileBtn.style.opacity=has?'1':'.45'}
+ta.addEventListener('input',refreshFile);
 
 function localToday(){const d=new Date();const pad=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function newKey(){try{return crypto.randomUUID()}catch(e){return 'k'+Date.now()+'-'+Math.random().toString(36).slice(2,12)}}
@@ -167,7 +181,7 @@ micBtn.addEventListener('click',async()=>{
       recog.onresult=e=>{
         let finalText='';
         for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)finalText+=e.results[i][0].transcript}
-        if(finalText){a.base=(a.base?a.base.replace(/\s+$/,'')+' ':'')+finalText.trim();ta.value=a.base}
+        if(finalText){a.base=(a.base?a.base.replace(/\s+$/,'')+' ':'')+finalText.trim();ta.value=a.base;refreshFile()}
       };
       recog.onend=()=>{if(activeRec===a&&!a.stopped){try{recog.start()}catch(e){}}};
       recog.onerror=e=>{if(e.error==='not-allowed'){setStatus('Mic is blocked. Allow the microphone, or type instead.');stopActive()}else if(e.error!=='aborted'&&e.error!=='no-speech'){setStatus('Listening hiccup: '+e.error+'. Type instead if it keeps happening.')}};
@@ -192,7 +206,7 @@ micBtn.addEventListener('click',async()=>{
         const dataUrl=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res('');r.readAsDataURL(blob)});
         if(!dataUrl){setStatus('Recording could not be read. Type instead.');return}
         const{response,data}=await apiCall({action:'transcribe',audio:dataUrl});
-        if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;setStatus('Transcribed. Fix anything, then file when ready.')}
+        if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;refreshFile();setStatus('Transcribed. Fix anything, then file when ready.')}
         else setStatus((data&&data.error)||'Transcription failed. Type instead.');
       };
       recorder.start();
@@ -236,7 +250,7 @@ fileBtn.addEventListener('click',async()=>{
   if(text.length<10){err.textContent='There is nothing to file yet. Talk or type a little about your day first.';return}
   fileBtn.disabled=true; status.textContent='Bum Bum is structuring your day...';
   const{response,data}=await apiCall({action:'save',text,todayLocal:localToday(),tzName:(Intl.DateTimeFormat().resolvedOptions().timeZone||''),idempotencyKey:newKey()});
-  fileBtn.disabled=false; status.textContent='';
+  fileBtn.disabled=false; status.textContent=''; refreshFile();
   if(!response.ok){err.textContent=(data&&data.error)||'Filing tripped. Your words are still in the box; try once more.';return}
   bbTrack('daylog_filed',{first_today:!!data.first_today,reflection:(data.reflection||[]).length});
   renderResult(data.structured, data.first_today
@@ -261,13 +275,61 @@ async function loadHistory(){
   const list=document.querySelector('#historyList');
   const{response,data}=await apiCall({action:'history'});
   if(!response.ok||!data.logs||!data.logs.length){list.innerHTML='<p class="meta">No logs yet. Your first filed day will show up here.</p>';return}
-  list.innerHTML=data.logs.map(l=>{
+  const rows=data.logs.map((l,i)=>{
     const s=l.structured||{};
-    const inner=reflectionHtml(s.reflection)+sectionHtml('Done',s.done)+sectionHtml('Tomorrow\u2019s list',s.tomorrow)+sectionHtml('Learnings',s.learnings);
-    return '<details><summary>'+esc(l.date)+' &middot; '+(s.done?s.done.length:0)+' done</summary><div class="jot">'+inner+'</div></details>';
+    const refl=s.reflection||[];
+    const kept=refl.filter(r=>r.status==='done').length;
+    const score=refl.length?kept+' of '+refl.length+' kept':'';
+    const inner='<div class="jot">'+reflectionHtml(s.reflection)+sectionHtml('Done today',s.done)+sectionHtml('Set out but did not happen',s.missed)+sectionHtml('Challenges',s.challenges)+sectionHtml('Beating them',s.overcome)+sectionHtml('Tomorrow\u2019s top list',s.tomorrow)+sectionHtml('Learnings',s.learnings)+'</div>';
+    return '<tr class="log-row" data-i="'+i+'"><td><b>'+esc(l.date)+'</b></td><td>'+(s.done?s.done.length:0)+' done</td><td>'+(s.tomorrow?s.tomorrow.length:0)+' planned</td><td>'+esc(score)+'</td><td class="chev" id="chev-'+i+'">+</td></tr>'
+      +'<tr class="log-detail hidden" id="detail-'+i+'"><td colspan="5">'+inner+'</td></tr>';
   }).join('');
+  list.innerHTML='<table class="log-table"><thead><tr><th>Date</th><th>Done</th><th>Planned</th><th>Scorecard</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+  list.querySelectorAll('.log-row').forEach(row=>{
+    row.addEventListener('click',()=>{
+      const i=row.dataset.i;
+      const det=document.querySelector('#detail-'+i);
+      const open=det.classList.toggle('hidden')===false;
+      document.querySelector('#chev-'+i).textContent=open?'\u2212':'+';
+    });
+  });
 }
 loadHistory();
+
+/* --- Look back: week and month summaries --- */
+function summaryHtml(entry){
+  const s=entry.summary||{};
+  const t=entry.tallies||{};
+  const label=entry.range==='week'?'Your week':'Your month';
+  const tallyLine=(t.days||0)+' days logged &middot; '+(t.done_total||0)+' things done'
+    +((t.scored_total||0)?' &middot; scorecard: '+(t.scored_done||0)+' done, '+(t.scored_partial||0)+' partial, '+(t.scored_not||0)+' not mentioned':'');
+  return '<div style="margin-top:14px"><h3 style="margin:0 0 2px">'+label+': '+esc(entry.window_start)+' to '+esc(entry.window_end)+'</h3>'
+    +'<p class="meta" style="margin:0 0 6px">'+tallyLine+'</p><div class="jot">'
+    +sectionHtml('Accomplishments',s.accomplishments)
+    +sectionHtml('Learnings',s.learnings)
+    +sectionHtml('Growth over time',s.growth)
+    +sectionHtml('Themes that kept coming up',s.themes)
+    +'</div></div>';
+}
+async function runSummary(range){
+  const status=document.querySelector('#sumStatus');
+  const err=document.querySelector('#sumError');
+  err.textContent=''; status.textContent='Bum Bum is reading your '+(range==='week'?'week':'month')+'...';
+  const{response,data}=await apiCall({action:'summarize',range,todayLocal:localToday()});
+  status.textContent='';
+  if(!response.ok){err.textContent=(data&&data.error)||'That summary tripped. Try once more.';return}
+  bbTrack('daylog_summary',{range,cached:!!data.cached});
+  document.querySelector('#sumBody').innerHTML=summaryHtml(data);
+  if(window.BBDropStrip)window.BBDropStrip.show('day-log');
+}
+document.querySelector('#sumWeek').addEventListener('click',()=>runSummary('week'));
+document.querySelector('#sumMonth').addEventListener('click',()=>runSummary('month'));
+(async()=>{
+  const{response,data}=await apiCall({action:'summaries'});
+  if(response.ok&&data.summaries&&data.summaries.length){
+    document.querySelector('#sumBody').innerHTML=data.summaries.map(summaryHtml).join('');
+  }
+})();
 </script>
 <?php endif; ?>
 <script src="/tools/drop-strip.js?v=20261027r2"></script></body></html>

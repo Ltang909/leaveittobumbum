@@ -636,16 +636,18 @@ export const TOOL_DOCS: ToolDoc[] = [
     href: "/tools/day-log/",
     icon: "/bum/icons/notes.png",
     summary:
-      "Day Log closes your day in a few minutes of talking. Six short prompts walk you through what got done, what got in the way, and what tomorrow needs. Bum Bum turns your words into clean jot notes, scores yesterday's top list against what you actually did, files the day in your account, and emails you the notes with tomorrow's priorities on top.",
+      "Day Log closes your day in a few minutes of talking. Three prompts above one box cover what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns your ramble into clean jot notes, scores yesterday's top list against what you actually did, files the day in your account, and emails you the notes with tomorrow's priorities on top. When a stretch of days piles up, week and month summaries pull out the accomplishments, learnings, and growth.",
     steps: [
-      "Open Day Log at the end of your day. The six prompts sit above one box: talk through all of them in one go, in any order, or type.",
-      "If yesterday had a list, it sits above the first prompt. Say honestly what landed and what did not.",
+      "Open Day Log at the end of your day. The three prompts sit above one box: talk through all of them in one go, in any order, or type.",
+      "If yesterday had a list, it sits above the box. Say honestly what landed and what did not.",
       "Press File my day. Bum Bum structures your words into jot notes and scores yesterday's list.",
       "Read the filed day on screen, and check your inbox: the same jot notes arrive by email with tomorrow's top list.",
       "Come back tomorrow. Today's list becomes the scorecard.",
+      "Any time, open Look back and summarize your week or month into highlights.",
     ],
     goodToKnow: [
       "One action per day filed. Re-filing the same day replaces the earlier version and costs no extra action.",
+      "Week and month summaries cost one action when freshly generated. Re-opening the same stretch of logs is free.",
       "Day Log needs a free account: the scorecard only works if yesterday's list is filed under you.",
       "Transcription tries your browser's live transcription first. On browsers without it, your recording is transcribed by Whisper and then discarded.",
       "Skip any prompt that does not fit the day. One answered prompt is enough to file.",

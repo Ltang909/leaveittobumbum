@@ -237,6 +237,132 @@ if ($action === 'context' || $action === 'history') {
     jsonResponse(['ok' => true, 'logs' => $logs]);
 }
 
+function dl_ensure_summaries(): void {
+    db()->exec("CREATE TABLE IF NOT EXISTS day_log_summaries (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id BIGINT UNSIGNED NOT NULL,
+        range_key VARCHAR(8) NOT NULL,
+        window_start DATE NOT NULL,
+        window_end DATE NOT NULL,
+        content_hash CHAR(40) NOT NULL,
+        content MEDIUMTEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        KEY idx_user_range (user_id, range_key, created_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+function dl_window_logs(int $userId, string $start, string $end): array {
+    $stmt = db()->prepare('SELECT log_date, structured FROM day_logs WHERE user_id = ? AND log_date >= ? AND log_date <= ? ORDER BY log_date ASC');
+    $stmt->execute([$userId, $start, $end]);
+    $out = [];
+    foreach ($stmt->fetchAll() as $row) {
+        $s = dl_structured($row);
+        if ($s !== null) $out[] = ['date' => $row['log_date'], 'structured' => $s];
+    }
+    return $out;
+}
+
+function dl_tallies(array $logs): array {
+    $t = ['days' => count($logs), 'done_total' => 0, 'scored_total' => 0, 'scored_done' => 0, 'scored_partial' => 0, 'scored_not' => 0];
+    foreach ($logs as $l) {
+        $s = $l['structured'];
+        $t['done_total'] += count($s['done'] ?? []);
+        foreach (($s['reflection'] ?? []) as $r) {
+            $t['scored_total']++;
+            if (($r['status'] ?? '') === 'done') $t['scored_done']++;
+            elseif (($r['status'] ?? '') === 'partial') $t['scored_partial']++;
+            else $t['scored_not']++;
+        }
+    }
+    return $t;
+}
+
+if ($action === 'summaries') {
+    $out = [];
+    try {
+        dl_ensure_summaries();
+        $stmt = db()->prepare('SELECT range_key, window_start, window_end, content FROM day_log_summaries WHERE user_id = ? ORDER BY created_at DESC LIMIT 6');
+        $stmt->execute([$userId]);
+        $seen = [];
+        foreach ($stmt->fetchAll() as $row) {
+            if (isset($seen[$row['range_key']])) continue;
+            $seen[$row['range_key']] = true;
+            $c = json_decode((string) $row['content'], true);
+            if (!is_array($c)) continue;
+            $out[] = ['range' => $row['range_key'], 'window_start' => $row['window_start'], 'window_end' => $row['window_end'], 'summary' => $c['summary'] ?? [], 'tallies' => $c['tallies'] ?? []];
+        }
+    } catch (Throwable $e) { /* summaries are best-effort */ }
+    jsonResponse(['ok' => true, 'summaries' => $out]);
+}
+
+if ($action === 'summarize') {
+    $range = (string) ($input['range'] ?? '');
+    if (!in_array($range, ['week', 'month'], true)) jsonResponse(['error' => 'Unknown range.'], 400);
+    $today = trim((string) ($input['todayLocal'] ?? ''));
+    if (!dl_valid_date($today)) jsonResponse(['error' => 'Invalid date.'], 422);
+    $start = date('Y-m-d', strtotime($today . ' -' . ($range === 'week' ? 6 : 29) . ' days'));
+    $logs = dl_window_logs($userId, $start, $today);
+    if (count($logs) < 2) {
+        jsonResponse(['error' => 'A ' . $range . ' summary needs at least 2 filed days in the window. You have ' . count($logs) . ' so far.'], 422);
+    }
+    $tallies = dl_tallies($logs);
+    $hashSrc = '';
+    foreach ($logs as $l) $hashSrc .= $l['date'] . '|' . json_encode($l['structured']) . ';';
+    $hash = sha1($hashSrc);
+    try { dl_ensure_summaries(); } catch (Throwable $e) { /* cache is best-effort */ }
+    try {
+        $stmt = db()->prepare('SELECT content FROM day_log_summaries WHERE user_id = ? AND range_key = ? AND content_hash = ? ORDER BY created_at DESC LIMIT 1');
+        $stmt->execute([$userId, $range, $hash]);
+        $hit = $stmt->fetch();
+        if ($hit) {
+            $c = json_decode((string) $hit['content'], true);
+            jsonResponse(['ok' => true, 'range' => $range, 'window_start' => $start, 'window_end' => $today, 'summary' => $c['summary'] ?? [], 'tallies' => $c['tallies'] ?? $tallies, 'cached' => true]);
+        }
+    } catch (Throwable $e) { /* fall through to generation */ }
+    $pre = subjectUsage($subject);
+    if (empty($pre['unlimited']) && ($pre['remaining'] ?? 0) <= 0) {
+        limitReachedResponse($subject, $pre);
+    }
+    $digest = [];
+    foreach ($logs as $l) {
+        $s = $l['structured'];
+        $line = '## ' . $l['date'];
+        foreach (['done' => 'Done', 'missed' => 'Missed', 'challenges' => 'Challenges', 'overcome' => 'Beating them', 'tomorrow' => 'Planned next', 'learnings' => 'Learnings'] as $k => $label) {
+            if (!empty($s[$k])) $line .= "\n" . $label . ': ' . implode('; ', array_slice($s[$k], 0, 8));
+        }
+        $digest[] = $line;
+    }
+    $digestText = implode("\n\n", $digest);
+    if (mb_strlen($digestText) > 55000) $digestText = mb_substr($digestText, -55000);
+    $system = 'You summarize a stretch of a person\'s day logs into highlights. '
+        . 'Output STRICT JSON only, no other text: {"accomplishments": [], "learnings": [], "growth": [], "themes": []}. '
+        . 'Jot notes: short fragments, the person\'s own words tightened. Never invent anything the logs do not support. '
+        . 'accomplishments: the concrete things they completed across the window, deduped, biggest first, up to 8. '
+        . 'learnings: the distinct lessons, distilled, up to 6. '
+        . 'growth: how they changed across the window, early days versus late days: follow-through on their own plans, recurring challenges beaten or still open, consistency or scope shifts, up to 5. If the logs show no clear change, say what stayed consistent instead, plainly. '
+        . 'themes: topics and challenges that kept coming up, up to 5. '
+        . 'No em dashes anywhere.';
+    $decoded = dl_groq_json($system, 'WINDOW: ' . $start . ' to ' . $today . ' (' . $tallies['days'] . " days logged)\n\n" . $digestText, 8000);
+    if ($decoded === null) $decoded = dl_groq_json($system, 'WINDOW: ' . $start . ' to ' . $today . ' (' . $tallies['days'] . " days logged)\n\n" . $digestText, 8000);
+    if ($decoded === null) {
+        jsonResponse(['error' => 'Bum Bum could not build that summary. Try once more.'], 502);
+    }
+    $summary = [
+        'accomplishments' => dl_clean_list($decoded['accomplishments'] ?? [], 8),
+        'learnings' => dl_clean_list($decoded['learnings'] ?? [], 6),
+        'growth' => dl_clean_list($decoded['growth'] ?? [], 5, 340),
+        'themes' => dl_clean_list($decoded['themes'] ?? [], 5),
+    ];
+    $count = consumeSubjectAction($subject, 'day-log', 'day-log-summary-' . $range . '-' . substr($hash, 0, 16));
+    if (!empty($count['limit_reached'])) limitReachedResponse($subject, $count);
+    try {
+        $stmt = db()->prepare('INSERT INTO day_log_summaries (user_id, range_key, window_start, window_end, content_hash, content) VALUES (?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$userId, $range, $start, $today, $hash, json_encode(['summary' => $summary, 'tallies' => $tallies])]);
+    } catch (Throwable $e) { /* best effort */ }
+    jsonResponse(['ok' => true, 'range' => $range, 'window_start' => $start, 'window_end' => $today, 'summary' => $summary, 'tallies' => $tallies, 'cached' => false, 'usage' => subjectUsage($subject)]);
+}
+
 if ($action === 'transcribe') {
     $audio = (string) ($input['audio'] ?? '');
     if (!preg_match('#^data:audio/(webm|ogg|mp3|mpeg|m4a|mp4|wav|x-wav);base64,#', $audio, $mm)) {
