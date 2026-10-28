@@ -8,6 +8,12 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/how-to-track-your-daily-work-progress/",
+    title: "How to Track Your Daily Work Progress (In Just 5 Minutes)",
+    description: "A daily work log takes five minutes: what to track, the minute-by-minute routine, how to review it weekly and monthly, and how Day Log scores yesterday's priorities for you.",
+    date: "October 28, 2026",
+  },
+  {
     href: "/blog/best-free-crm-small-business/",
     title: "12 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans)",
     description: "Compare 12 free CRM tools for small businesses by user limits, contact caps, features and upgrade traps. Includes HubSpot, Zoho, Attio and LeaveItToBumBum.",
