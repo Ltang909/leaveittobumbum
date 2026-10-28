@@ -522,4 +522,4 @@ function gcalUrl(e){
     (e.location?'&location='+encodeURIComponent(e.location):'')+
     (tz?'&ctz='+encodeURIComponent(tz):'');
 }
-</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261027r2"></script></body></html>
+</script></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261027r2"></script></body></html>
