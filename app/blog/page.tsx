@@ -8,6 +8,12 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/best-free-client-follow-up-tracker/",
+    title: "Best Free Client Follow-Up Trackers in 2026: 9 Tools Compared",
+    description: "Compare 9 free client follow-up trackers for freelancers and solopreneurs: LeaveItToBumBum Purrsuit, ClientPlot, Bigin, HubSpot, Zoho CRM, Capsule, Trello, FWD Tools and Google Sheets, by free plan, limits and best fit.",
+    date: "October 29, 2026",
+  },
+  {
     href: "/blog/how-to-track-your-daily-work-progress/",
     title: "How to Track Your Daily Work Progress (In Just 5 Minutes)",
     description: "A daily work log takes five minutes: what to track, the minute-by-minute routine, how to review it weekly and monthly, and how Day Log scores yesterday's priorities for you.",
