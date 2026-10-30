@@ -20,7 +20,7 @@ $shMeter = !empty($showMeter);
   function paint(u){
     if(!u||typeof u.unlimited==='undefined'&&typeof u.remaining==='undefined')return;
     var label=u.unlimited?'Unlimited actions':u.remaining+' of '+u.limit+' actions left';
-    document.querySelectorAll('.usage-pill').forEach(function(el){el.textContent=label;});
+    document.querySelectorAll('.usage-pill').forEach(function(el){el.textContent=label;el.classList.toggle('unlimited',!!u.unlimited);});
   }
   document.addEventListener('bb:usage',function(e){paint(e.detail);});
   var origFetch=window.fetch;
