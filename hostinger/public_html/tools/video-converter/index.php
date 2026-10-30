@@ -156,7 +156,17 @@ const MAX_SIZE=100*1024*1024;
 let videoFile=null,videoExt='',outFmt='mp4',ffmpeg=null,converting=false,convN=0;
 function setProg(p,txt){progWrap.classList.remove('hidden');progBar.style.width=Math.round(p*100)+'%';progText.textContent=txt;}
 function loadScript(src,timeoutMs){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;const to=setTimeout(()=>{s.remove();rej(new Error('script-timeout:'+src))},timeoutMs||90000);s.onload=()=>{clearTimeout(to);res()};s.onerror=()=>{clearTimeout(to);rej(new Error('script-load:'+src))};document.head.appendChild(s)})}
-async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
+let ffLogBuf=[],ffLogOn=false;
+async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();ff.on('log',({message})=>{if(ffLogOn){ffLogBuf.push(String(message));if(ffLogBuf.length>400)ffLogBuf.shift();}});onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
+async function probeVideo(ff,inName){
+  ffLogBuf=[];ffLogOn=true;
+  try{await ff.exec(['-i',inName]);}catch(e){}
+  ffLogOn=false;
+  const text=ffLogBuf.join('\n');
+  const vm=text.match(/Video:\s*([a-z0-9_]+)/i);
+  const am=text.match(/Audio:\s*([a-z0-9_]+)/i);
+  return{vcodec:vm?vm[1].toLowerCase():'',acodec:am?am[1].toLowerCase():''};
+}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/video-converter.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data};}
 function bindDrop(zone,input,onFile){zone.addEventListener('click',()=>input.click());zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});['dragover','dragenter'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('over')}));['dragleave','drop'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('over')}));zone.addEventListener('drop',e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)onFile(f)});input.addEventListener('change',()=>{const f=input.files&&input.files[0];if(f)onFile(f);input.value=''})}
 function extOf(name){const m=String(name||'').toLowerCase().match(/\.([a-z0-9]+)$/);return m?m[1]:'';}
@@ -183,7 +193,7 @@ document.querySelectorAll('#vcFormats .fmt-card').forEach(card=>{
 });
 const OUTS={
   mp4:{file:'output.mp4',mime:'video/mp4',dl:'mp4',args:['-c:v','libx264','-preset','veryfast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart']},
-  webm:{file:'output.webm',mime:'video/webm',dl:'webm',args:['-c:v','libvpx-vp9','-crf','30','-b:v','0','-c:a','libopus']},
+  webm:{file:'output.webm',mime:'video/webm',dl:'webm',args:['-c:v','libvpx-vp9','-deadline','good','-cpu-used','5','-crf','30','-b:v','0','-c:a','libopus']},
   gif:{file:'output.gif',mime:'image/gif',dl:'gif',args:null}
 };
 convertBtn.addEventListener('click',async()=>{
@@ -211,7 +221,17 @@ convertBtn.addEventListener('click',async()=>{
       if(code!==0)throw new Error('gif-exit-'+code);
       try{await ff.deleteFile('palette.png')}catch(e){}
     }else{
-      const code=await ff.exec(['-i',inName].concat(out.args,[out.file]));
+      setProg(0.2,'Checking the video...');
+      const probe=await probeVideo(ff,inName);
+      const canCopy=(outFmt==='mp4'&&probe.vcodec==='h264'&&(probe.acodec===''||probe.acodec==='aac'))||(outFmt==='webm'&&(probe.vcodec==='vp8'||probe.vcodec==='vp9'||probe.vcodec==='av1')&&(probe.acodec===''||probe.acodec==='opus'||probe.acodec==='vorbis'));
+      let code;
+      if(canCopy){
+        setProg(0.3,'No re-encode needed. Repacking as '+outFmt.toUpperCase()+'...');
+        code=await ff.exec(['-i',inName,'-c','copy'].concat(outFmt==='mp4'?['-movflags','faststart']:[],[out.file]));
+        if(code!==0){code=await ff.exec(['-i',inName].concat(out.args,[out.file]));}
+      }else{
+        code=await ff.exec(['-i',inName].concat(out.args,[out.file]));
+      }
       if(code!==0)throw new Error('encode-exit-'+code);
     }
     step='saving';
