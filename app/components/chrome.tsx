@@ -26,7 +26,7 @@ function ActionsPill() {
   if (!usage) return null;
   if (usage.unlimited) {
     return (
-      <a className="usage-pill" href="/account/">
+      <a className="usage-pill unlimited" href="/account/">
         Unlimited actions
       </a>
     );
