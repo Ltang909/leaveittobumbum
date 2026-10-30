@@ -22,7 +22,8 @@ foreach ($rows as $row) {
     $checked++;
     $requestId = (int) $row['id'];
     $customerId = (string) ($row['stripe_customer_id'] ?? '');
-    $priceId = $row['plan'] === 'operator' ? $stripe['operator_price'] : $stripe['helper_price'];
+    if (($row['plan'] ?? '') !== 'operator') { $errors[] = 'Request ' . $requestId . ' belongs to a non-Operator plan; skipped.'; continue; }
+    $priceId = $stripe['operator_price'];
     try {
         if ($customerId === '') throw new RuntimeException('No Stripe customer for user ' . $row['user_id']);
         $price = stripeRequest('GET', '/v1/prices/' . urlencode((string) $priceId));
