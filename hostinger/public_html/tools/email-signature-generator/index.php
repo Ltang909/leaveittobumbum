@@ -4,13 +4,13 @@
 <meta property="og:title" content="Email Signature Maker | Build a Professional Email Signature | Leave It to Bum Bum">
 <meta property="og:description" content="Fill in your details, pick a layout, copy a professional email signature into Gmail or Outlook. Built in your browser, nothing uploaded.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://leaveittobumbum.com/tools/email-signature/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/email-signature.png">
+<meta property="og:url" content="https://leaveittobumbum.com/tools/email-signature-generator/">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/email-signature-generator.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Email Signature Maker | Leave It to Bum Bum">
 <meta name="twitter:description" content="Fill in your details, pick a layout, copy a professional email signature into Gmail or Outlook. Built in your browser, nothing uploaded.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/email-signature.png">
-<link rel="canonical" href="https://leaveittobumbum.com/tools/email-signature/">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/email-signature-generator.png">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/email-signature-generator/">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -24,7 +24,7 @@
     "priceCurrency": "USD"
   },
   "description": "Build a professional email signature in your browser. Fill in your details, pick a layout, copy it into Gmail or Outlook. Nothing is uploaded. Free to try.",
-  "url": "https://leaveittobumbum.com/tools/email-signature/"
+  "url": "https://leaveittobumbum.com/tools/email-signature-generator/"
 }
 </script>
 <script type="application/ld+json">
@@ -76,7 +76,7 @@
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Email Signature Maker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Email Signature Maker","item":"https://leaveittobumbum.com/tools/email-signature/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Email Signature Maker","item":"https://leaveittobumbum.com/tools/email-signature-generator/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;margin-top:20px}
 .sig-card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:16px}
@@ -100,15 +100,18 @@ input[type=color].pick{width:36px;height:36px;border:2px solid var(--ink);border
 .export-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .export-row .button{min-height:48px}
 .hint{font-size:13px;opacity:.7;margin:10px 0 0}
-.guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.guide-grid h3{margin:0 0 8px;font-size:16px}
-.guide-grid ol{margin:0;padding-left:20px}
-.guide-grid li{margin-bottom:6px}
-@media(max-width:900px){.sig-grid{grid-template-columns:1fr}.sig-preview-wrap{position:static}.guide-grid{grid-template-columns:1fr}}
+.guide-grid{display:block}
+.guide-row{display:grid;grid-template-columns:130px 1fr;gap:4px 16px;padding:14px 0;border-top:1px solid var(--line)}
+.guide-row:first-child{padding-top:2px;border-top:0}
+.guide-row h3{margin:0;font-size:16px}
+.guide-row ol{margin:0;padding-left:20px}
+.guide-row li{margin-bottom:4px}
+@media(max-width:560px){.guide-row{grid-template-columns:1fr}}
+@media(max-width:900px){.sig-grid{grid-template-columns:1fr}.sig-preview-wrap{position:static}}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Email Signature Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/email-signature.png" alt="Email Signature Maker"><h1>Sign off like a pro.</h1><p class="lede bb-desc">Email Signature Maker builds a clean, professional email signature right in your browser. Fill in your details, pick a layout, and copy it straight into Gmail or Outlook. No signature subscription, and nothing you type leaves your device.</p>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/email-signature/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Email Signature Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/email-signature-generator.png" alt="Email Signature Maker"><h1>Sign off like a pro.</h1><p class="lede bb-desc">Email Signature Maker builds a clean, professional email signature right in your browser. Fill in your details, pick a layout, and copy it straight into Gmail or Outlook. No signature subscription, and nothing you type leaves your device.</p>
+<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/email-signature-generator/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
 <div class="sig-grid">
 <form class="sig-card" id="sigForm" autocomplete="off">
 <h2>Your details</h2>
@@ -144,9 +147,9 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Put it in your email</h2>
 <div class="guide-grid">
-<div><h3>Gmail</h3><ol><li>Open Gmail and click the gear icon, then See all settings.</li><li>On the General tab, scroll to Signature and click Create new.</li><li>Click in the signature box and paste.</li><li>Scroll down and Save Changes.</li></ol></div>
-<div><h3>Outlook</h3><ol><li>Open Settings, then Mail, then Compose and reply.</li><li>Click New signature and paste into the box.</li><li>Pick it as the default for new messages.</li><li>Save.</li></ol></div>
-<div><h3>Apple Mail</h3><ol><li>Open Settings, then Signatures.</li><li>Pick your account and click + to add one.</li><li>Paste into the signature box.</li><li>If the fonts shift, untick Always match my default message font.</li></ol></div>
+<div class="guide-row"><h3>Gmail</h3><ol><li>Open Gmail and click the gear icon, then See all settings.</li><li>On the General tab, scroll to Signature and click Create new.</li><li>Click in the signature box and paste.</li><li>Scroll down and Save Changes.</li></ol></div>
+<div class="guide-row"><h3>Outlook</h3><ol><li>Open Settings, then Mail, then Compose and reply.</li><li>Click New signature and paste into the box.</li><li>Pick it as the default for new messages.</li><li>Save.</li></ol></div>
+<div class="guide-row"><h3>Apple Mail</h3><ol><li>Open Settings, then Signatures.</li><li>Pick your account and click + to add one.</li><li>Paste into the signature box.</li><li>If the fonts shift, untick Always match my default message font.</li></ol></div>
 </div>
 </section>
 <script>
@@ -237,8 +240,8 @@ async function spendSignatureAction(){
   if(exported)return true;
   try{
     const s=await fetch('/api/session.php').then(r=>r.json());
-    const key='email-signature-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);
-    const res=await fetch('/api/tools/email-signature.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:s.csrf,idempotencyKey:key})});
+    const key='email-signature-generator-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);
+    const res=await fetch('/api/tools/email-signature-generator.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:s.csrf,idempotencyKey:key})});
     const respData=await res.json().catch(()=>({}));
     if(res.status===402){
       if(respData&&respData.signup_required)return false;
@@ -248,7 +251,7 @@ async function spendSignatureAction(){
     if(!res.ok){alert(respData.error||'Could not save. Try again.');return false}
     exported=true;
     if(respData&&respData.usage)document.dispatchEvent(new CustomEvent('bb:usage',{detail:respData.usage}));
-    if(window.BBDropStrip)window.BBDropStrip.show('email-signature');
+    if(window.BBDropStrip)window.BBDropStrip.show('email-signature-generator');
     return true;
   }catch(e){alert('Could not reach Bum Bum. Check your connection and try again.');return false}
 }
@@ -284,7 +287,7 @@ document.querySelector('#dlBtn').addEventListener('click',async()=>{
   if(!await guardExport())return;
   const blob=new Blob([buildSignature(false)],{type:'text/html'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='email-signature.html';document.body.appendChild(a);a.click();a.remove();
+  const a=document.createElement('a');a.href=url;a.download='email-signature-generator.html';document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),4000);
   setStatus('Downloaded. Open the file, copy what you see, and paste it into your email settings.');
   try{bbTrack('signature_export',{how:'download'})}catch(e){}
@@ -296,7 +299,7 @@ document.querySelector('#customColor').addEventListener('input',e=>{accent=e.tar
 document.querySelector('#sigForm').addEventListener('submit',e=>e.preventDefault());
 loadLocal();
 render();
-try{bbTrack('tool_opened',{tool:'email-signature'})}catch(e){}
+try{bbTrack('tool_opened',{tool:'email-signature-generator'})}catch(e){}
 </script><section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>

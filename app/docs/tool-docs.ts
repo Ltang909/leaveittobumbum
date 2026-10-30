@@ -671,10 +671,10 @@ export const TOOL_DOCS: ToolDoc[] = [
     updated: "October 28, 2026",
   },
   {
-    key: "email-signature",
+    key: "email-signature-generator",
     name: "Email Signature Maker",
-    href: "/tools/email-signature/",
-    icon: "/bum/icons/email-signature.png",
+    href: "/tools/email-signature-generator/",
+    icon: "/bum/icons/email-signature-generator.png",
     summary:
       "Email Signature Maker builds a professional email signature in your browser. Fill in your name, title, company, and contact details, pick from four layouts and an accent color, and watch the preview update as you type. Copy the finished signature formatted, straight into Gmail, Outlook, or Apple Mail settings, or download it as an HTML file. There is no signature subscription and nothing to install.",
     steps: [
