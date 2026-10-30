@@ -127,6 +127,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="fld"><label for="fX">X</label><input id="fX" type="url" placeholder="https://x.com/jane"></div>
 <div class="fld"><label for="fFacebook">Facebook</label><input id="fFacebook" type="url" placeholder="https://www.facebook.com/jane"></div>
 <div class="fld"><label for="fYoutube">YouTube</label><input id="fYoutube" type="url" placeholder="https://www.youtube.com/@jane"></div>
+<div class="fld"><label for="fGithub">GitHub</label><input id="fGithub" type="url" placeholder="https://github.com/jane"></div>
 <p class="grp">Layout</p>
 <div class="seg" role="group" aria-label="Signature layout"><button type="button" data-tpl="classic" class="on">Classic</button><button type="button" data-tpl="compact">Compact</button><button type="button" data-tpl="sidebar">Sidebar</button><button type="button" data-tpl="photo">Photo</button></div>
 <p class="grp">Accent color</p>
@@ -149,13 +150,13 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </div>
 </section>
 <script>
-const FIELDS=['fName','fTitle','fCompany','fEmail','fPhone','fWebsite','fPhoto','fLinkedin','fInstagram','fX','fFacebook','fYoutube'];
+const FIELDS=['fName','fTitle','fCompany','fEmail','fPhone','fWebsite','fPhoto','fLinkedin','fInstagram','fX','fFacebook','fYoutube','fGithub'];
 let tpl='classic',accent='#b3541e',exported=false;
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function val(id){const el=document.querySelector('#'+id);return el?el.value.trim():''}
 function siteDisplay(u){return u.replace(/^https?:\/\//i,'').replace(/\/+$/,'')}
 function siteHref(u){return /^https?:\/\//i.test(u)?u:'https://'+u}
-function socials(){const out=[];const map=[['fLinkedin','LinkedIn'],['fInstagram','Instagram'],['fX','X'],['fFacebook','Facebook'],['fYoutube','YouTube']];for(const[id,label]of map){const u=val(id);if(u)out.push([label,siteHref(u)])}return out}
+function socials(){const out=[];const map=[['fLinkedin','LinkedIn'],['fInstagram','Instagram'],['fX','X'],['fFacebook','Facebook'],['fYoutube','YouTube'],['fGithub','GitHub']];for(const[id,label]of map){const u=val(id);if(u)out.push([label,siteHref(u)])}return out}
 function data(preview){
   const ph=(v,f)=>preview&&!v?'<span style="opacity:.45">'+esc(f)+'</span>':esc(v);
   return {
