@@ -46,7 +46,7 @@ export const GUIDES: GuideDoc[] = [
     title: "What is an action?",
     summary:
       "An action is one completed result: a trimmed video, a read receipt, a chased invoice. Clicking around, previewing, and setting things up are free. You only spend an action when Bum Bum finishes something useful, and if a job fails, it costs nothing.",
-    updated: U,
+    updated: "October 30, 2026",
     blocks: [
       { h: "The rules of the meter" },
       { ul: [
@@ -58,7 +58,7 @@ export const GUIDES: GuideDoc[] = [
       { h: "Guests" },
       { p: "Guests get a small lifetime allowance of actions to feel the tools out, no card and no signup. When it runs out, a free account refills you monthly. Creating the account is the whole pitch: your trackers and logs need somewhere to live." },
       { h: "Running out mid-month" },
-      { p: "Tools pause politely and tell you. On a paid plan you can top up with an action pack, $6 per 1,000 extra actions, or simply wait for the reset. Your data and settings stay put either way. Plan allowances are on the [plans page](/docs/plans/)." },
+      { p: "Tools pause politely and tell you. On Poke around you can wait for the reset, or move to Operator, which never runs out. Your data and settings stay put either way. Plan allowances are on the [plans page](/docs/plans/)." },
     ],
   },
   {
@@ -66,14 +66,13 @@ export const GUIDES: GuideDoc[] = [
     section: "Getting started",
     title: "Plans and pricing",
     summary:
-      "Three plans, one shared meter. Poke around is free with 75 actions a month. Helper is $12 a month with 1,500 actions. Operator is $49 a month with 6,000 actions and the 36-hour custom tool promise.",
-    updated: U,
+      "Two plans, one shared meter. Poke around is free with 75 actions a month. Operator is $49 a month with unlimited actions, unlimited team members, and the 36-hour custom tool promise.",
+    updated: "October 30, 2026",
     blocks: [
       { h: "The plans" },
       { ul: [
         "**Poke around, $0.** 75 actions a month, all current tools, 1 workspace, and the community request queue. No card needed.",
-        "**Helper, $12/mo.** 1,500 actions a month, everything in Poke around, 3 team members, email support, and action packs at $6 per extra 1,000.",
-        "**Operator, $49/mo.** 6,000 actions a month, everything in Helper, 10 team members, and one scoped tool request each month with the [36-hour guarantee](/docs/the-36-hour-promise/).",
+                "**Operator, $49/mo.** Unlimited actions, everything in Poke around, unlimited team members, and one scoped tool request each month with the [36-hour guarantee](/docs/the-36-hour-promise/).",
       ] },
       { h: "Switching, pausing, cancelling" },
       { p: "Upgrades apply immediately; downgrades take effect at the next billing date. Pause or cancel anytime from your account page, through the billing portal, in about two clicks. No contracts, no cancellation maze, and you keep what you paid for until the end of the billing period. The full pricing page, with the meter explained, is [here](/pricing/)." },
@@ -84,17 +83,17 @@ export const GUIDES: GuideDoc[] = [
     section: "Getting started",
     title: "Teams and seats",
     summary:
-      "Helper workspaces fit 3 team members and Operator fits 10. Everyone on the team draws from the same monthly action bucket, and the plan is billed to the team owner.",
-    updated: U,
+      "Operator workspaces fit unlimited team members, and Operator actions are unlimited too. The plan is billed to the team owner.",
+    updated: "October 30, 2026",
     blocks: [
       { h: "How teams work" },
       { ul: [
-        "**Shared bucket.** Every member's finished work draws from the one monthly allowance. There is no per-seat action math.",
+        "**Shared meter.** Every member's finished work draws from the owner's plan: one monthly allowance on Poke around, unlimited on Operator. There is no per-seat action math.",
         "**Invite by link.** Invite people from your account page with a shareable link. No email back-and-forth required.",
         "**One bill.** The plan is billed to the team owner. Members never see a payment screen.",
         "**Shared work.** Trackers and logs belong to the workspace, so the team sees the same subscription list, the same follow-ups, the same receipt log.",
       ] },
-      { p: "Free (Poke around) workspaces are solo: 1 workspace, just you. Upgrading to Helper or Operator is what opens the seats up." },
+      { p: "Free (Poke around) workspaces are solo: 1 workspace, just you. Upgrading to Operator is what opens the seats up." },
     ],
   },
   {
@@ -260,12 +259,12 @@ export const GUIDES: GuideDoc[] = [
     title: "Questions, probably answered",
     summary:
       "The questions everybody asks, answered the way we would want them answered: shortly, and with the actual number in it.",
-    updated: U,
+    updated: "October 30, 2026",
     blocks: [
       { faq: [
         ["Do I need an account?", "No. Guests can use the tools right away with a small lifetime allowance of actions. A free account gives you 75 actions a month and somewhere for your trackers, logs, and packs to live."],
         ["Do unused actions roll over?", "No. The bucket refills fresh each month, which is how we keep the prices this low."],
-        ["What happens if I hit 100% mid-month?", "Tools pause politely and tell you. Top up with an action pack (paid plans) or wait for the reset. Your data and settings stay put either way."],
+        ["What happens if I hit 100% mid-month?", "Tools pause politely and tell you. Wait for the reset, or move to Operator, which never runs out. Your data and settings stay put either way."],
         ["Can I switch plans later?", "Yes. Upgrades apply immediately, downgrades at the next billing date. Either way takes about ten seconds."],
         ["Is my data used to train AI models?", "No. Your workspace contents are yours. Most files never even leave your device."],
         ["How do I cancel?", "From your account page, through the billing portal: two clicks. You keep what you paid for until the end of the billing period."],
@@ -280,10 +279,10 @@ export const GUIDES: GuideDoc[] = [
     title: "When something goes sideways",
     summary:
       "Most Bum Bum problems have boring causes and quick fixes. Here are the ones we actually see, in the order we see them.",
-    updated: U,
+    updated: "October 30, 2026",
     blocks: [
       { h: "“Out of actions”" },
-      { p: "As a guest, you have used up the lifetime guest allowance; a free account refills you with 75 actions a month. On an account, your monthly bucket is spent: top up with an action pack on a paid plan, or wait for your billing-date reset. Your data is never locked or deleted for this. See [What is an action?](/docs/actions/)." },
+      { p: "As a guest, you have used up the lifetime guest allowance; a free account refills you with 75 actions a month. On an account, your monthly bucket is spent: wait for your billing-date reset, or move to Operator and stop counting. Your data is never locked or deleted for this. See [What is an action?](/docs/actions/)." },
       { h: "A photo will not read (receipts, posters, meals)" },
       { ul: [
         "Flat surface, good light, and the subject filling the frame fixes most failed reads.",

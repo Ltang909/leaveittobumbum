@@ -95,7 +95,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .light .kicker { color:var(--yellow); }
 .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:0; border:2px solid white; }
 .steps article { padding:36px; min-height:245px; border-right:2px solid white; }.steps article:last-child{border:0}.steps b { color:var(--yellow); }.steps h3 { font-family:var(--font-display),serif; font-size:1.7rem; margin:60px 0 5px; }.steps p{margin:0;max-width:240px}
-.plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; align-items:stretch; }
+.plan-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; align-items:stretch; max-width:920px; margin-inline:auto; }
 .plan { position:relative; border:var(--line); background:white; border-radius:10px; padding:34px; display:flex; flex-direction:column; box-shadow:6px 6px 0 var(--ink); }
 .plan.featured { background:var(--yellow); transform:rotate(1deg); }
 .popular { position:absolute; right:22px; top:-15px; background:var(--orange); border:var(--line); padding:6px 10px; font-size:.67rem; font-weight:1000; transform:rotate(3deg); }
