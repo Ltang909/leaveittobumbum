@@ -8,6 +8,12 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/how-to-add-an-email-signature/",
+    title: "How to Add an Email Signature in Gmail, Outlook, and Apple Mail",
+    description: "Add a professional email signature in minutes: what to include, how to build one free, the exact steps for Gmail, Outlook, and Apple Mail, and fixes for images that do not show.",
+    date: "October 30, 2026",
+  },
+  {
     href: "/blog/best-free-client-follow-up-tracker/",
     title: "Best Free Client Follow-Up Trackers in 2026: 9 Tools Compared",
     description: "Compare 9 free client follow-up trackers for freelancers and solopreneurs: LeaveItToBumBum Purrsuit, ClientPlot, Bigin, HubSpot, Zoho CRM, Capsule, Trello, FWD Tools and Google Sheets, by free plan, limits and best fit.",

@@ -94,6 +94,7 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   hearsay: "e.g. Just your brand name. He checks what the AIs say about it…",
   "video-converter": "Drop the video here to convert it…",
   "day-log": "e.g. Finished the proposal, the client call ran long, tomorrow I chase the invoice…",
+  "email-signature-generator": "e.g. Make me a clean email signature for Gmail…",
 };
 
 // The task chips under the desk: a pool of twenty, one per tool. When a
