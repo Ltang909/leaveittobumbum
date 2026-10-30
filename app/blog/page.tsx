@@ -8,6 +8,36 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/descript-alternatives-2026/",
+    title: "5 Best Descript Alternatives in 2026 (Free & Simple Options)",
+    description: "Explore five Descript alternatives in 2026 for screen recording, video editing, and content creation, including simpler tools for everyday recordings.",
+    date: "October 30, 2026",
+  },
+  {
+    href: "/blog/rocket-money-alternatives-2026/",
+    title: "5 Best Rocket Money Alternatives in 2026 to Track Subscriptions",
+    description: "Looking for a Rocket Money alternative? Compare five subscription trackers and budgeting apps, including simple options for managing recurring payments.",
+    date: "October 30, 2026",
+  },
+  {
+    href: "/blog/hubspot-crm-alternatives-2026/",
+    title: "5 Best HubSpot CRM Alternatives in 2026 for Small Businesses",
+    description: "Looking for a simpler HubSpot CRM alternative? Compare five tools for contact management, client follow-ups, and small business sales.",
+    date: "October 30, 2026",
+  },
+  {
+    href: "/blog/otter-ai-alternatives-2026/",
+    title: "5 Best Otter.ai Alternatives in 2026 (Including Free Options)",
+    description: "Need a simpler alternative to Otter.ai? Compare five transcription and voice note tools for meetings, personal notes, and everyday ideas.",
+    date: "October 30, 2026",
+  },
+  {
+    href: "/blog/loom-alternatives-2026/",
+    title: "5 Best Loom Alternatives in 2026 (Free & Paid)",
+    description: "Looking for a Loom alternative? Compare five screen recording tools for 2026, including free options for freelancers, small businesses, and teams.",
+    date: "October 30, 2026",
+  },
+  {
     href: "/blog/how-to-add-an-email-signature/",
     title: "How to Add an Email Signature in Gmail, Outlook, and Apple Mail",
     description: "Add a professional email signature in minutes: what to include, how to build one free, the exact steps for Gmail, Outlook, and Apple Mail, and fixes for images that do not show.",
