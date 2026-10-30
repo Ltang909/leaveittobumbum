@@ -83,6 +83,7 @@ export function SiteFooter() {
         <b>Bum Bum</b>
         <a href="/about/">About</a>
         <a href="/team/">Team</a>
+        <a href="/blog/">Blog</a>
         <a href="/docs/">Docs</a>
         <a href="/ai-instructions/">AI Instructions</a>
       </nav>
