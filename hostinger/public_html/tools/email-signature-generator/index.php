@@ -249,7 +249,7 @@ async function spendSignatureAction(){
     const respData=await res.json().catch(()=>({}));
     if(res.status===402){
       if(respData&&respData.signup_required)return false;
-      document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">Copying or downloading your signature uses one action. Helper gives you 1,500 actions for $12/month.</p><p><a class="button" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" href="/account/">See your usage</a></p></div>';
+      document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">Copying or downloading your signature uses one action. Operator gives you unlimited actions for $49/month.</p><p><a class="button secondary" href="/account/">See your usage</a></p></div>';
       return false;
     }
     if(!res.ok){alert(respData.error||'Could not save. Try again.');return false}
