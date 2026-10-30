@@ -207,7 +207,18 @@ let selIn=0,selOut=0,placements=[],placeN=0,origPct=100,mp3Pct=100;
 let mp3Buffer=null,actx=null,origSrcNode=null,origGainNode=null,mp3GainNode=null,activeSrcs=[],previewOn=false;
 function setProg(p,txt){progWrap.classList.remove('hidden');progBar.style.width=Math.round(p*100)+'%';progText.textContent=txt;}
 function loadScript(src,timeoutMs){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;const to=setTimeout(()=>{s.remove();rej(new Error('script-timeout:'+src))},timeoutMs||90000);s.onload=()=>{clearTimeout(to);res()};s.onerror=()=>{clearTimeout(to);rej(new Error('script-load:'+src))};document.head.appendChild(s)})}
-async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
+let ffLogBuf=[],ffLogOn=false;
+function ffLogTail(n){return ffLogBuf.slice(-(n||12)).join('\n');}
+async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();ff.on('log',({message})=>{if(ffLogOn){ffLogBuf.push(String(message));if(ffLogBuf.length>400)ffLogBuf.shift();}});onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
+async function probeVideo(ff,vName){
+  ffLogBuf=[];ffLogOn=true;
+  try{await ff.exec(['-i',vName]);}catch(e){}
+  ffLogOn=false;
+  const text=ffLogBuf.join('\n');
+  const vm=text.match(/Video:\s*([a-z0-9_]+)/i);
+  const dm=text.match(/Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)/);
+  return{vcodec:vm?vm[1].toLowerCase():'',hasAudio:/:\s*Audio:\s*[a-z0-9_]+/i.test(text),durSec:dm?((+dm[1])*3600+(+dm[2])*60+(+dm[3])):0};
+}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/video-mp3-overlay.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data};}
 function bindDrop(zone,input,onFile){zone.addEventListener('click',()=>input.click());zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});['dragover','dragenter'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('over')}));['dragleave','drop'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('over')}));zone.addEventListener('drop',e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)onFile(f)});input.addEventListener('change',()=>{const f=input.files&&input.files[0];if(f)onFile(f);input.value=''})}
 function extOf(name){const m=String(name||'').toLowerCase().match(/\.([a-z0-9]+)$/);return m?m[1]:'';}
@@ -345,10 +356,10 @@ $('vmPreviewBtn').addEventListener('click',()=>{
 });
 /* ---- Render ---- */
 function volStr(pct){return String(Math.round(pct)/100);}
-function buildFilter(withOrig){
+function buildFilter(withOrig,baseSec){
   const parts=[];
   if(withOrig)parts.push('[0:a]aresample=44100,aformat=channel_layouts=stereo,volume='+volStr(origPct)+'[aorig]');
-  else parts.push('anullsrc=channel_layout=stereo:sample_rate=44100,atrim=0:'+(videoDur||0).toFixed(3)+',asetpts=PTS-STARTPTS,volume='+volStr(origPct)+'[aorig]');
+  else{const trim=(baseSec>0)?',atrim=0:'+baseSec.toFixed(3):'';parts.push('anullsrc=channel_layout=stereo:sample_rate=44100'+trim+',asetpts=PTS-STARTPTS,volume='+volStr(origPct)+'[aorig]');}
   placements.forEach((p,i)=>{
     const d=Math.round(p.at*1000);
     parts.push('[1:a]atrim=start='+p.sin.toFixed(3)+':end='+p.sout.toFixed(3)+',asetpts=PTS-STARTPTS,aresample=44100,aformat=channel_layouts=stereo,volume='+volStr(mp3Pct)+',adelay='+d+'|'+d+'[s'+i+']');
@@ -381,19 +392,28 @@ renderBtn.addEventListener('click',async()=>{
     step='rendering';
     const X264=['-c:v','libx264','-preset','veryfast','-crf','23'];
     const COPY=['-c:v','copy'];
-    const attempts=[
-      {filter:buildFilter(true),vargs:COPY},
-      {filter:buildFilter(true),vargs:X264},
-      {filter:buildFilter(false),vargs:COPY},
-      {filter:buildFilter(false),vargs:X264}
+    setProg(0.17,'Checking the video...');
+    const probe=await probeVideo(ff,vName);
+    const effDur=probe.durSec>0?probe.durSec:((isFinite(videoDur)&&videoDur>0)?videoDur:0);
+    const wanted=[
+      {withOrig:probe.hasAudio,copy:probe.vcodec==='h264'},
+      {withOrig:probe.hasAudio,copy:false},
+      {withOrig:!probe.hasAudio,copy:false}
     ];
-    let code=-1;
+    const seenK={},attempts=wanted.filter(a=>{const k=a.withOrig+'|'+a.copy;if(seenK[k])return false;seenK[k]=1;return true;});
+    let code=-1,lastTail='';
+    ffLogOn=true;
     for(const att of attempts){
       try{await ff.deleteFile('output.mp4')}catch(e){}
-      code=await ff.exec(['-i',vName,'-i',mName,'-filter_complex',att.filter,'-map','0:v:0','-map','[aout]'].concat(att.vargs,['-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']));
+      ffLogBuf=[];
+      const outArgs=['-filter_complex',buildFilter(att.withOrig,effDur),'-map','0:v:0','-map','[aout]'].concat(att.copy?COPY:X264,['-c:a','aac','-b:a','128k','-movflags','faststart']);
+      if(!att.withOrig&&!(effDur>0))outArgs.push('-shortest');
+      code=await ff.exec(['-i',vName,'-i',mName].concat(outArgs,['output.mp4']));
+      lastTail=ffLogTail(12);
       if(code===0)break;
     }
-    if(code!==0)throw new Error('encode-exit-'+code);
+    ffLogOn=false;
+    if(code!==0){const err=new Error('encode-exit-'+code);err.ffmpegTail=lastTail;throw err;}
     step='saving';
     const data=await ff.readFile('output.mp4');
     try{await ff.deleteFile(vName);await ff.deleteFile(mName);await ff.deleteFile('output.mp4')}catch(e){}
@@ -428,7 +448,12 @@ renderBtn.addEventListener('click',async()=>{
     }else if(step==='reading'){
       renderErr.textContent='Bum Bum could not read those files. Try an MP4 video and an MP3?';
     }else if(step==='rendering'){
-      renderErr.textContent='The mix failed on that video. It might be an unusual format or too large for this device. Try an MP4 under 100 MB?';
+      const tail=String((e&&e.ffmpegTail)||'');
+      const tlines=tail.split('\n').map(s=>s.trim()).filter(Boolean);
+      const lastLine=tlines.length?tlines[tlines.length-1].slice(0,140):'';
+      if(tail)console.error('Video MP3 Overlay render failed:\n'+tail);
+      bbTrack('action_failed',{tool:TOOL_KEY,stage:'render',reason:lastLine,mb:Math.round(videoFile.size/1048576)});
+      renderErr.textContent='The mix failed on that video'+(lastLine?' (the engine said: '+lastLine+')':'')+'. The full reason was logged so we can fix this properly. An MP4 of the same clip usually works.';
     }else{
       renderErr.textContent='Something went wrong finishing the mix. Try again?';
     }

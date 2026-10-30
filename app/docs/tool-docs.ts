@@ -588,6 +588,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "One finished conversion uses one action.",
       "Animated GIFs are capped at 15 seconds, because a GIF longer than that is a video wearing a costume.",
       "Rendering happens on your device, so long videos convert at the speed of your computer.",
+      "If your video is already in the format you pick, the converter repacks it without re-encoding, which is much faster.",
     ],
     data: "Your video never leaves your device. Conversion happens entirely in your browser.",
     tips: [
@@ -598,7 +599,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Does my video get uploaded anywhere?", "No. The whole conversion happens in your browser."],
       ["Why is my GIF only 15 seconds?", "GIFs balloon in size fast. Fifteen seconds keeps the file shareable; for anything longer, convert to MP4 instead."],
     ],
-    updated: U,
+    updated: "October 30, 2026",
   },
   {
     key: "video-mp3-overlay",
@@ -618,6 +619,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "One finished mix uses one action. Placing snippets and previewing the mix are free.",
       "Snippets can repeat, overlap the original audio, and each source has its own volume.",
       "Nothing gets uploaded; the render happens in your browser.",
+      "A video with no sound of its own still mixes fine. Your snippets play over silence where its track would be.",
     ],
     data: "Your video and MP3 never leave your device. The mix is rendered in your browser and Bum Bum keeps no copy of either file.",
     tips: [
@@ -628,7 +630,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Do my video and MP3 get uploaded anywhere?", "No. Everything happens in your browser."],
       ["Can I use the same part of the MP3 more than once?", "Yes. Snip it once, pin it as many times as the video needs."],
     ],
-    updated: U,
+    updated: "October 30, 2026",
   },
   {
     key: "day-log",
