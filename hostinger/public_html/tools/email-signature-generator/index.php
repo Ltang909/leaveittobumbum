@@ -5,11 +5,11 @@
 <meta property="og:description" content="Fill in your details, pick a layout, copy a professional email signature into Gmail or Outlook. Built in your browser, nothing uploaded.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/email-signature-generator/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/email-signature-generator.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/email-signature-generator-sticker.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Email Signature Maker | Leave It to Bum Bum">
 <meta name="twitter:description" content="Fill in your details, pick a layout, copy a professional email signature into Gmail or Outlook. Built in your browser, nothing uploaded.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/email-signature-generator.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/email-signature-generator-sticker.png">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/email-signature-generator/">
 <script type="application/ld+json">
 {
@@ -110,7 +110,7 @@ input[type=color].pick{width:36px;height:36px;border:2px solid var(--ink);border
 @media(max-width:900px){.sig-grid{grid-template-columns:1fr}.sig-preview-wrap{position:static}}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Email Signature Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/email-signature-generator.png" alt="Email Signature Maker"><h1>Sign off like a pro.</h1><p class="lede bb-desc">Email Signature Maker builds a clean, professional email signature right in your browser. Fill in your details, pick a layout, and copy it straight into Gmail or Outlook. No signature subscription, and nothing you type leaves your device.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Email Signature Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/email-signature-generator-sticker.png" alt="Email Signature Maker"><h1>Sign off like a pro.</h1><p class="lede bb-desc">Email Signature Maker builds a clean, professional email signature right in your browser. Fill in your details, pick a layout, and copy it straight into Gmail or Outlook. No signature subscription, and nothing you type leaves your device.</p>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/email-signature-generator/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
 <div class="sig-grid">
 <form class="sig-card" id="sigForm" autocomplete="off">
@@ -159,7 +159,11 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function val(id){const el=document.querySelector('#'+id);return el?el.value.trim():''}
 function siteDisplay(u){return u.replace(/^https?:\/\//i,'').replace(/\/+$/,'')}
 function siteHref(u){return /^https?:\/\//i.test(u)?u:'https://'+u}
-function socials(){const out=[];const map=[['fLinkedin','LinkedIn'],['fInstagram','Instagram'],['fX','X'],['fFacebook','Facebook'],['fYoutube','YouTube'],['fGithub','GitHub']];for(const[id,label]of map){const u=val(id);if(u)out.push([label,siteHref(u)])}return out}
+function socials(){const out=[];const map=[['fLinkedin','LinkedIn','linkedin'],['fInstagram','Instagram','instagram'],['fX','X','x'],['fFacebook','Facebook','facebook'],['fYoutube','YouTube','youtube'],['fGithub','GitHub','github']];for(const[id,label,slug]of map){const u=val(id);if(u)out.push([label,siteHref(u),slug])}return out}
+function socialsRow(d,preview){
+  const base=(preview?location.origin:'https://leaveittobumbum.com')+'/bum/icons/social/';
+  return '<table cellpadding="0" cellspacing="0" border="0"><tr>'+d.socials.map(x=>'<td style="padding-right:6px;"><a href="'+esc(x[1])+'"><img src="'+base+x[2]+'.png" width="20" height="20" alt="'+esc(x[0])+'" style="display:block;border:0;"></a></td>').join('')+'</tr></table>';
+}
 function data(preview){
   const ph=(v,f)=>preview&&!v?'<span style="opacity:.45">'+esc(f)+'</span>':esc(v);
   return {
@@ -176,13 +180,13 @@ function roleLine(d,preview){
   if(d.company||preview)parts.push(d.companyHtml);
   return parts.join(' <span style="color:#999999;">&middot;</span> ');
 }
-function contactRows(d,withDivider){
+function contactRows(d,withDivider,preview){
   let h='';
   if(withDivider)h+='<tr><td style="padding-top:9px;"><table cellpadding="0" cellspacing="0" border="0" width="56"><tr><td style="border-top:3px solid '+accent+';font-size:0;line-height:0;">&nbsp;</td></tr></table></td></tr>';
   if(d.email)h+='<tr><td style="font-size:13px;color:#222222;padding-top:'+(withDivider?8:6)+'px;"><a href="mailto:'+esc(d.email)+'" style="color:'+accent+';text-decoration:none;">'+esc(d.email)+'</a></td></tr>';
   if(d.phone)h+='<tr><td style="font-size:13px;color:#222222;padding-top:2px;"><a href="tel:'+esc(d.phone.replace(/[^0-9+]/g,''))+'" style="color:#222222;text-decoration:none;">'+esc(d.phone)+'</a></td></tr>';
   if(d.website)h+='<tr><td style="font-size:13px;color:#222222;padding-top:2px;"><a href="'+esc(siteHref(d.website))+'" style="color:'+accent+';text-decoration:none;">'+esc(siteDisplay(d.website))+'</a></td></tr>';
-  if(d.socials.length)h+='<tr><td style="font-size:12px;padding-top:7px;">'+d.socials.map(s=>'<a href="'+esc(s[1])+'" style="color:'+accent+';text-decoration:none;">'+esc(s[0])+'</a>').join(' <span style="color:#999999;">&middot;</span> ')+'</td></tr>';
+  if(d.socials.length)h+='<tr><td style="padding-top:8px;">'+socialsRow(d,preview)+'</td></tr>';
   return h;
 }
 function buildSignature(preview){
@@ -198,18 +202,18 @@ function buildSignature(preview){
     if(d.website)bits.push('<a href="'+esc(siteHref(d.website))+'" style="color:'+accent+';text-decoration:none;">'+esc(siteDisplay(d.website))+'</a>');
     let h='<table cellpadding="0" cellspacing="0" border="0"><tr><td style="'+F+'font-size:14px;color:#1a1a1a;"><b>'+d.nameHtml+'</b>'+(role?' <span style="color:#555555;">'+role+'</span>':'')+'</td></tr>';
     if(bits.length)h+='<tr><td style="'+F+'font-size:13px;color:#222222;padding-top:3px;">'+bits.join(' <span style="color:#999999;">&middot;</span> ')+'</td></tr>';
-    if(d.socials.length)h+='<tr><td style="'+F+'font-size:12px;padding-top:3px;">'+d.socials.map(s=>'<a href="'+esc(s[1])+'" style="color:'+accent+';text-decoration:none;">'+esc(s[0])+'</a>').join(' <span style="color:#999999;">&middot;</span> ')+'</td></tr>';
+    if(d.socials.length)h+='<tr><td style="padding-top:5px;">'+socialsRow(d,preview)+'</td></tr>';
     return h+'</table>';
   }
   if(tpl==='sidebar'){
-    return '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="border-left:4px solid '+accent+';padding-left:12px;"><table cellpadding="0" cellspacing="0" border="0">'+nameRow+roleRow+contactRows(d,false)+'</table></td></tr></table>';
+    return '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="border-left:4px solid '+accent+';padding-left:12px;"><table cellpadding="0" cellspacing="0" border="0">'+nameRow+roleRow+contactRows(d,false,preview)+'</table></td></tr></table>';
   }
   if(tpl==='photo'){
-    const inner='<table cellpadding="0" cellspacing="0" border="0"><tr><td style="'+F+'font-size:17px;font-weight:bold;color:#1a1a1a;">'+d.nameHtml+'</td></tr>'+roleRow+contactRows(d,true)+'</table>';
+    const inner='<table cellpadding="0" cellspacing="0" border="0"><tr><td style="'+F+'font-size:17px;font-weight:bold;color:#1a1a1a;">'+d.nameHtml+'</td></tr>'+roleRow+contactRows(d,true,preview)+'</table>';
     if(d.photo)return '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right:14px;vertical-align:top;"><img src="'+esc(d.photo)+'" width="76" height="76" alt="" style="border-radius:50%;display:block;"></td><td style="vertical-align:top;">'+inner+'</td></tr></table>';
     return inner;
   }
-  return '<table cellpadding="0" cellspacing="0" border="0">'+nameRow+roleRow+contactRows(d,true)+'</table>';
+  return '<table cellpadding="0" cellspacing="0" border="0">'+nameRow+roleRow+contactRows(d,true,preview)+'</table>';
 }
 function buildText(){
   const d=data(false);

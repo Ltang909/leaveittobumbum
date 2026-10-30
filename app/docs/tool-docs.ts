@@ -674,7 +674,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     key: "email-signature-generator",
     name: "Email Signature Maker",
     href: "/tools/email-signature-generator/",
-    icon: "/bum/icons/email-signature-generator.png",
+    icon: "/bum/icons/email-signature-generator-sticker.png",
     summary:
       "Email Signature Maker builds a professional email signature in your browser. Fill in your name, title, company, and contact details, pick from four layouts and an accent color, and watch the preview update as you type. Copy the finished signature formatted, straight into Gmail, Outlook, or Apple Mail settings, or download it as an HTML file. There is no signature subscription and nothing to install.",
     steps: [
@@ -689,7 +689,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Designing and previewing are free. The first copy or download in a visit uses one action; tweaking and copying again in the same visit is free.",
       "Everything runs in your browser. Your details are never uploaded or stored, and the form remembers them on this device for your next visit.",
       "The photo is optional and needs a public link: email apps cannot carry image files inside a pasted signature, so the signature points at the image address instead.",
-      "Social links are optional and render as small text links, which every mail app displays the same way.",
+      "Social links are optional and render as small linked icons, hosted on Leave It To Bum Bum so they show up in every mail app.",
       "The signature is table-based HTML with inline styles, the format Gmail, Outlook, and Apple Mail all expect.",
     ],
     data: "Your details are typed into your browser and stay there. The signature is built on your device; Bum Bum never receives or stores your contact details. A photo loads from the link you provide.",
