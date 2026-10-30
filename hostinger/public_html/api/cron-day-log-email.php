@@ -313,6 +313,15 @@ foreach ($users as $u) {
         $action = 'nudge';
     }
 
+    // A test send (only=) exists so the owner can eyeball the recap any
+    // time. When the loop is caught up the honest decision is skip, which
+    // makes the test URL look broken, so in test mode a skip upgrades to
+    // a preview recap of the latest log. State is never written in test
+    // mode, so this cannot disturb the real loop.
+    if ($testMode && $action === 'skip') {
+        $action = 'recap';
+    }
+
     $entry = ['user_id' => $userId, 'action' => $action, 'log_date' => $latestDate];
     $counts[$action === 'skip' ? 'skip' : $action]++;
 
