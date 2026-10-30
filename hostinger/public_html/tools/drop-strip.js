@@ -80,6 +80,7 @@
     hearsay: "e.g. Just your brand name. He checks what the AIs say about it\u2026",
     "video-converter": "Drop the video here to convert it\u2026",
     "day-log": "e.g. Finished the proposal, the client call ran long, tomorrow I chase the invoice\u2026",
+    "email-signature": "e.g. Make me a clean email signature for Gmail\u2026",
   };
   /* Where each tool's result lives, for completion placement (Item C):
    * when a job finishes, the strip renders directly below the result

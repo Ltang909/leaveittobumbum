@@ -670,4 +670,40 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     updated: "October 28, 2026",
   },
+  {
+    key: "email-signature",
+    name: "Email Signature Maker",
+    href: "/tools/email-signature/",
+    icon: "/bum/icons/email-signature.png",
+    summary:
+      "Email Signature Maker builds a professional email signature in your browser. Fill in your name, title, company, and contact details, pick from four layouts and an accent color, and watch the preview update as you type. Copy the finished signature formatted, straight into Gmail, Outlook, or Apple Mail settings, or download it as an HTML file. There is no signature subscription and nothing to install.",
+    steps: [
+      "Fill in your name, job title, and company, then your email, phone, and website.",
+      "Optionally add a photo or logo link and any social profile links.",
+      "Pick a layout: Classic, Compact, Sidebar, or Photo, and an accent color.",
+      "Check the live preview. It updates with every keystroke.",
+      "Press Copy signature and paste it into your mail app's signature settings. The page carries the exact steps for Gmail, Outlook, and Apple Mail.",
+      "Or download the signature as an HTML file, or copy the raw HTML code for apps that ask for it.",
+    ],
+    goodToKnow: [
+      "Designing and previewing are free. The first copy or download in a visit uses one action; tweaking and copying again in the same visit is free.",
+      "Everything runs in your browser. Your details are never uploaded or stored, and the form remembers them on this device for your next visit.",
+      "The photo is optional and needs a public link: email apps cannot carry image files inside a pasted signature, so the signature points at the image address instead.",
+      "Social links are optional and render as small text links, which every mail app displays the same way.",
+      "The signature is table-based HTML with inline styles, the format Gmail, Outlook, and Apple Mail all expect.",
+    ],
+    data: "Your details are typed into your browser and stay there. The signature is built on your device; Bum Bum never receives or stores your contact details. A photo loads from the link you provide.",
+    tips: [
+      "Keep it short: name, title, one phone number, and one website beat a wall of links.",
+      "Use your brand color as the accent so the sign-off matches everything else you send.",
+      "Set the signature up on a computer. The Gmail app on your phone uses the signature you saved on desktop.",
+    ],
+    faq: [
+      ["Do I need an account?", "No. Designing is free; the first copy or download in a visit uses one action."],
+      ["Why does the photo need a link?", "Email apps cannot carry image files inside a pasted signature. Your photo has to already live at a public web address, and the signature points at it."],
+      ["Will it work in Gmail and Outlook?", "Yes. The signature is plain table-based HTML, and the copy button pastes it in formatted, ready to save."],
+      ["Can I change it later?", "Any time. The form remembers your details on this device, so an update takes seconds."],
+    ],
+    updated: "October 30, 2026",
+  },
 ];

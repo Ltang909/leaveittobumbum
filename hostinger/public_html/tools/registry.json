@@ -241,6 +241,17 @@
       "url": "/tools/day-log/",
       "cta": "File my day",
       "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "email-signature",
+      "name": "Email Signature Maker",
+      "tag": "Brand",
+      "icon": "\u2709\ufe0f",
+      "iconImg": "/bum/icons/email-signature.png",
+      "description": "Fill in your details, pick a layout, and copy a professional email signature straight into Gmail or Outlook. Built in your browser, nothing uploaded.",
+      "url": "/tools/email-signature/",
+      "cta": "Make my signature",
+      "mascot": "/bum/cat-laptop.png"
     }
   ]
 }

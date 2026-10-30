@@ -560,4 +560,4 @@ document.querySelector('#notionSave').addEventListener('click',async()=>{
 });
 </script>
 <?php endif; ?>
-<script src="/tools/drop-strip.js?v=20261028r1"></script></body></html>
+<script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
