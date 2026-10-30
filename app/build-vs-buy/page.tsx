@@ -67,7 +67,7 @@ export default function BuildVsBuy() {
         <div className="prose" style={{ paddingBottom: 110 }}>
           <h2>Questions, probably answered</h2>
           <details><summary>But I genuinely enjoy building things? <span>+</span></summary><p>Then build! Seriously, the weekend project is a joy and we are not here to take that from you. And if you get stuck halfway, or the QA grind eats your third weekend, the request form will be right here. No judgment, only tools.</p></details>
-          <details><summary>What does the $49 actually cover? <span>+</span></summary><p>One scoped tool request every month, plus 6,000 actions across every tool in the box, 10 team seats, and all the hosting, fixes, and maintenance. The maintenance is the part of DIY nobody budgets for.</p></details>
+          <details><summary>What does the $49 actually cover? <span>+</span></summary><p>One scoped tool request every month, plus unlimited actions across every tool in the box, unlimited team seats, and all the hosting, fixes, and maintenance. The maintenance is the part of DIY nobody budgets for.</p></details>
           <details><summary>What if my idea is too big for 36 hours? <span>+</span></summary><p>We carve out the most useful slice and tell you honestly what the rest would take. A sharp little tool this month beats a perfect system that never ships.</p></details>
           <details><summary>Do I own the tool? <span>+</span></summary><p>It lives in your Bum Bum toolbox as long as your subscription does, maintained and working. Cancel anytime and your data comes with you. The 11pm bug reports stay with us either way.</p></details>
         </div>

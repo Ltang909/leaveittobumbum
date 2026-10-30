@@ -10,8 +10,7 @@ import { DeskFaceProvider, useDeskFace } from "./lib/desk-face";
 
 const plans = [
   { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["All current tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
-  { name: "Helper", price: "$12", note: "per month", credits: "1,500 actions each month", features: ["Everything in Poke around", "3 team members", "Email support", "$6 per extra 1,000 actions"], cta: "Choose Helper", plan: "helper" },
-  { name: "Operator", price: "$49", note: "per month", credits: "6,000 actions each month", features: ["Everything in Helper", "10 team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
+  { name: "Operator", price: "$49", note: "per month", credits: "Unlimited actions", features: ["Everything in Poke around", "Unlimited team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
 ];
 
 const QUIPS = [
@@ -187,7 +186,7 @@ export default function Home() {
       <section className="pricing shell" id="pricing">
         <div className="section-heading"><div><p className="kicker">One shared meter</p><h2>Pay for useful work,<br />not a maze of limits.</h2></div><p>Every completed result uses one action: a finished clip, a batch of receipts, a chased invoice, a playbook. Your whole team and every tool share the same monthly bucket.</p></div>
         <div className="plan-grid">{plans.map((plan) => <article className={`plan ${plan.featured ? "featured" : ""}`} key={plan.name}>{plan.featured && <span className="popular">BUM BUM’S PICK</span>}<h3>{plan.name}</h3><div className="price">{plan.price}<small>{plan.note}</small></div><p className="credits">{plan.credits}</p><ul>{plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul><PlanCta plan={plan.plan} label={plan.cta} href={plan.plan === "free" ? "/tools/" : `/checkout/?plan=${plan.plan}`} featured={plan.featured} /></article>)}</div>
-        <p className="pricing-note">Actions reset monthly and do not roll over. We warn you at 80% and 100%. Paid plans can keep going with simple action packs, or you can pause until the reset.</p>
+        <p className="pricing-note">Actions on Poke around reset monthly and do not roll over. We warn you at 80% and 100%. Operator never runs out.</p>
         <p className="section-more"><a href="/pricing/">How pricing works, in plain English <Arrow /></a></p>
       </section>
 

@@ -22,7 +22,7 @@ export default function Terms() {
           <h2>Plans and actions</h2>
           <ul>
             <li><strong>Poke Around</strong> is free: 75 actions/month.</li>
-            <li><strong>Helper</strong> ($12/month) and <strong>Operator</strong> ($49/month) are billed monthly through Stripe.</li>
+            <li><strong>Operator</strong> ($49/month) is billed monthly through Stripe.</li>
             <li>One action = one useful result (one quote, one cleaned-up note, one follow-up). Actions reset monthly and don&apos;t roll over. We warn you at 80% and 100%.</li>
             <li>You can cancel anytime; your plan runs until the end of the billing period. No refunds for partial months, but no hard feelings either.</li>
           </ul>

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-const ORDER = ["free", "helper", "operator"];
-const NAMES: Record<string, string> = { free: "Free", helper: "Helper", operator: "Operator" };
+const ORDER = ["free", "operator"];
+const NAMES: Record<string, string> = { free: "Free", operator: "Operator" };
 
 type PlanCtaProps = {
   plan: string;

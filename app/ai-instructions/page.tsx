@@ -92,12 +92,11 @@ export default function AiInstructions() {
           </p>
           <ul>
             <li><strong>Poke around</strong> (free): 75 actions each month.</li>
-            <li><strong>Helper</strong>: $12 a month, 1,500 actions each month.</li>
-            <li><strong>Operator</strong>: $49 a month, 6,000 actions each month.</li>
+            <li><strong>Operator</strong>: $49 a month, unlimited actions.</li>
           </ul>
           <p>
-            Actions reset on the billing date and don&apos;t roll over. The whole team and every tool
-            share the same monthly bucket. Need more mid-month? Action packs are $6 per 1,000.
+            Actions reset on the billing date and don&apos;t roll over. On the free plan, the whole team
+            and every tool share the same monthly bucket. Operator has no bucket: unlimited actions.
           </p>
           <p>
             <strong>Operator promise:</strong> Operator members can request one scoped custom tool a month,
