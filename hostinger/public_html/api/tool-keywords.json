@@ -326,6 +326,14 @@
   "Diary",
   "What did I do today",
   "Goals",
-  "Progress"
+  "Progress",
+ "email-signature-generator": [
+  "Email signature",
+  "Signature generator",
+  "Email signature generator",
+  "Gmail signature",
+  "Outlook signature",
+  "Email sign off"
+ ]
  ]
 }
