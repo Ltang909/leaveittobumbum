@@ -197,6 +197,21 @@ function dle_nudge_body(): string {
     ]);
 }
 
+function dle_nudge_mail(): array {
+    $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
+    $inner = dlm_card('No recap this morning', 'No new day log since your last recap', dlm_bullet_rows([
+        'File tonight and the weekday morning recaps pick right back up.',
+        'This is the only nudge. No log, no more emails.',
+    ]));
+    $inner .= '<tr><td class="em-pad" style="padding:18px 32px 4px 32px;" align="center">'
+        . '<a class="em-chip-lime em-ink" href="' . $appUrl . '/tools/day-log/" style="display:inline-block;background:#d8ff62;border:2px solid #1a291c;border-radius:999px;padding:10px 20px;font-family:Arial,sans-serif;font-size:14px;font-weight:900;color:#142015;text-decoration:none;">Open Day Log</a></td></tr>';
+    return [
+        'subject' => 'Bum Bum kept your seat warm',
+        'html' => dlm_shell('Your seat is warm.', $inner),
+        'text' => dle_nudge_body(),
+    ];
+}
+
 // Multipart (text + HTML) send over the same SMTP settings as
 // includes/smtp-mail.php. Mirrors the weekly recap's sender, including
 // the base64 HTML part (raw long-line HTML gets folded by SMTP near
@@ -291,7 +306,10 @@ foreach ($users as $u) {
         }
     } elseif ($latestDate > (string) $st['last_recap_log_date']) {
         $action = 'recap';
-    } elseif ($st['last_nudge_on'] === null || (string) $st['last_nudge_on'] < (string) $st['last_recap_sent_on']) {
+    } elseif ((string) $st['last_recap_sent_on'] < $today && ($st['last_nudge_on'] === null || (string) $st['last_nudge_on'] < (string) $st['last_recap_sent_on'])) {
+        // The nudge belongs to a LATER morning that still has nothing new.
+        // Without the sent-before-today guard it fired one hour after the
+        // same morning's recap (Oct 30: recap 7 AM, nudge 8 AM).
         $action = 'nudge';
     }
 
@@ -309,9 +327,12 @@ foreach ($users as $u) {
                 $saveState->execute([$userId, $latestDate, $today, $st['last_nudge_on']]);
             }
         } elseif ($action === 'nudge') {
-            $res = bb_send_mail($email, 'Bum Bum kept your seat warm', dle_nudge_body());
-            $entry['sent'] = !empty($res['ok']);
-            if (!empty($res['ok']) && !$testMode) {
+            $mail = dle_nudge_mail();
+            $entry['subject'] = $mail['subject'];
+            [$sent, $err] = dlm_send_mail($email, $mail['subject'], $mail['html'], $mail['text']);
+            $entry['sent'] = $sent;
+            if (!$sent) $entry['error'] = $err;
+            if ($sent && !$testMode) {
                 $saveState->execute([$userId, $st['last_recap_log_date'], $st['last_recap_sent_on'], $today]);
             }
         } elseif ($action === 'armed' && !$testMode) {
