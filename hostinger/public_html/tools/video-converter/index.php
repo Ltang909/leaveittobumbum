@@ -1,4 +1,11 @@
-<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
+<?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject);
+// Cross-origin isolation for THIS page only: lets the converter load the
+// multithreaded ffmpeg core (SharedArrayBuffer) where the browser allows
+// it, which encodes several times faster. Pages without these headers
+// keep the single-threaded core.
+header('Cross-Origin-Opener-Policy: same-origin');
+header('Cross-Origin-Embedder-Policy: credentialless');
+?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum</title>
 <meta name="description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
 <meta property="og:title" content="Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum">
@@ -127,7 +134,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="vc-progress hidden" id="vcProgWrap"><i id="vcProg"></i></div>
 <p id="vcProgText" class="vc-status"></p>
 <p id="vcConvertErr" class="error"></p>
-<div class="vc-step"><a id="vcDl" class="button hidden" download="converted.mp4">Download</a><button id="vcAgain" class="linklike" type="button">convert another</button></div>
+<div class="vc-step"><a id="vcDl" class="button hidden" download="converted.mp4">Download</a><button id="vcCancel" class="linklike hidden" type="button">cancel conversion</button><button id="vcAgain" class="linklike" type="button">convert another</button></div>
 </section>
 <div id="upgrade-slot"></div>
 <?php endif; ?>
@@ -149,15 +156,16 @@ const uploadSec=$('vcUpload'),fmtSec=$('vcFormat'),resultSec=$('vcResult');
 const fileInput=$('vcFile'),fileInfo=$('vcFileInfo'),uploadErr=$('vcUploadErr');
 const toFmtBtn=$('vcToFmt'),convertBtn=$('vcConvert'),back1Btn=$('vcBack1'),fmtErr=$('vcFmtErr');
 const progWrap=$('vcProgWrap'),progBar=$('vcProg'),progText=$('vcProgText'),convertErr=$('vcConvertErr');
-const dlLink=$('vcDl'),againBtn=$('vcAgain'),usageEl=$('vcUsage');
+const dlLink=$('vcDl'),againBtn=$('vcAgain'),usageEl=$('vcUsage'),cancelBtn=$('vcCancel');
 const FFMPEG_VENDOR='/tools/video-trimmer/vendor/';
 const OK_EXTS=['mp4','webm','mov','mkv','avi'];
 const MAX_SIZE=100*1024*1024;
-let videoFile=null,videoExt='',outFmt='mp4',ffmpeg=null,converting=false,convN=0;
+let videoFile=null,videoExt='',outFmt='mp4',ffmpeg=null,converting=false,convN=0,cancelled=false,convStart=0;
 function setProg(p,txt){progWrap.classList.remove('hidden');progBar.style.width=Math.round(p*100)+'%';progText.textContent=txt;}
+function fmtElapsed(ms){const s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
 function loadScript(src,timeoutMs){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;const to=setTimeout(()=>{s.remove();rej(new Error('script-timeout:'+src))},timeoutMs||90000);s.onload=()=>{clearTimeout(to);res()};s.onerror=()=>{clearTimeout(to);rej(new Error('script-load:'+src))};document.head.appendChild(s)})}
 let ffLogBuf=[],ffLogOn=false;
-async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();ff.on('log',({message})=>{if(ffLogOn){ffLogBuf.push(String(message));if(ffLogBuf.length>400)ffLogBuf.shift();}});onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
+async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();ff.on('log',({message})=>{if(ffLogOn){ffLogBuf.push(String(message));if(ffLogBuf.length>400)ffLogBuf.shift();}});onStage&&onStage('core');const mtOk=window.crossOriginIsolated&&typeof SharedArrayBuffer!=='undefined';await ff.load({coreURL:FFMPEG_VENDOR+(mtOk?'ffmpeg-core-mt.js':'ffmpeg-core.js')});ffmpeg=ff;return ffmpeg;}
 async function probeVideo(ff,inName){
   ffLogBuf=[];ffLogOn=true;
   try{await ff.exec(['-i',inName]);}catch(e){}
@@ -165,7 +173,8 @@ async function probeVideo(ff,inName){
   const text=ffLogBuf.join('\n');
   const vm=text.match(/Video:\s*([a-z0-9_]+)/i);
   const am=text.match(/Audio:\s*([a-z0-9_]+)/i);
-  return{vcodec:vm?vm[1].toLowerCase():'',acodec:am?am[1].toLowerCase():''};
+  const dm=text.match(/Video:[^\n]*?(\d{3,5})x(\d{3,5})/i);
+  return{vcodec:vm?vm[1].toLowerCase():'',acodec:am?am[1].toLowerCase():'',w:dm?parseInt(dm[1],10):0,h:dm?parseInt(dm[2],10):0};
 }
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/video-converter.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data};}
 function bindDrop(zone,input,onFile){zone.addEventListener('click',()=>input.click());zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});['dragover','dragenter'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('over')}));['dragleave','drop'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('over')}));zone.addEventListener('drop',e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)onFile(f)});input.addEventListener('change',()=>{const f=input.files&&input.files[0];if(f)onFile(f);input.value=''})}
@@ -193,14 +202,14 @@ document.querySelectorAll('#vcFormats .fmt-card').forEach(card=>{
 });
 const OUTS={
   mp4:{file:'output.mp4',mime:'video/mp4',dl:'mp4',args:['-c:v','libx264','-preset','veryfast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart']},
-  webm:{file:'output.webm',mime:'video/webm',dl:'webm',args:['-c:v','libvpx-vp9','-deadline','good','-cpu-used','5','-crf','30','-b:v','0','-c:a','libopus']},
+  webm:{file:'output.webm',mime:'video/webm',dl:'webm',args:['-c:v','libvpx-vp9','-deadline','realtime','-cpu-used','7','-crf','32','-b:v','0','-row-mt','1','-c:a','libopus']},
   gif:{file:'output.gif',mime:'image/gif',dl:'gif',args:null}
 };
 convertBtn.addEventListener('click',async()=>{
   if(converting||!videoFile)return;
   fmtErr.textContent='';convertErr.textContent='';dlLink.classList.add('hidden');
   resultSec.classList.remove('hidden');
-  convertBtn.disabled=true;converting=true;
+  convertBtn.disabled=true;converting=true;cancelled=false;
   let step='starting';
   try{
     step='quota';setProg(0.02,'Checking your actions...');
@@ -212,8 +221,8 @@ convertBtn.addEventListener('click',async()=>{
     const inName='input.'+videoExt;
     await ff.writeFile(inName,new Uint8Array(await videoFile.arrayBuffer()));
     const out=OUTS[outFmt];
-    ff.on('progress',({progress})=>{setProg(0.18+Math.min(1,progress||0)*0.64,'Converting to '+outFmt.toUpperCase()+'... '+Math.round((progress||0)*100)+'%')});
-    step='converting';
+    ff.on('progress',({progress})=>{setProg(0.18+Math.min(1,progress||0)*0.64,'Converting to '+outFmt.toUpperCase()+'... '+Math.round((progress||0)*100)+'% · '+fmtElapsed(Date.now()-convStart)+' in')});
+    step='converting';convStart=Date.now();cancelBtn.classList.remove('hidden');
     if(outFmt==='gif'){
       let code=await ff.exec(['-t','15','-i',inName,'-vf','fps=12,scale=480:-1:flags=lanczos,palettegen','palette.png']);
       if(code!==0)throw new Error('palette-exit-'+code);
@@ -224,13 +233,16 @@ convertBtn.addEventListener('click',async()=>{
       setProg(0.2,'Checking the video...');
       const probe=await probeVideo(ff,inName);
       const canCopy=(outFmt==='mp4'&&probe.vcodec==='h264'&&(probe.acodec===''||probe.acodec==='aac'))||(outFmt==='webm'&&(probe.vcodec==='vp8'||probe.vcodec==='vp9'||probe.vcodec==='av1')&&(probe.acodec===''||probe.acodec==='opus'||probe.acodec==='vorbis'));
+      // Anything taller than 1080 is capped to 1080 on re-encode: encoding
+      // 4K in a browser tab is where conversions go to die.
+      const scaleArgs=probe.h>1080?['-vf','scale=-2:1080:flags=lanczos']:[];
       let code;
       if(canCopy){
         setProg(0.3,'No re-encode needed. Repacking as '+outFmt.toUpperCase()+'...');
         code=await ff.exec(['-i',inName,'-c','copy'].concat(outFmt==='mp4'?['-movflags','faststart']:[],[out.file]));
-        if(code!==0){code=await ff.exec(['-i',inName].concat(out.args,[out.file]));}
+        if(code!==0){code=await ff.exec(['-i',inName].concat(scaleArgs,out.args,[out.file]));}
       }else{
-        code=await ff.exec(['-i',inName].concat(out.args,[out.file]));
+        code=await ff.exec(['-i',inName].concat(scaleArgs,out.args,[out.file]));
       }
       if(code!==0)throw new Error('encode-exit-'+code);
     }
@@ -263,6 +275,8 @@ convertBtn.addEventListener('click',async()=>{
       document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
       bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');
       convertErr.textContent='You are out of actions, so this conversion was not started.';
+    }else if(cancelled){
+      convertErr.textContent='';
     }else if(step==='engine'||step==='core'||String((e&&e.message)||'').indexOf('script-load:')===0){
       convertErr.textContent='The converter engine failed to load. Check your connection and try again.';
     }else if(step==='reading'){
@@ -272,9 +286,10 @@ convertBtn.addEventListener('click',async()=>{
     }else{
       convertErr.textContent='Something went wrong finishing the conversion. Try again?';
     }
-    progWrap.classList.add('hidden');progText.textContent='';
-  }finally{converting=false;convertBtn.disabled=false;}
+    progWrap.classList.add('hidden');progText.textContent=cancelled?'Conversion cancelled. No action was used.':'';
+  }finally{converting=false;convertBtn.disabled=false;cancelBtn.classList.add('hidden');}
 });
+cancelBtn.addEventListener('click',()=>{if(!converting)return;cancelled=true;try{if(ffmpeg)ffmpeg.terminate();}catch(e){}ffmpeg=null;});
 againBtn.addEventListener('click',()=>{
   if(dlLink.href){URL.revokeObjectURL(dlLink.href);dlLink.href='';}
   videoFile=null;videoExt='';dlLink.classList.add('hidden');
