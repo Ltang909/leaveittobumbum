@@ -177,7 +177,8 @@ async function probeVideo(ff,inName){
   const vm=text.match(/Video:\s*([a-z0-9_]+)/i);
   const am=text.match(/Audio:\s*([a-z0-9_]+)/i);
   const dm=text.match(/Video:[^\n]*?(\d{3,5})x(\d{3,5})/i);
-  return{vcodec:vm?vm[1].toLowerCase():'',acodec:am?am[1].toLowerCase():'',w:dm?parseInt(dm[1],10):0,h:dm?parseInt(dm[2],10):0};
+  const du=text.match(/Duration:\s*(\d+):(\d+):([\d.]+)/i);
+  return{vcodec:vm?vm[1].toLowerCase():'',acodec:am?am[1].toLowerCase():'',w:dm?parseInt(dm[1],10):0,h:dm?parseInt(dm[2],10):0,dur:du?(parseInt(du[1],10)*3600+parseInt(du[2],10)*60+parseFloat(du[3])):0};
 }
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/video-converter.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data};}
 function bindDrop(zone,input,onFile){zone.addEventListener('click',()=>input.click());zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});['dragover','dragenter'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('over')}));['dragleave','drop'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('over')}));zone.addEventListener('drop',e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)onFile(f)});input.addEventListener('change',()=>{const f=input.files&&input.files[0];if(f)onFile(f);input.value=''})}
@@ -204,7 +205,7 @@ document.querySelectorAll('#vcFormats .fmt-card').forEach(card=>{
   });
 });
 const OUTS={
-  mp4:{file:'output.mp4',mime:'video/mp4',dl:'mp4',args:['-c:v','libx264','-preset','superfast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart']},
+  mp4:{file:'output.mp4',mime:'video/mp4',dl:'mp4',args:['-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart']},
   webm:{file:'output.webm',mime:'video/webm',dl:'webm',args:['-c:v','libvpx-vp9','-deadline','realtime','-cpu-used','7','-crf','32','-b:v','0','-row-mt','1','-c:a','libopus']},
   gif:{file:'output.gif',mime:'image/gif',dl:'gif',args:null}
 };
@@ -224,7 +225,19 @@ convertBtn.addEventListener('click',async()=>{
     const inName='input.'+videoExt;
     await ff.writeFile(inName,new Uint8Array(await videoFile.arrayBuffer()));
     const out=OUTS[outFmt];
-    ff.on('progress',({progress})=>{setProg(0.18+Math.min(1,progress||0)*0.64,'Converting to '+outFmt.toUpperCase()+'... '+Math.round((progress||0)*100)+'% · '+fmtElapsed(Date.now()-convStart)+' in')});
+    // ffmpeg.wasm's progress ratio explodes on files with odd timestamp
+    // metadata (seen live: -949433300%). Trust the ratio only when it is
+    // sane; otherwise derive progress from processed time over the probed
+    // duration, and never let the bar run backwards.
+    let lastP=0,probeDur=0;
+    ff.on('progress',({progress,time})=>{
+      let p=progress;
+      if(!(p>=0&&p<=1.02)){p=(probeDur>0&&time>0)?(time/1e6)/probeDur:lastP;}
+      p=Math.max(lastP,Math.min(1,p||0));lastP=p;
+      let eta='';
+      if(p>0.03&&p<1){const left=(Date.now()-convStart)*(1-p)/p;if(isFinite(left)&&left>5000)eta=' · about '+fmtElapsed(left)+' left';}
+      setProg(0.18+p*0.64,'Converting to '+outFmt.toUpperCase()+'... '+Math.round(p*100)+'% · '+fmtElapsed(Date.now()-convStart)+' in'+eta);
+    });
     step='converting';convStart=Date.now();cancelBtn.classList.remove('hidden');
     if(outFmt==='gif'){
       let code=await ff.exec(['-t','15','-i',inName,'-vf','fps=12,scale=480:-1:flags=lanczos,palettegen','palette.png']);
@@ -235,6 +248,7 @@ convertBtn.addEventListener('click',async()=>{
     }else{
       setProg(0.2,'Checking the video...');
       const probe=await probeVideo(ff,inName);
+      probeDur=probe.dur||0;
       const canCopy=(outFmt==='mp4'&&probe.vcodec==='h264'&&(probe.acodec===''||probe.acodec==='aac'))||(outFmt==='webm'&&(probe.vcodec==='vp8'||probe.vcodec==='vp9'||probe.vcodec==='av1')&&(probe.acodec===''||probe.acodec==='opus'||probe.acodec==='vorbis'));
       // Anything taller than 1080 is capped to 1080 on re-encode: encoding
       // 4K in a browser tab is where conversions go to die.
