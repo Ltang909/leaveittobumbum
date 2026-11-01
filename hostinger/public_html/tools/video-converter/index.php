@@ -1,10 +1,11 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject);
-// Cross-origin isolation for THIS page only: lets the converter load the
-// multithreaded ffmpeg core (SharedArrayBuffer) where the browser allows
-// it, which encodes several times faster. Pages without these headers
-// keep the single-threaded core.
-header('Cross-Origin-Opener-Policy: same-origin');
-header('Cross-Origin-Embedder-Policy: credentialless');
+// NOTE (2026-11-01): cross-origin isolation headers (COOP/COEP) were
+// tried here to unlock the multithreaded ffmpeg core. In the owner's
+// Chrome/macOS every engine load (MT and ST alike) hung under isolation
+// while the same files loaded fine un-isolated, so the headers were
+// removed. The loader below still prefers the MT core if a future page
+// context ever provides isolation some other way; in practice it takes
+// the single-threaded core, now with a load timeout as a hang guard.
 ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum</title>
 <meta name="description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
@@ -203,7 +204,7 @@ document.querySelectorAll('#vcFormats .fmt-card').forEach(card=>{
   });
 });
 const OUTS={
-  mp4:{file:'output.mp4',mime:'video/mp4',dl:'mp4',args:['-c:v','libx264','-preset','veryfast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart']},
+  mp4:{file:'output.mp4',mime:'video/mp4',dl:'mp4',args:['-c:v','libx264','-preset','superfast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart']},
   webm:{file:'output.webm',mime:'video/webm',dl:'webm',args:['-c:v','libvpx-vp9','-deadline','realtime','-cpu-used','7','-crf','32','-b:v','0','-row-mt','1','-c:a','libopus']},
   gif:{file:'output.gif',mime:'image/gif',dl:'gif',args:null}
 };
