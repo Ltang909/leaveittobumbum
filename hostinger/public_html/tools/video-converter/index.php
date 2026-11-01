@@ -250,9 +250,13 @@ convertBtn.addEventListener('click',async()=>{
       const probe=await probeVideo(ff,inName);
       probeDur=probe.dur||0;
       const canCopy=(outFmt==='mp4'&&probe.vcodec==='h264'&&(probe.acodec===''||probe.acodec==='aac'))||(outFmt==='webm'&&(probe.vcodec==='vp8'||probe.vcodec==='vp9'||probe.vcodec==='av1')&&(probe.acodec===''||probe.acodec==='opus'||probe.acodec==='vorbis'));
-      // Anything taller than 1080 is capped to 1080 on re-encode: encoding
-      // 4K in a browser tab is where conversions go to die.
-      const scaleArgs=probe.h>1080?['-vf','scale=-2:1080:flags=lanczos']:[];
+      // The height cap lives inside the encode filter itself, not in
+      // the probe: files with thin metadata (every browser screen
+      // recording) can leave probe.h at 0, and then an uncapped encode
+      // of a 1440p recording runs at a crawl (measured: a 20 second
+      // clip not done in 150 s). min() makes the filter a no-op at
+      // 1080 and below.
+      const scaleArgs=['-vf','scale=-2:min(1080\\,ih):flags=lanczos'];
       let code;
       if(canCopy){
         setProg(0.3,'No re-encode needed. Repacking as '+outFmt.toUpperCase()+'...');
