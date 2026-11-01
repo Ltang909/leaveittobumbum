@@ -589,7 +589,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Animated GIFs are capped at 15 seconds, because a GIF longer than that is a video wearing a costume.",
       "Rendering happens on your device, so long videos convert at the speed of your computer.",
       "If your video is already in the format you pick, the converter repacks it without re-encoding, which is much faster.",
-      "Videos taller than 1080 pixels are converted at 1080 tall. Encoding 4K inside a browser tab takes forever, and almost nothing you are posting needs it.",
+      "Videos taller than 720 pixels are converted at 720 tall. Big recordings are where browser conversion goes to die, and 720 is plenty for posting and sharing.",
       "Changed your mind mid-conversion? Cancel it. A cancelled conversion uses no action.",
     ],
     data: "Your video never leaves your device. Conversion happens entirely in your browser.",

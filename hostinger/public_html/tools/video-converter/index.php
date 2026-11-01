@@ -254,9 +254,12 @@ convertBtn.addEventListener('click',async()=>{
       // the probe: files with thin metadata (every browser screen
       // recording) can leave probe.h at 0, and then an uncapped encode
       // of a 1440p recording runs at a crawl (measured: a 20 second
-      // clip not done in 150 s). min() makes the filter a no-op at
-      // 1080 and below.
-      const scaleArgs=['-vf','scale=-2:min(1080\\,ih):flags=lanczos'];
+      // clip not done in 150 s). Cap is 720 (owner's call, 2026-11-01):
+      // at 1440p in, 720 out measured ~64 s for 20 s of video vs
+      // ~149 s at 1080 out, because the in-browser VP9 decode of the
+      // big source dominates either way. min() makes the filter a
+      // no-op at 720 and below.
+      const scaleArgs=['-vf','scale=-2:min(720\\,ih):flags=lanczos'];
       let code;
       if(canCopy){
         setProg(0.3,'No re-encode needed. Repacking as '+outFmt.toUpperCase()+'...');
