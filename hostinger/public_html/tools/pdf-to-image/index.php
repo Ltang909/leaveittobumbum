@@ -166,6 +166,15 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>Usually because it is password-protected or damaged. Unlock it with the password in your usual PDF app, save an unprotected copy, and drop that in.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Turning PDF pages into images, the short guide</h2>
+<h3>How it works here</h3>
+<p>Each page of your PDF is drawn in your browser at the resolution you pick, then saved as an image in the format you chose. Your file never leaves your device: there is no upload, no server copy, and nothing to delete afterwards. Multi-page PDFs come out as one image per page, in order, with a zip when you want them all at once.</p>
+<h3>Picking a format</h3>
+<p>JPG is the safe default: every form, platform, and email client accepts it, and the files stay small. PNG keeps text and sharp lines perfectly crisp, which suits pages people will read closely, at a bigger file size. WebP makes the smallest files of the three and is the pick for putting pages on a website that accepts it.</p>
+<h3>Resolution, in plain terms</h3>
+<p>Standard is plenty when the destination is an upload form or a quick share. High is the pick for anything printed or read closely. Extra high is for pages with small print, like terms sheets and scanned forms. Because a PDF page is drawn fresh at the size you pick, text stays sharp instead of being stretched from a small image.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/pdf-merger/">PDF Merger</a> - Stitch several PDFs into one, in the order you choose.</p>

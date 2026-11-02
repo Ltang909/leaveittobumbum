@@ -1,0 +1,44 @@
+# Leave It to Bum Bum
+
+> Leave It to Bum Bum (leaveittobumbum.com) is a toolbox of small, single-job tools for solopreneurs and small business owners, run by Bum Bum, a cream British Shorthair cat. Tagline: "You run the business. Bum Bum handles the rest." Visitors describe a job at the front desk or pick a tool directly. If a tool does not exist yet, anyone can request it: the Bum Bum Promise is that requested tools are built within 36 hours.
+
+Pricing: a free guest tier (15 actions, no account), a free account tier (75 actions every month), and Operator at $49/month flat with unlimited actions. Usage units are called actions; one conversion, merge, or generation is typically one action. There are no per-tool subscriptions.
+
+Privacy note: the file tools (PDF, image, and video tools) run entirely in the visitor's browser. Files processed by them never leave the visitor's device and are never uploaded to a server.
+
+## Tools
+
+- [Screen Recorder](https://leaveittobumbum.com/tools/clips/): Record your screen right in your browser. Download the clip, keep it forever.
+- [Voice Notes to Text](https://leaveittobumbum.com/tools/notes/): Talk it out and get a live transcript you can copy or download.
+- [Subscription Tracker](https://leaveittobumbum.com/tools/cutline/): Every subscription you forgot about, in one place. Renewals show up in the Monday note, your weekly email roundup.
+- [Client Follow-Up Tracker](https://leaveittobumbum.com/tools/purrsuit/): A tiny CRM that tells you who to follow up with today and what to say.
+- [Job Application Tracker](https://leaveittobumbum.com/tools/corporate-bum-bum/): A job application tracker that tells you who to follow up with today and what to say.
+- [Online Sketchpad](https://leaveittobumbum.com/tools/doodle/): A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.
+- [Invoice Reminder](https://leaveittobumbum.com/tools/invoice-chaser/): Track who owes you what. Bum Bum can chase as your billing assistant, learns when each client usually pays, and emails you a reminder digest.
+- [Receipt Scanner](https://leaveittobumbum.com/tools/receipt-reader/): Snap photos of up to 10 receipts at once. Bum Bum reads them in your browser and hands you vendor, date, line items, tax, and total as clean editable tables.
+- [Poster to Calendar](https://leaveittobumbum.com/tools/poster-to-calendar/): Snap a photo of any event poster or flyer. Get a ready-to-save calendar event with the date, time, and place filled in.
+- [Meal Scanner](https://leaveittobumbum.com/tools/meal-scanner/): Snap a photo of your meal. Get estimated calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number.
+- [Resume Gap Checker](https://leaveittobumbum.com/tools/gap-scout/): Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions.
+- [Video Trimmer](https://leaveittobumbum.com/tools/video-trimmer/): Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser. Your video never leaves your device.
+- [Image Converter](https://leaveittobumbum.com/tools/image-converter/): WebP to PNG, JPG to WebP, whatever to whatever. Bum Bum converts your images right in your browser and hands them back in the format you wanted.
+- [PDF Merger](https://leaveittobumbum.com/tools/pdf-merger/): Stitch several PDFs into one, in the order you choose. Runs right in your browser, so your files never leave your device.
+- [PDF to Image](https://leaveittobumbum.com/tools/pdf-to-image/): Turn every page of a PDF into a clean JPG, PNG, or WebP image, right in your browser. Download pages one by one or all together in a zip.
+- [Image Cropper](https://leaveittobumbum.com/tools/image-cropper/): Drag a box around the good part. Bum Bum crops your image right in your browser, with aspect presets for profile pics and posts.
+- [Voice to Content](https://leaveittobumbum.com/tools/ghostwriter/): Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.
+- [Audiogram Maker](https://leaveittobumbum.com/tools/audiogram/): Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4.
+- [QR Code Generator](https://leaveittobumbum.com/tools/purr-code/): Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.
+- [SOP Generator](https://leaveittobumbum.com/tools/sop-ify/): Paste your chaotic process brain-dump. Get a clean step-by-step playbook a brand-new helper can follow.
+- [AI Mention Tracker](https://leaveittobumbum.com/tools/hearsay/): Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead.
+- [Video Converter](https://leaveittobumbum.com/tools/video-converter/): Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device.
+- [Video MP3 Overlay](https://leaveittobumbum.com/tools/video-mp3-overlay/): Drop in a video and an MP3. Snip the good bits of the song, pin each one where it should play, set the mix, and Bum Bum renders it right in your browser. Nothing gets uploaded.
+- [Day Log](https://leaveittobumbum.com/tools/day-log/): Talk through your day in a few minutes. Bum Bum turns it into jot notes, scores yesterday's list against today, and emails you tomorrow's top priorities.
+- [Email Signature Maker](https://leaveittobumbum.com/tools/email-signature-generator/): Fill in your details, pick a layout, and copy a professional email signature straight into Gmail or Outlook. Built in your browser, nothing uploaded.
+
+## Guides and documentation
+
+- [Tool docs](https://leaveittobumbum.com/docs/): a guide page for every tool, covering what it does, how to use it, and what happens to your data.
+- [Blog](https://leaveittobumbum.com/blog/): how-to guides and comparisons, including alternatives posts for popular tools.
+- [How to Merge a PDF Online (Without Uploading Your Files)](https://leaveittobumbum.com/blog/how-to-merge-a-pdf-online/)
+- [Pricing](https://leaveittobumbum.com/pricing/)
+- [AI instructions](https://leaveittobumbum.com/ai-instructions/): the official reference for AI assistants on how to describe Leave It to Bum Bum, its tools, and its pricing.
+- [Request a tool](https://leaveittobumbum.com/requests/): ask for a tool that does not exist yet; the Bum Bum Promise is a build within 36 hours.
