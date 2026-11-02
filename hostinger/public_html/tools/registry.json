@@ -144,6 +144,28 @@
       "mascot": "/bum/cat-curious.png"
     },
     {
+      "cta": "Merge PDFs",
+      "description": "Stitch several PDFs into one, in the order you choose. Runs right in your browser, so your files never leave your device.",
+      "icon": "📑",
+      "iconImg": "/bum/icons/pdf-merger.png",
+      "key": "pdf-merger",
+      "mascot": "/bum/cat-curious.png",
+      "name": "PDF Merger",
+      "tag": "Files",
+      "url": "/tools/pdf-merger/"
+    },
+    {
+      "cta": "Convert a PDF",
+      "description": "Turn every page of a PDF into a clean JPG image, right in your browser. Download pages one by one or all together in a zip.",
+      "icon": "🖼️",
+      "iconImg": "/bum/icons/pdf-to-jpg.png",
+      "key": "pdf-to-jpg",
+      "mascot": "/bum/cat-laptop.png",
+      "name": "PDF to JPG",
+      "tag": "Files",
+      "url": "/tools/pdf-to-jpg/"
+    },
+    {
       "key": "image-cropper",
       "name": "Image Cropper",
       "tag": "Files",
@@ -246,7 +268,7 @@
       "key": "email-signature-generator",
       "name": "Email Signature Maker",
       "tag": "Brand",
-      "icon": "\u2709\ufe0f",
+      "icon": "✉️",
       "iconImg": "/bum/icons/email-signature-generator-sticker.png",
       "description": "Fill in your details, pick a layout, and copy a professional email signature straight into Gmail or Outlook. Built in your browser, nothing uploaded.",
       "url": "/tools/email-signature-generator/",

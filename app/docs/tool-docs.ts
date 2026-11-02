@@ -428,6 +428,62 @@ export const TOOL_DOCS: ToolDoc[] = [
     updated: U,
   },
   {
+    key: "pdf-merger",
+    name: "PDF Merger",
+    href: "/tools/pdf-merger/",
+    icon: "/bum/icons/pdf-merger.png",
+    summary:
+      "PDF Merger stitches several PDFs into one, right in your browser, in the order you choose: the contract, the signed page, and the appendix become a single file.",
+    steps: [
+      "Open PDF Merger and pick your PDFs.",
+      "Arrange the files in the order you want with the up and down buttons.",
+      "Merge, then download the combined PDF.",
+    ],
+    goodToKnow: [
+      "One action per merge. Adding, reordering, and checking page counts are free.",
+      "Pages are copied exactly as they are: no re-compression and no quality loss.",
+      "Password-protected PDFs need to be unlocked first, then merged.",
+    ],
+    data: "Your files never leave your device. Merging happens in your browser.",
+    tips: [
+      "Put the signed page last and the contract first, the way a reader expects, and nobody has to shuffle loose pages again.",
+      "Merging the attachments from a client email thread into one PDF before you send them on saves the next person the same shuffle.",
+    ],
+    faq: [
+      ["Do my PDFs upload anywhere?", "No. The merge runs in your browser."],
+      ["Is there a size limit?", "Only what your device can comfortably hold in memory. Ordinary contracts and reports are no problem."],
+    ],
+    updated: U,
+  },
+  {
+    key: "pdf-to-jpg",
+    name: "PDF to JPG",
+    href: "/tools/pdf-to-jpg/",
+    icon: "/bum/icons/pdf-to-jpg.png",
+    summary:
+      "PDF to JPG turns every page of a PDF into a clean JPG image, right in your browser, for the forms, platforms, and clients that insist on pictures instead of documents.",
+    steps: [
+      "Open PDF to JPG and pick a PDF.",
+      "Choose a resolution and quality.",
+      "Convert, then download each page on its own or grab them all in a zip.",
+    ],
+    goodToKnow: [
+      "One action per PDF converted, however many pages it has.",
+      "Three resolutions: Standard for forms and uploads, High for reading and printing, Extra high for small print.",
+      "Password-protected PDFs need to be unlocked first, then converted.",
+    ],
+    data: "Your files never leave your device. Conversion happens in your browser.",
+    tips: [
+      "High resolution is the right default for anything a person will read closely. Standard keeps files small for upload forms with tight size caps.",
+      "Need just one page as an image? Convert the PDF, then keep the page you wanted and delete the rest.",
+    ],
+    faq: [
+      ["Do my PDFs upload anywhere?", "No, conversion is fully in your browser."],
+      ["What do I get from a multi-page PDF?", "One JPG per page, in order, plus a zip with all of them together."],
+    ],
+    updated: U,
+  },
+  {
     key: "ghostwriter",
     name: "Voice to Content",
     href: "/tools/ghostwriter/",
