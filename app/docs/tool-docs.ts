@@ -456,19 +456,20 @@ export const TOOL_DOCS: ToolDoc[] = [
     updated: U,
   },
   {
-    key: "pdf-to-jpg",
-    name: "PDF to JPG",
-    href: "/tools/pdf-to-jpg/",
-    icon: "/bum/icons/pdf-to-jpg.png",
+    key: "pdf-to-image",
+    name: "PDF to Image",
+    href: "/tools/pdf-to-image/",
+    icon: "/bum/icons/pdf-to-image.png",
     summary:
-      "PDF to JPG turns every page of a PDF into a clean JPG image, right in your browser, for the forms, platforms, and clients that insist on pictures instead of documents.",
+      "PDF to Image turns every page of a PDF into a clean image, right in your browser, for the forms, platforms, and clients that insist on pictures instead of documents. Pick JPG, PNG, or WebP.",
     steps: [
-      "Open PDF to JPG and pick a PDF.",
-      "Choose a resolution and quality.",
+      "Open PDF to Image and pick a PDF.",
+      "Choose a format, resolution, and quality.",
       "Convert, then download each page on its own or grab them all in a zip.",
     ],
     goodToKnow: [
       "One action per PDF converted, however many pages it has.",
+      "JPG is accepted everywhere, PNG keeps text crispest, and WebP makes the smallest files.",
       "Three resolutions: Standard for forms and uploads, High for reading and printing, Extra high for small print.",
       "Password-protected PDFs need to be unlocked first, then converted.",
     ],
@@ -479,7 +480,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     faq: [
       ["Do my PDFs upload anywhere?", "No, conversion is fully in your browser."],
-      ["What do I get from a multi-page PDF?", "One JPG per page, in order, plus a zip with all of them together."],
+      ["What do I get from a multi-page PDF?", "One image per page, in order and in the format you picked, plus a zip with all of them together."],
     ],
     updated: U,
   },

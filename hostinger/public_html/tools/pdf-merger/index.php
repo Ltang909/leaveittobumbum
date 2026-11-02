@@ -85,6 +85,10 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .file-row .meta{font-size:13px;opacity:.75}
 .file-row .grow{flex:1;min-width:160px}
 .file-row.bad{opacity:.65}
+.file-row img.thumb{width:58px;height:76px;object-fit:contain;border:1px solid #e7dcc3;border-radius:6px;background:#fff;flex:none}
+.file-row .thumbph{width:58px;height:76px;border:1px dashed #ddd1b8;border-radius:6px;background:#fffdf8;display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
+.file-row .thumbcap{font-size:11px;opacity:.65;text-align:center;margin-top:2px}
+.thumbwrap{flex:none;width:58px}
 .mini-btn{border:1px solid #ddd1b8;background:#fff;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer;color:inherit}
 .mini-btn:disabled{opacity:.35;cursor:default}
 .dl{border:1px solid #ddd1b8;background:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none;color:inherit;display:inline-block}
@@ -144,13 +148,15 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/pdf-to-jpg/">PDF to JPG</a> - Turn every page of a PDF into a JPG image.</p>
+<p><a href="/tools/pdf-to-image/">PDF to Image</a> - Turn every page of a PDF into a JPG, PNG, or WebP image.</p>
 <p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever, right in your browser.</p>
 <p><a href="/tools/video-converter/">Video Converter</a> - Convert a video to MP4, WebM, or animated GIF without uploading it.</p>
 </section>
 </main>
 <script src="/tools/pdf-merger/vendor/pdf-lib.min.js"></script>
+<script src="/tools/pdf-merger/vendor/pdf.min.js"></script>
 <script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='/tools/pdf-merger/vendor/pdf.worker.min.js';
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/pdf-merger.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
 bbTrack('tool_opened',{tool:'pdf-merger'});
@@ -161,6 +167,22 @@ const fileList=document.querySelector('#fileList'),totalLine=document.querySelec
 const mergeProgress=document.querySelector('#mergeProgress'),barFill=document.querySelector('#barFill'),progText=document.querySelector('#progText');
 let entries=[];
 
+async function renderThumb(source){
+  try{
+    const doc=await pdfjsLib.getDocument({data:source}).promise;
+    const page=await doc.getPage(1);
+    const base=page.getViewport({scale:1});
+    const viewport=page.getViewport({scale:116/base.width});
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    await page.render({canvasContext:ctx,viewport}).promise;
+    const url=canvas.toDataURL('image/jpeg',0.72);
+    await doc.destroy();
+    return url;
+  }catch(e){return null}
+}
 function goodEntries(){return entries.filter(e=>e.ok)}
 function refresh(){
   fileList.innerHTML='';
@@ -169,7 +191,12 @@ function refresh(){
     const info=e.ok
       ? '<b>'+esc(e.file.name)+'</b><br><span class="meta">'+e.pages+' page'+(e.pages===1?'':'s')+' &middot; '+(e.file.size/1024).toFixed(0)+' KB</span>'
       : '<b>'+esc(e.file.name)+'</b><br><span class="meta">Bum Bum could not read this one. It may be password-protected or damaged, so it is left out of the merge.</span>';
-    row.innerHTML='<div class="grow">'+info+'</div>';
+    row.innerHTML='';
+    const tw=document.createElement('div');tw.className='thumbwrap';
+    if(e.ok && e.thumb){tw.innerHTML='<img class="thumb" alt="First page of '+esc(e.file.name)+'"><div class="thumbcap">Page 1 of '+e.pages+'</div>';tw.querySelector('img').src=e.thumb}
+    else{tw.innerHTML='<div class="thumbph">📄</div>'}
+    row.appendChild(tw);
+    const grow=document.createElement('div');grow.className='grow';grow.innerHTML=info;row.appendChild(grow);
     const up=document.createElement('button');up.type='button';up.className='mini-btn';up.textContent='Up';up.disabled=i===0;
     up.addEventListener('click',()=>{const t=entries[i-1];entries[i-1]=entries[i];entries[i]=t;refresh()});
     const down=document.createElement('button');down.type='button';down.className='mini-btn';down.textContent='Down';down.disabled=i===entries.length-1;
@@ -194,11 +221,12 @@ async function addFiles(list){
     if(entries.length>=30)break;
     const isPdf=f.type==='application/pdf'||/\.pdf$/i.test(f.name||'');
     if(!isPdf)continue;
-    const entry={file:f,ok:false,pages:0};
+    const entry={file:f,ok:false,pages:0,thumb:null};
     try{
       const buf=await f.arrayBuffer();
       const doc=await PDFLib.PDFDocument.load(buf);
       entry.ok=true;entry.pages=doc.getPageCount();
+      entry.thumb=await renderThumb(await f.arrayBuffer());
     }catch(e){entry.ok=false}
     entries.push(entry);added++;
   }
@@ -245,7 +273,10 @@ mergeBtn.addEventListener('click',async()=>{
     const row=document.createElement('div');row.className='file-row';
     row.innerHTML='<div class="grow"><b>'+esc(base+'-merged.pdf')+'</b><br><span class="meta">'+totalPages+' pages &middot; '+(blob.size/1024).toFixed(0)+' KB</span></div>';
     const a=document.createElement('a');a.className='dl';a.href=url;a.download=base+'-merged.pdf';a.textContent='Download';
-    row.appendChild(a);resultList.prepend(row);
+    row.appendChild(a);
+    const mergedThumb=await renderThumb(bytes.slice(0));
+    if(mergedThumb){const tw=document.createElement('div');tw.className='thumbwrap';tw.innerHTML='<img class="thumb" alt="First page of the merged PDF"><div class="thumbcap">Merged</div>';tw.querySelector('img').src=mergedThumb;row.prepend(tw)}
+    resultList.prepend(row);
     bbTrack('merge_done',{files:good.length,pages:totalPages});
     if(window.BBDropStrip)window.BBDropStrip.show('pdf-merger');
     barFill.style.width='100%';progText.textContent='Done.';
