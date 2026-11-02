@@ -22,6 +22,8 @@ const TOOLS: Array<[string, string, string]> = [
   ["Video Trimmer", "/tools/video-trimmer/", "Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser. Your video never leaves your device."],
   ["Image Converter", "/tools/image-converter/", "WebP to PNG, JPG to WebP, whatever to whatever. Bum Bum converts your images right in your browser and hands them back in the format you wanted."],
   ["Image Cropper", "/tools/image-cropper/", "Drag a box around the good part. Bum Bum crops your image right in your browser, with aspect presets for profile pics and posts."],
+  ["PDF Merger", "/tools/pdf-merger/", "Stitch several PDFs into one, in the order you choose. Runs right in your browser, so your files never leave your device."],
+  ["PDF to Image", "/tools/pdf-to-image/", "Turn every page of a PDF into a clean JPG, PNG, or WebP image, right in your browser. Download pages one by one or all together in a zip."],
   ["Voice to Content", "/tools/ghostwriter/", "Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post."],
   ["Audiogram Maker", "/tools/audiogram/", "Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4."],
   ["QR Code Generator", "/tools/purr-code/", "Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print."],

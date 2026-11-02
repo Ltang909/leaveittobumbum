@@ -87,6 +87,8 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   "video-trimmer": "Drop the video here to trim it…",
   "image-converter": "Drop the image here to convert it…",
   "image-cropper": "Drop the image here to crop it…",
+  "pdf-merger": "Drop the PDFs here to merge them…",
+  "pdf-to-image": "Drop the PDF here to turn its pages into images…",
   ghostwriter: "e.g. Paste a ramble or transcript, get hooks, a script, and a caption…",
   audiogram: "Hit Do it! to open it, then drop your MP3 there…",
   "purr-code": "e.g. https://yourshop.com, whatever the code should open…",
@@ -97,7 +99,7 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   "email-signature-generator": "e.g. Make me a clean email signature for Gmail…",
 };
 
-// The task chips under the desk: a pool of twenty, one per tool. When a
+// The task chips under the desk: a pool of chips, one per tool. When a
 // session starts, four are drawn at random and kept for the whole session
 // (persisted in sessionStorage), so different visitors meet different
 // tools first and the set never reshuffles mid-session. "picker" chips
@@ -117,6 +119,8 @@ const CHIP_POOL: ChipDef[] = [
   { key: "meal-scanner", chip: "meal", label: "Scan my meal", picker: "image/*" },
   { key: "image-converter", chip: "image-convert", label: "Convert an image", picker: "image/*" },
   { key: "image-cropper", chip: "image-crop", label: "Crop an image", picker: "image/*" },
+  { key: "pdf-merger", chip: "pdf-merge", label: "Merge PDFs", picker: "application/pdf,.pdf" },
+  { key: "pdf-to-image", chip: "pdf-image", label: "PDF to images", picker: "application/pdf,.pdf" },
   { key: "video-trimmer", chip: "video-trim", label: "Trim a video", picker: "video/*" },
   { key: "video-converter", chip: "video-convert", label: "Convert a video", picker: "video/*" },
   { key: "clips", chip: "screen-record", label: "Record my screen" },
@@ -176,7 +180,7 @@ const NATIVE_TOOLS = ["notes", "receipt-reader", "corporate-bum-bum", "invoice-c
 // window.__bbCaptureHandoff and load /tools/capture-handoff.js, so the
 // IndexedDB stash actually gets picked up on arrival. Values are the
 // file kinds each page can swallow.
-const FILE_HANDOFF_KINDS: Record<string, ("audio" | "video" | "image")[]> = {
+const FILE_HANDOFF_KINDS: Record<string, ("audio" | "video" | "image" | "pdf")[]> = {
   notes: ["audio"],
   "receipt-reader": ["image"],
   "poster-to-calendar": ["image"],
@@ -185,6 +189,8 @@ const FILE_HANDOFF_KINDS: Record<string, ("audio" | "video" | "image")[]> = {
   "image-cropper": ["image"],
   "video-trimmer": ["video"],
   "video-converter": ["video"],
+  "pdf-merger": ["pdf"],
+  "pdf-to-image": ["pdf"],
 };
 
 // Tiny subsequence fuzzy matcher for the @ menu. Whole-string for names
@@ -251,10 +257,11 @@ function idem(): string {
   return Array.from(a, (b) => ("0" + b.toString(16)).slice(-2)).join("");
 }
 
-function fileKind(file: File): "audio" | "video" | "image" | "other" {
+function fileKind(file: File): "audio" | "video" | "image" | "pdf" | "other" {
   if (file.type.startsWith("audio/")) return "audio";
   if (file.type.startsWith("video/")) return "video";
   if (file.type.startsWith("image/")) return "image";
+  if (file.type === "application/pdf" || /\.pdf$/i.test(file.name || "")) return "pdf";
   return "other";
 }
 
@@ -352,7 +359,7 @@ function FilePreview({ file }: { file: File }) {
     return <video className={cls} src={url} preload="metadata" muted playsInline aria-hidden="true" />;
   return (
     <span className={cls + " bb-file-preview-icon"} aria-hidden="true">
-      {file.type.startsWith("audio/") ? "🎵" : file.type.startsWith("video/") ? "🎬" : "📎"}
+      {file.type.startsWith("audio/") ? "🎵" : file.type.startsWith("video/") ? "🎬" : file.type === "application/pdf" ? "📄" : "📎"}
     </span>
   );
 }
@@ -875,6 +882,15 @@ export default function CaptureBar() {
         });
         return;
       }
+      if (kind === "pdf") {
+        // Same rule for PDFs: never route one past a pin that cannot
+        // receive it.
+        setResult({
+          kind: "message",
+          text: pinned.name + " cannot take a PDF. Unpin it above the box, or @ one of the PDF tools: PDF Merger, PDF to Image.",
+        });
+        return;
+      }
     }
     if (kind === "audio") {
       stashAndGo(f, "/tools/notes/", "Voice Notes to Text", "file");
@@ -886,10 +902,19 @@ export default function CaptureBar() {
       // visitor picks a photo tool and hits Do it!.
       setStagedImage(f);
       setResult({ kind: "idle" });
+    } else if (kind === "pdf") {
+      // No pin: two PDF tools want different jobs from a PDF, so he
+      // asks rather than guesses, the same rule as photos.
+      setResult({
+        kind: "message",
+        text: "A PDF. Two tools want it: @PDF Merger stitches several PDFs into one, and @PDF to Image turns pages into JPG, PNG, or WebP images. Pin one above the box, then drop the PDF again.",
+        suggestName: "PDF Merger",
+        suggestUrl: "/tools/pdf-merger/",
+      });
     } else {
       setResult({
         kind: "message",
-        text: "That file type has Bum Bum stumped. He takes photos, videos, and audio here. Anything else, the toolbox probably has a tool for it.",
+        text: "That file type has Bum Bum stumped. He takes photos, videos, audio, and PDFs here. Anything else, the toolbox probably has a tool for it.",
         suggestName: "the toolbox",
         suggestUrl: "/tools/",
       });
@@ -1296,8 +1321,8 @@ export default function CaptureBar() {
               <button
                 type="button"
                 className="desk-icon-btn"
-                onClick={() => openFilePicker("image/*,video/*,audio/*")}
-                aria-label="Attach a photo, video, or audio file"
+                onClick={() => openFilePicker("image/*,video/*,audio/*,application/pdf,.pdf")}
+                aria-label="Attach a photo, video, audio file, or PDF"
                 title="Attach a file"
               >
                 +
@@ -1489,7 +1514,7 @@ export default function CaptureBar() {
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*,video/*,audio/*"
+          accept="image/*,video/*,audio/*,application/pdf,.pdf"
           style={{ display: "none" }}
           onChange={(e) => {
             const f = e.target.files && e.target.files[0];
