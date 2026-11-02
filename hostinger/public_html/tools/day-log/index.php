@@ -334,9 +334,16 @@ async function startMR(fellBack){
         if(base==='audio/x-m4a'||base==='audio/m4a'||base==='audio/aac')base='audio/mp4';
         dataUrl=dataUrl.replace(/^data:[^;,]+/,'data:'+base);
       }
-      hideWave(); ta.classList.remove('hidden');
-      if(!dataUrl){setStatus('Recording could not be read. Type instead.');return}
+      ta.classList.remove('hidden');
+      if(!dataUrl){hideWave();setStatus('Recording could not be read. Type instead.');return}
+      // Server transcription is the slow stretch: keep a loading
+      // state on screen until the words actually land (owner
+      // request), and lock the mic so a second take cannot race
+      // the transcription already in flight.
+      showWave('Bum Bum is finishing up writing...',true);
+      micBtn.disabled=true; micBtn.style.opacity='.45';
       const{response,data}=await apiCall({action:'transcribe',audio:dataUrl});
+      hideWave(); micBtn.disabled=false; micBtn.style.opacity='';
       if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;refreshFile();setStatus('Transcribed. Fix anything, then file when ready.')}
       else setStatus((data&&data.error)||'Transcription failed. Type instead.');
     };
