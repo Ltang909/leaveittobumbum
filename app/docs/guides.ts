@@ -134,7 +134,7 @@ export const GUIDES: GuideDoc[] = [
       { h: "Quiet weeks" },
       { p: "Nothing coming up? Most weeks like that you will hear nothing at all. Now and then, at most every other week, a one-line quiet note confirms Bum Bum checked and your week is genuinely clear. No streaks, no content marketing in disguise, just the all-clear." },
       { h: "Who gets it, and how to stop it" },
-      { p: "The Monday note goes to account holders who use the trackers. Guests never get email. Turn it off any time from the **Monday note panel on your [account page](/account/)**, or from the unsubscribe link at the bottom of any note. Turning it off changes nothing else about your account." },
+      { p: "The Monday note goes to account holders who use the trackers. Guests never get email. One note per email address: if you somehow have two accounts under the same email, their trackers round up into a single note. Turn it off any time from the **Monday note panel on your [account page](/account/)**, or from the unsubscribe link at the bottom of any note. Turning it off changes nothing else about your account." },
       { note: "One note a week, only from your own trackers. Nothing else, ever. That is the whole email program." },
     ],
   },
