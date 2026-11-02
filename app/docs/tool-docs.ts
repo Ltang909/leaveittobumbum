@@ -656,7 +656,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Week and month summaries cost one action when freshly generated. Re-opening the same stretch of logs is free.",
       "Advanced settings can file each day as its own Notion page inside a page or database you pick, using your own Notion integration token. Bum Bum stays the source of truth; re-filing a day rewrites its Notion page.",
       "Day Log needs a free account: the scorecard only works if yesterday's list is filed under you.",
-      "Transcription tries your browser's live transcription first. On browsers without it, your recording is transcribed by Whisper and then discarded.",
+      "Transcription tries your browser's live transcription first. On browsers without it, your recording is transcribed by Whisper and then discarded. While that runs, the page shows Bum Bum finishing up your writing; your words land in the box when it is done.",
       "Skip any prompt that does not fit the day. One answered prompt is enough to file.",
     ],
     data: "We keep your words, never your voice. Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Recap emails go only to your own account address.",
@@ -672,7 +672,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Can I fix a day after filing it?", "Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action."],
       ["Can I type instead of talking?", "Yes. The one big box takes typing too, and you can mix talking and typing in the same log."],
     ],
-    updated: "October 28, 2026",
+    updated: "November 1, 2026",
   },
   {
     key: "email-signature-generator",
