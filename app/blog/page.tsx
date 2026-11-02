@@ -8,6 +8,36 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/honeybook-alternatives-2026/",
+    title: "5 Best HoneyBook Alternatives in 2026 for Solopreneurs",
+    description: "Looking for a HoneyBook alternative after the price increases? Compare five options for invoicing, contracts, and client follow-ups, including simpler tools for freelancers and solopreneurs.",
+    date: "November 2, 2026",
+  },
+  {
+    href: "/blog/indy-alternatives-2026/",
+    title: "5 Best Indy Alternatives in 2026 for Freelancers",
+    description: "Looking for an Indy alternative after the price increases? Compare five options for proposals, invoicing, and follow-ups, including simpler tools that do one job well.",
+    date: "November 2, 2026",
+  },
+  {
+    href: "/blog/wave-alternatives-2026/",
+    title: "5 Best Wave Alternatives in 2026 for Freelancers",
+    description: "Looking for a Wave alternative after features moved behind the Pro paywall? Compare five options for invoicing, accounting, and chasing late payments.",
+    date: "November 2, 2026",
+  },
+  {
+    href: "/blog/dubsado-alternatives-2026/",
+    title: "5 Best Dubsado Alternatives in 2026 (Simpler Client Follow-Ups)",
+    description: "Looking for a Dubsado alternative without the setup marathon? Compare five options for client follow-ups, contracts, and invoicing, including tools that run in minutes.",
+    date: "November 2, 2026",
+  },
+  {
+    href: "/blog/capcut-alternatives-2026/",
+    title: "5 Best CapCut Alternatives in 2026 for Quick Video Edits",
+    description: "Looking for a CapCut alternative after the price increases and paywalls? Compare five options for trimming, converting, and editing short videos in 2026.",
+    date: "November 2, 2026",
+  },
+  {
     href: "/blog/descript-alternatives-2026/",
     title: "5 Best Descript Alternatives in 2026 (Free & Simple Options)",
     description: "Explore five Descript alternatives in 2026 for screen recording, video editing, and content creation, including simpler tools for everyday recordings.",
