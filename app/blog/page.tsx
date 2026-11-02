@@ -8,6 +8,12 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/how-to-merge-a-pdf-online/",
+    title: "How to Merge a PDF Online (Without Uploading Your Files)",
+    description: "Merge several PDFs into one, in the order you choose, right in your browser. No uploads, no quality loss, nothing to install. Here is the whole process, plus the ordering tips that save a shuffle later.",
+    date: "November 2, 2026",
+  },
+  {
     href: "/blog/how-to-write-an-sop/",
     title: "How to Write an SOP That People Actually Follow",
     description: "An SOP only works if someone else can follow it without asking you questions. Here is a simple way to write standard operating procedures for a small business, step by step.",
