@@ -242,6 +242,15 @@ try{bbTrack('tool_opened',{tool:'doodle'})}catch(e){}
 <p>Copy it to your clipboard or download it as an image file.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">A sketchpad in your browser, the short guide</h2>
+<h3>How it works here</h3>
+<p>Draw with a finger, stylus, or mouse, right in your browser. Nothing leaves your device while you draw; your sketch only goes anywhere when you choose to save, copy, or download it. Drawing is free and unlimited. Saving or copying a doodle uses one action, and exports come out as PNG or SVG.</p>
+<h3>Signatures that survive export</h3>
+<p>Signing something? Draw big, then shrink it into place. Big signatures export cleaner than small, careful ones, because the lines have more room to be smooth.</p>
+<h3>PNG or SVG</h3>
+<p>SVG keeps lines crisp at any size, so it is the one to pick for anything printed or shown large. PNG is the everyday choice for dropping a sketch into a document, a message, or a post.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>

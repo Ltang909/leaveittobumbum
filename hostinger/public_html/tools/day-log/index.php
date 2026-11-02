@@ -113,7 +113,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .wave-strip.anim .wave-bars span{animation:wavePulse 1s ease-in-out infinite}
 .wave-strip.anim .wave-bars span:nth-child(2){animation-delay:.1s}.wave-strip.anim .wave-bars span:nth-child(3){animation-delay:.22s}.wave-strip.anim .wave-bars span:nth-child(4){animation-delay:.34s}.wave-strip.anim .wave-bars span:nth-child(5){animation-delay:.46s}.wave-strip.anim .wave-bars span:nth-child(6){animation-delay:.58s}.wave-strip.anim .wave-bars span:nth-child(7){animation-delay:.7s}
 @keyframes wavePulse{0%,100%{height:8px}50%{height:30px}}
-@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}}
+@media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/day-log-sticker.png" alt="Day Log"><h1>5 min/day. Increase your productivity.</h1><p class="lede bb-desc">You're busy out there working on your business. Sometimes things get forgotten or deprioritized; when you look back, you forget what you did the past week. Spend 5 min every evening with Bum Bum, brain dump what you did, challenges faced, lessons learned and what to achieve. Bum bum reads what you've logged and sends you a daily email keeping you on track! He also summarizes highlights and growth on a weekly and monthly basis.</p>
 <?php if (!$user): ?>
 <section class="panel"><h2>Day Log lives in your account</h2><p class="lede">The scorecard only works if yesterday's list is waiting for you, so Day Log needs a free account to file into. Your logs, your words, nobody else's.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/day-log/') ?>">Sign in or create a free account</a></p></section>
@@ -191,6 +191,16 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <details><summary>Can I type instead of talking?</summary><p>Yes. The one big box takes typing too. Talk, type, or mix both in the same log.</p></details>
 <details><summary>Can I fix a day after filing it?</summary><p>Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action.</p></details>
 <details><summary>Can Day Log copy my logs to Notion?</summary><p>Yes. In Advanced settings, connect a Notion page or database with your own integration token and each filed day becomes its own Notion page of jot notes, titled with the date. Re-filing a day rewrites its page.</p></details>
+</section>
+
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Closing your day in five minutes, the short guide</h2>
+<h3>How it works here</h3>
+<p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next weekday morning, a recap email arrives with tomorrow's priorities on top. One action per day filed, and re-filing the same day replaces the earlier version at no extra cost. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you.</p>
+<h3>Your voice is never kept</h3>
+<p>Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Transcription tries your browser's live transcription first; on browsers without it, the recording is transcribed by Whisper and then discarded. Your words were the point. Your voice was just the fastest way to get them down.</p>
+<h3>Make tomorrow countable</h3>
+<p>Send the proposal scores cleanly tomorrow; work on business stuff never does. File before you plan tomorrow anywhere else, because the log's list is the one that gets scored. Kept-up logs compound: week and month summaries pull out the accomplishments, learnings, and growth across a stretch of days, and advanced settings can file each day into Notion with your own integration token.</p>
 </section>
 
 <section aria-label="More tiny tools">

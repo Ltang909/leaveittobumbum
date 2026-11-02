@@ -603,6 +603,13 @@ if(!screenOK){
 <p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video.</p>
 <p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-record-your-screen-for-free/">How to record your screen for free (no software to install)</a>.</p><p>Screen recording is one of the everyday jobs we rounded up in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Recording your screen, the short guide</h2>
+<h3>How it works here</h3>
+<p>Pick a tab, a window, or your whole screen, add your microphone and a small camera bubble if you want to be in it, and record. Everything happens in your browser: nothing uploads anywhere, and Bum Bum keeps no copy. When you stop, you can trim the result and tweak the playback speed before you download. One finished recording uses one action; recording and previewing are free.</p>
+<h3>Set up in thirty seconds</h3>
+<p>Close unrelated tabs before you record a single tab, because the picker shows everything you have open. Then make a short test recording first. It saves you from discovering a muted microphone at minute nine of the real take.</p>
+<h3>When a recording beats a meeting</h3>
+<p>Walkthroughs, bug reports, and status updates are usually better as a two-minute recording than as another call on the calendar. Record it once, send the file, and everyone watches it at their own speed. Screen capture needs a desktop browser; mobile browsers do not offer it.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-record-your-screen-for-free/">How to record your screen for free (no software to install)</a>.</p><p>Screen recording is one of the everyday jobs we rounded up in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 <script src="/tools/drop-strip.js?v=20261030r1"></script></body>
 </html>

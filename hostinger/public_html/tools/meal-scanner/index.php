@@ -190,6 +190,15 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>Every number is editable. Change a portion with the size picker, type over any figure, remove what it imagined, or add the side of fries it politely overlooked.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Meal photos into honest numbers, the short guide</h2>
+<h3>How it works here</h3>
+<p>One photo of your plate becomes estimated calories, protein, carbs, and fat. No database searching, no barcode scanning, no weighing anything. Your photo is read and discarded, never stored, and your running day total lives in your own browser, not in your account. One photo read uses one action.</p>
+<h3>Why a range is the honest answer</h3>
+<p>Every estimate here comes as a range instead of a fake-exact number, because vision estimates of portions typically run 20 to 40 percent off in either direction. A single precise-looking number would be a lie with good formatting. The range is the truth, not a cop-out.</p>
+<h3>Better reads</h3>
+<p>Include something for scale, like cutlery or your hand at the edge of the frame; portion guesses improve fast. Sauce-heavy plate? Edit the item after the read and note the sauce, because hidden calories mostly live there. No meal photo handy? The sample meal on this page shows the full result for free, every number editable.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap receipts, get clean tables.</p>

@@ -343,6 +343,15 @@ againBtn.addEventListener('click',()=>{
 <p>GIFs get chunky fast, so Bum Bum caps them at the first 15 seconds at a tidy size. Pick a short clip for the best GIFs.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Converting video in your browser, the short guide</h2>
+<h3>How it works here</h3>
+<p>Drop in a video and convert it to MP4, WebM, or animated GIF, entirely in your browser. Your video never leaves your device and Bum Bum keeps no copy. One finished conversion uses one action, and changing your mind mid-conversion costs nothing: a cancelled conversion uses no action.</p>
+<h3>Fast paths and honest limits</h3>
+<p>If your video is already in the format you pick, the converter repacks it without re-encoding, which is much faster. Videos taller than 720 pixels are converted at 720 tall; big recordings are where browser conversion goes to die, and 720 is plenty for posting and sharing. Long videos convert at the speed of your computer, because your computer is doing the work.</p>
+<h3>GIFs have rules</h3>
+<p>Animated GIFs are capped at 15 seconds, because a GIF longer than that is a video wearing a costume. Trim the moment first with the Video Trimmer, then convert; a tight four-second GIF beats a wandering fifteen-second one. When the destination is unknown, pick MP4. Everything plays MP4.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>

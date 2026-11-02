@@ -242,5 +242,12 @@ loadPacks();
 <p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
 <p><a href="/tools/doodle/">Online Sketchpad</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>Turning rough thoughts into content is one job among many: see where it fits in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Turning a ramble into posts, the short guide</h2>
+<h3>How it works here</h3>
+<p>Talk for about a minute and get a content pack back: three hooks, each testing a different angle, a 60-second script, and a caption ready to post. Your audio is raw material only; it is transcribed, used to build the pack, and never kept. Your packs are saved in your account, so a good hook from Tuesday is still there on Friday. One finished pack uses one action.</p>
+<h3>Talk, do not type</h3>
+<p>This tool is built for the ramble. Start mid-thought: the reason the thing is interesting makes a better hook than a polished introduction ever will.</p>
+<h3>Capture warm, polish later</h3>
+<p>Generate the pack while the thought is warm, then edit with fresh eyes. Capturing and polishing are different jobs, and doing them at the same time is how ideas die in drafts.</p>
+<h3>Read the guide</h3><p>Turning rough thoughts into content is one job among many: see where it fits in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

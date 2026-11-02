@@ -491,6 +491,15 @@ againBtn.addEventListener('click',()=>{
 <p>Videos in MP4, WebM, MOV, MKV, or AVI, up to 100 MB, and an MP3 for the sound you are laying over it.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Putting music on a video, the short guide</h2>
+<h3>How it works here</h3>
+<p>Drop in a video and an MP3. Snip the good bits of the song, pin each one where it should play, and set how loud everything sits. Snippets can repeat, overlap the original audio, and each source has its own volume. A video with no sound of its own still mixes fine. The render happens in your browser; neither file ever leaves your device. One finished mix uses one action, and placing snippets and previewing are free.</p>
+<h3>Mix quieter than feels right</h3>
+<p>Pull the song down further than seems right under dialogue. If you are noticing the music while someone is talking, it is too loud. You can always lift it in the preview; your viewers cannot turn it down.</p>
+<h3>Land it a breath early</h3>
+<p>Pin a snippet a breath before the moment it is for. Music that lands exactly on the action feels late, because the ear registers the hit after the eye sees it.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>

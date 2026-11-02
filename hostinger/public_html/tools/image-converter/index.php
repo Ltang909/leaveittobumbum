@@ -147,6 +147,15 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>If your browser can open it, Image Converter can convert it.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Converting images, the short guide</h2>
+<h3>How it works here</h3>
+<p>WebP to PNG, JPG to WebP, PNG to JPG, whatever to whatever, converted right in your browser and handed back in the format you wanted. Your files never leave your device. One action per image converted, and it is batch friendly: line up several images and convert them all the same way. Picking and previewing are free.</p>
+<h3>The two directions</h3>
+<p>Convert to WebP to shrink images for your website while keeping them sharp. Convert from WebP when some upload form refuses it: a screenshot stuck as a WebP becomes a friendly PNG here, which is the format every other tool and form on the internet accepts.</p>
+<h3>Which format when</h3>
+<p>PNG is the safe default almost everything accepts. JPG suits photos and keeps files small. WebP is the pick for your own website, where the smaller file loads faster and modern browsers all support it.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/image-cropper/">Image Cropper</a> - Drag a box around the good part.</p>

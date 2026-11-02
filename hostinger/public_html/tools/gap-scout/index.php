@@ -525,4 +525,11 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 <p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
 <p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap photos of up to 10 receipts at once.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-tailor-your-resume-to-a-job-description/">How to tailor your resume to a job description</a>.</p></section></main><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Finding the gaps in your resume, the short guide</h2>
+<h3>How it works here</h3>
+<p>Your resume is compared against up to five job descriptions, and you get the skills they keep asking for that your resume never mentions, with the exact line from each posting as proof. Everything runs in your browser: your resume never leaves your device, and nothing is uploaded or stored. One finished check uses one action.</p>
+<h3>Compare like with like</h3>
+<p>Use postings for the same kind of role. Mixing five unrelated jobs produces a gap list for a job that does not exist, and tailoring toward it helps with none of them.</p>
+<h3>Patterns before hobbies</h3>
+<p>A skill appearing in four of five postings is a pattern worth your effort. A skill in exactly one is that hiring manager's hobby. Work the list in that order and stop when the patterns run out.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-tailor-your-resume-to-a-job-description/">How to tailor your resume to a job description</a>.</p></section></main><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

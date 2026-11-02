@@ -166,6 +166,15 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>All of them. The .ics download works with Apple Calendar, Outlook, and most others. The Google Calendar button adds the event in one tap.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Posters into calendar events, the short guide</h2>
+<h3>How it works here</h3>
+<p>Take a photo of an event poster, flyer, or screenshot, and get a ready-to-save calendar event with the title, date, time, and place filled in. One read covers up to six events on the poster for one action. Relative dates get resolved for you: a poster that says Friday means the coming Friday. Your photo is read and discarded, never stored.</p>
+<h3>Photos that read well</h3>
+<p>Square-on beats artistic. A crooked photo can be straightened first with the Image Cropper, or simply retaken head-on; dates read far more reliably that way. Screenshots of digital posters work just as well as photos of paper ones.</p>
+<h3>Honest about what it is</h3>
+<p>If a photo holds no event at all, a pet, a selfie, a menu, Bum Bum says so instead of guessing. And always eyeball the year on posters near New Year; humans get that wrong too. No poster handy? The sample poster on this page drops in editable events for free, so you can see the whole flow first.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap receipts, get clean tables.</p>
