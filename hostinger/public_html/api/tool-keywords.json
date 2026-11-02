@@ -346,10 +346,13 @@
   "stitch pdf",
   "put pdfs together"
  ],
- "pdf-to-jpg": [
+ "pdf-to-image": [
   "pdf to jpg",
   "pdf to image",
+  "pdf to png",
+  "pdf to webp",
   "convert pdf to jpg",
+  "convert pdf to png",
   "pdf to jpeg",
   "pdf pages as images",
   "turn pdf into image",

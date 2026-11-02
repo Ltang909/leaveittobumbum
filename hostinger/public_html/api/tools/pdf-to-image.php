@@ -1,5 +1,5 @@
 <?php
-// PDF to JPG API.
+// PDF to Image API.
 // Conversion runs entirely in the visitor's browser (pdf.js): PDF files are
 // NEVER uploaded. This endpoint meters conversions (1 action per PDF).
 require dirname(__DIR__) . '/_bootstrap.php';
@@ -14,7 +14,7 @@ if ($action === 'convert') {
     if (strlen($key) < 16 || strlen($key) > 128) {
         jsonResponse(['error' => 'Invalid request identifier.'], 422);
     }
-    $count = consumeSubjectAction($subject, 'pdf-to-jpg', 'pdf-to-jpg-' . $key);
+    $count = consumeSubjectAction($subject, 'pdf-to-image', 'pdf-to-image-' . $key);
     if (!empty($count['limit_reached'])) {
         limitReachedResponse($subject, $count);
     }
