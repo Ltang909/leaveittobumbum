@@ -419,5 +419,12 @@ refresh();
 <p><a href="/tools/invoice-chaser/">Invoice Reminder</a> - Track who owes you what.</p>
 <p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>We compared the field: <a href="/blog/best-free-crm-small-business/">comparing free CRMs for a small business</a>, from full sales pipelines to tiny follow-up trackers like this one.</p></section>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Following up without a CRM, the short guide</h2>
+<h3>How it works here</h3>
+<p>Add the humans, move them down the pipeline, and every morning the tracker tells you exactly who to follow up with and what to say. Follow-ups that come due also show up in the Monday note for that week. Adding a contact uses one action; everything else is free, and you can import contacts from a CSV instead of typing them one by one.</p>
+<h3>The two-minute habit</h3>
+<p>Set the follow-up date before you close the tab after every call. Two days is a good default for a warm conversation. The tracker does the remembering; your only job is telling it when future-you should care.</p>
+<h3>Keep the pipeline honest</h3>
+<p>Someone who has gone quiet for a month belongs in a later stage, not in today's list forever. A short, true list gets worked. A long, stale one gets ignored, which is how follow-ups die in bigger CRMs too. Bum Bum never emails your clients from this tool; the words are always yours to send.</p>
+<h3>Read the guide</h3><p>We compared the field: <a href="/blog/best-free-crm-small-business/">comparing free CRMs for a small business</a>, from full sales pipelines to tiny follow-up trackers like this one.</p></section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

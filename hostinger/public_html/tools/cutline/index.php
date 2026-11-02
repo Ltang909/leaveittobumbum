@@ -130,4 +130,11 @@ load();
 <p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap photos of up to 10 receipts at once.</p>
 <p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-find-subscriptions-you-forgot-about/">How to find subscriptions you forgot about (and cancel them)</a>.</p><p>Subscriptions are one line item in the whole stack: see <a href="/blog/best-small-business-software/">the best small business software tools</a> we recommend, free and paid.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Tracking subscriptions without a spreadsheet, the short guide</h2>
+<h3>How it works here</h3>
+<p>Add each subscription once, with what it costs and how often it renews: weekly, monthly, quarterly, every six months, or yearly. The list lives in your account, and renewals show up in the Monday note, Bum Bum's weekly email, for the week they fall in. Adding a subscription uses one action; editing, deleting, and the list itself are free.</p>
+<h3>Free trials are the trap</h3>
+<p>Trials count as subscriptions here, on purpose. Add the trial the day you start it, with its trial end date, not the day you mean to decide. The Monday note can only warn you about a charge that is in the list.</p>
+<h3>What Bum Bum can and cannot see</h3>
+<p>Only what you type in. Bum Bum cannot see your bank, your cards, or the subscriptions themselves, which is exactly why the list stays honest: it is your record, kept current by you, reminded about by the Monday note.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-find-subscriptions-you-forgot-about/">How to find subscriptions you forgot about (and cancel them)</a>.</p><p>Subscriptions are one line item in the whole stack: see <a href="/blog/best-small-business-software/">the best small business software tools</a> we recommend, free and paid.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

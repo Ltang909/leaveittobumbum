@@ -145,12 +145,19 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </div>
 <div id="upgrade-slot"></div>
 <section class="panel" aria-label="Guide">
-<h2 style="margin-top:0">Put it in your email</h2>
+<h2 style="margin-top:0">Email signatures without the subscription, the short guide</h2>
+<h3>Put it in your email</h3>
 <div class="guide-grid">
 <div class="guide-row"><h3>Gmail</h3><ol><li>Open Gmail and click the gear icon, then See all settings.</li><li>On the General tab, scroll to Signature and click Create new.</li><li>Click in the signature box and paste.</li><li>Scroll down and Save Changes.</li></ol></div>
 <div class="guide-row"><h3>Outlook</h3><ol><li>Open Settings, then Mail, then Compose and reply.</li><li>Click New signature and paste into the box.</li><li>Pick it as the default for new messages.</li><li>Save.</li></ol></div>
 <div class="guide-row"><h3>Apple Mail</h3><ol><li>Open Settings, then Signatures.</li><li>Pick your account and click + to add one.</li><li>Paste into the signature box.</li><li>If the fonts shift, untick Always match my default message font.</li></ol></div>
 </div>
+<h3>How it works here</h3>
+<p>Fill in your name, title, company, and contact details, pick from four layouts and an accent color, and watch the preview update as you type. Then copy the finished signature, formatted, straight into Gmail, Outlook, or Apple Mail settings, or download it as an HTML file. Everything runs in your browser: your details are never uploaded or stored, and the form remembers them on this device for your next visit. Designing and previewing are free; the first copy or download in a visit uses one action.</p>
+<h3>Short beats complete</h3>
+<p>Name, title, one phone number, and one website beat a wall of links. Use your brand color as the accent, so the sign-off matches everything else you send. The signature itself is table-based HTML with inline styles, the format every mail app expects, which is why it survives the trip into settings intact.</p>
+<h3>The photo rule</h3>
+<p>A photo is optional and needs a public link, because email apps cannot carry image files inside a pasted signature; the signature points at the image address instead. Social links work the same way, as small linked icons. Set the signature up on a computer when you can: the Gmail app on your phone uses the signature you saved on desktop.</p>
 </section>
 <script>
 const FIELDS=['fName','fTitle','fCompany','fEmail','fPhone','fWebsite','fPhoto','fLinkedin','fInstagram','fX','fFacebook','fYoutube','fGithub'];

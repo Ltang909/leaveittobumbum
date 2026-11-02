@@ -212,6 +212,15 @@ loadScans();
 <p>For each question: which models mentioned your brand, the vibe of what they said, direct quotes, and which competitors got cited instead. Plus an overall verdict, from radio silent to loud and clear.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">What AI says about your brand, the short guide</h2>
+<h3>How it works here</h3>
+<p>The tracker asks AI models the questions your customers ask, and reports back your mention rate, the sentiment, direct quotes, and which competitors get cited instead of you. The scan sends your brand name and your questions to the models it checks; that is the whole point of the tool, and nothing else about your account goes along. One finished scan uses one action.</p>
+<h3>Ask like a customer</h3>
+<p>Write the questions the way customers type them, not the way your marketing page phrases them. The gap between those two is usually the finding.</p>
+<h3>A lost question is a content assignment</h3>
+<p>Your scans are saved, so you can rerun the same questions next month and see whether you are gaining or losing ground. Results are a snapshot of real answers and vary run to run, the way real AI answers do. When a competitor gets cited on a question you should own, that is not just a statistic; it is the next page to write.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>

@@ -161,6 +161,15 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>Anything your browser can open, including JPG, PNG, and WebP.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Cropping images, the short guide</h2>
+<h3>How it works here</h3>
+<p>Drag a box around the good part and crop, right in your browser. Aspect presets cover the common profile and post shapes, freeform cropping is always there, and you can set an exact crop area instead of eyeballing it. Your files never leave your device. One action per crop.</p>
+<h3>Crop for the destination</h3>
+<p>Start from the preset for wherever the image is going, then adjust. Leave a little breathing room around faces: platforms crop their previews their own way, and foreheads pay the price.</p>
+<h3>Crops that help other tools</h3>
+<p>A poster photo cropped square-on before Poster to Calendar makes its read noticeably more reliable. Cropping is often the two-minute fix that makes the next tool look smart.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>

@@ -412,6 +412,15 @@ draw();
 <p>No. Your codes work as long as your link does.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">QR codes that actually scan, the short guide</h2>
+<h3>How it works here</h3>
+<p>Your link becomes a branded code: soft dots, pretty colors, and a cat in the middle, ready to print. The code encodes your link and nothing else. Previewing is free; exporting a code uses one action. Codes do not expire, so a printed code keeps working as long as the link does.</p>
+<h3>Test at the real size</h3>
+<p>Print one, stick it where it will live, and scan it from a customer's distance. A code that scans beautifully off your monitor can fail off a menu across a table.</p>
+<h3>Contrast is king</h3>
+<p>Keep contrast strong between the dots and the background. Pretty colors that sit too close together make a code that looks great and scans never. Tracking is optional and shows scan counts, so a poster or a menu can prove it is working.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/doodle/">Online Sketchpad</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>

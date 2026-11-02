@@ -386,4 +386,11 @@ refresh().then(function(){
 <p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
 <p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-write-an-invoice-reminder-email/">How to write an invoice reminder email (with templates)</a>.</p><p>Chasing invoices is one piece of the money puzzle: see how <a href="/blog/best-business-account-software/">the best business account software for small businesses</a> compares side by side.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Getting paid without the awkward, the short guide</h2>
+<h3>How it works here</h3>
+<p>Track who owes you what, and when a chase is due, Bum Bum writes the email in the right tone. You always see and approve it before anything sends; then it goes out as your billing assistant in one tap. Adding an invoice or sending a chase uses one action each; everything else is free.</p>
+<h3>Timing is most of the tone</h3>
+<p>Chase the day after the due date, politely. The first nudge is a reminder, not an accusation, and most late invoices are buried inboxes, not bad intent. The chaser also learns how each client actually pays, so a client who always pays on day 20 does not get nudged on day 2.</p>
+<h3>Add invoices when you send them</h3>
+<p>Not when they go overdue. The learning only works with the real dates, and a tracker that only holds the problem invoices teaches itself the wrong lesson about everyone.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-write-an-invoice-reminder-email/">How to write an invoice reminder email (with templates)</a>.</p><p>Chasing invoices is one piece of the money puzzle: see how <a href="/blog/best-business-account-software/">the best business account software for small businesses</a> compares side by side.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

@@ -277,6 +277,15 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <p>Hand it to a helper, save it as your process doc, or use it to train the next person.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Turning a brain-dump into a playbook, the short guide</h2>
+<h3>How it works here</h3>
+<p>Paste the messy version of how you do a thing, or talk it out loud if the process lives in your head better than on a keyboard, and get a clean step-by-step playbook a brand-new helper could follow with zero prior context. Your playbooks are saved in your account and nothing is shared. One finished playbook uses one action.</p>
+<h3>Do not pre-organize</h3>
+<p>The messier the input, the bigger the transformation. Tidying your dump first is doing the job you are delegating, badly, at the exact moment you were trying to hand it off.</p>
+<h3>Include the annoying parts</h3>
+<p>The login that lives in a spreadsheet, the step everyone forgets, the exception that happens every month. Playbooks fail on the steps nobody wrote down. Start with the task you dread handing over; that dread is usually undocumented knowledge, and the SOP is how it stops being only yours.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>

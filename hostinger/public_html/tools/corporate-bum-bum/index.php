@@ -490,4 +490,11 @@ refresh().then(function(){
 <p><a href="/tools/gap-scout/">Resume Gap Checker</a> - Upload your resume and paste in job descriptions.</p>
 <p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
 </section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-track-job-applications/">How to track job applications (a system that survives 50 applications)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Tracking a job hunt without the dread, the short guide</h2>
+<h3>How it works here</h3>
+<p>Add the roles you apply to, move them down the pipeline, and every morning the tracker tells you who to follow up with and what to say. Applications with a follow-up due show up in the Monday note for that week. Adding an application uses one action; everything else is free, and a CSV import saves typing a backlog in one by one.</p>
+<h3>Log it when it happens</h3>
+<p>Add the application the minute you submit it, while the posting link is still in front of you. Reconstructing a month of applications from your sent folder is the spreadsheet dread this tool exists to replace.</p>
+<h3>The follow-up that works</h3>
+<p>Five business days after applying is the sweet spot: polite, expected, and often the thing that resurfaces your name. The tracker never contacts an employer on your behalf. It tells you who and when; the email is yours.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-track-job-applications/">How to track job applications (a system that survives 50 applications)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
