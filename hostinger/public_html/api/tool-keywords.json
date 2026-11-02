@@ -327,7 +327,7 @@
   "What did I do today",
   "Goals",
   "Progress"
-],
+ ],
  "email-signature-generator": [
   "Email signature",
   "Signature generator",
@@ -335,5 +335,24 @@
   "Gmail signature",
   "Outlook signature",
   "Email sign off"
+ ],
+ "pdf-merger": [
+  "merge pdf",
+  "combine pdf",
+  "pdf merger",
+  "join pdf",
+  "merge pdf files",
+  "combine pdfs",
+  "stitch pdf",
+  "put pdfs together"
+ ],
+ "pdf-to-jpg": [
+  "pdf to jpg",
+  "pdf to image",
+  "convert pdf to jpg",
+  "pdf to jpeg",
+  "pdf pages as images",
+  "turn pdf into image",
+  "pdf to picture"
  ]
 }
