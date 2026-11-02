@@ -8,6 +8,42 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/how-to-write-an-sop/",
+    title: "How to Write an SOP That People Actually Follow",
+    description: "An SOP only works if someone else can follow it without asking you questions. Here is a simple way to write standard operating procedures for a small business, step by step.",
+    date: "November 2, 2026",
+  },
+  {
+    href: "/blog/invoice-reminder-templates/",
+    title: "Invoice Reminder Templates for Every Stage of Late",
+    description: "Copy-ready invoice reminder templates for each stage: the friendly heads-up before the due date, the gentle nudge, the firm follow-up, and the final notice.",
+    date: "November 2, 2026",
+  },
+  {
+    href: "/blog/how-to-track-brand-mentions-in-ai/",
+    title: "How to Track When AI Mentions Your Brand",
+    description: "Customers now ask ChatGPT and other AI assistants who to hire. Here is how to check what those answers say about your business, and how to keep checking without making it a second job.",
+    date: "November 2, 2026",
+  },
+  {
+    href: "/blog/how-to-make-an-audiogram/",
+    title: "How to Make an Audiogram for Your Podcast Clips",
+    description: "An audiogram turns your best podcast moment into a video people can actually stop scrolling for. Here is how to make one, from picking the clip to posting it.",
+    date: "November 2, 2026",
+  },
+  {
+    href: "/blog/how-to-turn-voice-notes-into-content/",
+    title: "How to Turn Voice Notes Into Posts and Content",
+    description: "You talk faster than you type, and your best ideas show up away from the keyboard. Here is a simple workflow for turning voice notes into posts, newsletters, and scripts.",
+    date: "November 2, 2026",
+  },
+  {
+    href: "/blog/how-to-trim-a-video-online/",
+    title: "How to Trim a Video Online (No Editor Needed)",
+    description: "Most video edits are just cutting the beginning, the end, or one bad section. Here is how to trim a video in your browser, plus the small details that make the cut look clean.",
+    date: "November 2, 2026",
+  },
+  {
     href: "/blog/honeybook-alternatives-2026/",
     title: "5 Best HoneyBook Alternatives in 2026 for Solopreneurs",
     description: "Looking for a HoneyBook alternative after the price increases? Compare five options for invoicing, contracts, and client follow-ups, including simpler tools for freelancers and solopreneurs.",
