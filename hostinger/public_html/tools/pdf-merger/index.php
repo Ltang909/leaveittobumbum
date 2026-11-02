@@ -146,6 +146,15 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>Usually because it is password-protected or damaged. Unlock it with the password in your usual PDF app, save an unprotected copy, and drop that in.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Merging PDFs, the short guide</h2>
+<h3>How it works here</h3>
+<p>Most online mergers upload your PDFs to a server and combine them there. This one does the combining in your browser: you drop the files, arrange them, and the merged PDF is built on your own device from the pages of the originals. Pages are copied, never rebuilt as images, so text stays sharp and searchable and the quality is exactly what went in. Nothing is uploaded, kept, or seen by anyone else.</p>
+<h3>The order a reader expects</h3>
+<p>Main document first. Supporting files follow in the order the main document mentions them, signed pages sit where the signature belongs, and appendices go last. The first-page preview on each row shows you what you are arranging, so the merged file reads like one document instead of a pile of attachments.</p>
+<h3>Merge, or keep the files separate?</h3>
+<p>Merge when the destination wants one document: a job application, a client packet, a signed contract with its schedules, an archive you will search later. Keep files separate when different people need different pieces, or when some of the pieces are still being edited and would force a re-merge every round.</p>
+</section>
 <section class="panel" aria-label="More tiny tools">
 <h2 style="margin-top:0">More tiny tools</h2>
 <p><a href="/tools/pdf-to-image/">PDF to Image</a> - Turn every page of a PDF into a JPG, PNG, or WebP image.</p>
