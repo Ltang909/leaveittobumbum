@@ -356,6 +356,57 @@ function recap_send_mail(string $to, string $subject, string $html, string $text
     return [true, ''];
 }
 
+
+// ---------- one inbox, one note ----------
+// Signups never blocked duplicate accounts on one email address, and
+// every account used to get its own note: on 2026-11-02 one inbox got
+// three Monday notes (the real account's recap, plus a "quiet" note
+// for each empty duplicate account). Group accounts by email, send a
+// single note per inbox, and gather the week across the whole group.
+function recap_group_users(array $users): array {
+    $byEmail = [];
+    foreach ($users as $u) {
+        $byEmail[strtolower(trim((string) $u['email']))][] = $u;
+    }
+    $groups = [];
+    foreach ($byEmail as $rows) {
+        usort($rows, function ($a, $b) { return (int) $a['id'] <=> (int) $b['id']; });
+        $groups[] = $rows;
+    }
+    return $groups;
+}
+
+function recap_merge_sections(array $into, array $extra): array {
+    $byKey = [];
+    foreach ($into as $i => $sec) $byKey[$sec['key']] = $i;
+    foreach ($extra as $sec) {
+        if (isset($byKey[$sec['key']])) {
+            $into[$byKey[$sec['key']]]['items'] = array_merge($into[$byKey[$sec['key']]]['items'], $sec['items']);
+        } else {
+            $byKey[$sec['key']] = count($into);
+            $into[] = $sec;
+        }
+    }
+    foreach ($into as &$sec) {
+        usort($sec['items'], function ($a, $b) { return strcmp((string) ($a['date'] ?? ''), (string) ($b['date'] ?? '')); });
+        if ($sec['key'] === 'subscriptions') {
+            // The foot carries money totals; rebuild it from the merged
+            // items so totals stay right across accounts.
+            $totals = [];
+            foreach ($sec['items'] as $it) {
+                if (($it['amount'] ?? null) !== null && !empty($it['currency'])) {
+                    $totals[(string) $it['currency']] = ($totals[(string) $it['currency']] ?? 0) + (float) $it['amount'];
+                }
+            }
+            $foot = [];
+            foreach ($totals as $cur => $sum) $foot[] = recap_money($sum, $cur);
+            $sec['foot'] = $foot ? 'Renewing this week: ' . implode(' + ', $foot) : '';
+        }
+    }
+    unset($sec);
+    return $into;
+}
+
 // ---------- run ----------
 $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
 $userSql = 'SELECT id, email, created_at FROM users';
@@ -370,22 +421,41 @@ $statePut = $pdo->prepare('INSERT INTO weekly_email_state (user_id, last_sent_on
     VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE last_sent_on = VALUES(last_sent_on),
     last_kind = VALUES(last_kind), quiet_index = VALUES(quiet_index), unsub_token = VALUES(unsub_token)');
 
+$groups = recap_group_users($users);
 $report = ['ok' => true, 'mode' => $sendMode ? 'send' : 'dry-run', 'window' => $today . ' to ' . $sunday,
-    'week' => $weekLabel, 'users' => count($users), 'recaps' => 0, 'quiet' => 0, 'skipped' => 0, 'errors' => [], 'detail' => []];
+    'week' => $weekLabel, 'users' => count($users), 'inboxes' => count($groups), 'recaps' => 0, 'quiet' => 0, 'skipped' => 0, 'errors' => [], 'detail' => []];
 
-foreach ($users as $u) {
+foreach ($groups as $group) {
+    // The oldest account on the email is canonical; its state row and
+    // unsubscribe link speak for the whole group.
+    $u = $group[0];
     $userId = (int) $u['id'];
     $email = (string) $u['email'];
-    $stateGet->execute([$userId]);
-    $state = $stateGet->fetch() ?: ['last_sent_on' => null, 'last_kind' => '', 'quiet_index' => 0, 'unsubscribed' => 0, 'unsub_token' => ''];
+    $groupIds = [];
+    $groupStates = [];
+    $anyUnsub = false;
+    $anySentToday = false;
+    foreach ($group as $row) {
+        $gid = (int) $row['id'];
+        $groupIds[] = $gid;
+        $stateGet->execute([$gid]);
+        $gs = $stateGet->fetch() ?: ['last_sent_on' => null, 'last_kind' => '', 'quiet_index' => 0, 'unsubscribed' => 0, 'unsub_token' => ''];
+        $groupStates[$gid] = $gs;
+        if ((int) ($gs['unsubscribed'] ?? 0) === 1) $anyUnsub = true;
+        if ((string) ($gs['last_sent_on'] ?? '') === $today) $anySentToday = true;
+    }
+    $state = $groupStates[$userId];
     $token = (string) ($state['unsub_token'] ?? '');
     if ($token === '') $token = bin2hex(random_bytes(16));
     $unsubUrl = $appUrl . '/api/weekly-unsubscribe.php?u=' . $userId . '&t=' . $token;
 
-    if ((int) ($state['unsubscribed'] ?? 0) === 1 && $onlyEmail === '') { $report['skipped']++; continue; }
-    if ($onlyEmail === '' && (string) ($state['last_sent_on'] ?? '') === $today) { $report['skipped']++; continue; }
+    if ($anyUnsub && $onlyEmail === '') { $report['skipped']++; continue; }
+    if ($onlyEmail === '' && $anySentToday) { $report['skipped']++; continue; }
 
-    $sections = recap_gather($pdo, $userId, $today, $sunday, $monday);
+    $sections = [];
+    foreach ($groupIds as $gid) {
+        $sections = recap_merge_sections($sections, recap_gather($pdo, $gid, $today, $sunday, $monday));
+    }
     $itemCount = 0;
     foreach ($sections as $s) $itemCount += count($s['items']);
 
@@ -406,6 +476,7 @@ foreach ($users as $u) {
     }
 
     $entry = ['user_id' => $userId, 'kind' => $kind, 'items' => $itemCount, 'subject' => $mail['subject']];
+    if (count($groupIds) > 1) $entry['merged_user_ids'] = $groupIds;
     if ($onlyEmail !== '') $entry['html'] = $mail['html'];
     if ($sendMode) {
         [$sent, $err] = recap_send_mail($email, $mail['subject'], $mail['html'], $mail['text']);
@@ -413,6 +484,16 @@ foreach ($users as $u) {
             $statePut->execute([$userId, $today, $kind,
                 (int) ($state['quiet_index'] ?? 0) + ($kind === 'quiet' ? 1 : 0),
                 (int) ($state['unsubscribed'] ?? 0), $token]);
+            // Stamp the sibling accounts too, so none of them can earn
+            // its own note on a later run.
+            foreach (array_slice($groupIds, 1) as $gid) {
+                $gs = $groupStates[$gid];
+                $gt = (string) ($gs['unsub_token'] ?? '');
+                if ($gt === '') $gt = bin2hex(random_bytes(16));
+                $statePut->execute([$gid, $today, $kind,
+                    (int) ($gs['quiet_index'] ?? 0),
+                    (int) ($gs['unsubscribed'] ?? 0), $gt]);
+            }
             $entry['sent'] = true;
         } else {
             $entry['sent'] = false;
