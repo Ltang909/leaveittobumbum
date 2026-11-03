@@ -357,5 +357,17 @@
   "pdf pages as images",
   "turn pdf into image",
   "pdf to picture"
+ ],
+ "pdf-compressor": [
+  "compress pdf",
+  "pdf compressor",
+  "shrink pdf",
+  "reduce pdf size",
+  "make pdf smaller",
+  "compress a pdf",
+  "shrink a pdf",
+  "pdf too big to email",
+  "pdf file too big",
+  "pdf too big to upload"
  ]
 }

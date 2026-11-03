@@ -274,6 +274,17 @@
       "url": "/tools/email-signature-generator/",
       "cta": "Make my signature",
       "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "pdf-compressor",
+      "name": "PDF Compressor",
+      "tag": "Files",
+      "icon": "🗜️",
+      "iconImg": "/bum/icons/pdf-compressor.png",
+      "description": "Shrink a PDF right in your browser until it fits the email or upload limit. Pick a level, download the leaner file, send that.",
+      "url": "/tools/pdf-compressor/",
+      "cta": "Compress a PDF",
+      "mascot": "/bum/cat-curious.png"
     }
   ]
 }
