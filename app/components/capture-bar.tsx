@@ -89,6 +89,7 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   "image-cropper": "Drop the image here to crop it…",
   "pdf-merger": "Drop the PDFs here to merge them…",
   "pdf-to-image": "Drop the PDF here to turn its pages into images…",
+  "pdf-compressor": "Drop the PDF here to make it smaller…",
   ghostwriter: "e.g. Paste a ramble or transcript, get hooks, a script, and a caption…",
   audiogram: "Hit Do it! to open it, then drop your MP3 there…",
   "purr-code": "e.g. https://yourshop.com, whatever the code should open…",
@@ -121,6 +122,7 @@ const CHIP_POOL: ChipDef[] = [
   { key: "image-cropper", chip: "image-crop", label: "Crop an image", picker: "image/*" },
   { key: "pdf-merger", chip: "pdf-merge", label: "Merge PDFs", picker: "application/pdf,.pdf" },
   { key: "pdf-to-image", chip: "pdf-image", label: "PDF to images", picker: "application/pdf,.pdf" },
+  { key: "pdf-compressor", chip: "pdf-compress", label: "Compress a PDF", picker: "application/pdf,.pdf" },
   { key: "video-trimmer", chip: "video-trim", label: "Trim a video", picker: "video/*" },
   { key: "video-converter", chip: "video-convert", label: "Convert a video", picker: "video/*" },
   { key: "clips", chip: "screen-record", label: "Record my screen" },
@@ -191,6 +193,7 @@ const FILE_HANDOFF_KINDS: Record<string, ("audio" | "video" | "image" | "pdf")[]
   "video-converter": ["video"],
   "pdf-merger": ["pdf"],
   "pdf-to-image": ["pdf"],
+  "pdf-compressor": ["pdf"],
 };
 
 // Tiny subsequence fuzzy matcher for the @ menu. Whole-string for names
@@ -887,7 +890,7 @@ export default function CaptureBar() {
         // receive it.
         setResult({
           kind: "message",
-          text: pinned.name + " cannot take a PDF. Unpin it above the box, or @ one of the PDF tools: PDF Merger, PDF to Image.",
+          text: pinned.name + " cannot take a PDF. Unpin it above the box, or @ one of the PDF tools: PDF Merger, PDF to Image, PDF Compressor.",
         });
         return;
       }
@@ -907,7 +910,7 @@ export default function CaptureBar() {
       // asks rather than guesses, the same rule as photos.
       setResult({
         kind: "message",
-        text: "A PDF. Two tools want it: @PDF Merger stitches several PDFs into one, and @PDF to Image turns pages into JPG, PNG, or WebP images. Pin one above the box, then drop the PDF again.",
+        text: "A PDF. Three tools want it: @PDF Merger stitches several PDFs into one, @PDF to Image turns pages into JPG, PNG, or WebP images, and @PDF Compressor shrinks it until it fits the email or upload limit. Pin one above the box, then drop the PDF again.",
         suggestName: "PDF Merger",
         suggestUrl: "/tools/pdf-merger/",
       });
