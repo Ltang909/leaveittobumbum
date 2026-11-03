@@ -177,12 +177,7 @@ loadNotes();
 <p>Yes. On iPhone your words still appear live while you record. Short pieces of your audio are sent to our server as you speak and transcribed on the spot. The audio itself is never stored.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
-</section>
+<?php $bbTool = 'notes'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Voice notes that become text, the short guide</h2>
 <h3>How it works here</h3>
 <p>Hit record and talk. Your words appear as a live transcript while you speak, and when you stop, the transcript is saved to your private library, ready to copy or download. The recording itself stays in your browser, so you can listen back right away or download the audio to keep. One finished note uses one action.</p>

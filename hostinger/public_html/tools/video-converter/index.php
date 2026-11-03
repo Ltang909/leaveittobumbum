@@ -352,10 +352,5 @@ againBtn.addEventListener('click',()=>{
 <h3>GIFs have rules</h3>
 <p>Animated GIFs are capped at 15 seconds, because a GIF longer than that is a video wearing a costume. Trim the moment first with the Video Trimmer, then convert; a tight four-second GIF beats a wandering fifteen-second one. When the destination is unknown, pick MP4. Everything plays MP4.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed.</p>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
-</section>
+<?php $bbTool = 'video-converter'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

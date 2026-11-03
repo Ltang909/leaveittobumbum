@@ -156,12 +156,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h3>Which format when</h3>
 <p>PNG is the safe default almost everything accepts. JPG suits photos and keeps files small. WebP is the pick for your own website, where the smaller file loads faster and modern browsers all support it.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/image-cropper/">Image Cropper</a> - Drag a box around the good part.</p>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
-</section>
+<?php $bbTool = 'image-converter'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}

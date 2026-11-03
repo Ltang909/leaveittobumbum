@@ -41,6 +41,23 @@ export const GUIDES: GuideDoc[] = [
     ],
   },
   {
+    slug: "chaining-tools",
+    section: "Getting started",
+    title: "Chaining tools together",
+    summary:
+      "Most jobs are really two or three tiny tasks in a trench coat. Every tool page ends with the natural next steps, so a merged PDF becomes page images, a receipt becomes a tracked subscription, and a voice note becomes a content pack without a trip back to the toolbox.",
+    updated: "November 3, 2026",
+    blocks: [
+      { h: "Why tools suggest a next step" },
+      { p: "Real tasks rarely end where they start. You merge a contract packet, then someone asks for the pages as images. You scan a receipt, then the subscription hiding on it needs tracking. Rather than send you back to the [toolbox](/tools/) to hunt, every tool page finishes with a **next task** strip: three follow-on tools picked for the job you just did, in the order people usually need them." },
+      { h: "How the suggestions are picked" },
+      { p: "They are chosen by hand, not by an algorithm: the follow-ons are the tools that take the output of the one you are using as their input, or that finish the job it started. [PDF Merger](/tools/pdf-merger/) points at [PDF to Image](/tools/pdf-to-image/) and [Image Converter](/tools/image-converter/); the [Receipt Scanner](/tools/receipt-reader/) points at the [Subscription Tracker](/tools/cutline/) and the [Invoice Reminder](/tools/invoice-chaser/). If none of them fit, the whole toolbox is one click away in the header." },
+      { h: "It costs nothing to look" },
+      { p: "Opening a suggested tool is free; [actions](/docs/actions/) only spend when a tool finishes a job for you. Following a chain just to see where it leads costs nothing but the clicks." },
+      { note: "The strip only suggests. Your work stays in the tool you put it in until you hand it to the next one yourself." },
+    ],
+  },
+  {
     slug: "actions",
     section: "Getting started",
     title: "What is an action?",

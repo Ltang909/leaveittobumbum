@@ -484,12 +484,7 @@ refresh().then(function(){
 <p>Yes. Import a CSV matched by company and role.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
-<p><a href="/tools/gap-scout/">Resume Gap Checker</a> - Upload your resume and paste in job descriptions.</p>
-<p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
-</section>
+<?php $bbTool = 'corporate-bum-bum'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Tracking a job hunt without the dread, the short guide</h2>
 <h3>How it works here</h3>
 <p>Add the roles you apply to, move them down the pipeline, and every morning the tracker tells you who to follow up with and what to say. Applications with a follow-up due show up in the Monday note for that week. Adding an application uses one action; everything else is free, and a CSV import saves typing a backlog in one by one.</p>

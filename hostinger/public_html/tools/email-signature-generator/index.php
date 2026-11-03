@@ -334,10 +334,5 @@ try{bbTrack('tool_opened',{tool:'email-signature-generator'})}catch(e){}
 <p>Any time. The form remembers your details on this device, so updating a title or phone number takes seconds. Paste the new version over the old one in your mail settings.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/day-log/">Day Log</a> - Talk through your day, get jot notes and a morning recap.</p>
-<p><a href="/tools/invoice-chaser/">Invoice Chaser</a> - Chase late invoices without writing the awkward email yourself.</p>
-<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>
-</section>
+<?php $bbTool = 'email-signature-generator'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

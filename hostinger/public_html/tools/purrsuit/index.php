@@ -413,12 +413,7 @@ refresh();
 <p>Yes. Import a CSV and Client Follow-Up Tracker matches them up for you.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/corporate-bum-bum/">Job Application Tracker</a> - A job application tracker that tells you who to follow up with today and what to say.</p>
-<p><a href="/tools/invoice-chaser/">Invoice Reminder</a> - Track who owes you what.</p>
-<p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
-</section>
+<?php $bbTool = 'purrsuit'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Following up without a CRM, the short guide</h2>
 <h3>How it works here</h3>
 <p>Add the humans, move them down the pipeline, and every morning the tracker tells you exactly who to follow up with and what to say. Follow-ups that come due also show up in the Monday note for that week. Adding a contact uses one action; everything else is free, and you can import contacts from a CSV instead of typing them one by one.</p>

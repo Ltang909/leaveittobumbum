@@ -199,13 +199,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h3>Better reads</h3>
 <p>Include something for scale, like cutlery or your hand at the edge of the frame; portion guesses improve fast. Sauce-heavy plate? Edit the item after the read and note the sauce, because hidden calories mostly live there. No meal photo handy? The sample meal on this page shows the full result for free, every number editable.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap receipts, get clean tables.</p>
-<p><a href="/tools/poster-to-calendar/">Poster to Calendar</a> - Snap a poster, get a ready-to-save calendar event.</p>
-<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
-</section>
-</main>
+<?php $bbTool = 'meal-scanner'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 <script src="/tools/error-scenes.js"></script>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/meal-scanner.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}bbTrack('tool_opened',{tool:'meal-scanner'});

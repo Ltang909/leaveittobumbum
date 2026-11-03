@@ -236,12 +236,7 @@ loadPacks();
 <p>English plus Spanish, French, German, Italian, Portuguese, Chinese, Cantonese, Japanese, and Korean.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
-<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
-<p><a href="/tools/doodle/">Online Sketchpad</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
-</section>
+<?php $bbTool = 'ghostwriter'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Turning a ramble into posts, the short guide</h2>
 <h3>How it works here</h3>
 <p>Talk for about a minute and get a content pack back: three hooks, each testing a different angle, a 60-second script, and a caption ready to post. Your audio is raw material only; it is transcribed, used to build the pack, and never kept. Your packs are saved in your account, so a good hook from Tuesday is still there on Friday. One finished pack uses one action.</p>

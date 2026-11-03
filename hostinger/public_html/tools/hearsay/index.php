@@ -221,10 +221,5 @@ loadScans();
 <h3>A lost question is a content assignment</h3>
 <p>Your scans are saved, so you can rerun the same questions next month and see whether you are gaining or losing ground. Results are a snapshot of real answers and vary run to run, the way real AI answers do. When a competitor gets cited on a question you should own, that is not just a statistic; it is the next page to write.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
-<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.</p>
-</section>
+<?php $bbTool = 'hearsay'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

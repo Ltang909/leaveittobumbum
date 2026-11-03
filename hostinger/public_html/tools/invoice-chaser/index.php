@@ -380,12 +380,7 @@ refresh().then(function(){
 <p>That is exactly who this is for. The chaser adapts its timing to each client's real payment pattern.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap photos of up to 10 receipts at once.</p>
-<p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
-<p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
-</section>
+<?php $bbTool = 'invoice-chaser'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Getting paid without the awkward, the short guide</h2>
 <h3>How it works here</h3>
 <p>Track who owes you what, and when a chase is due, Bum Bum writes the email in the right tone. You always see and approve it before anything sends; then it goes out as your billing assistant in one tap. Adding an invoice or sending a chase uses one action each; everything else is free.</p>

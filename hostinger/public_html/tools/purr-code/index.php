@@ -421,10 +421,5 @@ draw();
 <h3>Contrast is king</h3>
 <p>Keep contrast strong between the dots and the background. Pretty colors that sit too close together make a code that looks great and scans never. Tracking is optional and shows scan counts, so a poster or a menu can prove it is working.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/doodle/">Online Sketchpad</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
-<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
-<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-</section>
+<?php $bbTool = 'purr-code'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

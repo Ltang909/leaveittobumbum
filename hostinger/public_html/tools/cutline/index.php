@@ -124,12 +124,7 @@ load();
 <p>Adding a subscription uses one action. Viewing your list is free.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/invoice-chaser/">Invoice Reminder</a> - Track who owes you what.</p>
-<p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap photos of up to 10 receipts at once.</p>
-<p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
-</section>
+<?php $bbTool = 'cutline'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Tracking subscriptions without a spreadsheet, the short guide</h2>
 <h3>How it works here</h3>
 <p>Add each subscription once, with what it costs and how often it renews: weekly, monthly, quarterly, every six months, or yearly. The list lives in your account, and renewals show up in the Monday note, Bum Bum's weekly email, for the week they fall in. Adding a subscription uses one action; editing, deleting, and the list itself are free.</p>

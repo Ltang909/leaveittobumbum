@@ -597,12 +597,7 @@ if(!screenOK){
 <p>Yes. Trim the start and end and tweak the playback speed before you download.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video.</p>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
-</section>
+<?php $bbTool = 'clips'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Recording your screen, the short guide</h2>
 <h3>How it works here</h3>
 <p>Pick a tab, a window, or your whole screen, add your microphone and a small camera bubble if you want to be in it, and record. Everything happens in your browser: nothing uploads anywhere, and Bum Bum keeps no copy. When you stop, you can trim the result and tweak the playback speed before you download. One finished recording uses one action; recording and previewing are free.</p>
