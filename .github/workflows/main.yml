@@ -71,3 +71,11 @@ jobs:
             for p in index.html checkout/index.php account/index.php api/usage.php app.css; do
               if [ -e "$DOCROOT/$p" ]; then echo "OK: $p"; else echo "MISSING: $p"; fi
             done
+
+      # IndexNow: tell Bing et al. the sitemap URLs changed, right after the
+      # new files are live. The deploy is already done at this point, so a
+      # failed ping must not fail the run.
+      - name: Ping IndexNow
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        continue-on-error: true
+        run: node scripts/indexnow-ping.mjs
