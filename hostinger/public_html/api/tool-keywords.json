@@ -344,7 +344,9 @@
   "merge pdf files",
   "combine pdfs",
   "stitch pdf",
-  "put pdfs together"
+  "put pdfs together",
+  "Merge 2 PDFs",
+  "Combine PDFs into one file"
  ],
  "pdf-to-image": [
   "pdf to jpg",
@@ -356,7 +358,8 @@
   "pdf to jpeg",
   "pdf pages as images",
   "turn pdf into image",
-  "pdf to picture"
+  "pdf to picture",
+  "PDF to Webm"
  ],
  "pdf-compressor": [
   "compress pdf",
