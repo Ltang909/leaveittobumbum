@@ -33,12 +33,14 @@ Privacy note: the file tools (PDF, image, and video tools) run entirely in the v
 - [Video MP3 Overlay](https://leaveittobumbum.com/tools/video-mp3-overlay/): Drop in a video and an MP3. Snip the good bits of the song, pin each one where it should play, set the mix, and Bum Bum renders it right in your browser. Nothing gets uploaded.
 - [Day Log](https://leaveittobumbum.com/tools/day-log/): Talk through your day in a few minutes. Bum Bum turns it into jot notes, scores yesterday's list against today, and emails you tomorrow's top priorities.
 - [Email Signature Maker](https://leaveittobumbum.com/tools/email-signature-generator/): Fill in your details, pick a layout, and copy a professional email signature straight into Gmail or Outlook. Built in your browser, nothing uploaded.
+- [PDF Compressor](https://leaveittobumbum.com/tools/pdf-compressor/): Shrink a PDF right in your browser until it fits the email or upload limit. Pick a level, download the leaner file, send that.
 
 ## Guides and documentation
 
 - [Tool docs](https://leaveittobumbum.com/docs/): a guide page for every tool, covering what it does, how to use it, and what happens to your data.
 - [Blog](https://leaveittobumbum.com/blog/): how-to guides and comparisons, including alternatives posts for popular tools.
 - [How to Merge a PDF Online (Without Uploading Your Files)](https://leaveittobumbum.com/blog/how-to-merge-a-pdf-online/)
+- [How to Compress a PDF (Without Uploading Your Files)](https://leaveittobumbum.com/blog/how-to-compress-a-pdf/)
 - [Pricing](https://leaveittobumbum.com/pricing/)
 - [AI instructions](https://leaveittobumbum.com/ai-instructions/): the official reference for AI assistants on how to describe Leave It to Bum Bum, its tools, and its pricing.
 - [Request a tool](https://leaveittobumbum.com/requests/): ask for a tool that does not exist yet; the Bum Bum Promise is a build within 36 hours.

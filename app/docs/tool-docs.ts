@@ -485,6 +485,35 @@ export const TOOL_DOCS: ToolDoc[] = [
     updated: U,
   },
   {
+    key: "pdf-compressor",
+    name: "PDF Compressor",
+    href: "/tools/pdf-compressor/",
+    icon: "/bum/icons/pdf-compressor.png",
+    summary:
+      "PDF Compressor shrinks a PDF in your browser until it fits the email or upload limit that waved the original away. Pick a level, download the leaner file, and send that one.",
+    steps: [
+      "Open PDF Compressor and pick a PDF.",
+      "Choose a level: Smaller, Balanced, or High quality.",
+      "Compress, check the before and after sizes, then download the smaller PDF.",
+    ],
+    goodToKnow: [
+      "One action per PDF, charged only when the compressed file is actually smaller. If it does not shrink, no action is used.",
+      "Pages are rebuilt as pictures, so text in the compressed copy is not selectable or searchable, and links and form fields do not carry over.",
+      "Three levels: Smaller for strict size caps, Balanced for everyday sending, High quality for pages read closely or printed.",
+      "Password-protected PDFs need to be unlocked first, then compressed.",
+    ],
+    data: "Your files never leave your device. Compression happens in your browser.",
+    tips: [
+      "Send the compressed copy and keep the original as your editable master. Next month's edit will thank you.",
+      "Still over the cap? Run the compressed copy through once more at the next level down.",
+    ],
+    faq: [
+      ["Do my PDFs upload anywhere?", "No, compression is fully in your browser."],
+      ["What if my PDF does not get smaller?", "Bum Bum says so, there is nothing to download, and no action is charged. Some PDFs are already lean."],
+    ],
+    updated: U,
+  },
+  {
     key: "ghostwriter",
     name: "Voice to Content",
     href: "/tools/ghostwriter/",

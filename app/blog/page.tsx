@@ -8,6 +8,12 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/how-to-compress-a-pdf/",
+    title: "How to Compress a PDF (Without Uploading Your Files)",
+    description: "Shrink a PDF in your browser until it fits the email or upload limit: pick a level, check the before and after, download the leaner file. No uploads, and the one tradeoff stated plainly.",
+    date: "November 3, 2026",
+  },
+  {
     href: "/blog/pdf-to-jpg/",
     title: "How to Convert PDF Pages to JPG (In Your Browser)",
     description: "Turn every page of a PDF into JPG images, right in your browser: no uploads, per-page downloads or one ZIP. For the forms and platforms that demand pictures.",
