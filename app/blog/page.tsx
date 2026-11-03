@@ -8,6 +8,60 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/pdf-to-jpg/",
+    title: "How to Convert PDF Pages to JPG (In Your Browser)",
+    description: "Turn every page of a PDF into JPG images, right in your browser: no uploads, per-page downloads or one ZIP. For the forms and platforms that demand pictures.",
+    date: "November 3, 2026",
+  },
+  {
+    href: "/blog/pdf-to-png/",
+    title: "How to Convert PDF Pages to PNG (Crispest Text, In Your Browser)",
+    description: "Turn PDF pages into crisp PNG images in your browser: lossless pages for documents, diagrams, and screenshots of pages. No uploads, ZIP bundle included.",
+    date: "November 3, 2026",
+  },
+  {
+    href: "/blog/webp-to-png/",
+    title: "How to Convert WebP to PNG (Free, In Your Browser)",
+    description: "Convert WebP images to PNG right in your browser: no uploads, no quality loss, transparency kept. Here is why WebP files get refused, and the one-minute fix.",
+    date: "November 3, 2026",
+  },
+  {
+    href: "/blog/png-to-jpg/",
+    title: "How to Convert PNG to JPG (Smaller Files, Same Picture)",
+    description: "Convert PNG to JPG in your browser to shrink photos for email, uploads, and forms. What changes, what flattens, and how to keep the quality high.",
+    date: "November 3, 2026",
+  },
+  {
+    href: "/blog/jpg-to-webp/",
+    title: "How to Convert JPG to WebP (Shrink Images for Your Website)",
+    description: "Convert JPG to WebP in your browser and cut image weight on your website without a visible quality drop. When WebP is the right call, and when it is not.",
+    date: "November 3, 2026",
+  },
+  {
+    href: "/blog/png-to-webp/",
+    title: "How to Convert PNG to WebP (Transparency Kept, File Shrunk)",
+    description: "Convert PNG to WebP in your browser: keep transparency, lose most of the file size. The web-ready version of your graphics, in about a minute.",
+    date: "November 3, 2026",
+  },
+  {
+    href: "/blog/webp-to-jpg/",
+    title: "How to Convert WebP to JPG (The Format Everything Accepts)",
+    description: "Convert WebP to JPG in your browser when a form, app, or client needs the most accepted image format there is. One minute, no uploads, one honest caveat.",
+    date: "November 3, 2026",
+  },
+  {
+    href: "/blog/mp4-to-gif/",
+    title: "How to Turn an MP4 Into a GIF (In Your Browser)",
+    description: "Turn the first seconds of an MP4 into a looping GIF, right in your browser. Why short clips win, what gets left behind, and how to keep the file lean.",
+    date: "November 3, 2026",
+  },
+  {
+    href: "/blog/mp4-to-webm/",
+    title: "How to Convert MP4 to WebM (Smaller Video for the Web)",
+    description: "Convert MP4 to WebM in your browser for lighter web pages and faster-loading embeds. What WebM buys you, and where MP4 still wins.",
+    date: "November 3, 2026",
+  },
+  {
     href: "/blog/how-to-merge-a-pdf-online/",
     title: "How to Merge a PDF Online (Without Uploading Your Files)",
     description: "Merge several PDFs into one, in the order you choose, right in your browser. No uploads, no quality loss, nothing to install. Here is the whole process, plus the ordering tips that save a shuffle later.",
