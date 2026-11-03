@@ -184,6 +184,14 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>Yes. Download your whole receipt log as one CSV whenever you like.</p>
 </details>
 </section>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Receipts into spreadsheets, the short guide</h2>
+<h3>How it works here</h3>
+<p>Snap up to 10 receipts at once. Bum Bum reads them right in your browser and pulls out the vendor, date, line items, tax, and total as clean, editable tables. Your photos never leave your device; only the typed-up numbers are saved, in your account, when you save a card to your log. One action per receipt read, and if a photo holds no receipt at all, it is skipped without charging an action.</p>
+<h3>Photos that read well</h3>
+<p>Flat, well lit, and filling the frame. A creased receipt reads better smoothed flat and shot from directly above; shadows across the total are the top cause of a misread.</p>
+<h3>Check the doubtful number</h3>
+<p>The raw text Bum Bum read sits on every card, so you can check any number against exactly what it saw. Saving to your log and exporting to CSV are free.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-scan-receipts-into-a-spreadsheet/">How to scan receipts into a spreadsheet</a>.</p></section>
 <?php $bbTool = 'receipt-reader'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -599,11 +607,4 @@ function renderLog(log){
   });
 }
 fetchLogs();
-</script><section class="panel" aria-label="Guide"><h2 style="margin-top:0">Receipts into spreadsheets, the short guide</h2>
-<h3>How it works here</h3>
-<p>Snap up to 10 receipts at once. Bum Bum reads them right in your browser and pulls out the vendor, date, line items, tax, and total as clean, editable tables. Your photos never leave your device; only the typed-up numbers are saved, in your account, when you save a card to your log. One action per receipt read, and if a photo holds no receipt at all, it is skipped without charging an action.</p>
-<h3>Photos that read well</h3>
-<p>Flat, well lit, and filling the frame. A creased receipt reads better smoothed flat and shot from directly above; shadows across the total are the top cause of a misread.</p>
-<h3>Check the doubtful number</h3>
-<p>The raw text Bum Bum read sits on every card, so you can check any number against exactly what it saw. Saving to your log and exporting to CSV are free.</p>
-<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-scan-receipts-into-a-spreadsheet/">How to scan receipts into a spreadsheet</a>.</p></section></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</script><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
