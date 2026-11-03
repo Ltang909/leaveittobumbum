@@ -510,10 +510,5 @@ againBtn.addEventListener('click',()=>{
 <h3>Readable captions</h3>
 <p>Choose a background with a calm middle. A busy photo plus animated captions equals nobody reading anything, no matter how good the audio is.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
-</section>
+<?php $bbTool = 'audiogram'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

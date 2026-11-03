@@ -165,12 +165,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h3>Big files, honest limits</h3>
 <p>Rendering happens on your device, so very large files take a while and some patience. That is the trade for never uploading them: your computer does the work a server would otherwise do with your footage on it.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video.</p>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
-</section>
+<?php $bbTool = 'video-trimmer'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}

@@ -155,12 +155,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h3>Merge, or keep the files separate?</h3>
 <p>Merge when the destination wants one document: a job application, a client packet, a signed contract with its schedules, an archive you will search later. Keep files separate when different people need different pieces, or when some of the pieces are still being edited and would force a re-merge every round.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/pdf-to-image/">PDF to Image</a> - Turn every page of a PDF into a JPG, PNG, or WebP image.</p>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever, right in your browser.</p>
-<p><a href="/tools/video-converter/">Video Converter</a> - Convert a video to MP4, WebM, or animated GIF without uploading it.</p>
-</section>
+<?php $bbTool = 'pdf-merger'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main>
 <script src="/tools/pdf-merger/vendor/pdf-lib.min.js"></script>
 <script src="/tools/pdf-merger/vendor/pdf.min.js"></script>

@@ -251,10 +251,5 @@ try{bbTrack('tool_opened',{tool:'doodle'})}catch(e){}
 <h3>PNG or SVG</h3>
 <p>SVG keeps lines crisp at any size, so it is the one to pick for anything printed or shown large. PNG is the everyday choice for dropping a sketch into a document, a message, or a post.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>
-<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
-</section>
+<?php $bbTool = 'doodle'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

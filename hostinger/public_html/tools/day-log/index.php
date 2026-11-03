@@ -203,10 +203,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>Send the proposal scores cleanly tomorrow; work on business stuff never does. File before you plan tomorrow anywhere else, because the log's list is the one that gets scored. Kept-up logs compound: week and month summaries pull out the accomplishments, learnings, and growth across a stretch of days, and advanced settings can file each day into Notion with your own integration token.</p>
 </section>
 
-<section aria-label="More tiny tools">
-<h2>More tiny tools</h2>
-<p class="lede">Day Log is one of the tools in Bum Bum's toolbox. <a href="/tools/">See the whole toolbox</a>.</p>
-</section>
+<?php $bbTool = 'day-log'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 <?php if ($user): ?>
 <script>

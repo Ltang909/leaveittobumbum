@@ -170,12 +170,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h3>Crops that help other tools</h3>
 <p>A poster photo cropped square-on before Poster to Calendar makes its read noticeably more reliable. Cropping is often the two-minute fix that makes the next tool look smart.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
-</section>
+<?php $bbTool = 'image-cropper'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}

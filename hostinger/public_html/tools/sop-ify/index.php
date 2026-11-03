@@ -286,10 +286,5 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <h3>Include the annoying parts</h3>
 <p>The login that lives in a spreadsheet, the step everyone forgets, the exception that happens every month. Playbooks fail on the steps nobody wrote down. Start with the task you dread handing over; that dread is usually undocumented knowledge, and the SOP is how it stops being only yours.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
-<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>
-</section>
+<?php $bbTool = 'sop-ify'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

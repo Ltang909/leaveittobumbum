@@ -175,12 +175,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h3>Resolution, in plain terms</h3>
 <p>Standard is plenty when the destination is an upload form or a quick share. High is the pick for anything printed or read closely. Extra high is for pages with small print, like terms sheets and scanned forms. Because a PDF page is drawn fresh at the size you pick, text stays sharp instead of being stretched from a small image.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/pdf-merger/">PDF Merger</a> - Stitch several PDFs into one, in the order you choose.</p>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever, right in your browser.</p>
-<p><a href="/tools/image-cropper/">Image Cropper</a> - Drag a box around the good part.</p>
-</section>
+<?php $bbTool = 'pdf-to-image'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main>
 <script src="/tools/pdf-merger/vendor/pdf.min.js"></script>
 <script src="/tools/pdf-merger/vendor/jszip.min.js"></script>

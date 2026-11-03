@@ -500,10 +500,5 @@ againBtn.addEventListener('click',()=>{
 <h3>Land it a breath early</h3>
 <p>Pin a snippet a breath before the moment it is for. Music that lands exactly on the action feels late, because the ear registers the hit after the eye sees it.</p>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/video-converter/">Video Converter</a> - Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4.</p>
-</section>
+<?php $bbTool = 'video-mp3-overlay'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
