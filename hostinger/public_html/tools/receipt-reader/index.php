@@ -607,4 +607,4 @@ function renderLog(log){
   });
 }
 fetchLogs();
-</script><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</script><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
