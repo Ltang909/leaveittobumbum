@@ -93,6 +93,12 @@ export function SiteFooter() {
         <a href="/terms/">Terms</a>
         <a href="mailto:hello@leaveittobumbum.com">Contact</a>
       </nav>
+      <nav className="footer-links" aria-label="Directories">
+        <b>Find us on</b>
+        <a href="https://dang.ai/" target="_blank" rel="noopener">Dang.ai</a>
+        <a href="https://www.toolpilot.ai/" target="_blank" rel="noopener">ToolPilot</a>
+        <a href="https://fazier.com/" target="_blank" rel="noopener">Fazier</a>
+      </nav>
       <div className="footer-bottom">
         <p>© {new Date().getFullYear()} Leave It to Bum Bum</p>
         <p className="exe"><img src="/bum/cat-butt-v2.png" alt="" aria-hidden="true" /> BumBum.exe is running…</p>

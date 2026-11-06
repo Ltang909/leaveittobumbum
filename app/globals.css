@@ -116,7 +116,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .guarantee-number { font-family:var(--font-display),serif; font-size:clamp(7rem,16vw,13rem); font-weight:900; letter-spacing:-.09em; line-height:.7; color:var(--cream); text-shadow:4px 4px 0 var(--ink),-2px -2px 0 var(--ink); transform:rotate(-5deg); }.guarantee-number span { display:block; font-family:var(--font-body),sans-serif; font-size:1.6rem; letter-spacing:.28em; text-align:center; color:var(--ink); text-shadow:none; margin-top:35px; }
 .guarantee-inner>div:last-child>p { max-width:650px; font-size:1.12rem; }.guarantee details { border-block:1.5px solid var(--ink); margin-top:25px; padding:18px 0; }.guarantee summary { cursor:pointer; font-weight:1000; list-style:none; display:flex; justify-content:space-between; }.guarantee details p { font-size:.92rem; }
 .closing { padding:130px 0; text-align:center; }.closing .button { margin-top:35px; }
-.footer { border-top:var(--line); padding:38px 0 50px; display:grid; grid-template-columns:1.6fr 1fr 1fr; gap:32px; font-size:.85rem; }
+.footer { border-top:var(--line); padding:38px 0 50px; display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:32px; font-size:.85rem; }
 .footer-brand p { margin:12px 0 16px; max-width:30ch; }
 .socials { display:flex; gap:10px; }
 .socials a { display:inline-flex; width:36px; height:36px; border:var(--line); border-radius:12px; background:#fff; align-items:center; justify-content:center; transition:transform .15s, background .15s; }
