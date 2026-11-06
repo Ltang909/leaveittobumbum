@@ -179,6 +179,14 @@ export default function Home() {
         <p className="section-more section-more-left"><a href="#guarantee">Missing something? Bum Bum builds it in 36 hours <Arrow /></a></p>
       </section>
 
+      <section className="guides shell">
+        <div className="section-heading"><div><p className="kicker">From the blog</p><h2>Still comparing software?<br />Start with the shortlists.</h2></div><p>Honest roundups for solo businesses, checked against the vendors' own pricing pages.</p></div>
+        <p className="section-more section-more-left"><a href="/blog/best-small-business-software/">Best small business software: the 2026 shortlist <Arrow /></a></p>
+        <p className="section-more section-more-left"><a href="/blog/best-business-account-software/">Best business accounting software for small businesses <Arrow /></a></p>
+        <p className="section-more section-more-left"><a href="/blog/best-free-crm-small-business/">Best free CRM software for small businesses <Arrow /></a></p>
+        <p className="section-more section-more-left"><a href="/blog/">Browse all the guides <Arrow /></a></p>
+      </section>
+
       <section className="how">
         <div className="shell"><div className="section-heading light"><div><p className="kicker">No software degree required</p><h2>Three steps.<br />Then, nap.</h2></div></div><div className="steps"><article><b>01</b><h3>Pick the annoying task</h3><p>Find the busywork with your name on it.</p></article><article><b>02</b><h3>Hand over the messy bits</h3><p>Paste in rough notes, numbers, or files. Bum Bum sorts it out.</p></article><article><b>03</b><h3>Get the finished thing</h3><p>Copy it, send it, save it. One action spent, afternoon reclaimed.</p></article></div></div>
       </section>
