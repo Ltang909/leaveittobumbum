@@ -126,6 +126,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .footer-links b { font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; opacity:.6; }
 .footer-links a { font-weight:800; text-decoration:none; color:inherit; }
 .footer-links a:hover { text-decoration:underline; }
+.footer-badge { height:32px; width:auto; display:block; background:#fff; border:var(--line); border-radius:6px; }
 .footer-bottom { grid-column:1/-1; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; border-top:1px dashed var(--ink); padding-top:20px; margin:8px 0 0; }
 .footer-bottom p { margin:0; }
 .footer .exe { display:flex; align-items:center; gap:8px; font-weight:800; opacity:.85; }
