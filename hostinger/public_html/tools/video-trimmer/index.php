@@ -234,7 +234,7 @@ trimBtn.addEventListener('click',async()=>{
   try{
     step='quota';progText.textContent='Checking your actions...';
     const st=await apiCall({action:'status'});
-    if(st.response.ok&&st.data.usage&&Number(st.data.usage.remaining)<=0)throw new Error('actions');
+    if(st.response.ok&&st.data.usage&&!st.data.usage.unlimited&&Number(st.data.usage.remaining)<=0)throw new Error('actions');
     step='engine';progText.textContent='Loading the trimmer (first trim downloads it, about 30 MB)...';barFill.style.width='8%';
     const ff=await getFFmpeg(s=>{step=s});
     step='reading';barFill.style.width='18%';progText.textContent='Reading your video...';ffLogs.length=0;
