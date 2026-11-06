@@ -96,7 +96,7 @@ export function SiteFooter() {
       <nav className="footer-links" aria-label="Directories">
         <b>Find us on</b>
         <a href="https://dang.ai/" target="_blank" rel="noopener">Dang.ai</a>
-        <a href="https://www.toolpilot.ai/" target="_blank" rel="noopener">ToolPilot</a>
+        <a href="https://www.toolpilot.ai/" target="_blank" rel="noopener" aria-label="Featured on ToolPilot"><img className="footer-badge" src="/badges/toolpilot-featured-white.png" alt="Featured on ToolPilot" /></a>
         <a href="https://fazier.com/" target="_blank" rel="noopener">Fazier</a>
       </nav>
       <div className="footer-bottom">
