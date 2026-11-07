@@ -13,7 +13,7 @@ export default function Privacy() {
       <section className="page-head shell">
         <p className="kicker">Privacy Policy</p>
         <h1>Bum Bum is a cat,<br />not a data broker.</h1>
-        <p className="lede">Last updated: November 2026. Here&apos;s the plain version of what we collect and why.</p>
+        <p className="lede">Last updated: November 7, 2026. Here&apos;s the plain version of what we collect and why.</p>
       </section>
       <div className="page-body shell">
         <div className="prose">
