@@ -105,7 +105,7 @@ export default function DailyWorkLog() {
           <p>Most work doesn't come with a big green checkmark.</p>
           <p>You might spend two hours solving a customer problem, thirty minutes helping a colleague, and another hour figuring out why something broke. All valuable work. None of it necessarily shows up as a completed project.</p>
           <p>By the end of the week, the small wins have disappeared from memory. You remember the unfinished tasks, not everything you actually did.</p>
-          <p>That's why a daily work log is useful. Not to document every minute, but to capture enough context that you can see your progress over time.</p>
+          <p>That is why a daily work log is useful: it captures enough context to show your progress over time, without documenting every minute.</p>
           <h2>What should you track in a daily work log?</h2>
           <p>You only need four things:</p>
           <ul>
@@ -169,9 +169,9 @@ export default function DailyWorkLog() {
           <p>That's what <a href="/tools/day-log/">Day Log</a> from Leave It To Bum Bum is built for.</p>
           <p>Spend five minutes every evening talking or typing about your day. Bum Bum turns the ramble into clean jot notes: what got done, what did not happen, the challenges, how you plan to beat them, what you learned, and tomorrow's top list. If talking is easier than typing at the end of the day, talk: recordings are transcribed and then discarded, so only your words are kept.</p>
           <p>Each new filing also scores the top list you set yesterday: done, partial, or not mentioned, judged only from what you said today. The plan alone never earns a checkmark.</p>
-          <p>On weekday mornings, the <a href="/docs/the-day-log-recap/">recap</a> arrives by email with today's top list first, so the plan is waiting before the day starts. Monday's recap covers Friday. File nothing and the emails never start; miss a day and you get one nudge, then silence until you log again.</p>
+          <p>Each morning, the <a href="/docs/the-day-log-recap/">recap</a> arrives by email with today's top list first, so the plan is waiting before the day starts. A Friday log recaps on Saturday. File nothing and the emails never start; miss a day and you get one nudge, then silence until you log again.</p>
           <p>And the weekly and monthly review from the section above is built in: week and month summaries pull the accomplishments, learnings, and repeating patterns out of a stretch of logs. If you live in Notion, each filed day can also land there as its own page.</p>
-          <p>No complicated dashboards to maintain. No perfect notes required.</p>
+          <p>There are no complicated dashboards to maintain, and your notes do not need to be perfect.</p>
           <p>Just five minutes a day, and a cat who remembers what you've been up to.</p>
           <h2>Daily work log questions</h2>
           <h3>What is a daily work log?</h3>

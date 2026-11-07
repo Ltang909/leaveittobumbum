@@ -162,7 +162,7 @@ export default function Home() {
               <p className="eyebrow"><span>●</span> Small business busywork, handled</p>
               <h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1>
               <p className="lede">Little tools that handle the fiddly stuff stealing your afternoon.</p>
-              <p className="fine">Start free. No card. No call with a guy named Chad.</p>
+              <p className="fine">Start free. No card required, and nobody books you a call with a guy named Chad.</p>
             </div>
             <HeroPortrait party={party} />
           </div>
@@ -184,7 +184,7 @@ export default function Home() {
       </section>
 
       <section className="pricing shell" id="pricing">
-        <div className="section-heading"><div><p className="kicker">One shared meter</p><h2>Pay for useful work,<br />not a maze of limits.</h2></div><p>Every completed result uses one action: a finished clip, a batch of receipts, a chased invoice, a playbook. Your whole team and every tool share the same monthly bucket.</p></div>
+        <div className="section-heading"><div><p className="kicker">One shared meter</p><h2>One shared meter<br />for all your tools.</h2></div><p>Every completed result uses one action: a finished clip, a batch of receipts, a chased invoice, a playbook. Your whole team and every tool share the same monthly bucket.</p></div>
         <div className="plan-grid">{plans.map((plan) => <article className={`plan ${plan.featured ? "featured" : ""}`} key={plan.name}>{plan.featured && <span className="popular">BUM BUM’S PICK</span>}<h3>{plan.name}</h3><div className="price">{plan.price}<small>{plan.note}</small></div><p className="credits">{plan.credits}</p><ul>{plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul><PlanCta plan={plan.plan} label={plan.cta} href={plan.plan === "free" ? "/tools/" : `/checkout/?plan=${plan.plan}`} featured={plan.featured} /></article>)}</div>
         <p className="pricing-note">Actions on Poke around reset monthly and do not roll over. We warn you at 80% and 100%. Operator never runs out.</p>
         <p className="section-more"><a href="/pricing/">How pricing works, in plain English <Arrow /></a></p>

@@ -111,7 +111,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">1. Your ingredients</h2>
 <div class="ag-drop" id="agMp3Drop" role="button" tabindex="0"><strong>Drop your MP3 here, or tap to pick one</strong><span>Up to 25 MB. Sent for transcription only with captions; with No captions it never leaves your browser.</span><input type="file" id="agMp3" accept="audio/mpeg,.mp3"></div>
 <p class="ag-fileline" id="agMp3Info"></p>
-<div class="ag-drop" id="agImgDrop" role="button" tabindex="0"><strong>Drop a background image here, or tap to pick one</strong><span>Stays in your browser. Never uploaded anywhere.</span><input type="file" id="agImg" accept="image/*"></div>
+<div class="ag-drop" id="agImgDrop" role="button" tabindex="0"><strong>Drop a background image here, or tap to pick one</strong><span>Your image stays in your browser and is never uploaded anywhere.</span><input type="file" id="agImg" accept="image/*"></div>
 <p class="ag-fileline" id="agImgInfo"></p>
 <p id="agUploadErr" class="error"></p>
 <div class="ag-step"><button id="agToStyle" class="button" type="button" disabled>Continue</button></div>

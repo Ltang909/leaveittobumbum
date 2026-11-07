@@ -127,7 +127,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php else: ?>
 <section class="panel" id="vmUpload">
 <h2 style="margin-top:0">1. Your video and your MP3</h2>
-<div class="vm-drop" id="vmVideoDrop" role="button" tabindex="0"><strong>Drop your video here, or tap to pick one</strong><span>MP4, WebM, MOV, MKV, or AVI. Up to 100 MB. Never uploaded anywhere.</span><input type="file" id="vmVideoFile" accept="video/*,.mkv,.avi,.mov"></div>
+<div class="vm-drop" id="vmVideoDrop" role="button" tabindex="0"><strong>Drop your video here, or tap to pick one</strong><span>MP4, WebM, MOV, MKV, or AVI. Up to 100 MB, and your file is never uploaded anywhere.</span><input type="file" id="vmVideoFile" accept="video/*,.mkv,.avi,.mov"></div>
 <p class="vm-fileline" id="vmVideoInfo"></p>
 <div class="vm-drop" id="vmMp3Drop" role="button" tabindex="0"><strong>Drop your MP3 here, or tap to pick one</strong><span>The song, the jingle, the voiceover. Up to 30 MB, and it stays on your device too.</span><input type="file" id="vmMp3File" accept="audio/*,.mp3"></div>
 <p class="vm-fileline" id="vmMp3Info"></p>

@@ -14,7 +14,7 @@ export default function Team() {
       <section className="page-head shell">
         <p className="kicker">The humans (and management)</p>
         <h1>Meet the team.</h1>
-        <p className="lede">Two visionary cats. Two humans in supporting roles. Zero meetings that could have been naps.</p>
+        <p className="lede">The team is two cats with strong opinions, two humans in supporting roles, and a shared belief that most meetings could have been naps.</p>
       </section>
       <section className="shell" style={{ paddingBottom: 110 }}>
         <CrewCards />
