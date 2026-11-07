@@ -111,7 +111,7 @@ export default function IndyAlternatives() {
           <p><strong><a href="/tools/invoice-chaser/">Try the Invoice Chaser</a></strong></p>
           <h2>2. Bonsai: Closest like-for-like workspace</h2>
           <p>Bonsai covers the same ground as Indy: proposals, contracts, invoicing, and time tracking. Essentials ($25 per month) is the first tier with invoicing. One consideration: Zoom acquired Bonsai in late 2025 and says its capabilities will be incorporated into Zoom over time, so the standalone roadmap is less certain than it was.</p>
-          <p><strong>Best for:</strong> Freelancers who want Indy's shape from a bigger, more established vendor.</p>
+          <p><strong>Best for:</strong> Freelancers who want what Indy offers, from a bigger, more established vendor.</p>
           <h2>3. Wave: Best free invoicing and accounting</h2>
           <p>Wave's Starter plan is free and includes invoicing and real accounting. Unrestricted automatic payment reminders require Pro ($19 per month), and a few previously free features moved behind that paywall in recent years, but for straightforward billing it is the strongest free option here.</p>
           <p><strong>Best for:</strong> Freelancers who need proper books, not just documents.</p>

@@ -89,7 +89,7 @@ export default function WaveAlternatives() {
               <tbody>
                 <tr><td><strong><a href="/tools/invoice-chaser/">Leave It to Bum Bum</a></strong></td><td>Chasing late invoices</td><td>The reminder layer as a standalone tool</td></tr>
                 <tr><td><strong><a href="https://www.freshbooks.com/" rel="noopener">FreshBooks</a></strong></td><td>Invoicing-first accounting</td><td>Polished invoicing experience</td></tr>
-                <tr><td><strong><a href="https://quickbooks.intuit.com/" rel="noopener">QuickBooks Online</a></strong></td><td>Full accounting</td><td>The accountant ecosystem standard</td></tr>
+                <tr><td><strong><a href="https://quickbooks.intuit.com/" rel="noopener">QuickBooks Online</a></strong></td><td>Full accounting</td><td>The standard choice among accountants</td></tr>
                 <tr><td><strong><a href="https://www.hellobonsai.com/" rel="noopener">Bonsai</a></strong></td><td>Contracts plus invoicing</td><td>Engagement paperwork in one place</td></tr>
                 <tr><td><strong><a href="https://www.zoho.com/books/" rel="noopener">Zoho Books</a></strong></td><td>Accounting on a budget</td><td>Generous free tier for tiny businesses</td></tr>
               </tbody>
@@ -112,7 +112,7 @@ export default function WaveAlternatives() {
           <h2>2. FreshBooks: Best invoicing-first accounting</h2>
           <p>FreshBooks is the polished option: Lite is $23 per month (up to 5 billable clients), Plus $43 (50 clients), Premium $70. Watch the tier design, though. Automated late-payment reminders and late fees are Premium-tier features, so the chasing job is exactly what FreshBooks uses to pull you up the ladder.</p>
           <p><strong>Best for:</strong> Freelancers who invoice a handful of clients and want it to feel effortless.</p>
-          <h2>3. QuickBooks Online: Best for the accountant ecosystem</h2>
+          <h2>3. QuickBooks Online: Best when your accountant uses it</h2>
           <p>QuickBooks Online (Simple Start $38 per month, Essentials $85, Plus $140, Advanced $340 after the August 2026 increases) is what most accountants ask for by name. Prices have risen every year, and most solos use a fraction of it, but if your accountant wants it, that conversation is already over.</p>
           <p><strong>Best for:</strong> Businesses with an accountant, payroll, or inventory in the picture.</p>
           <h2>4. Bonsai: Best for contracts plus invoicing</h2>

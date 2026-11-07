@@ -162,7 +162,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "A follow-up five business days after applying is polite, expected, and often the thing that resurfaces your name.",
     ],
     faq: [
-      ["How is this different from a spreadsheet?", "This tracker tells you who to follow up with today and drafts the shape of what to say. A spreadsheet holds the list but never reminds you."],
+      ["How is this different from a spreadsheet?", "This tracker tells you who to follow up with today and drafts what to say. A spreadsheet holds the list but never reminds you."],
       ["Can I import my applications?", "Yes, CSV import is on the page."],
     ],
     updated: U,
