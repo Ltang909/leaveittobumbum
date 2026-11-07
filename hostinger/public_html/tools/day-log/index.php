@@ -120,6 +120,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .wave-strip.big{padding:30px 14px;justify-content:center;font-size:16px}
 .wave-bars{display:flex;align-items:center;gap:4px;height:34px}
 .wave-bars span{display:block;width:6px;height:10px;border-radius:3px;background:#b3541e}
+.wave-strip.wait{min-height:170px;align-items:flex-start}
 .wave-strip.anim .wave-bars span{animation:wavePulse 1s ease-in-out infinite}
 .wave-strip.anim .wave-bars span:nth-child(2){animation-delay:.1s}.wave-strip.anim .wave-bars span:nth-child(3){animation-delay:.22s}.wave-strip.anim .wave-bars span:nth-child(4){animation-delay:.34s}.wave-strip.anim .wave-bars span:nth-child(5){animation-delay:.46s}.wave-strip.anim .wave-bars span:nth-child(6){animation-delay:.58s}.wave-strip.anim .wave-bars span:nth-child(7){animation-delay:.7s}
 @keyframes wavePulse{0%,100%{height:8px}50%{height:30px}}
@@ -252,7 +253,7 @@ const waveStrip=document.querySelector('#waveStrip');
 const waveLabel=document.querySelector('#waveLabel');
 const waveBars=Array.from(waveStrip.querySelectorAll('.wave-bars span'));
 function showWave(label,anim){waveStrip.classList.remove('hidden');waveStrip.classList.toggle('anim',!!anim);waveLabel.textContent=label||''}
-function hideWave(){waveStrip.classList.add('hidden');waveStrip.classList.remove('anim','big')}
+function hideWave(){waveStrip.classList.add('hidden');waveStrip.classList.remove('anim','big','wait')}
 function stopLevels(a){if(a&&a.raf)cancelAnimationFrame(a.raf)}
 
 async function stopActive(){
@@ -334,16 +335,17 @@ async function startMR(fellBack){
         if(base==='audio/x-m4a'||base==='audio/m4a'||base==='audio/aac')base='audio/mp4';
         dataUrl=dataUrl.replace(/^data:[^;,]+/,'data:'+base);
       }
-      ta.classList.remove('hidden');
-      if(!dataUrl){hideWave();setStatus('Recording could not be read. Type instead.');return}
-      // Server transcription is the slow stretch: keep a loading
-      // state on screen until the words actually land (owner
-      // request), and lock the mic so a second take cannot race
-      // the transcription already in flight.
+      if(!dataUrl){hideWave();ta.classList.remove('hidden');setStatus('Recording could not be read. Type instead.');return}
+      // Server transcription is the slow stretch: the loading strip
+      // takes the text box's place, message at the top of the box,
+      // until the words actually land (owner request), and the mic
+      // locks so a second take cannot race the transcription
+      // already in flight.
       showWave('Bum Bum is finishing up writing...',true);
+      waveStrip.classList.remove('big'); waveStrip.classList.add('wait');
       micBtn.disabled=true; micBtn.style.opacity='.45';
       const{response,data}=await apiCall({action:'transcribe',audio:dataUrl});
-      hideWave(); micBtn.disabled=false; micBtn.style.opacity='';
+      hideWave(); ta.classList.remove('hidden'); micBtn.disabled=false; micBtn.style.opacity='';
       if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;refreshFile();setStatus('Transcribed. Fix anything, then file when ready.')}
       else setStatus((data&&data.error)||'Transcription failed. Type instead.');
     };
