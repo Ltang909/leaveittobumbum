@@ -51,7 +51,7 @@ export const GUIDES: GuideDoc[] = [
       { h: "Why tools suggest a next step" },
       { p: "Real tasks rarely end where they start. You merge a contract packet, then someone asks for the pages as images. You scan a receipt, then the subscription hiding on it needs tracking. Rather than send you back to the [toolbox](/tools/) to hunt, every tool page finishes with a **next task** strip: three follow-on tools picked for the job you just did, in the order people usually need them." },
       { h: "How the suggestions are picked" },
-      { p: "They are chosen by hand, not by an algorithm: the follow-ons are the tools that take the output of the one you are using as their input, or that finish the job it started. [PDF Merger](/tools/pdf-merger/) points at [PDF to Image](/tools/pdf-to-image/), the [PDF Compressor](/tools/pdf-compressor/) and the [Receipt Scanner](/tools/receipt-reader/); the [Receipt Scanner](/tools/receipt-reader/) points at the [Subscription Tracker](/tools/cutline/) and the [Invoice Reminder](/tools/invoice-chaser/). If none of them fit, the whole toolbox is one click away in the header." },
+      { p: "They are chosen by hand: the follow-ons are the tools that take the output of the one you are using as their input, or that finish the job it started. [PDF Merger](/tools/pdf-merger/) points at [PDF to Image](/tools/pdf-to-image/), the [PDF Compressor](/tools/pdf-compressor/) and the [Receipt Scanner](/tools/receipt-reader/); the [Receipt Scanner](/tools/receipt-reader/) points at the [Subscription Tracker](/tools/cutline/) and the [Invoice Reminder](/tools/invoice-chaser/). If none of them fit, the whole toolbox is one click away in the header." },
       { h: "It costs nothing to look" },
       { p: "Opening a suggested tool is free; [actions](/docs/actions/) only spend when a tool finishes a job for you. Following a chain just to see where it leads costs nothing but the clicks." },
       { note: "The strip only suggests. Your work stays in the tool you put it in until you hand it to the next one yourself." },
@@ -67,7 +67,7 @@ export const GUIDES: GuideDoc[] = [
     blocks: [
       { h: "The rules of the meter" },
       { ul: [
-        "**One bucket for everything.** Your whole team and every tool share the same monthly actions. No per-tool limits, no per-seat math.",
+        "**One bucket for everything.** Your whole team and every tool share the same monthly actions, with no per-tool limits or per-seat math.",
         "**Finished work only.** A job that fails or that you abandon costs nothing. The meter moves when a result lands.",
         "**Monthly reset.** Actions reset on your billing date and do not roll over.",
         "**Fair warning.** You get a nudge at 80% and again at 100%, so the meter never surprises you mid-task.",
@@ -88,11 +88,11 @@ export const GUIDES: GuideDoc[] = [
     blocks: [
       { h: "The plans" },
       { ul: [
-        "**Poke around, $0.** 75 actions a month, all current tools, 1 workspace, and the community request queue. No card needed.",
+        "**Poke around, $0.** 75 actions a month, all current tools, 1 workspace, and the community request queue, with no card needed.",
                 "**Operator, $49/mo.** Unlimited actions, everything in Poke around, unlimited team members, and one scoped tool request each month with the [36-hour guarantee](/docs/the-36-hour-promise/).",
       ] },
       { h: "Switching, pausing, cancelling" },
-      { p: "Upgrades apply immediately; downgrades take effect at the next billing date. Pause or cancel anytime from your account page, through the billing portal, in about two clicks. No contracts, no cancellation maze, and you keep what you paid for until the end of the billing period. The full pricing page, with the meter explained, is [here](/pricing/)." },
+      { p: "Upgrades apply immediately; downgrades take effect at the next billing date. Pause or cancel anytime from your account page, through the billing portal, in about two clicks, with no contracts or cancellation maze, and you keep what you paid for until the end of the billing period. The full pricing page, with the meter explained, is [here](/pricing/)." },
     ],
   },
   {
@@ -147,7 +147,7 @@ export const GUIDES: GuideDoc[] = [
         "**Client follow-ups** that are due, including the overdue ones you have been avoiding.",
         "**Job application follow-ups** that come due that week.",
       ] },
-      { p: "Each section links straight to its tracker, so the email is a starting line, not a report you file away." },
+      { p: "Each section links straight to its tracker, so you can act on the email right away." },
       { h: "Quiet weeks" },
       { p: "Nothing coming up? Most weeks like that you will hear nothing at all. Now and then, at most every other week, a one-line quiet note confirms Bum Bum checked and your week is genuinely clear. No streaks, no content marketing in disguise, just the all-clear." },
       { h: "Who gets it, and how to stop it" },
@@ -160,22 +160,22 @@ export const GUIDES: GuideDoc[] = [
     section: "Trackers and email",
     title: "The Day Log recap",
     summary:
-      "The Day Log recap is a weekday-morning email. Once you have filed a log in Day Log, the next weekday morning brings your most recent log back as clean jot notes: the previous list scored, what got done, and your next top priorities. Monday's recap covers Friday.",
+      "The Day Log recap is a morning email. Once you have filed a log in Day Log, the next morning brings your most recent log back as clean jot notes: the previous list scored, what got done, and your next top priorities.",
     updated: U,
     blocks: [
       { h: "How the loop starts" },
-      { p: "No log, no emails, ever. The loop starts the first time you file a day in [Day Log](/docs/tools/day-log/), and every recap is built from your own filed logs, never from anything else." },
+      { p: "The loop starts the first time you file a day in [Day Log](/docs/tools/day-log/), and every recap is built from your own filed logs. If you never file a log, you never get an email." },
       { h: "When it sends" },
       { ul: [
-        "**Weekday mornings only**, Monday to Friday. Nothing sends on weekends.",
-        "**Monday recaps Friday.** Each run covers your most recent log that has not been emailed yet, so Friday's log lands in your inbox on Monday morning.",
-        "**The latest log wins.** If two logs pile up before a weekday morning (say, Saturday and Sunday), the recap covers the newest one. The other stays in Past logs on the site; it just is not emailed.",
+        "**Every morning.** A log filed on Friday recaps on Saturday; the rhythm runs seven days a week.",
+        "**One recap per new log.** Each run covers your most recent log that has not been emailed yet.",
+        "**The latest log wins.** If two logs pile up before a morning (say, Saturday and Sunday), the recap covers the newest one. The other stays in Past logs on the site; it just is not emailed.",
       ] },
       { h: "Missing a day" },
-      { p: "Miss a day and the next weekday morning brings one short nudge instead of a recap. If you still have not logged by that evening, the emails stop entirely. No streak guilt, no daily nagging. File a log any night and the recaps pick right back up the next weekday morning." },
+      { p: "Miss a day and the next morning brings one short nudge instead of a recap. If you still have not logged by that evening, the emails stop entirely, with no streak guilt or daily nagging. File a log any night and the recaps pick right back up the next morning." },
       { h: "How to stop it" },
       { p: "There is no separate switch, because there is nothing to switch off: stop filing logs and the emails stop on their own, after the single nudge. The recap goes only to your own account address." },
-      { note: "Your words only, on weekday mornings, driven entirely by what you filed. That is the whole program." },
+      { note: "Your words only, every morning, driven entirely by what you filed. That is the whole program." },
     ],
   },
   {
@@ -192,7 +192,7 @@ export const GUIDES: GuideDoc[] = [
       { p: "Operator members can send one scoped request a month down the fast lane: agreed scope, built within 36 hours, or the next month is free. Operator requests also appear in the public queue with an operator badge, so everyone can follow along. The promise, its clock rules, and what fits in it are spelled out on [the 36-hour promise page](/docs/the-36-hour-promise/)." },
       { h: "What makes a good request" },
       { ul: [
-        "Name the annoying task, not the software you imagine solving it. 'Turn my supplier PDF invoices into a spreadsheet' beats 'build an invoice app'.",
+        "Describe the annoying task in plain words. 'Turn my supplier PDF invoices into a spreadsheet' tells us what to build far better than 'build an invoice app'.",
         "Say what goes in and what should come out. One example input and output is worth a page of description.",
         "One task per request. Two tasks means two requests, and both move faster for it.",
       ] },
@@ -217,7 +217,7 @@ export const GUIDES: GuideDoc[] = [
       { ul: [
         "Weekends and US federal holidays do not count.",
         "The clock pauses while we are waiting on you, for an answer, a login, or an example file.",
-        "Miss the window and your next month is free, credited automatically. No forms, no begging; the credit shows up on your account page.",
+        "Miss the window and your next month is free, credited automatically. The credit shows up on your account page, with no forms to file.",
       ] },
       { h: "What fits in 36 hours" },
       { p: "One focused workflow that can be built in about four working hours, using approved existing services where it makes sense. It cannot include regulated data (health records, finance credentials, that neighborhood), complex data migrations, mobile app store review timelines, or work stuck waiting on a third party." },

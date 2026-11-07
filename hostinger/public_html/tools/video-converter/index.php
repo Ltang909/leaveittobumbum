@@ -114,7 +114,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php else: ?>
 <section class="panel" id="vcUpload">
 <h2 style="margin-top:0">1. Your video</h2>
-<div class="vc-drop" id="vcDrop" role="button" tabindex="0"><strong>Drop your video here, or tap to pick one</strong><span>MP4, WebM, MOV, MKV, or AVI. Up to 100 MB. Never uploaded anywhere.</span><input type="file" id="vcFile" accept="video/*,.mkv,.avi,.mov"></div>
+<div class="vc-drop" id="vcDrop" role="button" tabindex="0"><strong>Drop your video here, or tap to pick one</strong><span>MP4, WebM, MOV, MKV, or AVI. Up to 100 MB, and your file is never uploaded anywhere.</span><input type="file" id="vcFile" accept="video/*,.mkv,.avi,.mov"></div>
 <p class="vc-fileline" id="vcFileInfo"></p>
 <p id="vcUploadErr" class="error"></p>
 <div class="vc-step"><button id="vcToFmt" class="button" type="button" disabled>Continue</button></div>

@@ -4,7 +4,7 @@ import { PlanCta } from "../components/plan-ctas";
 
 export const metadata: Metadata = {
   title: "Pricing | Leave It to Bum Bum",
-  description: "One shared meter. Every completed result uses one action. Pay for useful work, not a maze of limits.",
+  description: "One shared meter covers every tool and your whole team. Every completed result uses one action.",
 };
 
 const plans = [
@@ -18,7 +18,7 @@ export default function Pricing() {
       <SiteHeader />
       <section className="page-head shell">
         <p className="kicker">Pricing</p>
-        <h1>Pay for useful work,<br />not a maze of limits.</h1>
+        <h1>One shared meter<br />for all your tools.</h1>
         <p className="lede">One shared meter. Every completed result uses one action. On Poke around, your whole team and every tool share the same monthly bucket. Operator skips the counting entirely.</p>
       </section>
       <section className="shell" style={{ paddingBottom: 90 }}>
@@ -39,13 +39,13 @@ export default function Pricing() {
           <p>An action is one completed result: a trimmed video, an audit report, a cleaned-up subscription list. Clicking around and previewing is free. You only spend when Bum Bum finishes something useful for you.</p>
           <h2>How the meter works</h2>
           <ul>
-            <li><strong>Shared bucket:</strong> your whole team and every tool draw from the same monthly actions. No per-tool limits, no per-seat math.</li>
+            <li><strong>Shared bucket:</strong> your whole team and every tool draw from the same monthly actions, with no per-tool limits or per-seat math.</li>
             <li><strong>Monthly reset:</strong> actions reset on your billing date and don&rsquo;t roll over.</li>
             <li><strong>Fair warning:</strong> we nudge you at 80% and again at 100%, so the meter never surprises you.</li>
             <li><strong>Run out early?</strong> Pause until the reset, or move to Operator and never count again.</li>
           </ul>
           <h2>Pause or cancel anytime</h2>
-          <p>No contracts, no cancellation maze. Downgrade to free or cancel in two clicks from your account page, and you keep what you paid for until the end of the billing period.</p>
+          <p>Downgrade to free or cancel in two clicks from your account page. There are no contracts or cancellation mazes to fight through, and you keep what you paid for until the end of the billing period.</p>
           <h2>Where the 36-hour promise fits</h2>
           <p>Operator members get one scoped tool request each month, and Bum Bum ships it within 36 hours or your next month is on us. <a href="/36-hours/"><strong>Read the full promise</strong></a>.</p>
           <h2>Questions, probably answered</h2>
