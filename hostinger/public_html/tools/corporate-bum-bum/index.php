@@ -45,7 +45,7 @@
       "name": "How is this different from a spreadsheet?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It tells you who to follow up with every morning and drafts what to say. A spreadsheet just sits there."
+        "text": "It tells you who to follow up with every morning and drafts what to say. A spreadsheet holds the same list, but it will not remind you or draft the message."
       }
     },
     {
@@ -473,7 +473,7 @@ refresh().then(function(){
 </details>
 <details>
 <summary>How is this different from a spreadsheet?</summary>
-<p>It tells you who to follow up with every morning and drafts what to say. A spreadsheet just sits there.</p>
+<p>It tells you who to follow up with every morning and drafts what to say. A spreadsheet holds the same list, but it will not remind you or draft the message.</p>
 </details>
 <details>
 <summary>What does the morning follow-up tell me?</summary>

@@ -66,7 +66,7 @@ export default function InvoiceReminderEmailGuide() {
           <li><strong>Burying the payment link.</strong> If paying takes effort, your invoice joins a pile. Put the link in the first few lines, every single time.</li>
           <li><strong>Apologizing for asking.</strong> "Sorry to bother you, just wondering if maybe..." reads as optional. You delivered the work, so a plain, friendly request is the right tone.</li>
           <li><strong>Waiting a month to send the first note.</strong> By then your invoice is buried under forty others. The three-day heads-up feels early the first time you send it. Send it anyway.</li>
-          <li><strong>Getting heated at fourteen days.</strong> Firm beats angry. State the facts, name the next step, and leave the door open for a fast reply.</li>
+          <li><strong>Getting heated at fourteen days.</strong> Stay firm and factual. State the facts, name the next step, and leave the door open for a fast reply.</li>
           </ul>
           <h2>The easier way</h2>
           <p>Writing these from scratch for every late invoice eats real time, and remembering who got which email is its own headache. <a href="/tools/invoice-chaser/">Invoice Reminder</a> writes the chase email for you, sends it as your billing assistant, and learns which tone gets each client to pay. You approve the words, it does the awkward part.</p>

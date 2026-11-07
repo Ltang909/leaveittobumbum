@@ -37,7 +37,7 @@
       "name": "How accurate is it?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It is an approximation, on purpose. Every scan gives you a range, not a single fake-exact number, because portion size is the swing factor in any photo estimate. Expect it to land in the right neighborhood, not on the exact gram."
+        "text": "It is an approximation, on purpose. Every scan gives you a range, because portion size is the swing factor in any photo estimate. Expect it to land in the right neighborhood. Gram-level precision is more than a photo can honestly give."
       }
     },
     {
@@ -123,7 +123,7 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .day-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Meal Scanner"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/meal-scanner.png" alt="Meal Scanner"><h1>Plates in, numbers out.</h1><p class="lede bb-desc">Too busy to type your lunch into a tracker? Snap the plate instead. Bum Bum reads the photo and estimates the calories, protein, carbs, and fat in seconds. No database searching, no barcode scanning, no weighing anything. Every estimate comes as an <b>honest range</b>, not a fake-exact number, because any app that claims to know your burrito to the calorie is lying to you. Fix what it misjudged, then add the meal to your running total for the day. One action per meal scanned. Your photo is read to pull the numbers, then discarded; your totals live only in your browser.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Meal Scanner"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/meal-scanner.png" alt="Meal Scanner"><h1>Plates in, numbers out.</h1><p class="lede bb-desc">Too busy to type your lunch into a tracker? Snap the plate instead. Bum Bum reads the photo and estimates the calories, protein, carbs, and fat in seconds. You skip the database searching, barcode scanning, and weighing that tracker apps usually ask for. Every estimate comes as an <b>honest range</b>, because a photo cannot pin your burrito down to the exact calorie, whatever an app claims. Fix what it misjudged, then add the meal to your running total for the day. One action per meal scanned. Your photo is read to pull the numbers, then discarded; your totals live only in your browser.</p>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to scan meals</h2><a class="button" href="/account/?next=<?= urlencode('/tools/meal-scanner/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/meal-scanner/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/meal-scanner/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -193,9 +193,9 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Meal photos into honest numbers, the short guide</h2>
 <h3>How it works here</h3>
-<p>One photo of your plate becomes estimated calories, protein, carbs, and fat. No database searching, no barcode scanning, no weighing anything. Your photo is read and discarded, never stored, and your running day total lives in your own browser, not in your account. One photo read uses one action.</p>
+<p>One photo of your plate becomes estimated calories, protein, carbs, and fat. You skip the database searching, barcode scanning, and weighing that tracker apps usually ask for. Your photo is read and discarded, never stored, and your running day total lives in your own browser, not in your account. One photo read uses one action.</p>
 <h3>Why a range is the honest answer</h3>
-<p>Every estimate here comes as a range instead of a fake-exact number, because vision estimates of portions typically run 20 to 40 percent off in either direction. A single precise-looking number would be a lie with good formatting. The range is the truth, not a cop-out.</p>
+<p>Every estimate here comes as a range instead of a fake-exact number, because vision estimates of portions typically run 20 to 40 percent off in either direction. A single precise-looking number would claim an accuracy the photo cannot support, so the range is the more honest answer.</p>
 <h3>Better reads</h3>
 <p>Include something for scale, like cutlery or your hand at the edge of the frame; portion guesses improve fast. Sauce-heavy plate? Edit the item after the read and note the sauce, because hidden calories mostly live there. No meal photo handy? The sample meal on this page shows the full result for free, every number editable.</p>
 </section>

@@ -385,7 +385,7 @@ refresh().then(function(){
 <h3>How it works here</h3>
 <p>Track who owes you what, and when a chase is due, Bum Bum writes the email in the right tone. You always see and approve it before anything sends; then it goes out as your billing assistant in one tap. Adding an invoice or sending a chase uses one action each; everything else is free.</p>
 <h3>Timing is most of the tone</h3>
-<p>Chase the day after the due date, politely. The first nudge is a reminder, not an accusation, and most late invoices are buried inboxes, not bad intent. The chaser also learns how each client actually pays, so a client who always pays on day 20 does not get nudged on day 2.</p>
+<p>Chase the day after the due date, politely. Treat the first nudge as a simple reminder, since most late invoices are sitting unread in a busy inbox rather than being deliberately ignored. The chaser also learns how each client actually pays, so a client who always pays on day 20 does not get nudged on day 2.</p>
 <h3>Add invoices when you send them</h3>
-<p>Not when they go overdue. The learning only works with the real dates, and a tracker that only holds the problem invoices teaches itself the wrong lesson about everyone.</p>
+<p>Invoices added only once they are overdue skew the learning, which works from the real dates. A tracker that only holds the problem invoices teaches itself the wrong lesson about everyone.</p>
 <h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-write-an-invoice-reminder-email/">How to write an invoice reminder email (with templates)</a>.</p><p>Chasing invoices is one piece of the money puzzle: see how <a href="/blog/best-business-account-software/">the best business account software for small businesses</a> compares side by side.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

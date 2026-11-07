@@ -45,7 +45,7 @@
       "name": "How is Client Follow-Up Tracker different from a big CRM?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It does one job: it tells you who to follow up with every morning and what to say. No pipelines to configure, no fields to customize, no training needed."
+        "text": "It does one job: it tells you who to follow up with every morning and what to say. There are no pipelines to configure and no custom fields to set up, and it needs no training to use."
       }
     },
     {
@@ -402,7 +402,7 @@ refresh();
 </details>
 <details>
 <summary>How is Client Follow-Up Tracker different from a big CRM?</summary>
-<p>It does one job: it tells you who to follow up with every morning and what to say. No pipelines to configure, no fields to customize, no training needed.</p>
+<p>It does one job: it tells you who to follow up with every morning and what to say. There are no pipelines to configure and no custom fields to set up, and it needs no training to use.</p>
 </details>
 <details>
 <summary>What does the morning follow-up tell me?</summary>
@@ -420,6 +420,6 @@ refresh();
 <h3>The two-minute habit</h3>
 <p>Set the follow-up date before you close the tab after every call. Two days is a good default for a warm conversation. The tracker does the remembering; your only job is telling it when future-you should care.</p>
 <h3>Keep the pipeline honest</h3>
-<p>Someone who has gone quiet for a month belongs in a later stage, not in today's list forever. A short, true list gets worked. A long, stale one gets ignored, which is how follow-ups die in bigger CRMs too. Bum Bum never emails your clients from this tool; the words are always yours to send.</p>
+<p>Someone who has gone quiet for a month belongs in a later stage, not in today's list forever. A short, current list gets worked through. A long, stale one gets ignored, and follow-ups get missed that way in bigger CRMs too. Bum Bum never emails your clients from this tool; the words are always yours to send.</p>
 <h3>Read the guide</h3><p>We compared the field: <a href="/blog/best-free-crm-small-business/">comparing free CRMs for a small business</a>, from full sales pipelines to tiny follow-up trackers like this one.</p></section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

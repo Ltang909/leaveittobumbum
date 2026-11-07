@@ -41,7 +41,7 @@ export default function ThirtySixHours() {
         </div>
         <div className="promise-callout">
           <h2>If we miss, next month is on us.</h2>
-          <p>Credited automatically, no forms, no begging. The credit applies to your Operator subscription and shows up on your account page.</p>
+          <p>The credit is applied automatically, with no forms to file. The credit applies to your Operator subscription and shows up on your account page.</p>
           <p><a href="/checkout/?plan=operator">Get the promise <span aria-hidden="true">↗</span></a></p>
         </div>
         <div className="prose">

@@ -13,7 +13,7 @@ export default function FindSubscriptionsGuide() {
       <section className="page-head shell">
         <p className="kicker">Guide</p>
         <h1>How to find subscriptions you forgot about (and cancel them)</h1>
-        <p className="lede">The average forgotten subscription is small. The pile of them is not. Twenty minutes of digging finds every recurring charge you are paying for and getting nothing from.</p>
+        <p className="lede">Forgotten subscriptions are usually small individually, but they add up. Twenty minutes of digging finds every recurring charge you are paying for and getting nothing from.</p>
       </section>
       <section className="shell">
         <div className="prose">
@@ -35,7 +35,7 @@ export default function FindSubscriptionsGuide() {
           <li><strong>Minutes 15 to 20:</strong> Search your email for "renewal" and "receipt" and cross-check against your list. Put every subscription you find into one list with its price and next renewal date. That list is your whole picture, probably for the first time.</li>
           </ul>
           <h2>Free trials and the calendar trick</h2>
-          <p>Trials get you because the charge lands weeks after you stopped caring about the app. The fix takes ten seconds at sign-up time: the moment you start a trial, add a calendar event for two days before it ends, titled "Cancel the trial?" Future you gets a nudge while there is still time to act. Do the same for annual renewals on anything pricey. A $180 charge you see coming is a decision. The same charge out of nowhere is just a leak.</p>
+          <p>Trials get you because the charge lands weeks after you stopped caring about the app. The fix takes ten seconds at sign-up time: the moment you start a trial, add a calendar event for two days before it ends, titled "Cancel the trial?" Future you gets a nudge while there is still time to act. Do the same for annual renewals on anything pricey. A calendar reminder turns a $180 renewal into a decision you make ahead of time, instead of a charge you only notice after it lands.</p>
           <h2>Cancel, pause, or downgrade: which stops the money?</h2>
           <ul>
           <li><strong>Cancel</strong> ends the billing. On most services you keep access until the end of the paid period, so cancel the day you decide, not the day before renewal when you will forget.</li>

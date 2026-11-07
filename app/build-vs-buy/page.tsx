@@ -38,7 +38,7 @@ export default function BuildVsBuy() {
           ))}
         </ul>
         <div className="prose">
-          <p>None of this is hard in the way that stops you. It is hard in the way that eats your evenings, one small papercut at a time, until the tool you were excited about becomes the chore you avoid.</p>
+          <p>None of this is especially hard on its own. It just keeps taking time, one small task at a time, until the tool you were excited about becomes a chore you avoid.</p>
         </div>
         <DiyCalculator />
         <div className="promise-callout">
@@ -66,9 +66,9 @@ export default function BuildVsBuy() {
         </div>
         <div className="prose" style={{ paddingBottom: 110 }}>
           <h2>Questions, probably answered</h2>
-          <details><summary>But I genuinely enjoy building things? <span>+</span></summary><p>Then build! Seriously, the weekend project is a joy and we are not here to take that from you. And if you get stuck halfway, or the QA grind eats your third weekend, the request form will be right here. No judgment, only tools.</p></details>
+          <details><summary>But I genuinely enjoy building things? <span>+</span></summary><p>Then build! Seriously, the weekend project is a joy and we are not here to take that from you. And if you get stuck halfway, or the QA grind eats your third weekend, the request form will be right here. That is a normal place to end up, and we are happy to take it from there.</p></details>
           <details><summary>What does the $49 actually cover? <span>+</span></summary><p>One scoped tool request every month, plus unlimited actions across every tool in the box, unlimited team seats, and all the hosting, fixes, and maintenance. The maintenance is the part of DIY nobody budgets for.</p></details>
-          <details><summary>What if my idea is too big for 36 hours? <span>+</span></summary><p>We carve out the most useful slice and tell you honestly what the rest would take. A sharp little tool this month beats a perfect system that never ships.</p></details>
+          <details><summary>What if my idea is too big for 36 hours? <span>+</span></summary><p>We carve out the most useful slice and tell you honestly what the rest would take. A smaller tool that ships this month will help you sooner than a larger system that is still being built.</p></details>
           <details><summary>Do I own the tool? <span>+</span></summary><p>It lives in your Bum Bum toolbox as long as your subscription does, maintained and working. Cancel anytime and your data comes with you. The 11pm bug reports stay with us either way.</p></details>
         </div>
       </section>
