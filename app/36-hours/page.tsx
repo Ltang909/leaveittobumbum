@@ -66,7 +66,7 @@ export default function ThirtySixHours() {
         </div>
         <div className="prose" style={{ paddingBottom: 110 }}>
           <h2>Questions, probably answered</h2>
-          <details><summary>Does the request have to be my idea? <span>+</span></summary><p>Nope. Describe the pain however you like &mdash; &ldquo;I hate doing X every week&rdquo; is a perfectly good brief. We&rsquo;ll shape it into something buildable.</p></details>
+          <details><summary>Does the request have to be my idea? <span>+</span></summary><p>Nope. Describe the pain however you like &mdash; &ldquo;I hate doing X every week&rdquo; is a perfectly good brief. We&rsquo;ll turn it into a scoped request we can build.</p></details>
           <details><summary>What if my request isn&rsquo;t eligible? <span>+</span></summary><p>We&rsquo;ll tell you within a day, with the reason in plain language and the closest eligible version. An ineligible request never burns your monthly slot.</p></details>
           <details><summary>Can I watch it being built? <span>+</span></summary><p>You&rsquo;ll get updates as it ships, and you can reply to the thread any time. Hovering is optional but permitted.</p></details>
         </div>
