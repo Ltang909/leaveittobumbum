@@ -3,6 +3,7 @@ import registry from "../../hostinger/public_html/tools/registry.json";
 export type Tool = {
   key: string;
   name: string;
+  cardTitle?: string[];
   tag: string;
   icon: string;
   iconImg?: string;
