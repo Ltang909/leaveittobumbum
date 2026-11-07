@@ -758,7 +758,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Can I fix a day after filing it?", "Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action."],
       ["Can I type instead of talking?", "Yes. The one big box takes typing too, and you can mix talking and typing in the same log."],
     ],
-    updated: "October 28, 2026",
+    updated: "November 7, 2026",
   },
   {
     key: "email-signature-generator",
