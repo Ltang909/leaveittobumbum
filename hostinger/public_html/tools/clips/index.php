@@ -63,6 +63,14 @@
     },
     {
       "@type": "Question",
+      "name": "Why doesn't the floating bubble follow me into other tabs and windows?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The floating bubble is a small mirror that lives on this page, and websites are not allowed to draw inside other tabs or apps, so it cannot travel with you. Tools that seem to do it use a browser extension, which has permissions a website does not. Your finished recording still includes your camera in the corner either way, because it is blended into the video as you record. To see yourself while you work in another window, share your entire screen and keep the bubble up."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Can I trim the recording before downloading?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -591,6 +599,10 @@ if(!screenOK){
 <details>
 <summary>Can I include my webcam in the recording?</summary>
 <p>Yes. Add your mic and a little camera bubble if you want to be in the recording.</p>
+</details>
+<details>
+<summary>Why doesn't the floating bubble follow me into other tabs and windows?</summary>
+<p>The floating bubble is a small mirror that lives on this page, and websites are not allowed to draw inside other tabs or apps, so it cannot travel with you. Tools that seem to do it use a browser extension, which has permissions a website does not. Your finished recording still includes your camera in the corner either way, because it is blended into the video as you record. To see yourself while you work in another window, share your entire screen and keep the bubble up.</p>
 </details>
 <details>
 <summary>Can I trim the recording before downloading?</summary>
