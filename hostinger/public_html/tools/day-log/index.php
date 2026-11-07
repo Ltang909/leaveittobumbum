@@ -189,12 +189,12 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p id="notionMsg" class="mic-status" style="margin-top:8px"></p>
 <p id="notionError" class="error"></p>
 <h3 style="margin:18px 0 4px">Your top list on your calendar</h3>
-<p class="meta" style="margin-top:0">Emails get buried. If you connect Google Calendar, your top list also lands as an 8 AM event on the mornings your recap goes out. It is optional, and you can disconnect any time.</p>
+<p class="meta" style="margin-top:0">Emails get buried. If you connect Google Calendar, your top list also lands as an all-day event on the mornings your recap goes out. It is optional, and you can disconnect any time.</p>
 <?php if ($gcalNote === 'connected'): ?><p class="mic-status">Google Calendar connected. Your next recap morning puts the top list on your calendar too.</p><?php elseif ($gcalNote === 'error'): ?><p class="error">That connection did not finish. Try again.</p><?php elseif ($gcalNote === 'unavailable'): ?><p class="error">Calendar connection is not available right now.</p><?php endif; ?>
 <?php if (!$gcalReady): ?>
 <p class="meta">Calendar connection is not switched on yet.</p>
 <?php elseif ($gcalConn): ?>
-<p class="meta">Connected. Your top list lands on your calendar at 8 AM on recap mornings, next to the email.</p>
+<p class="meta">Connected. Your top list lands on your calendar as an all-day event on recap mornings, next to the email.</p>
 <div class="btnrow"><button type="button" class="button secondary" id="gcalTest">Send a test event</button><button type="button" class="button secondary" id="gcalDisconnect">Disconnect Google Calendar</button></div>
 <p id="gcalMsg" class="mic-status" style="margin-top:8px"></p>
 <?php else: ?>
@@ -600,7 +600,7 @@ if(gcalTest){gcalTest.addEventListener('click',async()=>{
   const session=await fetch('/api/session.php').then(r=>r.json());
   const response=await fetch('/api/auth/google-calendar-test.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:session.csrf})});
   const data=await response.json().catch(()=>({}));
-  if(response.ok&&data.status==='created'){msg.textContent='Sent. Check your calendar tomorrow at 8 AM for Today\'s Top List.';}
+  if(response.ok&&data.status==='created'){msg.textContent='Sent. It is on your calendar tomorrow as an all-day event.';}
   else if(data.status==='no top list'){msg.textContent='Your most recent log has no top list, so there was nothing to send.';}
   else if(data.status==='not connected'){msg.textContent='Not connected yet.';}
   else{msg.textContent='The test did not land: '+(data.status||'unknown error')+'.';}

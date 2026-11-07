@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 // Manual test for the Day Log Google Calendar connection: creates the
-// top-list event for tomorrow 8 AM from the user's most recent log,
+// all-day top-list event for tomorrow from the user's most recent log,
 // without touching the per-day delivery stamp, so the real recap
 // morning flow is unaffected.
 require __DIR__ . '/../_bootstrap.php';
