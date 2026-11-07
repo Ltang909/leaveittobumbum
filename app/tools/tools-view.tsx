@@ -128,7 +128,7 @@ export default function ToolsView() {
                 <span className="tool-tag">{tool.tag}</span>
                 {(tool.iconImg || tool.mascot) && <img className="tool-mascot" src={tool.iconImg || tool.mascot} alt="" aria-hidden="true" />}
               </div>
-              <h3>{tool.name}</h3>
+              <h3>{tool.cardTitle ? <>{tool.cardTitle[0]}<br />{tool.cardTitle[1]}</> : tool.name}</h3>
               <p>{tool.description}</p>
               <button onClick={() => openTool(tool)}>{tool.cta} <Arrow /></button>
             </article>
