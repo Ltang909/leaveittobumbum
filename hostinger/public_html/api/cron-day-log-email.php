@@ -328,7 +328,7 @@ foreach ($users as $u) {
             }
             if ($sent && !$testMode) {
                 // Optional calendar delivery rides the recap: connected
-                // users also get the top list as an 8 AM event today.
+                // users also get the top list as an all-day event today.
                 $entry['calendar'] = gcal_create_top_list_event($pdo, $userId, $today, is_array($structured['tomorrow'] ?? null) ? $structured['tomorrow'] : []);
             }
         } elseif ($action === 'nudge') {

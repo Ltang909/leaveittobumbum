@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 // Optional Google Calendar delivery for Day Log. A user who connects
-// Google Calendar gets "Today's Top List" as an 8:00 AM event on recap
+// Google Calendar gets the day's top list as an all-day event on recap
 // mornings, alongside the recap email. The connection is separate from
 // Google sign-in: it reuses the same OAuth client (google_client_id /
 // google_client_secret in the server config) but asks only for the
@@ -67,7 +67,7 @@ function gcal_access_token(string $refreshToken): array {
     return ['', $err, $err === 'invalid_grant'];
 }
 
-// Creates today's 8 AM "Today's Top List" event for a connected user.
+// Creates today's all-day commitments event for a connected user.
 // Returns a short status string for the caller's log; never throws.
 function gcal_create_top_list_event(PDO $pdo, int $userId, string $today, array $topList, bool $stamp = true): string {
     try {
@@ -88,14 +88,17 @@ function gcal_create_top_list_event(PDO $pdo, int $userId, string $today, array 
             return 'error: ' . $err;
         }
         $desc = implode("\n", array_map(fn($i) => '- ' . $i, $items)) . "\n\nFrom your Day Log on Leave It To Bum Bum.";
+        $count = count($items);
+        $summary = "Today's commitments - " . $count . ($count === 1 ? ' thing' : ' things') . ' to do. Tasks in description';
+        $dayAfter = (new DateTime($today))->modify('+1 day')->format('Y-m-d');
         [$http, $event] = gcal_http('https://www.googleapis.com/calendar/v3/calendars/primary/events', [
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $access, 'Content-Type: application/json'],
             CURLOPT_POSTFIELDS => json_encode([
-                'summary' => "Today's Top List",
+                'summary' => $summary,
                 'description' => $desc,
-                'start' => ['dateTime' => $today . 'T08:00:00', 'timeZone' => 'America/Toronto'],
-                'end' => ['dateTime' => $today . 'T08:15:00', 'timeZone' => 'America/Toronto'],
+                'start' => ['date' => $today],
+                'end' => ['date' => $dayAfter],
             ]),
         ]);
         $eventId = (string) ($event['id'] ?? '');
