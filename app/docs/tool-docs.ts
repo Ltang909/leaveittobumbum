@@ -760,7 +760,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Can I type instead of talking?", "Yes. The one big box takes typing too, and you can mix talking and typing in the same log."],
       ["Can my top list go on my calendar?", "Yes. Connect Google Calendar in Advanced settings and, on the mornings your recap email goes out, your top list also lands as an all-day event. It is optional, and disconnecting stops the events, not the emails."],
     ],
-    updated: "November 1, 2026",
+    updated: "November 7, 2026",
   },
   {
     key: "email-signature-generator",
