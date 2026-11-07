@@ -1,4 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
+<?php
+$gcalReady = false; $gcalConn = null; $gcalNote = (string) ($_GET['gcal'] ?? '');
+if ($user) {
+    require_once dirname(__DIR__, 2) . '/includes/google-calendar.php';
+    try {
+        $gcalReady = gcal_configured();
+        if ($gcalReady) $gcalConn = gcal_connection(db(), (int) $user['id']);
+    } catch (Throwable $e) { $gcalReady = false; }
+}
+?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Day Log | Close the Day, Queue Up Tomorrow | Leave It to Bum Bum</title>
 <meta name="description" content="Talk through your day in a few minutes. Bum Bum turns it into jot notes, scores yesterday's list against today, and emails you tomorrow's top priorities.">
 <meta property="og:title" content="Day Log | Close the Day, Queue Up Tomorrow | Leave It to Bum Bum">
@@ -32,7 +42,7 @@
     {
       "@type": "Question",
       "name": "What lands in the email?",
-      "acceptedAnswer": { "@type": "Answer", "text": "A recap on weekday mornings: your most recent log in clean jot notes, yesterday's list scored, and your next top priorities. Monday's recap covers Friday. Miss a day and you get one gentle nudge; after that, no emails until you log again." }
+      "acceptedAnswer": { "@type": "Answer", "text": "A recap every morning: your most recent log in clean jot notes, yesterday's list scored, and your next top priorities. Miss a day and you get one gentle nudge; after that, no emails until you log again." }
     },
     {
       "@type": "Question",
@@ -178,6 +188,18 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </div>
 <p id="notionMsg" class="mic-status" style="margin-top:8px"></p>
 <p id="notionError" class="error"></p>
+<h3 style="margin:18px 0 4px">Your top list on your calendar</h3>
+<p class="meta" style="margin-top:0">Emails get buried. If you connect Google Calendar, your top list also lands as an 8 AM event on the mornings your recap goes out. It is optional, and you can disconnect any time.</p>
+<?php if ($gcalNote === 'connected'): ?><p class="mic-status">Google Calendar connected. Your next recap morning puts the top list on your calendar too.</p><?php elseif ($gcalNote === 'error'): ?><p class="error">That connection did not finish. Try again.</p><?php elseif ($gcalNote === 'unavailable'): ?><p class="error">Calendar connection is not available right now.</p><?php endif; ?>
+<?php if (!$gcalReady): ?>
+<p class="meta">Calendar connection is not switched on yet.</p>
+<?php elseif ($gcalConn): ?>
+<p class="meta">Connected. Your top list lands on your calendar at 8 AM on recap mornings, next to the email.</p>
+<div class="btnrow"><button type="button" class="button secondary" id="gcalDisconnect">Disconnect Google Calendar</button></div>
+<p id="gcalMsg" class="mic-status" style="margin-top:8px"></p>
+<?php else: ?>
+<div class="btnrow"><a class="button secondary" href="/api/auth/google-calendar.php">Connect Google Calendar</a></div>
+<?php endif; ?>
 </details>
 </section>
 <?php endif; ?>
@@ -185,7 +207,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section id="faq">
 <h2>Day Log questions</h2>
 <details><summary>Where does my voice go?</summary><p>Your words are kept, your voice is not. Recordings are transcribed and then discarded. Only the text of your log is stored, in your account.</p></details>
-<details><summary>What lands in the email?</summary><p>A recap on weekday mornings: your most recent log in clean jot notes, yesterday's list scored, and your next top priorities. Monday's recap covers Friday. Miss a day and you get one gentle nudge; after that, no emails until you log again.</p></details>
+<details><summary>What lands in the email?</summary><p>A recap every morning: your most recent log in clean jot notes, yesterday's list scored, and your next top priorities. Miss a day and you get one gentle nudge; after that, no emails until you log again.</p></details>
 <details><summary>What if I skip a day?</summary><p>Nothing breaks. The scorecard compares against your most recent filed day, whenever that was.</p></details>
 <details><summary>How does the scorecard work?</summary><p>When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone.</p></details>
 <details><summary>Can I type instead of talking?</summary><p>Yes. The one big box takes typing too. Talk, type, or mix both in the same log.</p></details>
@@ -196,7 +218,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Closing your day in five minutes, the short guide</h2>
 <h3>How it works here</h3>
-<p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next weekday morning, a recap email arrives with tomorrow's priorities on top. One action per day filed, and re-filing the same day replaces the earlier version at no extra cost. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you.</p>
+<p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next morning, a recap email arrives with tomorrow's priorities on top. One action per day filed, and re-filing the same day replaces the earlier version at no extra cost. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you.</p>
 <h3>Your voice is never kept</h3>
 <p>Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Transcription tries your browser's live transcription first; on browsers without it, the recording is transcribed by Whisper and then discarded. Your words were the point. Your voice was just the fastest way to get them down.</p>
 <h3>Make tomorrow countable</h3>
@@ -428,7 +450,7 @@ fileBtn.addEventListener('click',async()=>{
   if(!response.ok){err.textContent=(data&&data.error)||'Filing tripped. Your words are still in the box; try once more.';return}
   bbTrack('daylog_filed',{first_today:!!data.first_today,reflection:(data.reflection||[]).length});
   let metaMsg=data.first_today
-    ? 'Filed. Your recap lands the next weekday morning; Monday recaps Friday. Tomorrow, this list is the scorecard.'
+    ? 'Filed. Your recap lands tomorrow morning. Tomorrow, this list is the scorecard.'
     : 'Updated. Re-filing the same day replaces the earlier version and costs no extra action.';
   if(data.notion&&data.notion.connected){
     metaMsg+= data.notion.ok ? (data.notion.created?' A Notion page was made for today.':' Today’s Notion page was updated.') : ' '+(data.notion.error||'');
@@ -572,6 +594,13 @@ document.querySelector('#notionSave').addEventListener('click',async()=>{
   document.querySelector('#notionToken').value='';
   renderNotion(data.notion);
 });
+const gcalBtn=document.querySelector('#gcalDisconnect');
+if(gcalBtn){gcalBtn.addEventListener('click',async()=>{
+  const msg=document.querySelector('#gcalMsg'); msg.textContent='Disconnecting...';
+  const session=await fetch('/api/session.php').then(r=>r.json());
+  const response=await fetch('/api/auth/google-calendar-disconnect.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:session.csrf})});
+  if(response.ok){location.href='/tools/day-log/';}else{msg.textContent='That disconnect tripped. Try once more.';}
+});}
 </script>
 <?php endif; ?>
 <script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
