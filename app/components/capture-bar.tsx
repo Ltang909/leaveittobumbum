@@ -1104,17 +1104,21 @@ export default function CaptureBar() {
   // just text.
   function syncMention(value: string, caret: number) {
     let start = -1;
-    for (let i = caret - 1; i >= 0; i--) {
+    // Tool names can hold spaces (Day Log, PDF Merger), so the scan
+    // back to the @ crosses single spaces too. It stays bounded (42
+    // chars) and stops at a newline, so a stray @ in a long sentence
+    // does not hold the menu open.
+    for (let i = caret - 1; i >= 0 && caret - i <= 42; i--) {
       const ch = value[i];
       if (ch === "@") {
         start = i;
         break;
       }
-      if (/\s/.test(ch)) break;
+      if (ch === "\n") break;
     }
     if (start >= 0 && (start === 0 || /\s/.test(value[start - 1]))) {
       const query = value.slice(start + 1, caret);
-      if (/^[A-Za-z0-9-]*$/.test(query)) {
+      if (/^[A-Za-z0-9 \-]*$/.test(query) && !query.includes("  ")) {
         setMention({ start, query });
         setMentionIndex(0);
         if (!sessionWarmRef.current) {
