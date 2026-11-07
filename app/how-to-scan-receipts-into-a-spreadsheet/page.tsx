@@ -20,7 +20,7 @@ export default function ScanReceiptsGuide() {
           <h2>How to scan receipts into a spreadsheet</h2>
           <p>Every business has a shoebox, a glove compartment, or a camera roll stuffed with receipts that someone meant to deal with later. Later arrives at tax time, all at once, with faded ink. Scanning receipts into a spreadsheet as you go turns that yearly panic into a tidy table you can sort, search, and hand to your accountant. Here is the whole process, from photo to CSV.</p>
           <h2>Why a spreadsheet beats the shoebox</h2>
-          <p>A photo of a receipt proves you bought something. A row in a spreadsheet tells you what it cost, when, and which job it belonged to. You can total a month of fuel in seconds, filter every expense for one client, and spot the purchase you forgot to claim. Your accountant will also charge you less when the records arrive as clean data instead of a bag of paper. Sorting beats squinting, every time.</p>
+          <p>A photo of a receipt proves you bought something. A row in a spreadsheet tells you what it cost, when, and which job it belonged to. You can total a month of fuel in seconds, filter every expense for one client, and spot the purchase you forgot to claim. Your accountant will also charge you less when the records arrive as clean data instead of a bag of paper. That is much easier than squinting at a pile of paper receipts.</p>
           <h2>The fields worth capturing</h2>
           <ul>
           <li><strong>Vendor.</strong> The shop or supplier name, spelled the way it appears on the receipt.</li>

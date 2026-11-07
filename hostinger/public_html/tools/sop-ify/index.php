@@ -282,9 +282,9 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <h3>How it works here</h3>
 <p>Paste the messy version of how you do a thing, or talk it out loud if the process lives in your head better than on a keyboard, and get a clean step-by-step playbook a brand-new helper could follow with zero prior context. Your playbooks are saved in your account and nothing is shared. One finished playbook uses one action.</p>
 <h3>Do not pre-organize</h3>
-<p>The messier the input, the bigger the transformation. Tidying your dump first is doing the job you are delegating, badly, at the exact moment you were trying to hand it off.</p>
+<p>You do not need to organize your input first. Paste or say it in whatever order it comes out, and let the tool arrange it. Organizing it yourself means doing part of the work you are trying to hand off.</p>
 <h3>Include the annoying parts</h3>
-<p>The login that lives in a spreadsheet, the step everyone forgets, the exception that happens every month. Playbooks fail on the steps nobody wrote down. Start with the task you dread handing over; that dread is usually undocumented knowledge, and the SOP is how it stops being only yours.</p>
+<p>The login that lives in a spreadsheet, the step everyone forgets, the exception that happens every month. Playbooks fail on the steps nobody wrote down. Start with the task you dread handing over. That usually means the steps live only in your head, and writing the SOP gets them down where a helper can use them.</p>
 </section>
 <?php $bbTool = 'sop-ify'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

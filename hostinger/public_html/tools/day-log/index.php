@@ -37,7 +37,7 @@ if ($user) {
     {
       "@type": "Question",
       "name": "Where does my voice go?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Your words are kept, your voice is not. Recordings are transcribed and then discarded. Only the text of your log is stored, in your account." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Recordings are transcribed and then discarded. Only the text of your log is stored, in your account." }
     },
     {
       "@type": "Question",
@@ -126,7 +126,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/day-log-sticker.png" alt="Day Log"><h1>5 min/day. Increase your productivity.</h1><p class="lede bb-desc">You're busy out there working on your business. Sometimes things get forgotten or deprioritized; when you look back, you forget what you did the past week. Spend 5 min every evening with Bum Bum, brain dump what you did, challenges faced, lessons learned and what to achieve. Bum bum reads what you've logged and sends you a daily email keeping you on track! He also summarizes highlights and growth on a weekly and monthly basis.</p>
 <?php if (!$user): ?>
-<section class="panel"><h2>Day Log lives in your account</h2><p class="lede">The scorecard only works if yesterday's list is waiting for you, so Day Log needs a free account to file into. Your logs, your words, nobody else's.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/day-log/') ?>">Sign in or create a free account</a></p></section>
+<section class="panel"><h2>Day Log lives in your account</h2><p class="lede">The scorecard only works if yesterday's list is waiting for you, so Day Log needs a free account to file into. Your logs are your words, and nobody else sees them.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/day-log/') ?>">Sign in or create a free account</a></p></section>
 <?php else: ?>
 
 <div id="yesterdaySlot"></div>
@@ -206,7 +206,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 
 <section id="faq">
 <h2>Day Log questions</h2>
-<details><summary>Where does my voice go?</summary><p>Your words are kept, your voice is not. Recordings are transcribed and then discarded. Only the text of your log is stored, in your account.</p></details>
+<details><summary>Where does my voice go?</summary><p>Recordings are transcribed and then discarded. Only the text of your log is stored, in your account.</p></details>
 <details><summary>What lands in the email?</summary><p>A recap every morning: your most recent log in clean jot notes, yesterday's list scored, and your next top priorities. Miss a day and you get one gentle nudge; after that, no emails until you log again.</p></details>
 <details><summary>What if I skip a day?</summary><p>Nothing breaks. The scorecard compares against your most recent filed day, whenever that was.</p></details>
 <details><summary>How does the scorecard work?</summary><p>When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone.</p></details>
@@ -220,9 +220,9 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h3>How it works here</h3>
 <p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next morning, a recap email arrives with tomorrow's priorities on top. One action per day filed, and re-filing the same day replaces the earlier version at no extra cost. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you.</p>
 <h3>Your voice is never kept</h3>
-<p>Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Transcription tries your browser's live transcription first; on browsers without it, the recording is transcribed by Whisper and then discarded. Your words were the point. Your voice was just the fastest way to get them down.</p>
-<h3>Make tomorrow countable</h3>
-<p>Send the proposal scores cleanly tomorrow; work on business stuff never does. File before you plan tomorrow anywhere else, because the log's list is the one that gets scored. Kept-up logs compound: week and month summaries pull out the accomplishments, learnings, and growth across a stretch of days, and advanced settings can file each day into Notion with your own integration token.</p>
+<p>Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Transcription tries your browser's live transcription first; on browsers without it, the recording is transcribed by Whisper and then discarded. The recording is only a way to get your words into the box.</p>
+<h3>Write tomorrow's list so it can be scored</h3>
+<p>'Send the proposal' is easy to score tomorrow. 'Work on business stuff' is too vague to mark done or not. File before you plan tomorrow anywhere else, because the log's list is the one that gets scored. Over a stretch of days, week and month summaries pull out the accomplishments, learnings, and growth, and advanced settings can file each day into Notion with your own integration token.</p>
 </section>
 
 <?php $bbTool = 'day-log'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>

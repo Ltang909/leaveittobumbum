@@ -99,7 +99,7 @@ export default function DailyWorkLog() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p><strong>Quick answer:</strong> A daily work log is a short end-of-day record of what you did, what got in the way, what you learned, and what you plan to do next. Five minutes is enough: brain dump the day, note what actually moved forward, name the blocker, capture one lesson, and pick tomorrow's top priorities. Keeping it small is the whole trick, and a tool like <strong><a href="/tools/day-log/">Day Log</a></strong> can sort the ramble and score yesterday's list for you.</p>
+          <p><strong>Quick answer:</strong> A daily work log is a short end-of-day record of what you did, what got in the way, what you learned, and what you plan to do next. Five minutes is enough: brain dump the day, note what actually moved forward, name the blocker, capture one lesson, and pick tomorrow's top priorities. Keeping the log small makes the habit easier to keep, and a tool like <strong><a href="/tools/day-log/">Day Log</a></strong> can sort the ramble and score yesterday's list for you.</p>
           <p>You worked all day. Answered emails, handled problems, made decisions, moved projects forward. But when Friday rolls around and someone asks what you accomplished this week, your mind goes blank. A five-minute daily work log fixes that. Here is how to build the habit without turning it into another task on your to-do list.</p>
           <h2>Why it's so hard to remember what you accomplished</h2>
           <p>Most work doesn't come with a big green checkmark.</p>

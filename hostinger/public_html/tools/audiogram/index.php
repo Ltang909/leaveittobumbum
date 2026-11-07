@@ -557,9 +557,9 @@ againBtn.addEventListener('click',()=>{
 <h3>How it works here</h3>
 <p>Upload an MP3 and a background image, pick a caption style, and download a captioned MP4 ready for the feed. The transcription that makes the captions is automatic, and your audio is never stored after. Setting up and previewing are free; one finished video uses one action.</p>
 <h3>Pick the shape first</h3>
-<p>Vertical for Reels and TikTok, square for feeds. Caption styles and sizes cover the usual formats, but the shape decision comes before all of them. Making the wrong shape twice is the tax everyone pays once.</p>
+<p>Vertical for Reels and TikTok, square for feeds. Caption styles and sizes cover the usual formats, but the shape decision comes before all of them. Choosing the wrong shape means rendering the video again, so pick the shape before anything else.</p>
 <h3>Readable captions</h3>
-<p>Choose a background with a calm middle. A busy photo plus animated captions equals nobody reading anything, no matter how good the audio is.</p>
+<p>Choose a background with a calm middle. Animated captions are hard to follow over a busy photo, however good the audio is.</p>
 </section>
 <?php $bbTool = 'audiogram'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

@@ -133,7 +133,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Keep the pipeline honest. Someone who has gone quiet for a month belongs in a later stage, not in today's list forever.",
     ],
     faq: [
-      ["How is this different from a big CRM?", "No deals pipeline gymnastics, no required fields, no admin. Just who, where things stand, and who needs a nudge today."],
+      ["How is this different from a big CRM?", "It skips deal-pipeline setup, required fields, and admin settings. It tracks who the contact is, where things stand, and who needs a nudge today."],
       ["Can I import my contacts?", "Yes, there is a CSV import on the page. Name and company are enough to start."],
     ],
     updated: U,
@@ -162,7 +162,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "A follow-up five business days after applying is polite, expected, and often the thing that resurfaces your name.",
     ],
     faq: [
-      ["How is this different from a spreadsheet?", "A spreadsheet never taps you on the shoulder. This tells you who to follow up with today, and drafts the shape of what to say."],
+      ["How is this different from a spreadsheet?", "This tracker tells you who to follow up with today and drafts the shape of what to say. A spreadsheet holds the list but never reminds you."],
       ["Can I import my applications?", "Yes, CSV import is on the page."],
     ],
     updated: U,
@@ -215,8 +215,8 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     data: "Your invoice list lives in your account. Chase emails are sent from Bum Bum's mail as your billing assistant, with your details in the signature you set.",
     tips: [
-      "Chase the day after the due date, politely. The first nudge is a reminder, not an accusation, and most late invoices are just buried inboxes.",
-      "Add the invoice the day you send it, not the day it goes overdue. The learning only works with the real dates.",
+      "Chase the day after the due date, politely. Treat the first nudge as a simple reminder, since most late invoices are just sitting unread in a busy inbox.",
+      "Add the invoice the day you send it. The learning only works with the real dates, so entries added later, once an invoice is already overdue, skew it.",
     ],
     faq: [
       ["Does it actually send the emails?", "Yes, with your approval each time. Nothing sends itself; you read the draft and tap send."],
@@ -292,7 +292,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     href: "/tools/meal-scanner/",
     icon: "/bum/icons/meal-scanner.png",
     summary:
-      "Meal Scanner estimates the calories, protein, carbs, and fat in a meal from one photo. No database searching, no barcode scanning, no weighing anything, and every estimate comes as an honest range instead of a fake-exact number.",
+      "Meal Scanner estimates the calories, protein, carbs, and fat in a meal from one photo. You skip the database searching, barcode scanning, and weighing, and every estimate comes as an honest range instead of a fake-exact number.",
     steps: [
       "Open Meal Scanner and snap or upload a photo of your plate.",
       "Bum Bum identifies the items and estimates each one, with a low-to-high range.",
@@ -301,7 +301,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     goodToKnow: [
       "One photo read uses one action.",
-      "Vision estimates of portions typically run 20 to 40 percent off in either direction. The range is the honest answer, not a cop-out.",
+      "Vision estimates of portions typically run 20 to 40 percent off in either direction. The range is the honest answer, because it reflects that spread.",
       "Your running day total is kept in your browser only.",
       "No meal photo handy? The sample meal on the page shows the full result for free, every number editable.",
     ],
@@ -364,8 +364,8 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     data: "Your video never leaves your device. The trim happens in your browser and Bum Bum keeps no copy.",
     tips: [
-      "Mark a little wide, then tighten. Cutting a second of dead air is easy; recovering a clipped first word is not.",
-      "For a clip headed to social, trim to the moment itself. Context is what the caption is for.",
+      "Mark a little wide, then tighten. You can trim away an extra second of dead air, but a word clipped at the start cannot be put back.",
+      "For a clip headed to social, trim to the moment itself and leave any background or context for the caption.",
     ],
     faq: [
       ["Does my video upload anywhere?", "No. Everything happens in your browser."],
@@ -564,8 +564,8 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     data: "Your audio is transcribed to make the captions and nothing more. It is never stored, and the finished video is yours to download.",
     tips: [
-      "Vertical for Reels and TikTok, square for feeds. Making the wrong shape twice is the tax everyone pays once.",
-      "A background with a calm middle keeps captions readable. Busy photo plus animated captions equals nobody reading anything.",
+      "Vertical for Reels and TikTok, square for feeds. Choosing the wrong shape means rendering the video again.",
+      "A background with a calm middle keeps captions readable. Animated captions over a busy photo are hard to follow.",
     ],
     faq: [
       ["What happens to my audio?", "It is transcribed for captions, if you want them, and never kept."],
@@ -611,19 +611,19 @@ export const TOOL_DOCS: ToolDoc[] = [
       "SOP Generator turns a messy brain-dump of how you do a thing into a clean, step-by-step playbook a brand-new helper could follow with zero prior context.",
     steps: [
       "Open SOP Generator and dump how you do the thing: type it, or talk instead of typing.",
-      "Ramble freely. Order, polish, and completeness are the tool's problem, not yours.",
+      "Ramble freely. The tool handles the order, polish, and completeness, so you do not have to.",
       "Get back a structured playbook: steps in order, with the details a newcomer needs.",
       "Skim it, fix anything only you would know, and hand it over.",
     ],
     goodToKnow: [
       "One finished playbook uses one action.",
-      "The messier the input, the bigger the transformation. Do not pre-organize; that is the job you are delegating.",
+      "You do not need to organize the input first. Sorting it out is the job you are delegating to the tool.",
       "You can talk instead of typing if the process lives in your head better than on a keyboard.",
     ],
     data: "Your dump is used to build the playbook and your playbooks are saved in your account. Nothing is shared.",
     tips: [
       "Include the annoying parts: the login that lives in a spreadsheet, the step everyone forgets. Playbooks fail on the steps nobody wrote down.",
-      "Do one for the task you dread handing over. That dread is usually undocumented knowledge, and the SOP is how it stops being only yours.",
+      "Do one for the task you dread handing over. That usually means the steps are undocumented and live only in your head, and the SOP gets them written down for the next person.",
     ],
     faq: [
       ["How detailed is the playbook?", "Step by step, written for someone with zero context, because that is who usually reads it at 9 AM on their first day."],
@@ -652,7 +652,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     data: "The scan sends your brand name and your questions to the AI models it checks. That is the whole point of the tool, and nothing else about your account goes along.",
     tips: [
       "Write the questions the way customers type them, not the way your marketing page phrases them. The gap between those two is usually the finding.",
-      "A competitor cited on a question you should own is a content assignment, not just a sad statistic. Write the page that answers it.",
+      "A competitor cited on a question you should own is a content assignment. Write the page that answers it.",
     ],
     faq: [
       ["Which AI models does it ask?", "Three of the major ones your customers are most likely to be asking. The scan shows which model said what, per question."],
@@ -748,14 +748,14 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Transcription tries your browser's live transcription first. On browsers without it, your recording is transcribed by Whisper and then discarded.",
       "Skip any prompt that does not fit the day. One answered prompt is enough to file.",
     ],
-    data: "We keep your words, never your voice. Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Recap emails go only to your own account address.",
+    data: "Only the text of your log is stored, in your account, and it is never shared. Recordings are transcribed and discarded. Recap emails go only to your own account address.",
     tips: [
-      "Make tomorrow's items countable. 'Send the proposal' scores cleanly tomorrow; 'work on business stuff' never does.",
+      "Write tomorrow's items so they can be checked off. 'Send the proposal' is easy to score the next day; 'work on business stuff' is too vague to mark.",
       "Do the brain-dump prompt out loud and unfiltered. The structure step is good at finding the plan inside a ramble.",
       "File before you plan tomorrow anywhere else. The log's list is the one that gets scored.",
     ],
     faq: [
-      ["Where does my voice go?", "Nowhere it stays. Recordings are transcribed and discarded; only text is kept."],
+      ["Where does my voice go?", "Recordings are transcribed and discarded. Only the text of your log is kept, in your account."],
       ["What if I skip a day?", "Nothing breaks. The scorecard compares against your most recent filed day, whenever that was."],
       ["How does the scorecard work?", "When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone."],
       ["Can I fix a day after filing it?", "Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action."],

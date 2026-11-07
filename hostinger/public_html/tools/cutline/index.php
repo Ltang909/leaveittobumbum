@@ -131,5 +131,5 @@ load();
 <h3>Free trials are the trap</h3>
 <p>Trials count as subscriptions here, on purpose. Add the trial the day you start it, with its trial end date, not the day you mean to decide. The Monday note can only warn you about a charge that is in the list.</p>
 <h3>What Bum Bum can and cannot see</h3>
-<p>Only what you type in. Bum Bum cannot see your bank, your cards, or the subscriptions themselves, which is exactly why the list stays honest: it is your record, kept current by you, reminded about by the Monday note.</p>
+<p>Bum Bum can only see what you type in. It cannot see your bank, your cards, or the subscriptions themselves, so the list is exactly your own record, kept current by you and reminded about by the Monday note.</p>
 <h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-find-subscriptions-you-forgot-about/">How to find subscriptions you forgot about (and cancel them)</a>.</p><p>Subscriptions are one line item in the whole stack: see <a href="/blog/best-small-business-software/">the best small business software tools</a> we recommend, free and paid.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

@@ -53,7 +53,7 @@
       "name": "How accurate are the results?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Directional, not gospel. AI answers shift with phrasing, timing, and model updates. Use AI Brand Mention Checker to spot trends month to month, not as a final grade."
+        "text": "The results are directional. AI answers shift with phrasing, timing, and model updates, so use AI Brand Mention Checker to spot trends month to month instead of treating one scan as a final grade."
       }
     },
     {
@@ -205,7 +205,7 @@ loadScans();
 </details>
 <details>
 <summary>How accurate are the results?</summary>
-<p>Directional, not gospel. AI answers shift with phrasing, timing, and model updates. Use AI Brand Mention Checker to spot trends month to month, not as a final grade.</p>
+<p>The results are directional. AI answers shift with phrasing, timing, and model updates, so use AI Brand Mention Checker to spot trends month to month instead of treating one scan as a final grade.</p>
 </details>
 <details>
 <summary>What do I get in a scan?</summary>
@@ -219,7 +219,7 @@ loadScans();
 <h3>Ask like a customer</h3>
 <p>Write the questions the way customers type them, not the way your marketing page phrases them. The gap between those two is usually the finding.</p>
 <h3>A lost question is a content assignment</h3>
-<p>Your scans are saved, so you can rerun the same questions next month and see whether you are gaining or losing ground. Results are a snapshot of real answers and vary run to run, the way real AI answers do. When a competitor gets cited on a question you should own, that is not just a statistic; it is the next page to write.</p>
+<p>Your scans are saved, so you can rerun the same questions next month and see whether you are gaining or losing ground. Results are a snapshot of real answers and vary run to run, the way real AI answers do. When a competitor gets cited on a question you should own, treat it as the next page to write.</p>
 </section>
 <?php $bbTool = 'hearsay'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>

@@ -22,7 +22,7 @@ export default function TrackJobApplicationsGuide() {
 
           <h2>Why the spreadsheet breaks down around 30 applications</h2>
           <p>The first twenty rows feel fine. Then the cracks show up. You add a column for the recruiter, then a column for the referral, then a colour code only you understand, and only on a good day. Rows stop matching reality because updating the sheet feels like a second job search running alongside the first one.</p>
-          <p>The deeper problem is that a spreadsheet just sits there. It never taps you on the shoulder. A follow-up that was due on Monday looks exactly like one due next Friday, so both quietly slip. The tool is not the failure. The missing piece is a system that tells you what needs attention today.</p>
+          <p>The deeper problem is that a spreadsheet just sits there. It never taps you on the shoulder. A follow-up that was due on Monday looks exactly like one due next Friday, so both quietly slip. A spreadsheet stores the information but cannot remind you. The missing piece is a system that tells you what needs attention today.</p>
 
           <h2>The columns that actually matter</h2>
           <p>Six columns carry the whole system. Everything else is decoration you will abandon by week three.</p>
@@ -45,7 +45,7 @@ export default function TrackJobApplicationsGuide() {
           </ul>
           <p>Keep the message tiny. Here is one that works:</p>
           <p>"Hi Ana, I applied for the Growth Marketing Manager role on May 4 and I am still very keen. I led paid acquisition at my last company and grew signups 40% in a year, which looks close to what your posting describes. Happy to share more detail if helpful. Thanks, Leon"</p>
-          <p>Three things make it work. It names the role and the date, so Ana can find you in seconds. It offers one proof point instead of a life story. It ends with an easy yes. After the day 14 nudge, let it rest. Two nudges show persistence. Five show a pattern recruiters warn each other about.</p>
+          <p>Three things make it work. It names the role and the date, so Ana can find you in seconds. It offers one proof point instead of a life story. It ends with an easy yes. After the day 14 nudge, let it rest. Two nudges is a reasonable limit for one application. More than that starts to work against you with recruiters.</p>
 
           <h2>The 15-minute weekly review</h2>
           <p>Pick one slot each week, Monday morning works well, and run the same pass every time. Sort by follow-up date. Anything overdue gets nudged, rescheduled, or marked closed. Dead applications get archived the same day you learn they are dead, not three weeks later. Then scan the coming week's dates and move anything you already know will slip.</p>
