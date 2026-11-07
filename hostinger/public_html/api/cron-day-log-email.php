@@ -1,9 +1,9 @@
 <?php
 // Day Log morning emails. The rules (Leon's spec, Oct 28):
 //   - Emails only ever start after a user has filed a log. No log, no loop.
-//   - Sends happen on weekday mornings only (Mon-Fri, America/Toronto).
+//   - Sends happen every morning (America/Toronto).
 //   - The recap covers the user's most recent un-emailed log dated before
-//     today, so Monday morning's run recaps Friday's log.
+//     today, so Saturday morning's run recaps Friday's log.
 //   - If there is no new log to recap, the user gets ONE nudge. If they
 //     still have not logged by that evening, no more emails go out until
 //     they log again (the next recap re-arms the single nudge).
@@ -14,7 +14,7 @@
 //
 // Call: GET /api/cron-day-log-email.php?secret=<cron_secret>
 //   (no params)        dry run: reports who would get what, sends nothing
-//   &send=1            real run, gated to Mon-Fri 07:00-10:59 Toronto time
+//   &send=1            real run, gated to 07:00-10:59 Toronto time, every day
 //   &send=1&only=EMAIL test run for one account, bypasses the time gate
 //
 // HOSTINGER CRON: schedule this hourly; the endpoint itself decides
@@ -34,19 +34,18 @@ if ($sendMode && !bb_mail_configured()) {
 }
 $onlyEmail = strtolower(trim((string) ($_GET['only'] ?? '')));
 // Test mode (only=) also previews today's log and never writes state,
-// so a test send does not disturb the real weekday-morning loop.
+// so a test send does not disturb the real morning loop.
 $testMode = $onlyEmail !== '';
 
 $tz = new DateTimeZone('America/Toronto');
 $now = new DateTime('now', $tz);
 $today = $now->format('Y-m-d');
-$dow = (int) $now->format('N'); // 1 = Monday, 7 = Sunday
 $hour = (int) $now->format('G');
 $latestCutoff = $testMode ? date('Y-m-d', strtotime($today . ' +1 day')) : $today;
 
 if ($sendMode && $onlyEmail === '') {
-    if ($dow > 5 || $hour < 7 || $hour > 10) {
-        jsonResponse(['ok' => true, 'sent' => 0, 'note' => 'Outside the weekday morning send window (Toronto).', 'toronto_now' => $now->format('Y-m-d H:i')]);
+    if ($hour < 7 || $hour > 10) {
+        jsonResponse(['ok' => true, 'sent' => 0, 'note' => 'Outside the morning send window (Toronto).', 'toronto_now' => $now->format('Y-m-d H:i')]);
     }
 }
 
@@ -95,7 +94,7 @@ function dlm_shell(string $headline, string $innerHtml): string {
     . $innerHtml
     . '<tr><td class="em-pad" style="padding:20px 32px 28px 32px;">'
     . '<div class="em-mute" style="border-top:2px dashed #1a291c;padding-top:16px;font-family:Arial,sans-serif;font-size:12px;line-height:1.6;color:#667064;" align="center">'
-    . 'These recaps follow your own Day Log filings, on weekday mornings. Stop filing and they stop.<br>'
+    . 'These recaps follow your own Day Log filings, every morning. Stop filing and they stop.<br>'
     . 'Leave It To Bum Bum · Aurora, ON L4G, Canada · <a href="mailto:hello@leaveittobumbum.com" style="color:#667064;">hello@leaveittobumbum.com</a>'
     . '</div></td></tr>'
     . '</table></td></tr></table></body></html>';
@@ -187,7 +186,7 @@ function dle_nudge_body(): string {
     return implode("\n", [
         'Morning.',
         '',
-        'No day log yesterday, so there is no recap this morning. File tonight and the weekday morning recaps pick right back up.',
+        'No day log yesterday, so there is no recap this morning. File tonight and the morning recaps pick right back up.',
         '',
         'File tonight: https://leaveittobumbum.com/tools/day-log/',
         '',
@@ -200,7 +199,7 @@ function dle_nudge_body(): string {
 function dle_nudge_mail(): array {
     $appUrl = rtrim((string) (config()['app_url'] ?? 'https://leaveittobumbum.com'), '/');
     $inner = dlm_card('No recap this morning', 'No new day log since your last recap', dlm_bullet_rows([
-        'File tonight and the weekday morning recaps pick right back up.',
+        'File tonight and the morning recaps pick right back up.',
         'This is the only nudge. No log, no more emails.',
     ]));
     $inner .= '<tr><td class="em-pad" style="padding:18px 32px 4px 32px;" align="center">'
