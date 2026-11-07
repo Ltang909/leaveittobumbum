@@ -69,14 +69,14 @@ function gcal_access_token(string $refreshToken): array {
 
 // Creates today's 8 AM "Today's Top List" event for a connected user.
 // Returns a short status string for the caller's log; never throws.
-function gcal_create_top_list_event(PDO $pdo, int $userId, string $today, array $topList): string {
+function gcal_create_top_list_event(PDO $pdo, int $userId, string $today, array $topList, bool $stamp = true): string {
     try {
         gcal_install($pdo);
         $stmt = $pdo->prepare('SELECT refresh_token, last_event_date FROM user_google_calendar WHERE user_id = ?');
         $stmt->execute([$userId]);
         $conn = $stmt->fetch();
         if (!$conn) return 'not connected';
-        if ((string) ($conn['last_event_date'] ?? '') === $today) return 'already created';
+        if ($stamp && (string) ($conn['last_event_date'] ?? '') === $today) return 'already created';
         $items = array_values(array_filter(array_map(fn($i) => trim((string) $i), $topList), fn($i) => $i !== ''));
         if (!$items) return 'no top list';
         [$access, $err, $invalidGrant] = gcal_access_token((string) $conn['refresh_token']);
@@ -100,8 +100,10 @@ function gcal_create_top_list_event(PDO $pdo, int $userId, string $today, array 
         ]);
         $eventId = (string) ($event['id'] ?? '');
         if (($http === 200 || $http === 201) && $eventId !== '') {
-            $pdo->prepare('UPDATE user_google_calendar SET last_event_date = ?, last_event_id = ? WHERE user_id = ?')
-                ->execute([$today, $eventId, $userId]);
+            if ($stamp) {
+                $pdo->prepare('UPDATE user_google_calendar SET last_event_date = ?, last_event_id = ? WHERE user_id = ?')
+                    ->execute([$today, $eventId, $userId]);
+            }
             return 'created';
         }
         return 'error: calendar insert failed (' . $http . ')';

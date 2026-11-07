@@ -195,7 +195,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p class="meta">Calendar connection is not switched on yet.</p>
 <?php elseif ($gcalConn): ?>
 <p class="meta">Connected. Your top list lands on your calendar at 8 AM on recap mornings, next to the email.</p>
-<div class="btnrow"><button type="button" class="button secondary" id="gcalDisconnect">Disconnect Google Calendar</button></div>
+<div class="btnrow"><button type="button" class="button secondary" id="gcalTest">Send a test event</button><button type="button" class="button secondary" id="gcalDisconnect">Disconnect Google Calendar</button></div>
 <p id="gcalMsg" class="mic-status" style="margin-top:8px"></p>
 <?php else: ?>
 <div class="btnrow"><a class="button secondary" href="/api/auth/google-calendar.php">Connect Google Calendar</a></div>
@@ -594,6 +594,17 @@ document.querySelector('#notionSave').addEventListener('click',async()=>{
   document.querySelector('#notionToken').value='';
   renderNotion(data.notion);
 });
+const gcalTest=document.querySelector('#gcalTest');
+if(gcalTest){gcalTest.addEventListener('click',async()=>{
+  const msg=document.querySelector('#gcalMsg'); msg.textContent='Sending a test event...';
+  const session=await fetch('/api/session.php').then(r=>r.json());
+  const response=await fetch('/api/auth/google-calendar-test.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf:session.csrf})});
+  const data=await response.json().catch(()=>({}));
+  if(response.ok&&data.status==='created'){msg.textContent='Sent. Check your calendar tomorrow at 8 AM for Today\'s Top List.';}
+  else if(data.status==='no top list'){msg.textContent='Your most recent log has no top list, so there was nothing to send.';}
+  else if(data.status==='not connected'){msg.textContent='Not connected yet.';}
+  else{msg.textContent='The test did not land: '+(data.status||'unknown error')+'.';}
+});}
 const gcalBtn=document.querySelector('#gcalDisconnect');
 if(gcalBtn){gcalBtn.addEventListener('click',async()=>{
   const msg=document.querySelector('#gcalMsg'); msg.textContent='Disconnecting...';
