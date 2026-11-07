@@ -442,6 +442,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .docs-side .docs-home-link { font-weight:800; margin-bottom:6px; }
 .docs-nav-group h3 { font-size:.74rem; text-transform:uppercase; letter-spacing:.13em; margin:20px 0 6px; padding:0 10px; opacity:.75; }
 .docs-main { min-width:0; }
+.docs-nav-toggle { display:none; }
 .docs-main h1, .docs-title { font-size:clamp(2.1rem,4.2vw,3.2rem); margin:.08em 0 .25em; }
 .docs-head { margin-bottom:8px; }
 .docs-updated { font-weight:700; font-size:.9rem; opacity:.62; margin:14px 0 0; }
@@ -488,5 +489,8 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
   .docs-shell { grid-template-columns:1fr; gap:8px; padding-top:22px; }
   .docs-side { position:static; max-height:none; overflow:visible; border:var(--line); border-radius:14px; background:#fff; padding:12px 14px; margin-bottom:26px; }
   .docs-nav-group h3 { margin-top:14px; }
+  .docs-nav-toggle { display:flex; align-items:center; justify-content:space-between; width:100%; background:none; border:none; padding:4px 6px; font:inherit; font-weight:800; font-size:1rem; color:inherit; cursor:pointer; }
+  .docs-side:not(.docs-open) nav { display:none; }
+  .docs-side.docs-open nav { margin-top:8px; }
   .docs-tool-grid { grid-template-columns:1fr; }
 }
