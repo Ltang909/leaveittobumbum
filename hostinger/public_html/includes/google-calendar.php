@@ -89,7 +89,7 @@ function gcal_create_top_list_event(PDO $pdo, int $userId, string $today, array 
         }
         $desc = implode("\n", array_map(fn($i) => '- ' . $i, $items)) . "\n\nFrom your Day Log on Leave It To Bum Bum.";
         $count = count($items);
-        $summary = "Today's commitments - " . $count . ($count === 1 ? ' thing' : ' things') . ' to do. Tasks in description';
+        $summary = $count . ($count === 1 ? ' commitment' : ' commitments') . ' to do - tasks in description';
         $dayAfter = (new DateTime($today))->modify('+1 day')->format('Y-m-d');
         [$http, $event] = gcal_http('https://www.googleapis.com/calendar/v3/calendars/primary/events', [
             CURLOPT_POST => true,
