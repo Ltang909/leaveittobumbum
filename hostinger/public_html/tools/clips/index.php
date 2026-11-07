@@ -191,7 +191,7 @@ if(!screenOK){
   let screenVideoEl=null,camVideoEl=null,compCanvas=null,compCtx=null,drawRAF=0;
   let recordedBlob=null,editBlobUrl='',editSpeed=1;
   let pipWin=null,bubbleTimerEl=null,fallbackBubble=null;
-  function pickMime(){const c=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t}return ''}
+  function pickMime(){const c=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t}return ''}
   function setError(m){errorEl.textContent=m}
   function stopTracks(){[screenStream,micStream,camStream].forEach(s=>{if(s)s.getTracks().forEach(t=>t.stop())});screenStream=null;micStream=null;camStream=null;if(drawRAF)cancelAnimationFrame(drawRAF);drawRAF=0;screenVideoEl=null;camVideoEl=null;compCanvas=null;compCtx=null;if(mixCtx){mixCtx.close().catch(()=>{});mixCtx=null}closeBubbleWindow()}
   function doStop(){if(recorder&&recorder.state!=='inactive')recorder.stop()}
