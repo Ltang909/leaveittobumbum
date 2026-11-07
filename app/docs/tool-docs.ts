@@ -46,6 +46,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     faq: [
       ["Do I need an account to record my screen?", "You can record as a guest. A free account gives you a monthly bucket of actions for finished recordings and keeps everything under one roof."],
       ["Can I include my webcam?", "Yes. Turn on the camera bubble and it sits in the corner of your recording."],
+      ["What format does my recording download as?", "MP4 wherever your browser can record it, which covers most people. A few browsers (Firefox among them) record WebM instead, so the format follows your browser."],
     ],
     updated: U,
   },
