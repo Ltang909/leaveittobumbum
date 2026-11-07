@@ -47,6 +47,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Do I need an account to record my screen?", "You can record as a guest. A free account gives you a monthly bucket of actions for finished recordings and keeps everything under one roof."],
       ["Can I include my webcam?", "Yes. Turn on the camera bubble and it sits in the corner of your recording."],
       ["What format does my recording download as?", "MP4 wherever your browser can record it, which covers most people. A few browsers (Firefox among them) record WebM instead, so the format follows your browser."],
+      ["Why doesn't the floating bubble follow me into other tabs and windows?", "The floating bubble is a small mirror that lives on this page, and websites are not allowed to draw inside other tabs or apps, so it cannot travel with you. Tools that seem to do it use a browser extension, which has permissions a website does not. Your finished recording still includes your camera in the corner either way, because it is blended into the video as you record. To see yourself while you work in another window, share your entire screen and keep the bubble up."],
     ],
     updated: U,
   },
