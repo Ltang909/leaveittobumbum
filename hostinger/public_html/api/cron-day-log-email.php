@@ -22,6 +22,7 @@
 // staging shares the production database and would email real users.
 require __DIR__ . '/tools/cutline.php';
 require dirname(__DIR__) . '/includes/smtp-mail.php';
+require dirname(__DIR__) . '/includes/google-calendar.php';
 
 $secret = (string) ($_GET['secret'] ?? '');
 $expected = (string) (config()['cron_secret'] ?? '');
@@ -324,6 +325,11 @@ foreach ($users as $u) {
             if (!$sent) $entry['error'] = $err;
             if ($sent && !$testMode) {
                 $saveState->execute([$userId, $latestDate, $today, $st['last_nudge_on']]);
+            }
+            if ($sent && !$testMode) {
+                // Optional calendar delivery rides the recap: connected
+                // users also get the top list as an 8 AM event today.
+                $entry['calendar'] = gcal_create_top_list_event($pdo, $userId, $today, is_array($structured['tomorrow'] ?? null) ? $structured['tomorrow'] : []);
             }
         } elseif ($action === 'nudge') {
             $mail = dle_nudge_mail();
