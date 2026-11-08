@@ -545,6 +545,35 @@ export const TOOL_DOCS: ToolDoc[] = [
     updated: U,
   },
   {
+    key: "sound-human",
+    name: "Sound Human",
+    href: "/tools/sound-human/",
+    icon: "/bum/icons/sound-human.png",
+    summary:
+      "Sound Human is a set of short instructions you paste at the end of a prompt. They tell an AI to write in plain, human sentences: direct points, concrete words, varied rhythm, no filler.",
+    steps: [
+      "Open Sound Human and paste your draft prompt into the combiner, or scroll to the add-ons and copy one on its own.",
+      "Tick the add-ons you want. The combined block updates as you type.",
+      "Copy the whole block and paste it into ChatGPT, Claude, or your AI of choice as one message.",
+      "Compare the reply with what the same prompt gave you before.",
+    ],
+    goodToKnow: [
+      "Sound Human is free and uses no actions.",
+      "Everything runs in your browser. Your prompt text is never sent anywhere.",
+      "Add-ons work with any AI that follows written instructions.",
+    ],
+    data: "The combiner runs entirely on the page. Nothing you type is stored or sent to Bum Bum.",
+    tips: [
+      "Start with Skip the contrast formula and Cut the AI filler. Those two remove the most common AI habits.",
+      "Save a combined block that works for you in your notes app, and reuse it instead of rebuilding it each time.",
+    ],
+    faq: [
+      ["Will this beat an AI detector?", "That is the wrong target. Detectors are unreliable. These add-ons aim at writing a reader can get through comfortably."],
+      ["Can I edit an add-on?", "Yes. Copy one, paste it into your notes, and change the wording to suit you. They are plain text."],
+    ],
+    updated: U,
+  },
+  {
     key: "audiogram",
     name: "Audiogram Maker",
     href: "/tools/audiogram/",
