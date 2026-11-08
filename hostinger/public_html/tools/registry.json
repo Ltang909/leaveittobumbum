@@ -205,6 +205,18 @@
       "mascot": "/bum/cat-excited-v2.png"
     },
     {
+      "cardTitle": ["Sound", "Human"],
+      "cta": "Copy an add-on",
+      "description": "Prompt add-ons to paste into ChatGPT or Claude so the writing sounds human. Copy and go.",
+      "icon": "✎",
+      "iconImg": "/bum/icons/sound-human.png",
+      "key": "sound-human",
+      "name": "Sound Human",
+      "tag": "Content",
+      "url": "/tools/sound-human/",
+      "mascot": "/bum/cat-laptop.png"
+    },
+    {
       "key": "audiogram",
       "name": "Audiogram Maker",
       "tag": "Content",
