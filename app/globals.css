@@ -82,6 +82,12 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .view-toggle button + button { border-left:var(--line); }
 .view-toggle button[aria-pressed="true"] { background:var(--yellow); }
 .view-toggle button:focus-visible { outline:2px solid var(--ink); outline-offset:-4px; }
+.tools-count { font-weight:1000; font-size:.95rem; margin:20px 0 14px; opacity:.75; }
+.pager { display:flex; gap:8px; justify-content:center; align-items:center; flex-wrap:wrap; margin:28px 0 4px; }
+.pager button { border:var(--line); background:white; border-radius:8px; min-height:46px; padding:0 16px; font-family:inherit; font-size:.95rem; font-weight:1000; color:var(--ink); cursor:pointer; box-shadow:3px 3px 0 var(--ink); }
+.pager button[aria-current="page"] { background:var(--ink); color:#fff; }
+.pager button:disabled { opacity:.35; cursor:default; box-shadow:none; }
+.pager button:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
 .tool-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
 .tool-row { display:flex; align-items:center; gap:16px; background:white; border:var(--line); border-radius:10px; padding:13px 18px; box-shadow:4px 4px 0 var(--ink); text-decoration:none; color:var(--ink); }
 .tool-row:hover { transform:translate(-1px,-1px); box-shadow:5px 5px 0 var(--ink); }
