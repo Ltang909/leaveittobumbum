@@ -8,6 +8,12 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/how-to-make-ai-sound-more-human/",
+    title: "How to Make AI Sound More Human",
+    description: "AI writing gets spotted for specific, nameable habits: formulaic contrast writing, performative profundity, spatial metaphor inflation, and a filler vocabulary. What each one is, how to spot it, and the prompt instructions that fix it.",
+    date: "November 8, 2026",
+  },
+  {
     href: "/blog/how-to-compress-a-pdf/",
     title: "How to Compress a PDF (Without Uploading Your Files)",
     description: "Shrink a PDF in your browser until it fits the email or upload limit: pick a level, check the before and after, download the leaner file. No uploads, and the one tradeoff stated plainly.",
