@@ -7,7 +7,6 @@ $addons = [
   ["id" => "talk", "title" => "Write like you talk", "blurb" => "Contractions and everyday words. The fastest way to make a draft sound like a person sent it.", "text" => "Write the way a person talks. Use contractions. Choose everyday words over formal ones. Skip \"furthermore\", \"moreover\", \"additionally\", and \"in conclusion\". Start a sentence with And or But when it sounds natural."],
   ["id" => "filler", "title" => "Cut the AI filler", "blurb" => "A short banned list. Delve, tapestry, game-changer, and the rest of the usual suspects.", "text" => "Do not use these words and phrases: delve, tapestry, testament to, game-changer, revolutionize, ever-evolving, look no further, in today's fast-paced world. Replace each one with a plain fact, or delete the sentence."],
   ["id" => "specific", "title" => "Be specific", "blurb" => "General claims sound generated because they usually are. Real numbers and names fix that.", "text" => "Use specific details: real numbers, names, dates, and prices. If a sentence could describe any business in any industry, rewrite it with a detail only this business can claim, or cut it."],
-  ["id" => "voice", "title" => "Match my voice", "blurb" => "Paste a paragraph you wrote. The AI copies your habits instead of its own defaults.", "text" => "Match the voice of the writing sample below: its sentence lengths, word choices, formality, and humor. Write the new text so the same person could have written both. Sample: [paste a paragraph of your own writing here]"],
 ];
 $defaultOn = ["contrast", "concrete", "filler"];
 ?>
@@ -176,9 +175,11 @@ try{bbTrack('tool_opened',{tool:'sound-human'})}catch(e){}
 <h3>How add-ons work</h3>
 <p>An add-on is a plain instruction written for the AI, kept where you can grab it in one tap. AIs follow the last instructions in a prompt closely, so an add-on goes at the end, after the request itself. One add-on changes one habit. Two or three together cover most of the habits that make AI writing easy to spot.</p>
 <h3>Start with two</h3>
-<p>New to this? Start with Skip the contrast formula and Cut the AI filler. Those two remove the most common AI habits. Add Vary the rhythm when a draft reads flat, and Match my voice when the text has to sound like you in particular, like a bio or an about page.</p>
+<p>New to this? Start with Skip the contrast formula and Cut the AI filler. Those two remove the most common AI habits. Add Vary the rhythm when a draft reads flat, and Be specific when a draft could describe anyone's business.</p>
 <h3>Keep your own set</h3>
 <p>Once a combo works for you, save the combined block in your notes app and reuse it. Your prompts stay yours; this page just saves you retyping the instructions every time.</p>
+<h3>The longer version</h3>
+<p>Each habit above has a name and a reason it gives AI writing away. The full rundown, with examples, is in our article: <a href="/blog/how-to-make-ai-sound-more-human/">How to Make AI Sound More Human</a>.</p>
 </section>
 <?php $bbTool = 'sound-human'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
