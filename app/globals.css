@@ -313,7 +313,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .hero-desk h1 { font-size:clamp(1.9rem, 4.3vw, 3.55rem); }
 .hero-desk h1 em { white-space:nowrap; font-style:normal; }
 @media (min-width:901px){
-  .hero-desk .hero-portrait { min-height:330px; }
+  .hero-desk .hero-portrait { min-height:330px; transform:translateX(40px); }
   .hero-desk .portrait-frame { width:47%; }
 }
 /* The restored hero portrait keeps the old sticker treatment (burst,
