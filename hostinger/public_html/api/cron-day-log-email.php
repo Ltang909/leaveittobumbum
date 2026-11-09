@@ -88,7 +88,7 @@ function dlm_shell(string $headline, string $innerHtml): string {
     . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="em-outer" style="background:#f6f0df;padding:28px 12px;"><tr><td align="center">'
     . '<table role="presentation" width="600" cellpadding="0" cellspacing="0" class="em-shell" style="max-width:600px;width:100%;background:#ffffff;border:2px solid #1a291c;border-radius:22px;">'
     . '<tr><td class="em-pad" style="padding:28px 32px 8px 32px;" align="center">'
-    . '<img src="' . $appUrl . '/bum-bum.png" width="104" alt="Bum Bum" style="display:block;border:0;">'
+    . '<img src="' . $appUrl . '/bum/day-log-email.png" width="104" alt="Bum Bum" style="display:block;border:0;">'
     . '<div class="em-mute" style="font-family:Arial,sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:#667064;text-transform:uppercase;padding-top:10px;">Leave It To Bum Bum</div>'
     . '<div class="em-headline em-ink" style="font-family:Georgia,serif;font-size:30px;font-weight:900;color:#142015;line-height:1.15;padding-top:6px;">' . $headline . '</div>'
     . '</td></tr>'
