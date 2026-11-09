@@ -94,7 +94,6 @@ function HeroPortrait({ party }: { party: boolean }) {
         <div className="scribble scribble-one">this is Bum Bum</div>
       </div>
       {quip && <div className="quip-bubble" role="status">{quip}</div>}
-      <div className="stamp">BUILT FOR<br /><b>REAL WORK</b></div>
     </div>
   );
 }
