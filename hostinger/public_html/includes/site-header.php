@@ -71,3 +71,30 @@ $shMeter = !empty($showMeter);
 </script>
 <?php // Guest conversion modal (no-op markup when not a guest page). ?>
 <?php require __DIR__ . '/guest-convert.php'; ?>
+<script>
+// Short guides start minimized: heading stays, body sits behind a toggle.
+document.addEventListener('DOMContentLoaded',function(){
+  var panel=document.querySelector('section[aria-label="Guide"]');
+  if(!panel)return;
+  var h2=panel.querySelector('h2');
+  if(!h2)return;
+  var body=document.createElement('div');
+  body.className='guide-body';
+  var node=h2.nextSibling;
+  while(node){var next=node.nextSibling;body.appendChild(node);node=next;}
+  body.hidden=true;
+  panel.appendChild(body);
+  var btn=document.createElement('button');
+  btn.type='button';
+  btn.className='guide-toggle';
+  btn.textContent='Read the guide';
+  btn.setAttribute('aria-expanded','false');
+  btn.addEventListener('click',function(){
+    var open=body.hidden;
+    body.hidden=!open;
+    btn.textContent=open?'Hide the guide':'Read the guide';
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  h2.insertAdjacentElement('afterend',btn);
+});
+</script>
