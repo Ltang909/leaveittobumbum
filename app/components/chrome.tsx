@@ -90,6 +90,7 @@ export function SiteFooter() {
         <b>Fine print</b>
         <a href="/privacy/">Privacy</a>
         <a href="/terms/">Terms</a>
+        <a href="/trust/">Trust</a>
         <a href="mailto:hello@leaveittobumbum.com">Contact</a>
       </nav>
       <nav className="footer-links" aria-label="Directories">
