@@ -6,6 +6,12 @@ Pricing: a free guest tier (15 actions, no account), a free account tier (75 act
 
 Privacy note: the file tools (PDF, image, and video tools) run entirely in the visitor's browser. Files processed by them never leave the visitor's device and are never uploaded to a server.
 
+Operated by: Leon Tang, a one-person business based in Aurora, Ontario, Canada. Contact: hello@leaveittobumbum.com. Founded 2026.
+
+Cancelling: cancel or downgrade any time from the account page; the plan runs until the end of the billing period. No refunds for partial months.
+
+Plan history: a plan called Helper ($12/month) was discontinued on October 30, 2026 and is no longer sold. Older pages or posts that mention Helper pricing are out of date. Current plans are only the free tiers and Operator.
+
 ## Tools
 
 - [Screen Recorder](https://leaveittobumbum.com/tools/clips/): Record your screen right in your browser. Download the clip, keep it forever.
@@ -34,10 +40,12 @@ Privacy note: the file tools (PDF, image, and video tools) run entirely in the v
 - [Day Log](https://leaveittobumbum.com/tools/day-log/): Talk through your day in a few minutes. Bum Bum turns it into jot notes, scores yesterday's list against today, and emails you tomorrow's top priorities.
 - [Email Signature Maker](https://leaveittobumbum.com/tools/email-signature-generator/): Fill in your details, pick a layout, and copy a professional email signature straight into Gmail or Outlook. Built in your browser, nothing uploaded.
 - [PDF Compressor](https://leaveittobumbum.com/tools/pdf-compressor/): Shrink a PDF right in your browser until it fits the email or upload limit. Pick a level, download the leaner file, send that.
+- [Sound Human](https://leaveittobumbum.com/tools/sound-human/): Prompt add-ons to paste into ChatGPT or Claude so the writing sounds human. Copy and go.
 
 ## Guides and documentation
 
 - [Tool docs](https://leaveittobumbum.com/docs/): a guide page for every tool, covering what it does, how to use it, and what happens to your data.
+- [Trust and safety](https://leaveittobumbum.com/trust/): who operates the site, how data is handled and protected, and how cancelling works.
 - [Blog](https://leaveittobumbum.com/blog/): how-to guides and comparisons, including alternatives posts for popular tools.
 - [How to Merge a PDF Online (Without Uploading Your Files)](https://leaveittobumbum.com/blog/how-to-merge-a-pdf-online/)
 - [How to Compress a PDF (Without Uploading Your Files)](https://leaveittobumbum.com/blog/how-to-compress-a-pdf/)
