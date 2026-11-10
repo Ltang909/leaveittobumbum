@@ -323,6 +323,18 @@
       "cardTitle": ["PDF", "Compressor"],
       "cta": "Compress a PDF",
       "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "invoice-generator",
+      "name": "Invoice Generator",
+      "tag": "Money",
+      "icon": "📄",
+      "iconImg": "/bum/icons/invoice-generator.png",
+      "description": "Make a clean invoice PDF in your browser. Add items, tax, and a due date, then download and send it.",
+      "url": "/tools/invoice-generator/",
+      "cardTitle": ["Invoice", "Generator"],
+      "cta": "Make an invoice",
+      "mascot": "/bum/cat-bowtie.png"
     }
   ]
 }
