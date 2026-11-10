@@ -1,9 +1,9 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject);
 $bbHeicMode = isset($bbHeicMode) && in_array($bbHeicMode, ['jpg','png','pdf'], true) ? $bbHeicMode : 'jpg';
 $bbModes = [
-  'jpg' => ['name' => 'HEIC to JPG', 'h1' => 'Your iPhone photos, as JPGs.', 'title' => 'HEIC to JPG Converter | Convert iPhone Photos in Your Browser | Leave It to Bum Bum'],
-  'png' => ['name' => 'HEIC to PNG', 'h1' => 'Your iPhone photos, as PNGs.', 'title' => 'HEIC to PNG Converter | Convert iPhone Photos in Your Browser | Leave It to Bum Bum'],
-  'pdf' => ['name' => 'HEIC to PDF', 'h1' => 'Your iPhone photos, in one PDF.', 'title' => 'HEIC to PDF Converter | Convert iPhone Photos in Your Browser | Leave It to Bum Bum'],
+  'jpg' => ['name' => 'HEIC to JPG', 'h1' => 'Free HEIC to JPG Converter', 'tag' => 'Your iPhone photos, as JPGs.', 'title' => 'HEIC to JPG Converter | Convert iPhone Photos in Your Browser | Leave It to Bum Bum'],
+  'png' => ['name' => 'HEIC to PNG', 'h1' => 'Free HEIC to PNG Converter', 'tag' => 'Your iPhone photos, as PNGs.', 'title' => 'HEIC to PNG Converter | Convert iPhone Photos in Your Browser | Leave It to Bum Bum'],
+  'pdf' => ['name' => 'HEIC to PDF', 'h1' => 'Free HEIC to PDF Converter', 'tag' => 'Your iPhone photos, in one PDF.', 'title' => 'HEIC to PDF Converter | Convert iPhone Photos in Your Browser | Leave It to Bum Bum'],
 ];
 $bbM = $bbModes[$bbHeicMode];
 $bbName = $bbM['name'];
@@ -78,7 +78,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 </style></head>
-<body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>$bbName]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/heic-to-jpg.png" alt="<?= htmlspecialchars($bbName) ?>"><h1><?= htmlspecialchars($bbM['h1']) ?></h1><p class="lede bb-desc">Your iPhone saves photos as HEIC, and half the internet still waves them away. Drop them here and Bum Bum turns them into JPG, PNG, or a single PDF <b>right in your browser</b>. Free, no sign-up, and your photos never leave your device.</p>
+<body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>$bbName]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/heic-to-jpg.png" alt="<?= htmlspecialchars($bbName) ?>"><h1><?= htmlspecialchars($bbM['h1']) ?></h1><p class="lede bb-desc"><?= htmlspecialchars($bbM['tag']) ?> Your iPhone saves photos as HEIC, and half the internet still waves them away. Drop them here and Bum Bum turns them into JPG, PNG, or a single PDF <b>right in your browser</b>. Free, no sign-up, and your photos never leave your device.</p>
 <section class="panel" id="uploadPanel">
 <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Add HEIC photos">
 <p style="font-size:2rem;margin:0">📸</p>
