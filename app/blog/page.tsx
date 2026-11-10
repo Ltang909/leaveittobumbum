@@ -8,6 +8,30 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/bonsai-alternatives-2026/",
+    title: "6 Best Bonsai Alternatives for Freelancers in 2026 (Prices & Fees Compared)",
+    description: "Looking beyond Bonsai? Compare Indy, Moxie, HoneyBook, Dubsado, Wave and Leave It To Bum Bum by price, contracts, invoicing, payment fees and fit.",
+    date: "November 10, 2026",
+  },
+  {
+    href: "/blog/moxie-alternatives-2026/",
+    title: "6 Best Moxie Alternatives in 2026 (For Freelancers & Small Teams)",
+    description: "Compare Moxie alternatives including Bonsai, Indy, HoneyBook, Dubsado, Bloom and Leave It To Bum Bum. See real pricing, contracts, portals and payment trade-offs.",
+    date: "November 10, 2026",
+  },
+  {
+    href: "/blog/toggl-alternatives-2026/",
+    title: "5 Best Toggl Track Alternatives in 2026 (Free & Paid Options)",
+    description: "Compare Clockify, Harvest, Everhour and Time Doctor against Toggl Track in 2026. See free limits, annual pricing, billable hours, integrations and reports.",
+    date: "November 10, 2026",
+  },
+  {
+    href: "/blog/indy-vs-bonsai-2026/",
+    title: "Indy vs Bonsai (2026): Pricing, Contracts, Invoices & Fees",
+    description: "Indy vs Bonsai in 2026: compare free plans, annual prices, proposals, contracts, invoicing, payment processing fees, time tracking and tax features.",
+    date: "November 10, 2026",
+  },
+  {
     href: "/blog/how-to-make-ai-sound-more-human/",
     title: "How to Make AI Sound More Human",
     description: "AI writing gets spotted for specific, nameable habits: formulaic contrast writing, performative profundity, spatial metaphor inflation, and a filler vocabulary. What each one is, how to spot it, and the prompt instructions that fix it.",
