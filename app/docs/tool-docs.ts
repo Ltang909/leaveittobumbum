@@ -574,6 +574,35 @@ export const TOOL_DOCS: ToolDoc[] = [
     updated: U,
   },
   {
+    key: "invoice-generator",
+    name: "Invoice Generator",
+    href: "/tools/invoice-generator/",
+    icon: "/bum/icons/invoice-generator.png",
+    summary:
+      "The Invoice Generator builds a clean invoice PDF right in your browser. Fill in your details and your client's, add items with quantities and rates, set tax or a discount if you use them, and download the finished PDF.",
+    steps: [
+      "Fill in your business details and your client's details.",
+      "Add your items with quantities and rates. Totals update as you type.",
+      "Set tax or a discount if you use them, and pick a due date.",
+      "Download the PDF and email it to your client.",
+    ],
+    goodToKnow: [
+      "The Invoice Generator is free and uses no actions.",
+      "Everything runs in your browser. Nothing you type is sent to Bum Bum.",
+      "The discount comes off the subtotal first, then tax applies to what is left.",
+    ],
+    data: "The generator runs entirely on the page. Your business details save in your browser, on your device only. Client details and items are never saved or sent anywhere.",
+    tips: [
+      "Fill in your business details once and they are waiting for you next visit.",
+      "Pair it with the Invoice Reminder: this tool makes the invoice, that one chases it when it goes unpaid.",
+    ],
+    faq: [
+      ["Do I need an account?", "No. The Invoice Generator is free, uses no actions, and needs no sign-up."],
+      ["Can I add my logo?", "Not yet. Your business name sits large at the top. Logo support is first on the list if people ask for it."],
+    ],
+    updated: U,
+  },
+  {
     key: "audiogram",
     name: "Audiogram Maker",
     href: "/tools/audiogram/",
