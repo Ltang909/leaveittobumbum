@@ -93,8 +93,8 @@
 <?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?>
 <main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Screen Recorder"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?>
 <p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/clips.png" alt="Screen Recorder">
-<h1>Show them instead of telling them</h1>
-<p class="lede bb-desc">Screen Recorder records your screen right in your browser. Pick a tab, a window, or your whole screen, add your mic and a little camera bubble if you want to be in it, then trim and tweak the speed before you download. Nothing uploads anywhere, your video never leaves your computer. One finished recording uses one action.</p>
+<h1>Screen Recorder</h1>
+<p class="lede bb-desc">Show them instead of telling them. Screen Recorder records your screen right in your browser. Pick a tab, a window, or your whole screen, add your mic and a little camera bubble if you want to be in it, then trim and tweak the speed before you download. Nothing uploads anywhere, your video never leaves your computer. One finished recording uses one action.</p>
 <?php if (!$user && !$isGuest): ?>
 <section class="panel"><h2>Sign in to use Screen Recorder</h2><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Sign in or create an account</a></section>
 <?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
