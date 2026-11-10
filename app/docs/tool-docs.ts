@@ -603,6 +603,35 @@ export const TOOL_DOCS: ToolDoc[] = [
     updated: U,
   },
   {
+    key: "heic-to-jpg",
+    name: "HEIC to JPG",
+    href: "/tools/heic-to-jpg/",
+    icon: "/bum/icons/heic-to-jpg.png",
+    summary:
+      "HEIC to JPG turns iPhone HEIC photos into files everything else accepts. Drop in a batch, pick JPG, PNG, or a single PDF, and download the converted photos. It runs entirely in your browser, and the same tool answers to HEIC to PNG and HEIC to PDF.",
+    steps: [
+      "Drop your HEIC photos into the converter, or click to pick them.",
+      "Pick your output: JPG, PNG, or PDF. Conversions start on their own.",
+      "Watch each photo finish in the list, with a preview and its new file size.",
+      "Download each photo on its own, all of them in one ZIP, or the whole set as one PDF.",
+    ],
+    goodToKnow: [
+      "This converter is free and uses no actions.",
+      "Everything runs in your browser. Your photos are never uploaded or sent anywhere.",
+      "PNG keeps every pixel. JPG lets you trade a little quality for a smaller file, using the slider.",
+    ],
+    data: "Your photos are decoded and re-encoded on your device. Nothing is stored or sent to Bum Bum.",
+    tips: [
+      "Sending a stack of receipts or site photos? Pick PDF and the whole set arrives as one tidy file.",
+      "Live Photos convert as stills only. The short video part stays a separate file on your phone.",
+    ],
+    faq: [
+      ["Why do my iPhone photos end in .heic?", "HEIC is the format iPhones have saved in since iOS 11. It keeps files small on the phone, but many websites, forms, and Windows PCs still cannot open it."],
+      ["Can I convert a batch?", "Yes. Drop in as many as you like, then take them one by one, in a ZIP, or as a single PDF."],
+    ],
+    updated: U,
+  },
+  {
     key: "audiogram",
     name: "Audiogram Maker",
     href: "/tools/audiogram/",

@@ -335,6 +335,18 @@
       "cardTitle": ["Invoice", "Generator"],
       "cta": "Make an invoice",
       "mascot": "/bum/cat-bowtie.png"
+    },
+    {
+      "key": "heic-to-jpg",
+      "name": "HEIC to JPG",
+      "tag": "Files",
+      "icon": "📸",
+      "iconImg": "/bum/icons/heic-to-jpg.png",
+      "description": "Turn iPhone HEIC photos into JPG, PNG, or a single PDF, right in your browser.",
+      "url": "/tools/heic-to-jpg/",
+      "cardTitle": ["HEIC to", "JPG"],
+      "cta": "Convert photos",
+      "mascot": "/bum/cat-curious.png"
     }
   ]
 }
