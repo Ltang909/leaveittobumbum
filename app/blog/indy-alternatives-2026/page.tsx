@@ -16,7 +16,7 @@ const postingLd = {
   "headline": HEADLINE,
   "description": DESC,
   "datePublished": "2026-11-02",
-  "dateModified": "2026-11-02",
+  "dateModified": "2026-11-10",
   "author": { "@type": "Organization", "name": "LeaveItToBumBum", "url": "https://leaveittobumbum.com/" },
   "publisher": {
     "@type": "Organization",
@@ -126,6 +126,7 @@ export default function IndyAlternatives() {
           <p>A freelancer tool should be the most boring subscription you own. If yours is generating surprise renewals, that is the feature to switch away from.</p>
           <p><strong>Our recommendation:</strong> Choose Bonsai for the like-for-like workspace, Wave for free accounting, and Leave It to Bum Bum for the weekly jobs of chasing, following up, and tracking.</p>
           <p><strong><a href="/tools/cutline/">See what you are actually paying for</a></strong></p>
+          <p><strong>Read next:</strong> Comparing Indy head-to-head with Bonsai? See <a href="/blog/indy-vs-bonsai-2026/">Indy vs Bonsai</a> for the plan-by-plan breakdown, or the wider <a href="/blog/bonsai-alternatives-2026/">Bonsai alternatives</a> list.</p>
           <h2>Frequently asked questions</h2>
           <h3>Is there a free alternative to Indy?</h3>
           <p>Yes. Wave's Starter plan is free for invoicing and accounting, and Leave It to Bum Bum has a free tier for invoice chasing, follow-up tracking, and subscription tracking. Indy's own free plan caps you at 3 proposals, 3 contracts, and 3 invoices a month.</p>
