@@ -123,16 +123,30 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .wave-strip.anim .wave-bars span:nth-child(2){animation-delay:.1s}.wave-strip.anim .wave-bars span:nth-child(3){animation-delay:.22s}.wave-strip.anim .wave-bars span:nth-child(4){animation-delay:.34s}.wave-strip.anim .wave-bars span:nth-child(5){animation-delay:.46s}.wave-strip.anim .wave-bars span:nth-child(6){animation-delay:.58s}.wave-strip.anim .wave-bars span:nth-child(7){animation-delay:.7s}
 @keyframes wavePulse{0%,100%{height:8px}50%{height:30px}}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-.dl-tabs{display:flex;border-bottom:2px solid #e2d7bf}
-.dl-tab{flex:1;text-align:center;border:2px solid transparent;border-bottom:none;background:transparent;font:inherit;font-weight:800;padding:11px 10px;border-radius:14px 14px 0 0;cursor:pointer;color:#6b6350;margin-bottom:-2px}
-.dl-tab.active{background:#f8f2df;border-color:#e2d7bf;color:#142015}
-.tab-body{background:#f8f2df;border:2px solid #e2d7bf;border-top:none;border-radius:0 0 14px 14px;padding:4px 18px 18px}
-.rec-zone{text-align:center;padding:20px 12px 4px}
+.dl-steps{display:flex;align-items:center;gap:14px}
+.dl-step{display:inline-flex;align-items:center;gap:9px;border:none;background:transparent;font:inherit;font-weight:700;font-size:15px;color:#6b6350;cursor:pointer;padding:6px 6px;border-radius:999px;white-space:nowrap}
+.dl-step .step-badge{width:27px;height:27px;border-radius:50%;border:1.5px solid #d8d2c0;background:#fff;color:#6b6350;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.dl-step .step-badge svg{width:14px;height:14px}
+.dl-step.active{background:#edf6da;color:#142015;font-weight:800;padding:6px 16px 6px 6px}
+.dl-step.active .step-badge{background:#1d4731;border-color:#1d4731;color:#fff}
+.step-line{flex:1;height:1.5px;background:#e3dcc6;min-width:10px}
+@media (max-width:560px){.dl-step{font-size:13px;gap:6px}.dl-steps{gap:8px}}
+.tab-body{background:#fbf8ee;border-radius:18px;padding:10px 22px 24px;margin-top:16px}
+.rec-zone{text-align:center;padding:16px 6px 2px}
+.rec-flex{display:flex;align-items:center;justify-content:center;gap:20px}
+.wave-deco{display:flex;align-items:center;gap:3px}
+.wave-deco span{width:3px;border-radius:2px;background:#c9c0a4}
 .rec-zone .wave-strip{margin-bottom:14px;text-align:left}
-.mic-round{width:78px;height:78px;border-radius:50%;border:2px solid #1a291c;background:#d8ff62;font-size:30px;cursor:pointer;box-shadow:0 3px 0 #2f2a22;line-height:1}
-.mic-round.recording{background:#ff7448;font-size:15px;font-weight:900}
-.rec-label{font-weight:800;margin:10px 0 2px}
-.rec-or{opacity:.6;margin:2px 0 8px;font-size:13.5px}
+.mic-round{width:64px;height:64px;border-radius:50%;border:none;background:#d8ff62;cursor:pointer;line-height:1;color:#1d2b1a;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.mic-round svg{width:26px;height:26px}
+.mic-round .ic-stop{display:none;width:22px;height:22px}
+.mic-round.recording .ic-stop{display:block}
+.mic-round.recording .ic-mic{display:none}
+.mic-round.recording{background:#ff7448}
+.rec-label{font-weight:700;font-size:14px;color:#3a3627;margin:14px 0 2px}
+.rec-or{opacity:.6;margin:4px 0 10px;font-size:12.5px}
+.type-btn{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #ddd5bd;border-radius:999px;padding:7px 15px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;color:#3a3627}
+.type-btn svg{width:15px;height:15px}
 .yday{background:#fffdf6;border:1px solid #eee3cb;border-radius:10px;padding:10px 14px;font-size:14.5px;margin:14px 0 0}
 .yday ul{margin:6px 0;padding-left:20px}
 .yday .hint{font-size:13px;opacity:.75;margin:6px 0 0}
@@ -158,18 +172,23 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php else: ?>
 
 <section class="panel" id="logPanel">
-<div class="dl-tabs">
-<button type="button" class="dl-tab active" id="tabTalk">Talk through your day</button>
-<button type="button" class="dl-tab" id="tabJot">Note a mid day learning</button>
+<div class="dl-steps">
+<button type="button" class="dl-step active" id="tabTalk"><span class="step-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></span>Talk through your day</button>
+<span class="step-line"></span>
+<button type="button" class="dl-step" id="tabJot"><span class="step-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span>Note a mid day learning</button>
 </div>
 <div class="tab-body">
 <div id="panelTalk">
 <div class="rec-zone">
-<div id="waveStrip" class="wave-strip hidden"><div class="wave-bars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><span id="waveLabel"></span></div>
-<button type="button" class="mic-round" id="micBtn" aria-label="Record">&#127908;</button>
+<div class="rec-flex">
+<div class="wave-deco" aria-hidden="true"><span style="height:5px"></span><span style="height:9px"></span><span style="height:14px"></span><span style="height:7px"></span><span style="height:17px"></span><span style="height:11px"></span><span style="height:6px"></span><span style="height:13px"></span><span style="height:8px"></span><span style="height:15px"></span><span style="height:6px"></span><span style="height:10px"></span><span style="height:4px"></span></div>
+<button type="button" class="mic-round" id="micBtn" aria-label="Record"><svg class="ic-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg><svg class="ic-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg></button>
+<div class="wave-deco" aria-hidden="true"><span style="height:4px"></span><span style="height:10px"></span><span style="height:6px"></span><span style="height:15px"></span><span style="height:8px"></span><span style="height:13px"></span><span style="height:6px"></span><span style="height:11px"></span><span style="height:17px"></span><span style="height:7px"></span><span style="height:14px"></span><span style="height:9px"></span><span style="height:5px"></span></div>
+</div>
 <p class="rec-label" id="recLabel">Tap to start recording</p>
 <p class="rec-or">or</p>
-<button type="button" class="mini-btn" id="typeBtn">Type instead</button>
+<button type="button" class="type-btn" id="typeBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9 14h6"/></svg>Type instead</button>
+<div id="waveStrip" class="wave-strip hidden" style="margin-top:14px"><div class="wave-bars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><span id="waveLabel"></span></div>
 <p class="mic-status" id="micStatus"></p>
 </div>
 <div id="typeZone" class="hidden">
@@ -301,7 +320,7 @@ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let activeRec=null; // {mode, recog|recorder, chunks, stream, base, stopped, raf, ctx}
 
 function setStatus(msg){document.querySelector('#micStatus').textContent=msg||''}
-function setBtn(recording){micBtn.textContent=recording?'Stop':'\u{1F3A4}';micBtn.classList.toggle('recording',!!recording);const l=document.querySelector('#recLabel');if(l)l.textContent=recording?'Recording. Tap the mic to stop.':'Tap to start recording'}
+function setBtn(recording){micBtn.classList.toggle('recording',!!recording);const l=document.querySelector('#recLabel');if(l)l.textContent=recording?'Recording. Tap the mic to stop.':'Tap to start recording'}
 const waveStrip=document.querySelector('#waveStrip');
 const waveLabel=document.querySelector('#waveLabel');
 const waveBars=Array.from(waveStrip.querySelectorAll('.wave-bars span'));
