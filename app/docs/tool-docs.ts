@@ -632,6 +632,64 @@ export const TOOL_DOCS: ToolDoc[] = [
     updated: U,
   },
   {
+    key: "jpg-to-pdf",
+    name: "JPG to PDF",
+    href: "/tools/jpg-to-pdf/",
+    icon: "/bum/icons/jpg-to-pdf.png",
+    summary:
+      "JPG to PDF gathers JPG and PNG images into a single PDF, one image per page, in the order you set. Pick a page size, fit to image or a uniform A4 or Letter, and download the finished file. It runs entirely in your browser.",
+    steps: [
+      "Drop your JPG or PNG images into the converter, or click to pick them.",
+      "Put the images in order with the up and down buttons. The first image becomes page one.",
+      "Pick a page size: fit to image, A4, or Letter.",
+      "Build the PDF and download it.",
+    ],
+    goodToKnow: [
+      "JPG to PDF is free and uses no actions.",
+      "Everything runs in your browser. Your images are never uploaded or sent anywhere.",
+      "JPGs are embedded exactly as they are, with no second round of compression, and PNGs stay lossless.",
+    ],
+    data: "Your images are read and assembled into a PDF on your device. Nothing is stored or sent to Bum Bum.",
+    tips: [
+      "Choose A4 or Letter when the PDF will be printed or attached to a form; wide images turn sideways so nothing gets cropped.",
+      "Need the reverse trip later? PDF to Image turns a PDF back into pictures, page by page.",
+    ],
+    faq: [
+      ["Which image types can I use?", "JPG and PNG. Photos, scans, and screenshots all work. iPhone HEIC photos go through HEIC to JPG first, since browsers cannot open HEIC on their own."],
+      ["Can I change the page order?", "Yes. Every image in the list has up and down buttons, and the PDF follows the order you see."],
+    ],
+    updated: "November 11, 2026",
+  },
+  {
+    key: "split-pdf",
+    name: "Split PDF",
+    href: "/tools/split-pdf/",
+    icon: "/bum/icons/split-pdf.png",
+    summary:
+      "Split PDF pulls pages out of a PDF in your browser. Take a page range as a new PDF, keeping the order you type, or split every page into its own file and download the set as a ZIP.",
+    steps: [
+      "Drop your PDF into the splitter. Bum Bum reads its page count.",
+      "Choose a page range, like 1-3, 5, 8-10, or split every page into its own file.",
+      "Split the PDF.",
+      "Download the new PDF, or the ZIP of single pages.",
+    ],
+    goodToKnow: [
+      "Split PDF is free and uses no actions.",
+      "Everything runs in your browser. Your PDF is never uploaded or sent anywhere.",
+      "Pages are copied exactly as they are. Nothing is re-rendered or compressed.",
+    ],
+    data: "Your PDF is opened and split on your device. Nothing is stored or sent to Bum Bum.",
+    tips: [
+      "Sending one section of a long document? A range keeps just that section, in order, as a single tidy file.",
+      "Password-protected PDFs cannot be opened here. Unlock the file as its owner first, then split the copy.",
+    ],
+    faq: [
+      ["How do page ranges work?", "Type the pages you want, like 1-3, 5, 8-10. Single pages and ranges can be mixed, and the new PDF keeps the order you type them in."],
+      ["What does splitting every page give me?", "One PDF per page, gathered into a single ZIP download, named by page number."],
+    ],
+    updated: "November 11, 2026",
+  },
+  {
     key: "audiogram",
     name: "Audiogram Maker",
     href: "/tools/audiogram/",
