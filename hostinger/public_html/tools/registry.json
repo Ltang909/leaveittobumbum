@@ -347,6 +347,30 @@
       "cardTitle": ["HEIC to", "JPG"],
       "cta": "Convert photos",
       "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "jpg-to-pdf",
+      "name": "JPG to PDF",
+      "tag": "Files",
+      "icon": "📄",
+      "iconImg": "/bum/icons/jpg-to-pdf.png",
+      "description": "Turn JPG and PNG images into one PDF, in your order, right in your browser. Files stay on your device.",
+      "url": "/tools/jpg-to-pdf/",
+      "cardTitle": ["JPG to", "PDF"],
+      "cta": "Make a PDF",
+      "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "split-pdf",
+      "name": "Split PDF",
+      "tag": "Files",
+      "icon": "✂️",
+      "iconImg": "/bum/icons/split-pdf.png",
+      "description": "Pull a page range out of a PDF, or split every page into its own file, right in your browser.",
+      "url": "/tools/split-pdf/",
+      "cardTitle": ["Split", "PDF"],
+      "cta": "Split a PDF",
+      "mascot": "/bum/cat-curious.png"
     }
   ]
 }
