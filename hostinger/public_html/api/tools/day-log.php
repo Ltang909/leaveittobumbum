@@ -63,11 +63,15 @@ function dl_ensure_jottings(): void {
         id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
         user_id BIGINT UNSIGNED NOT NULL,
         log_date DATE NOT NULL,
-        text VARCHAR(300) NOT NULL,
+        text VARCHAR(1000) NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         KEY idx_user_date (user_id, log_date)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $col = db()->query("SHOW COLUMNS FROM day_log_jottings LIKE 'text'")->fetch();
+    if ($col && stripos((string) ($col['Type'] ?? ''), 'varchar(300)') !== false) {
+        db()->exec("ALTER TABLE day_log_jottings MODIFY text VARCHAR(1000) NOT NULL");
+    }
 }
 
 function dl_fetch_jottings(int $userId, string $date): array {
@@ -854,7 +858,7 @@ if ($action === 'jot' || $action === 'unjot') {
 
     $today = trim((string) ($input['todayLocal'] ?? ''));
     if (!dl_valid_date($today)) jsonResponse(['error' => 'Invalid date.'], 422);
-    $text = dl_clean(mb_substr(trim((string) ($input['text'] ?? '')), 0, 300));
+    $text = dl_clean(mb_substr(trim((string) ($input['text'] ?? '')), 0, 1000));
     if ($text === '') jsonResponse(['error' => 'Type the learning first, then save it.'], 422);
     $existingJots = dl_fetch_jottings($userId, $today);
     if (count($existingJots) >= 30) jsonResponse(['error' => 'That is a full day of learning. Jot the next one tomorrow.'], 422);
