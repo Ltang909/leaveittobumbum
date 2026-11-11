@@ -6,7 +6,7 @@ import { SiteHeader, SiteFooter } from "./components/chrome";
 import { useRequestTool } from "./components/request-tool";
 import { PlanCta } from "./components/plan-ctas";
 import CaptureBar from "./components/capture-bar";
-import { DeskFaceProvider, useDeskFace } from "./lib/desk-face";
+import { DeskFaceProvider } from "./lib/desk-face";
 
 const plans = [
   { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["All current tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
@@ -50,49 +50,34 @@ const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "Ar
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 
-// The hero portrait: this is Bum Bum. Booping cycles his faces, and the
-// front desk borrows the same portrait for its own moments (a working
-// face while you type, the routed tool's persona as a hat) through the
-// shared desk-face state.
+// The hero cat: Bum Bum as a cutout peeking over the desk, art supplied
+// by Leon (Nov 11, 2026) with the burst and rays baked in. Booping still
+// earns a quip, and the Konami party dance still applies.
 function HeroPortrait({ party }: { party: boolean }) {
-  const { mood, hat } = useDeskFace();
-  const [face, setFace] = useState(0);
   const [quip, setQuip] = useState<string | null>(null);
   const [boingKey, setBoingKey] = useState(0);
-  const [portraitOk, setPortraitOk] = useState(true);
 
   function boopBumBum() {
-    setFace((f) => (f + 1) % FACES.length);
     setBoingKey((k) => k + 1);
     setQuip(QUIPS[Math.floor(Math.random() * QUIPS.length)]);
     window.setTimeout(() => setQuip(null), 2600);
   }
 
-  const override = mood || hat;
-  const src = override || FACES[face].src;
-  const alt = override ? "Bum Bum, on the job" : FACES[face].alt;
-
   return (
-    <div className="hero-portrait" aria-label="Bum Bum, chief tiny-tool operator">
-      <div className="portrait-burst"></div>
+    <div className="hero-portrait hero-cat" aria-label="Bum Bum, chief tiny-tool operator">
       <div
         key={boingKey}
-        className={`portrait-frame boopable${boingKey && !party ? " boing" : ""}${party ? " dance" : ""}`}
+        className={`hero-cat-boop boopable${boingKey && !party ? " boing" : ""}${party ? " dance" : ""}`}
         onClick={boopBumBum}
         onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); boopBumBum(); } }}
         role="button"
         tabIndex={0}
         aria-label="Boop Bum Bum"
       >
-        <img
-          src={src}
-          alt={alt}
-          onLoad={(event) => { setPortraitOk(true); event.currentTarget.style.display = ""; }}
-          onError={(event) => { setPortraitOk(false); event.currentTarget.style.display = "none"; }}
-        />
-        {!portraitOk && <div className="photo-fallback"><span>🐈</span><small>Bum Bum’s portrait<br />is clocking in</small></div>}
-        <div className="scribble scribble-one">this is Bum Bum</div>
+        <img className="hero-cat-img" src="/bum/hero-cat.png" alt="Bum Bum the cat peeking over the desk" />
       </div>
+      <div className="hero-cat-tag">this is Bum Bum</div>
+      <svg className="hero-cat-arrow" viewBox="0 0 60 56" aria-hidden="true"><path d="M54 6C42 24 28 38 12 47" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" /><path d="M21 45 L11 48 L13 37" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
       {quip && <div className="quip-bubble" role="status">{quip}</div>}
     </div>
   );
