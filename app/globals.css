@@ -69,14 +69,14 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .cat-filter select { border:var(--line); background:#fff; min-height:58px; border-radius:8px; padding:0 40px 0 16px; font-size:.95rem; font-weight:900; font-family:inherit; box-shadow:4px 4px 0 var(--ink); cursor:pointer; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2317150f' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; }
 .cat-filter select:focus { outline:2px solid var(--ink); outline-offset:2px; }
 .tool-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:17px; }
-.tool-card { min-height:350px; padding:23px; border:var(--line); border-radius:10px; display:flex; flex-direction:column; box-shadow:5px 5px 0 var(--ink); }
+.tool-card { min-height:350px; padding:23px; border:var(--line); border-radius:10px; display:flex; flex-direction:column; box-shadow:5px 5px 0 var(--ink); text-decoration:none; color:inherit; }
 .card-1 { background:var(--yellow); }.card-2 { background:#f7a9ca; }.card-3 { background:var(--mint); }.card-4 { background:#8eb5ff; }.card-5 { background:#ffc59b; }.card-6 { background:#d6c9f5; }.card-7 { background:#b2e8dc; }.card-8 { background:#ffb3b3; }
-.tool-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.tool-top { display:flex; justify-content:flex-start; align-items:center; gap:12px; }
 .tool-icon { width:48px; height:48px; display:grid; place-items:center; background:white; border:var(--line); border-radius:50%; font-size:1.3rem; }
 .tool-tag { font-size:.7rem; font-weight:1000; text-transform:uppercase; letter-spacing:.1em; }
 .tool-card h3 { font-family:var(--font-display),serif; font-size:1.7rem; line-height:1.12; min-height:2.24em; margin:35px 0 8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 .tool-card p { margin:0; min-height:4.65em; }
-.tool-card button { border:0; border-top:1.5px solid var(--ink); background:transparent; margin-top:auto; padding:15px 0 0; display:flex; justify-content:space-between; font-weight:1000; cursor:pointer; color:var(--ink); }
+.tool-card .tool-cta { border-top:1.5px solid var(--ink); margin-top:auto; padding:15px 0 0; display:flex; justify-content:space-between; font-weight:1000; color:var(--ink); }
 .view-toggle { display:flex; border:var(--line); border-radius:8px; overflow:hidden; background:white; box-shadow:4px 4px 0 var(--ink); flex:none; }
 .view-toggle button { border:0; background:transparent; padding:0 20px; min-height:58px; font-family:inherit; font-size:.95rem; font-weight:1000; color:var(--ink); cursor:pointer; }
 .view-toggle button + button { border-left:var(--line); }
@@ -200,7 +200,6 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .brand-cat { width:44px; height:44px; border-radius:50%; object-fit:cover; background:var(--pink); border:var(--line); transform:rotate(-5deg); flex:none; }
 .nav-right { display:flex; align-items:center; gap:12px; }
 .nav-right .button { margin-top:0; }
-.tool-mascot { width:64px; height:64px; border-radius:50%; object-fit:cover; background:#fff; border:var(--line); margin-left:auto; transform:rotate(4deg); }
 .tool-top { align-items:center; }
 .sticker { background:#fff; border:var(--line); border-radius:22px; box-shadow:8px 8px 0 var(--line); padding:10px; }
 .modal-peek { float:right; width:96px; margin:0 44px 10px 12px; transform:rotate(6deg); background:#fff; border:var(--line); border-radius:16px; box-shadow:4px 4px 0 var(--orange); }

@@ -71,10 +71,6 @@ export default function ToolsView() {
     resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function openTool(tool: Tool) {
-    window.location.href = tool.url;
-  }
-
   return (
     <main>
       <SiteHeader />
@@ -145,16 +141,15 @@ export default function ToolsView() {
         ) : (
         <div className="tool-grid">
           {paged.map((tool, index) => (
-            <article className={`tool-card card-${(((page - 1) * PAGE_SIZE + index) % 8) + 1}`} key={tool.key}>
+            <a className={`tool-card card-${(((page - 1) * PAGE_SIZE + index) % 8) + 1}`} key={tool.key} href={tool.url}>
               <div className="tool-top">
                 <span className="tool-icon">{tool.icon}</span>
                 <span className="tool-tag">{tool.tag}</span>
-                {(tool.iconImg || tool.mascot) && <img className="tool-mascot" src={tool.iconImg || tool.mascot} alt="" aria-hidden="true" />}
               </div>
               <h3>{tool.cardTitle ? <>{tool.cardTitle[0]}<br />{tool.cardTitle[1]}</> : tool.name}</h3>
               <p>{tool.description}</p>
-              <button onClick={() => openTool(tool)}>{tool.cta} <Arrow /></button>
-            </article>
+              <span className="tool-cta">{tool.cta} <Arrow /></span>
+            </a>
           ))}
         </div>
         )}

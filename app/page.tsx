@@ -131,10 +131,6 @@ export default function Home() {
     };
   }, []);
 
-  function openTool(tool: { url: string }) {
-    window.location.href = tool.url;
-  }
-
   return (
     <main>
       <SiteHeader />
@@ -156,7 +152,7 @@ export default function Home() {
 
       <section className="toolbox shell" id="toolbox">
         <div className="section-heading"><div><p className="kicker">Bum Bum’s toolbox</p><h2>Pick the thing you<br />don’t want to do.</h2></div></div>
-        <div className="tool-grid">{homeTools.map((tool, index) => <article className={`tool-card card-${(index % 8) + 1}`} key={tool.key}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span>{(tool.iconImg || tool.mascot) && <img className="tool-mascot" src={tool.iconImg || tool.mascot} alt="" aria-hidden="true" />}</div><h3>{tool.cardTitle ? <>{tool.cardTitle[0]}<br />{tool.cardTitle[1]}</> : tool.name}</h3><p>{tool.description}</p><button onClick={() => openTool(tool)}>{tool.cta} <Arrow /></button></article>)}</div>
+        <div className="tool-grid">{homeTools.map((tool, index) => <a className={`tool-card card-${(index % 8) + 1}`} key={tool.key} href={tool.url}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span></div><h3>{tool.cardTitle ? <>{tool.cardTitle[0]}<br />{tool.cardTitle[1]}</> : tool.name}</h3><p>{tool.description}</p><span className="tool-cta">{tool.cta} <Arrow /></span></a>)}</div>
         <div className="toolbox-more"><a className="button" href="/tools/">Browse the full toolbox <Arrow /></a></div>
         <p className="section-more section-more-left"><a href="#guarantee">Missing something? Bum Bum builds it in 36 hours <Arrow /></a></p>
       </section>
