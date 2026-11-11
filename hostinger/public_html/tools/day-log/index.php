@@ -123,9 +123,10 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .wave-strip.anim .wave-bars span:nth-child(2){animation-delay:.1s}.wave-strip.anim .wave-bars span:nth-child(3){animation-delay:.22s}.wave-strip.anim .wave-bars span:nth-child(4){animation-delay:.34s}.wave-strip.anim .wave-bars span:nth-child(5){animation-delay:.46s}.wave-strip.anim .wave-bars span:nth-child(6){animation-delay:.58s}.wave-strip.anim .wave-bars span:nth-child(7){animation-delay:.7s}
 @keyframes wavePulse{0%,100%{height:8px}50%{height:30px}}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-.dl-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px}
-.dl-tab{border:2px solid transparent;background:transparent;font:inherit;font-weight:800;padding:8px 16px;border-radius:999px;cursor:pointer;color:#6b6350}
-.dl-tab.active{background:#e9f5cf;border-color:#1a291c;color:#142015;box-shadow:2px 2px 0 #2f2a22}
+.dl-tabs{display:flex;border-bottom:2px solid #e2d7bf}
+.dl-tab{flex:1;text-align:center;border:2px solid transparent;border-bottom:none;background:transparent;font:inherit;font-weight:800;padding:11px 10px;border-radius:14px 14px 0 0;cursor:pointer;color:#6b6350;margin-bottom:-2px}
+.dl-tab.active{background:#f8f2df;border-color:#e2d7bf;color:#142015}
+.tab-body{background:#f8f2df;border:2px solid #e2d7bf;border-top:none;border-radius:0 0 14px 14px;padding:4px 18px 18px}
 .rec-zone{text-align:center;padding:20px 12px 4px}
 .rec-zone .wave-strip{margin-bottom:14px;text-align:left}
 .mic-round{width:78px;height:78px;border-radius:50%;border:2px solid #1a291c;background:#d8ff62;font-size:30px;cursor:pointer;box-shadow:0 3px 0 #2f2a22;line-height:1}
@@ -136,7 +137,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .yday ul{margin:6px 0;padding-left:20px}
 .yday .hint{font-size:13px;opacity:.75;margin:6px 0 0}
 .prompt-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0 4px}
-.chip{background:#f6efdd;border:1px solid #e2d7bf;border-radius:10px;padding:9px 14px;font-weight:700;font-size:14.5px}
+.chip{background:#fffdf6;border:1px solid #e2d7bf;border-radius:10px;padding:9px 14px;font-weight:700;font-size:14.5px}
 .dl-file{width:100%;padding:14px;font-size:16.5px;margin-top:12px}
 .log-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
 .log-card{text-align:left;background:#fff;border:2px solid #e2d7bf;border-radius:14px;padding:14px;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:5px}
@@ -160,6 +161,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <button type="button" class="dl-tab active" id="tabTalk">Talk through your day</button>
 <button type="button" class="dl-tab" id="tabJot">Note a mid day learning</button>
 </div>
+<div class="tab-body">
 <div id="panelTalk">
 <div class="rec-zone">
 <div id="waveStrip" class="wave-strip hidden"><div class="wave-bars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><span id="waveLabel"></span></div>
@@ -192,6 +194,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </div>
 <p id="jotStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="jotError" class="error"></p>
+</div>
 </div>
 </div>
 </section>
