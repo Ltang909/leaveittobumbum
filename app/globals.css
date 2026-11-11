@@ -394,13 +394,17 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .hero-headline { position:relative; }
 .hero-spark { position:absolute; left:-56px; top:2px; width:46px; height:38px; }
 .hero-desk h1 em { color:#0354FB; font-style:normal; }
+.hero-desk h1 { font-size:clamp(2.5rem, 5.6vw, 5.1rem); }
+.hero-top { grid-template-columns:minmax(0,1.45fr) minmax(0,.55fr); }
+@media (max-width:900px){.hero-top{grid-template-columns:1fr}}
 .capture-home-card { border:3px solid var(--ink); border-radius:26px; box-shadow:9px 9px 0 var(--ink); padding:22px 24px; }
 .hero-portrait { min-height:300px; }
-.hero-portrait .portrait-burst { width:68%; }
-.hero-portrait .portrait-frame { width:58%; aspect-ratio:1.25; }
+.hero-portrait .portrait-burst { width:80%; max-width:340px; }
+.hero-portrait .portrait-frame { width:78%; max-width:300px; aspect-ratio:1; }
+.hero-portrait .portrait-frame img { object-position:center 28%; }
 .desk-composer { border:0; border-radius:0; background:transparent; box-shadow:none; padding:6px 2px 2px; }
 .desk-composer:focus-within { outline:none; }
-.desk-composer textarea { font-size:1.1rem; min-height:52px; }
+.desk-composer textarea { font-size:1.1rem; min-height:34px; }
 .desk-composer-bar .button { font-family:var(--font-display),serif; font-size:1.2rem; min-height:58px; padding:0 32px; border-radius:12px; box-shadow:5px 5px 0 var(--orange); }
 .desk-icon-btn svg { width:21px; height:21px; }
 .desk-chips-row { justify-content:flex-start; }
