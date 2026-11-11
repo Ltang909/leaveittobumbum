@@ -815,9 +815,9 @@ export const TOOL_DOCS: ToolDoc[] = [
     href: "/tools/day-log/",
     icon: "/bum/icons/day-log-sticker.png",
     summary:
-      "Day Log closes your day in a few minutes of talking. Three prompts above one box cover what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns your ramble into clean jot notes, scores yesterday's top list against what you actually did, files the day in your account, and recaps it by email the next morning with tomorrow's priorities on top. When a stretch of days piles up, week and month summaries pull out the accomplishments, learnings, and growth.",
+      "Day Log closes your day in a few minutes of talking. Two tabs at the top offer two ways in: talk through your day, or note a mid day learning. Talking covers what got done and what got in the way, what you learned, and what tomorrow needs, with yesterday's commitments listed above the prompts so they can be scored. Bum Bum turns your ramble into clean jot notes, scores yesterday's top list against what you actually did, files the day in your account, and recaps it by email the next morning with tomorrow's priorities on top. When a stretch of days piles up, week and month summaries pull out the accomplishments, learnings, and growth.",
     steps: [
-      "Open Day Log at the end of your day. The three prompts sit above one box: talk through all of them in one go, in any order, or type.",
+      "Open Day Log at the end of your day and stay on Talk through your day. Tap the mic and talk through the three prompt chips in one go, in any order, or tap Type instead and write. Yesterday's commitments sit above the chips.",
       "If yesterday had a list, it sits above the box. Say honestly what landed and what did not.",
       "Press File my day. Bum Bum structures your words into jot notes and scores yesterday's list.",
       "Read the filed day on screen. The same jot notes land in your inbox the next morning with tomorrow's top list.",
@@ -827,7 +827,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     goodToKnow: [
       "One action per day filed. Re-filing the same day replaces the earlier version and costs no extra action.",
       "Learnings can be jotted the moment they land, all day, free and as often as you like. They are appended to the filed day's learnings in your own words, and one jotted after filing still joins that day's record.",
-      "Filed a day and spotted a mistake? Open it in Past logs and edit any jot note, including the scorecard marks. Saving is free, and your Notion page updates to match. Delete this day removes a log entirely and archives its Notion page.",
+      "Filed a day and spotted a mistake? Open it in Recent logs and edit any jot note, including the scorecard marks. Saving is free, and your Notion page updates to match. Delete this day removes a log entirely and archives its Notion page.",
       "Recap emails go out every morning, and only once you have filed a log. Miss a day and you get a single nudge; after that, no emails until you log again.",
       "Optional: connect Google Calendar from Advanced settings on the Day Log page, and your top list also lands as an all-day event on recap mornings. Disconnect any time; the emails keep coming either way.",
       "Week and month summaries cost one action when freshly generated. Re-opening the same stretch of logs is free.",
@@ -848,7 +848,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Can I capture a learning before I file?", "Yes. Jot it into Day Log as it happens, free and as often as you like. When you file that evening, jottings are appended to the day's learnings in your own words. Jot one after filing and it still joins the day's record."],
       ["What if I skip a day?", "Nothing breaks. The scorecard compares against your most recent filed day, whenever that was."],
       ["How does the scorecard work?", "When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone."],
-      ["Can I fix a day after filing it?", "Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action."],
+      ["Can I fix a day after filing it?", "Yes. Open the day in Recent logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action."],
       ["Can I type instead of talking?", "Yes. The one big box takes typing too, and you can mix talking and typing in the same log."],
       ["Can my top list go on my calendar?", "Yes. Connect Google Calendar in Advanced settings and, on the mornings your recap email goes out, your top list also lands as an all-day event. It is optional, and disconnecting stops the events, not the emails."],
     ],
