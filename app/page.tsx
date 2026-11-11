@@ -146,8 +146,9 @@ export default function Home() {
               <div className="hero-headline"><svg className="hero-spark" viewBox="0 0 48 40" aria-hidden="true"><path d="M7 31l11-5M13 13l10 6M28 5l3 11" stroke="#FFD84D" strokeWidth="5" strokeLinecap="round" fill="none" /></svg><h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1></div>
               <p className="lede">Little tools that handle the fiddly stuff stealing your afternoon.</p>
             </div>
+            <HeroPortrait party={party} />
           </div>
-          <CaptureBar deskPortrait={<HeroPortrait party={party} />} />
+          <CaptureBar />
         </DeskFaceProvider>
       </section>
 
