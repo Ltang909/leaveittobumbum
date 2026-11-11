@@ -44,9 +44,15 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
 .dropzone p{margin:6px 0}
-.controls{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;align-items:end}
-.controls label{font-weight:700;font-size:14px;display:block}
-.controls select,.controls input[type=text]{padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;margin-top:4px}
+.hidden{display:none!important}
+.mode-opts{display:grid;gap:10px;margin-top:16px}
+.mode-opt{display:flex;gap:10px;align-items:flex-start;border:1px solid #e2d7bf;border-radius:12px;background:#fff;padding:12px 14px;cursor:pointer}
+.mode-opt:has(input:checked){border-color:#b3a37e;background:#fffdf8}
+.mode-opt input{margin-top:3px;accent-color:#2f2a22}
+.mode-opt .mode-sub{font-size:13px;opacity:.75;font-weight:400}
+.range-row{margin-top:12px}
+.range-row label{font-weight:700;font-size:14px;display:block}
+.range-row input[type=text]{padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;margin-top:4px}
 .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
 .mini-btn{border:1px solid #ddd1b8;background:#fff;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer;color:inherit}
 .mini-btn:disabled{opacity:.45;cursor:default}
@@ -71,16 +77,16 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
 </div>
 <div id="fileList"></div>
-<div class="controls">
-<div><label for="modeSel">Split how</label><select id="modeSel">
-<option value="range">Pull out a page range, as one PDF</option>
-<option value="each">Every page as its own PDF, in a ZIP</option>
-</select></div>
-<div id="rangeWrap"><label for="rangeInput">Pages, like 1-3, 5, 8-10</label><input type="text" id="rangeInput" placeholder="1-3, 5" size="22"></div>
+<div id="splitControls" class="hidden">
+<div class="mode-opts" role="radiogroup" aria-label="What do you want?">
+<label class="mode-opt"><input type="radio" name="splitMode" value="range" checked><span><b>Pull out some pages</b><br><span class="mode-sub">One new PDF with just the pages you pick.</span></span></label>
+<label class="mode-opt"><input type="radio" name="splitMode" value="each"><span><b>Split into single pages</b><br><span class="mode-sub">A ZIP download with one PDF for every page.</span></span></label>
 </div>
+<div class="range-row" id="rangeWrap"><label for="rangeInput">Which pages?</label><input type="text" id="rangeInput" placeholder="2-4, 7" size="22"> <span class="hc-note" id="rangeHint"></span></div>
 <div class="btnrow">
 <button type="button" class="button" id="splitBtn" disabled>Split my PDF</button>
 <button type="button" class="mini-btn" id="clearBtn">Clear</button>
+</div>
 </div>
 <p class="hc-status" id="statusLine" role="status"></p>
 <p class="hc-note">Splitting runs on your device. Very large PDFs can take a moment to read.</p>
@@ -111,9 +117,11 @@ var $=function(id){return document.getElementById(id);};
 var current=null; // {file, name, doc, count}
 function fmtSize(n){if(n<1024)return n+" B";if(n<1048576)return (n/1024).toFixed(1)+" KB";return (n/1048576).toFixed(2)+" MB";}
 function setStatus(msg,isErr){var s=$("statusLine");s.textContent=msg||"";s.className="hc-status"+(isErr?" error":"");}
+function getMode(){var r=document.querySelector('input[name="splitMode"]:checked');return r?r.value:"range";}
 function refresh(){
   $("splitBtn").disabled=!current;
-  $("rangeWrap").style.display=$("modeSel").value==="range"?"":"none";
+  $("splitControls").classList.toggle("hidden",!current);
+  $("rangeWrap").style.display=getMode()==="range"?"":"none";
 }
 function parseRanges(text,count){
   var out=[],seen={};
@@ -150,7 +158,8 @@ async function addFile(file){
     row.querySelector(".meta").textContent=fmtSize(file.size);
     row.querySelector(".st").textContent=current.count+" page"+(current.count===1?"":"s");
     list.appendChild(row);
-    setStatus("Loaded: "+current.count+" page"+(current.count===1?"":"s")+". Pick the split and go.");
+    $("rangeHint").textContent="This PDF has "+current.count+" page"+(current.count===1?"":"s")+", numbered 1 to "+current.count+".";
+    setStatus("Loaded: "+current.count+" page"+(current.count===1?"":"s")+". Pick what you want below.");
   }catch(e){
     current=null;$("fileList").textContent="";
     setStatus("Bum Bum could not read that PDF. It may be password-protected or damaged.",true);
@@ -165,7 +174,7 @@ fi.addEventListener("change",function(){if(fi.files.length)addFile(fi.files[0]);
 ["dragover","dragenter"].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.add("over");});});
 ["dragleave","drop"].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.remove("over");});});
 dz.addEventListener("drop",function(e){if(e.dataTransfer&&e.dataTransfer.files.length)addFile(e.dataTransfer.files[0]);});
-$("modeSel").addEventListener("change",refresh);
+Array.prototype.forEach.call(document.querySelectorAll('input[name="splitMode"]'),function(r){r.addEventListener("change",refresh);});
 $("clearBtn").addEventListener("click",function(){current=null;$("fileList").textContent="";$("rangeInput").value="";setStatus("");refresh();});
 $("splitBtn").addEventListener("click",async function(){
   if(!current)return;
@@ -173,7 +182,7 @@ $("splitBtn").addEventListener("click",async function(){
   var base=current.name.replace(/\.pdf$/i,"");
   try{
     var PDFLib=window.PDFLib;
-    if($("modeSel").value==="each"){
+    if(getMode()==="each"){
       var zip=new window.JSZip();
       var width=String(current.count).length;
       for(var i=0;i<current.count;i++){
