@@ -1538,7 +1538,6 @@ export default function CaptureBar() {
       </div>
         <div className="desk-chips-row">
           <div className="desk-try-group">
-          <span className="desk-try">Try:</span>
           <div className="capture-home-chips desk-task-chips">
             {chipKeys.map((k) => {
               const def = CHIP_POOL.find((c) => c.key === k);
