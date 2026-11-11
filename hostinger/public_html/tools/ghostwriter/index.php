@@ -5,11 +5,11 @@
 <meta property="og:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/ghostwriter/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-ghostwriter.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/ghostwriter.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Voice to Content | Turn a Voice Ramble Into Hooks, a Script, and a Caption | Leave It to Bum Bum">
 <meta name="twitter:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-ghostwriter.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/ghostwriter.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/ghostwriter/">
 <script type="application/ld+json">
 {

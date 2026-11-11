@@ -5,11 +5,11 @@
 <meta property="og:description" content="Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/gap-scout/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-gap-scout.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/gap-scout.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Resume Gap Checker | Compare Your Resume to Any Job Description | Leave It to Bum Bum">
 <meta name="twitter:description" content="Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-gap-scout.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/gap-scout.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/gap-scout/">
 <script type="application/ld+json">
 {

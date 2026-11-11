@@ -5,11 +5,11 @@
 <meta property="og:description" content="Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/pdf-compressor/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/pdf-compressor.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/pdf-compressor.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PDF Compressor | Shrink a PDF in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/pdf-compressor.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/pdf-compressor.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/pdf-compressor/">
 <script type="application/ld+json">
 {

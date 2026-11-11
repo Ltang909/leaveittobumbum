@@ -5,11 +5,11 @@
 <meta property="og:description" content="Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/hearsay/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-hearsay.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/hearsay.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI Brand Mention Checker | See What AI Models Say About Your Brand | Leave It to Bum Bum">
 <meta name="twitter:description" content="Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-hearsay.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/hearsay.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/hearsay/">
 <script type="application/ld+json">
 {

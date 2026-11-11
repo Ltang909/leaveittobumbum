@@ -13,6 +13,8 @@ if ($user) {
 <meta name="description" content="Spend 5 min every evening to brain dump what you did, challenges faced, lessons learned and what to achieve. Bum bum reads what you've logged and sends you a daily email keeping you on track.">
 <meta property="og:title" content="Day Log | Close the Day, Queue Up Tomorrow | Leave It to Bum Bum">
 <meta property="og:description" content="Spend 5 min every evening to brain dump what you did, challenges faced, lessons learned and what to achieve. Bum bum reads what you've logged and sends you a daily email keeping you on track.">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/day-log.jpg">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/day-log.jpg">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/day-log/">
 <meta name="twitter:card" content="summary">

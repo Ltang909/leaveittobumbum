@@ -5,11 +5,11 @@
 <meta property="og:description" content="Get paid without the awkward. Bum Bum writes the chase email, sends it as your billing assistant, and learns when each client needs a nudge. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/invoice-chaser/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-invoice-chaser.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/invoice-chaser.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Invoice Reminder Tool | Chase Late Payments Without the Awkward Emails | Leave It to Bum Bum">
 <meta name="twitter:description" content="Get paid without the awkward. Bum Bum writes the chase email, sends it as your billing assistant, and learns when each client needs a nudge. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-invoice-chaser.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/invoice-chaser.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/invoice-chaser/">
 <script type="application/ld+json">
 {

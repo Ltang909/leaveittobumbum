@@ -5,11 +5,11 @@
 <meta property="og:description" content="Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/notes/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-notes.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/notes.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Voice Notes to Text | Transcribe Voice Notes Free in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-notes.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/notes.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/notes/">
 <script type="application/ld+json">
 {

@@ -5,11 +5,11 @@
 <meta property="og:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/corporate-bum-bum/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-corporate-bum-bum.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/corporate-bum-bum.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Job Application Tracker | Track Every Application and Follow-Up | Leave It to Bum Bum">
 <meta name="twitter:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-corporate-bum-bum.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/corporate-bum-bum.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/corporate-bum-bum/">
 <script type="application/ld+json">
 {

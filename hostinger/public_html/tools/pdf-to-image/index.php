@@ -5,11 +5,11 @@
 <meta property="og:description" content="Turn every page of a PDF into a JPG, PNG, or WebP image, right in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/pdf-to-image/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/pdf-to-image.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/pdf-to-image.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PDF to Image | Turn PDF Pages Into JPG, PNG, or WebP in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Turn every page of a PDF into a JPG, PNG, or WebP image, right in your browser. Fast, private, files never leave your device. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/pdf-to-image.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/pdf-to-image.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/pdf-to-image/">
 <script type="application/ld+json">
 {

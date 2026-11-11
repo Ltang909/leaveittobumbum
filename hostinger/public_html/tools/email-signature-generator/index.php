@@ -5,11 +5,11 @@
 <meta property="og:description" content="Fill in your details, pick a layout, copy a professional email signature into Gmail or Outlook. Built in your browser, nothing uploaded.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/email-signature-generator/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/email-signature-generator-sticker.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/email-signature-generator.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Email Signature Maker | Leave It to Bum Bum">
 <meta name="twitter:description" content="Fill in your details, pick a layout, copy a professional email signature into Gmail or Outlook. Built in your browser, nothing uploaded.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/email-signature-generator-sticker.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/email-signature-generator.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/email-signature-generator/">
 <script type="application/ld+json">
 {

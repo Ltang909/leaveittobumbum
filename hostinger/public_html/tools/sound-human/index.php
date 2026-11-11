@@ -16,11 +16,11 @@ $defaultOn = ["contrast", "concrete", "filler"];
 <meta property="og:description" content="Free prompt add-ons to paste into ChatGPT or Claude. Plain instructions that make AI writing sound like a person wrote it.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/sound-human/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/sound-human.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/sound-human.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Sound Human | Prompt Add-Ons for Human-Sounding AI Writing | Leave It to Bum Bum">
 <meta name="twitter:description" content="Free prompt add-ons to paste into ChatGPT or Claude. Plain instructions that make AI writing sound like a person wrote it.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/sound-human.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/sound-human.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/sound-human/">
 <script type="application/ld+json">
 {

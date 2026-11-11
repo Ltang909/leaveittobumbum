@@ -13,11 +13,11 @@
 <meta property="og:description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-converter/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-video-converter.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/video-converter.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-video-converter.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/video-converter.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-converter/">
 <script type="application/ld+json">
 {

@@ -5,11 +5,11 @@
 <meta property="og:description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/meal-scanner/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/meal-scanner.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Meal Scanner | Snap Your Food, Get Calories and Macros | Leave It to Bum Bum">
 <meta name="twitter:description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/meal-scanner.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/meal-scanner/">
 <script type="application/ld+json">
 {
