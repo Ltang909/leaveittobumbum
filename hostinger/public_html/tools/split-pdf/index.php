@@ -80,7 +80,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div id="fileList"></div>
 <div id="splitControls" class="hidden">
 <div class="mode-opts" role="radiogroup" aria-label="What do you want?">
-<label class="mode-opt"><input type="radio" name="splitMode" value="range" checked><span><b>Pull out some pages</b><br><span class="mode-sub">A PDF for each group you type: 1-2 makes one file, 3 makes the next.</span></span></label>
+<label class="mode-opt"><input type="radio" name="splitMode" value="range" checked><span><b>Pull out some pages</b><br><span class="mode-sub">Separate page ranges with commas to create individual PDFs. For example, 1-2, 3 creates two PDFs: one with pages 1–2 and another with page 3.</span></span></label>
 <label class="mode-opt"><input type="radio" name="splitMode" value="each"><span><b>Split into single pages</b><br><span class="mode-sub">A ZIP download with one PDF for every page.</span></span></label>
 </div>
 <div class="range-row" id="rangeWrap"><label for="rangeInput">Which pages?</label><input type="text" id="rangeInput" placeholder="1-2, 3" size="22"> <span class="hc-note" id="rangeHint"></span></div>
@@ -116,6 +116,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 "use strict";
 var $=function(id){return document.getElementById(id);};
 var current=null; // {file, name, doc, count}
+var lastSplit=null; // {sig, blob, name} of the last finished split, so a repeat click is recognized
 function fmtSize(n){if(n<1024)return n+" B";if(n<1048576)return (n/1024).toFixed(1)+" KB";return (n/1048576).toFixed(2)+" MB";}
 function setStatus(msg,isErr){var s=$("statusLine");s.textContent=msg||"";s.className="hc-status"+(isErr?" error":"");}
 function getMode(){var r=document.querySelector('input[name="splitMode"]:checked');return r?r.value:"range";}
@@ -162,6 +163,7 @@ async function addFile(file){
     var bytes=await file.arrayBuffer();
     var doc=await window.PDFLib.PDFDocument.load(bytes,{ignoreEncryption:true});
     current={file:file,name:file.name,doc:doc,count:doc.getPageCount()};
+    lastSplit=null;
     var list=$("fileList");list.textContent="";
     var row=document.createElement("div");row.className="file-row";
     row.innerHTML='<div class="grow"><div><b></b></div><div class="meta"></div></div><span class="st"></span>';
@@ -186,14 +188,21 @@ fi.addEventListener("change",function(){if(fi.files.length)addFile(fi.files[0]);
 ["dragleave","drop"].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.remove("over");});});
 dz.addEventListener("drop",function(e){if(e.dataTransfer&&e.dataTransfer.files.length)addFile(e.dataTransfer.files[0]);});
 Array.prototype.forEach.call(document.querySelectorAll('input[name="splitMode"]'),function(r){r.addEventListener("change",refresh);});
-$("clearBtn").addEventListener("click",function(){current=null;$("fileList").textContent="";$("rangeInput").value="";setStatus("");refresh();});
+$("clearBtn").addEventListener("click",function(){current=null;lastSplit=null;$("fileList").textContent="";$("rangeInput").value="";setStatus("");refresh();});
 $("splitBtn").addEventListener("click",async function(){
   if(!current)return;
   var btn=$("splitBtn");btn.disabled=true;var old=btn.textContent;btn.textContent="Splitting...";
   var base=current.name.replace(/\.pdf$/i,"");
+  var mode=getMode();
+  var sig=current.file.name+"|"+current.file.size+"|"+(current.file.lastModified||0)+"|"+mode+"|"+(mode==="range"?$("rangeInput").value.trim():"");
+  if(lastSplit&&lastSplit.sig===sig){
+    saveBlob(lastSplit.blob,lastSplit.name);
+    setStatus("Already split with these settings. Downloading the same file again.");
+    btn.disabled=false;btn.textContent=old;refresh();return;
+  }
   try{
     var PDFLib=window.PDFLib;
-    if(getMode()==="each"){
+    if(mode==="each"){
       var zip=new window.JSZip();
       var width=String(current.count).length;
       for(var i=0;i<current.count;i++){
@@ -207,7 +216,8 @@ $("splitBtn").addEventListener("click",async function(){
       }
       var zb=await zip.generateAsync({type:"blob"});
       saveBlob(zb,base+"-pages.zip");
-      setStatus("Your ZIP is downloading: "+current.count+" PDF"+(current.count===1?"":"s")+", one page each.");
+      lastSplit={sig:sig,blob:zb,name:base+"-pages.zip"};
+      setStatus("Done. Your ZIP downloaded: "+current.count+" PDF"+(current.count===1?"":"s")+", one page each.");
     }else{
       var groups=parseGroups($("rangeInput").value,current.count);
       if(!groups){setStatus("That does not work for a "+current.count+"-page PDF. Use pages between 1 and "+current.count+", like 1-2, 3.",true);btn.disabled=false;btn.textContent=old;refresh();return;}
@@ -220,8 +230,10 @@ $("splitBtn").addEventListener("click",async function(){
       }
       if(groups.length===1){
         var out1=await buildGroup(groups[0]);
-        saveBlob(new Blob([out1],{type:"application/pdf"}),groupName(base,groups[0]));
-        setStatus("Your PDF is downloading: "+groupLabel(groups[0])+".");
+        var blob1=new Blob([out1],{type:"application/pdf"});
+        saveBlob(blob1,groupName(base,groups[0]));
+        lastSplit={sig:sig,blob:blob1,name:groupName(base,groups[0])};
+        setStatus("Done. Your PDF downloaded: "+groupLabel(groups[0])+".");
       }else{
         var zip2=new window.JSZip();
         for(var gi=0;gi<groups.length;gi++){
@@ -230,7 +242,8 @@ $("splitBtn").addEventListener("click",async function(){
         }
         var zb2=await zip2.generateAsync({type:"blob"});
         saveBlob(zb2,base+"-split.zip");
-        setStatus("Your ZIP is downloading: "+groups.length+" PDFs ("+groups.map(groupLabel).join(", ")+").");
+        lastSplit={sig:sig,blob:zb2,name:base+"-split.zip"};
+        setStatus("Done. Your ZIP downloaded: "+groups.length+" PDFs ("+groups.map(groupLabel).join(", ")+").");
       }
     }
     if(window.BBDropStrip)window.BBDropStrip.show('split-pdf');
