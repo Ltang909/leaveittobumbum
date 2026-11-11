@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { bbTrack, initTracking } from "../lib/track";
 import { tools, Tool } from "../lib/tools";
 import { useDeskFace } from "../lib/desk-face";
@@ -369,7 +369,7 @@ function FilePreview({ file }: { file: File }) {
   );
 }
 
-export default function CaptureBar() {
+export default function CaptureBar({ deskPortrait }: { deskPortrait?: ReactNode }) {
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [stagedImage, setStagedImage] = useState<File | null>(null);
@@ -1241,6 +1241,7 @@ export default function CaptureBar() {
       }}
     >
       <div className="capture-home-card desk-card" ref={cardRef}>
+        {deskPortrait}
         <div className="desk-composer-wrap">
           <div className="desk-composer">
             {pinned && (
