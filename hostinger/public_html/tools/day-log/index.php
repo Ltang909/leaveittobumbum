@@ -62,7 +62,7 @@ if ($user) {
     {
       "@type": "Question",
       "name": "Can I fix a day after filing it?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Open the day in Recent logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action." }
     },
     {
       "@type": "Question",
@@ -104,13 +104,6 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .score-tag{flex:none;font-size:12px;font-weight:900;border:1.5px solid #1a291c;border-radius:999px;padding:2px 10px}
 .score-done{background:#d8ff62}.score-partial{background:#ffe9b8}.score-not{background:#fff;opacity:.75}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
-.log-table{width:100%;border-collapse:collapse;font-size:14.5px}
-.log-table th{text-align:left;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;opacity:.65;padding:6px 8px;border-bottom:2px solid #e2d7bf}
-.log-table td{padding:9px 8px;border-bottom:1px solid #eee3cb;vertical-align:top}
-.log-table .log-row{cursor:pointer}
-.log-table .log-row:hover{background:#fffdf6}
-.log-table .log-detail td{background:#fffdf8}
-.log-table .chev{font-weight:900;text-align:right;white-space:nowrap}
 .editor h4{margin:14px 0 4px;font-size:15px}
 .edit-row{display:flex;gap:6px;align-items:center;margin:5px 0}
 .edit-row input[type=text]{flex:1;padding:8px 10px;border:1px solid #d9c9a3;border-radius:8px;font:inherit;font-size:14.5px;background:#fff;min-width:0}
@@ -130,6 +123,30 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .wave-strip.anim .wave-bars span:nth-child(2){animation-delay:.1s}.wave-strip.anim .wave-bars span:nth-child(3){animation-delay:.22s}.wave-strip.anim .wave-bars span:nth-child(4){animation-delay:.34s}.wave-strip.anim .wave-bars span:nth-child(5){animation-delay:.46s}.wave-strip.anim .wave-bars span:nth-child(6){animation-delay:.58s}.wave-strip.anim .wave-bars span:nth-child(7){animation-delay:.7s}
 @keyframes wavePulse{0%,100%{height:8px}50%{height:30px}}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+.dl-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.dl-tab{border:2px solid transparent;background:transparent;font:inherit;font-weight:800;padding:8px 16px;border-radius:999px;cursor:pointer;color:#6b6350}
+.dl-tab.active{background:#e9f5cf;border-color:#1a291c;color:#142015;box-shadow:2px 2px 0 #2f2a22}
+.rec-zone{text-align:center;padding:20px 12px 4px}
+.rec-zone .wave-strip{margin-bottom:14px;text-align:left}
+.mic-round{width:78px;height:78px;border-radius:50%;border:2px solid #1a291c;background:#d8ff62;font-size:30px;cursor:pointer;box-shadow:0 3px 0 #2f2a22;line-height:1}
+.mic-round.recording{background:#ff7448;font-size:15px;font-weight:900}
+.rec-label{font-weight:800;margin:10px 0 2px}
+.rec-or{opacity:.6;margin:2px 0 8px;font-size:13.5px}
+.yday{background:#fffdf6;border:1px solid #eee3cb;border-radius:10px;padding:10px 14px;font-size:14.5px;margin:14px 0 0}
+.yday ul{margin:6px 0;padding-left:20px}
+.yday .hint{font-size:13px;opacity:.75;margin:6px 0 0}
+.prompt-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0 4px}
+.chip{background:#f6efdd;border:1px solid #e2d7bf;border-radius:10px;padding:9px 14px;font-weight:700;font-size:14.5px}
+.dl-file{width:100%;padding:14px;font-size:16.5px;margin-top:12px}
+.log-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
+.log-card{text-align:left;background:#fff;border:2px solid #e2d7bf;border-radius:14px;padding:14px;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:5px}
+.log-card:hover{border-color:#b3a37e}
+.log-card.active{border-color:#1a291c;box-shadow:3px 3px 0 var(--line)}
+.log-card.latest{background:#eef7dc;border-color:#9db87a}
+.log-card-date{font-weight:900;font-size:15.5px}
+.log-card-snip{font-size:14px;opacity:.85}
+.log-card-meta{font-size:12.5px;font-weight:800;opacity:.65}
+#historyDetail{margin-top:14px}
 .jot-form{border-top:1px solid #eee3cb;margin-top:16px;padding-top:14px}
 .jot-form h3{margin:0 0 4px;font-size:15.5px}
 .jot-form .hint{font-size:13.5px;opacity:.75;margin:0 0 10px}
@@ -138,24 +155,35 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel"><h2>Day Log lives in your account</h2><p class="lede">The scorecard only works if yesterday's list is waiting for you, so Day Log needs a free account to file into. Your logs are your words, and nobody else sees them.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/day-log/') ?>">Sign in or create a free account</a></p></section>
 <?php else: ?>
 
-<div id="yesterdaySlot"></div>
-
 <section class="panel" id="logPanel">
-<h2>Today's log</h2>
-<div class="read-note" style="margin-top:0">
-<b>Talk through these in any order, brain dump is fine!</b>
-<ul style="margin:8px 0;padding-left:20px">
-<li>What did you do today, what challenges did you face and how do you plan to overcome them?</li>
-<li>What did you learn today?</li>
-<li>What do you plan on achieving tomorrow?</li>
-</ul>
+<div class="dl-tabs">
+<button type="button" class="dl-tab active" id="tabTalk">Talk through your day</button>
+<button type="button" class="dl-tab" id="tabJot">Note a mid day learning</button>
 </div>
-<textarea id="logText" placeholder="Tap Record and talk through your day, or start typing..." style="width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;resize:vertical;min-height:170px"></textarea>
+<div id="panelTalk">
+<div class="rec-zone">
 <div id="waveStrip" class="wave-strip hidden"><div class="wave-bars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><span id="waveLabel"></span></div>
-<div class="mic-row"><button type="button" class="mic-btn" id="micBtn">Record</button><button type="button" class="button" id="fileBtn" disabled style="opacity:.45">File my day</button><span class="mic-status" id="micStatus"></span></div>
+<button type="button" class="mic-round" id="micBtn" aria-label="Record">&#127908;</button>
+<p class="rec-label" id="recLabel">Tap to start recording</p>
+<p class="rec-or">or</p>
+<button type="button" class="mini-btn" id="typeBtn">Type instead</button>
+<p class="mic-status" id="micStatus"></p>
+</div>
+<div id="typeZone" class="hidden">
+<textarea id="logText" placeholder="Talk through your day, or type it here..." style="width:100%;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;resize:vertical;min-height:170px"></textarea>
+</div>
+<div id="yesterdaySlot"></div>
+<div class="prompt-chips">
+<span class="chip">&#127919; What did you do today?</span>
+<span class="chip">&#9889; What challenged you?</span>
+<span class="chip">&#128197; What are you committing to tomorrow?</span>
+</div>
+<button type="button" class="button dl-file" id="fileBtn" disabled style="opacity:.45">File my day</button>
 <p id="fileStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="batchError" class="error"></p>
-<div class="jot-form">
+</div>
+<div id="panelJot" class="hidden">
+<div class="jot-form" style="border-top:0;margin-top:2px;padding-top:0">
 <h3>Learnings as they land</h3>
 <p class="hint">A lesson landed mid-day? Jot it here in a line or two. When you file tonight, it lands in the day's Learnings in your own words. Jotting is free, and one jotted after filing still joins today's record.</p>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -165,6 +193,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p id="jotStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="jotError" class="error"></p>
 </div>
+</div>
 </section>
 
 
@@ -173,12 +202,12 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div id="resultCollapse" class="hidden">
 <div class="jot" id="resultBody" style="margin-top:12px"></div>
 <p class="read-note" id="emailNote"></p>
-<p class="read-note">Want to fix a line? This day lives in Past logs below, where you can edit or delete it.</p>
+<p class="read-note">Want to fix a line? This day lives in Recent logs below, where you can edit or delete it.</p>
 </div>
 </section>
 
 <section class="panel" id="historyPanel">
-<h2>Past logs</h2>
+<h2>Recent logs</h2>
 <div id="historyList"><p class="meta">Loading your past logs...</p></div>
 </section>
 
@@ -231,7 +260,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <details><summary>What if I skip a day?</summary><p>Nothing breaks. The scorecard compares against your most recent filed day, whenever that was.</p></details>
 <details><summary>How does the scorecard work?</summary><p>When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone.</p></details>
 <details><summary>Can I type instead of talking?</summary><p>Yes. The one big box takes typing too. Talk, type, or mix both in the same log.</p></details>
-<details><summary>Can I fix a day after filing it?</summary><p>Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action.</p></details>
+<details><summary>Can I fix a day after filing it?</summary><p>Yes. Open the day in Recent logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action.</p></details>
 <details><summary>Can Day Log copy my logs to Notion?</summary><p>Yes. In Advanced settings, connect a Notion page or database with your own integration token and each filed day becomes its own Notion page of jot notes, titled with the date. Re-filing a day rewrites its page.</p></details>
 <details><summary>Can I capture a learning before I file?</summary><p>Yes. Jot learnings into Day Log as they happen during the day, free and as often as you like. When you file that evening, they are appended to the day's learnings in your own words. Jot one after filing and it still joins the day's record.</p></details>
 </section>
@@ -268,7 +297,7 @@ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let activeRec=null; // {mode, recog|recorder, chunks, stream, base, stopped, raf, ctx}
 
 function setStatus(msg){document.querySelector('#micStatus').textContent=msg||''}
-function setBtn(recording){micBtn.textContent=recording?'Stop':'Record';micBtn.classList.toggle('recording',!!recording)}
+function setBtn(recording){micBtn.textContent=recording?'Stop':'\u{1F3A4}';micBtn.classList.toggle('recording',!!recording);const l=document.querySelector('#recLabel');if(l)l.textContent=recording?'Recording. Tap the mic to stop.':'Tap to start recording'}
 const waveStrip=document.querySelector('#waveStrip');
 const waveLabel=document.querySelector('#waveLabel');
 const waveBars=Array.from(waveStrip.querySelectorAll('.wave-bars span'));
@@ -292,7 +321,7 @@ function startSR(){
   recog.onresult=e=>{
     let finalText='';
     for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)finalText+=e.results[i][0].transcript}
-    if(finalText){a.base=(a.base?a.base.replace(/\s+$/,'')+' ':'')+finalText.trim();ta.value=a.base;refreshFile()}
+    if(finalText){a.base=(a.base?a.base.replace(/\s+$/,'')+' ':'')+finalText.trim();ta.value=a.base;openType();refreshFile()}
   };
   recog.onend=()=>{if(activeRec===a&&!a.stopped){try{recog.start()}catch(e){}}};
   recog.onerror=e=>{
@@ -366,7 +395,7 @@ async function startMR(fellBack){
       micBtn.disabled=true; micBtn.style.opacity='.45';
       const{response,data}=await apiCall({action:'transcribe',audio:dataUrl});
       hideWave(); ta.classList.remove('hidden'); micBtn.disabled=false; micBtn.style.opacity='';
-      if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;refreshFile();setStatus('Transcribed. Fix anything, then file when ready.')}
+      if(response.ok&&data.text){ta.value=(a.base?a.base.replace(/\s+$/,'')+' ':'')+data.text;openType();refreshFile();setStatus('Transcribed. Fix anything, then file when ready.')}
       else setStatus((data&&data.error)||'Transcription failed. Type instead.');
     };
     recorder.start();
@@ -516,69 +545,84 @@ async function addJot(){
 jotBtn.addEventListener('click',addJot);
 jotText.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addJot()}});
 
+/* --- Tabs: talk through your day, or note a mid day learning --- */
+function openType(){document.querySelector('#typeZone').classList.remove('hidden')}
+document.querySelector('#typeBtn').addEventListener('click',()=>{openType();ta.focus()});
+const tabTalk=document.querySelector('#tabTalk');
+const tabJot=document.querySelector('#tabJot');
+function showTab(jot){
+  tabTalk.classList.toggle('active',!jot);
+  tabJot.classList.toggle('active',!!jot);
+  document.querySelector('#panelTalk').classList.toggle('hidden',!!jot);
+  document.querySelector('#panelJot').classList.toggle('hidden',!jot);
+  if(jot)document.querySelector('#jotText').focus();
+}
+tabTalk.addEventListener('click',()=>showTab(false));
+tabJot.addEventListener('click',()=>showTab(true));
+
 /* --- Context + history on load --- */
 (async()=>{
   const{response,data}=await apiCall({action:'context',todayLocal:localToday()});
   if(response.ok&&data.yesterday&&data.yesterday.tomorrow&&data.yesterday.tomorrow.length){
     const items=data.yesterday.tomorrow.map(i=>'<li>'+esc(i)+'</li>').join('');
-    document.querySelector('#yesterdaySlot').innerHTML='<div class="read-note"><b>Yesterday ('+esc(data.yesterday.date)+') you aimed for:</b><ul style="margin:6px 0 0;padding-left:20px">'+items+'</ul><p style="margin:6px 0 0">Today\u2019s first prompt scores this list. Answer honestly; not mentioned is a fine answer.</p></div>';
+    document.querySelector('#yesterdaySlot').innerHTML='<div class="yday"><b>Yesterday ('+esc(data.yesterday.date)+') you committed to:</b><ul>'+items+'</ul><p class="hint">Talk through the prompts and Bum Bum scores this list: done, partial, or not mentioned. Not mentioned is a fine answer.</p></div>';
   }
   if(response.ok&&data.today&&data.today.structured){
     renderResult(data.today.structured,'Already filed today. Filing again updates it and costs no extra action.');
   }
 })();
+let dlHistory=[];
+function fmtDay(dateStr){
+  try{return new Date(dateStr+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}catch(e){return dateStr}
+}
+function renderDetail(date){
+  const box=document.querySelector('#historyDetail');
+  if(!box)return;
+  const l=dlHistory.find(x=>x.date===date);
+  document.querySelectorAll('.log-card').forEach(c=>c.classList.toggle('active',c.dataset.date===date));
+  if(!l){box.innerHTML='';return}
+  const s=l.structured||{};
+  box.innerHTML='<div class="jot">'+reflectionHtml(s.reflection)+sectionHtml('Done today',s.done)+sectionHtml('Set out but did not happen',s.missed)+sectionHtml('Challenges',s.challenges)+sectionHtml('Beating them',s.overcome)+sectionHtml('Tomorrow\u2019s top list',s.tomorrow)+sectionHtml('Learnings',s.learnings)+'</div>'
+    +'<div class="edit-actions"><button type="button" class="button secondary" id="hdEdit">Edit jot notes</button><button type="button" class="mini-btn del-log" id="hdDelete">Delete this day</button></div>';
+  document.querySelector('#hdEdit').addEventListener('click',()=>{
+    bindEditor(box,date,s,async()=>{await loadHistory();renderDetail(date)});
+  });
+  const del=document.querySelector('#hdDelete');
+  let armed=null;
+  del.addEventListener('click',async()=>{
+    if(!armed){
+      del.textContent='Tap again to delete this day';
+      del.classList.add('armed');
+      armed=setTimeout(()=>{del.textContent='Delete this day';del.classList.remove('armed');armed=null},3000);
+      return;
+    }
+    clearTimeout(armed);
+    del.disabled=true; del.textContent='Deleting...';
+    const{response}=await apiCall({action:'delete',date});
+    if(!response.ok){del.disabled=false;del.textContent='Delete this day';del.classList.remove('armed');armed=null;return}
+    if(date===localToday()){document.querySelector('#resultPanel').classList.add('hidden');dlResult=null}
+    loadHistory();
+  });
+}
 async function loadHistory(){
   const list=document.querySelector('#historyList');
   const{response,data}=await apiCall({action:'history'});
-  if(!response.ok||!data.logs||!data.logs.length){list.innerHTML='<p class="meta">No logs yet. Your first filed day will show up here.</p>';return}
-  const rows=data.logs.map((l,i)=>{
+  if(!response.ok||!data.logs||!data.logs.length){dlHistory=[];list.innerHTML='<p class="meta">No logs yet. Your first filed day will show up here.</p>';return}
+  dlHistory=data.logs;
+  const cards=data.logs.map((l,i)=>{
     const s=l.structured||{};
     const refl=s.reflection||[];
     const kept=refl.filter(r=>r.status==='done').length;
     const score=refl.length?kept+' of '+refl.length+' kept':'';
-    const inner='<div class="jot">'+reflectionHtml(s.reflection)+sectionHtml('Done today',s.done)+sectionHtml('Set out but did not happen',s.missed)+sectionHtml('Challenges',s.challenges)+sectionHtml('Beating them',s.overcome)+sectionHtml('Tomorrow\u2019s top list',s.tomorrow)+sectionHtml('Learnings',s.learnings)+'</div>'
-      +'<div class="edit-actions"><button type="button" class="button secondary edit-log" data-date="'+esc(l.date)+'">Edit jot notes</button><button type="button" class="mini-btn del-log" data-date="'+esc(l.date)+'">Delete this day</button></div>';
-    return '<tr class="log-row" data-i="'+i+'" data-date="'+esc(l.date)+'"><td><b>'+esc(l.date)+'</b></td><td>'+(s.done?s.done.length:0)+' done</td><td>'+(s.tomorrow?s.tomorrow.length:0)+' planned</td><td>'+esc(score)+'</td><td class="chev" id="chev-'+i+'">+</td></tr>'
-      +'<tr class="log-detail hidden" id="detail-'+i+'"><td colspan="5">'+inner+'</td></tr>';
+    const snip=((s.done&&s.done[0])||(s.learnings&&s.learnings[0])||'Filed day');
+    const allKept=refl.length>0&&refl.every(r=>r.status!=='not_mentioned');
+    return '<button type="button" class="log-card'+(i===0?' latest':'')+'" data-date="'+esc(l.date)+'">'
+      +'<span class="log-card-date">'+esc(fmtDay(l.date))+(allKept?' &#10003;':'')+'</span>'
+      +'<span class="log-card-snip">'+esc(snip.length>90?snip.slice(0,90)+'\u2026':snip)+'</span>'
+      +'<span class="log-card-meta">'+(s.done?s.done.length:0)+' done'+(score?' &middot; '+esc(score):'')+'</span></button>';
   }).join('');
-  list.innerHTML='<table class="log-table"><thead><tr><th>Date</th><th>Done</th><th>Planned</th><th>Scorecard</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
-  list.querySelectorAll('.log-row').forEach(row=>{
-    row.addEventListener('click',()=>{
-      const i=row.dataset.i;
-      const det=document.querySelector('#detail-'+i);
-      const open=det.classList.toggle('hidden')===false;
-      document.querySelector('#chev-'+i).textContent=open?'\u2212':'+';
-    });
-  });
-  const reopen=date=>{
-    list.querySelectorAll('.log-row').forEach(r=>{if(r.dataset.date===date)r.click()});
-  };
-  list.querySelectorAll('.edit-log').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const date=btn.dataset.date;
-      const rowEl=list.querySelector('.log-row[data-date="'+date+'"]');
-      const s=(data.logs[Number(rowEl.dataset.i)]||{}).structured||{};
-      const cell=btn.closest('td');
-      bindEditor(cell,date,s,async()=>{await loadHistory();reopen(date)});
-    });
-  });
-  list.querySelectorAll('.del-log').forEach(btn=>{
-    let armed=null;
-    btn.addEventListener('click',async()=>{
-      if(!armed){
-        btn.textContent='Tap again to delete this day';
-        btn.classList.add('armed');
-        armed=setTimeout(()=>{btn.textContent='Delete this day';btn.classList.remove('armed');armed=null},3000);
-        return;
-      }
-      clearTimeout(armed);
-      btn.disabled=true; btn.textContent='Deleting...';
-      const{response,data}=await apiCall({action:'delete',date:btn.dataset.date});
-      if(!response.ok){btn.disabled=false;btn.textContent='Delete this day';btn.classList.remove('armed');armed=null;return}
-      if(btn.dataset.date===localToday()){document.querySelector('#resultPanel').classList.add('hidden');dlResult=null}
-      loadHistory();
-    });
-  });
+  list.innerHTML='<div class="log-cards">'+cards+'</div><div id="historyDetail"></div>';
+  list.querySelectorAll('.log-card').forEach(c=>c.addEventListener('click',()=>renderDetail(c.dataset.date)));
 }
 loadHistory();
 
