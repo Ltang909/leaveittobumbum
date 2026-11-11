@@ -201,6 +201,17 @@ function capture_nav_destinations(): array {
         'hearsay' => ['name' => 'AI Mention Tracker', 'url' => '/tools/hearsay/'],
         'video-converter' => ['name' => 'Video Converter', 'url' => '/tools/video-converter/'],
         'video-mp3-overlay' => ['name' => 'Video MP3 Overlay', 'url' => '/tools/video-mp3-overlay/'],
+        'day-log' => ['name' => 'Day Log', 'url' => '/tools/day-log/'],
+        'email-signature-generator' => ['name' => 'Email Signature Maker', 'url' => '/tools/email-signature-generator/'],
+        'pdf-merger' => ['name' => 'PDF Merger', 'url' => '/tools/pdf-merger/'],
+        'pdf-to-image' => ['name' => 'PDF to Image', 'url' => '/tools/pdf-to-image/'],
+        'pdf-compressor' => ['name' => 'PDF Compressor', 'url' => '/tools/pdf-compressor/'],
+        'sound-human' => ['name' => 'Sound Human', 'url' => '/tools/sound-human/'],
+        'heic-to-jpg' => ['name' => 'HEIC to JPG', 'url' => '/tools/heic-to-jpg/'],
+        'invoice-generator' => ['name' => 'Invoice Generator', 'url' => '/tools/invoice-generator/'],
+        'jpg-to-pdf' => ['name' => 'JPG to PDF', 'url' => '/tools/jpg-to-pdf/'],
+        'split-pdf' => ['name' => 'Split PDF', 'url' => '/tools/split-pdf/'],
+        'png-to-jpg' => ['name' => 'PNG to JPG Converter', 'url' => '/tools/png-to-jpg/'],
     ];
 }
 
