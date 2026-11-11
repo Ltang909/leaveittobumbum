@@ -1239,10 +1239,6 @@ export default function CaptureBar() {
       }}
     >
       <div className="capture-home-card desk-card" ref={cardRef}>
-        <div className="desk-head">
-          <h2 className="desk-greeting">What are we handling today?</h2>
-        </div>
-        <p className="desk-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>
         <div className="desk-composer-wrap">
           <div className="desk-composer">
             {pinned && (
@@ -1341,7 +1337,7 @@ export default function CaptureBar() {
                 aria-label={recording ? "Stop recording" : "Dictate instead"}
                 title={recording ? "Stop recording" : "Dictate instead"}
               >
-                🎤
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0" /><path d="M12 19v3" /></svg>
               </button>
               <button
                 type="button"
@@ -1352,7 +1348,7 @@ export default function CaptureBar() {
                 aria-label="Take a photo"
                 title="Take a photo"
               >
-                📷
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" /><circle cx="12" cy="13" r="3.5" /></svg>
               </button>
               <span className="desk-composer-spacer" />
               <button type="button" className="button" onClick={submit} disabled={busy}>
@@ -1498,10 +1494,13 @@ export default function CaptureBar() {
           )}
         </div>
         <div className="desk-chips-row">
+          <div className="desk-try-group">
+          <span className="desk-try">Try:</span>
           <div className="capture-home-chips desk-task-chips">
             {chipKeys.map((k) => {
               const def = CHIP_POOL.find((c) => c.key === k);
               if (!def) return null;
+              const chipTool = tools.find((x) => x.key === def.key);
               return (
                 <button
                   key={def.key}
@@ -1509,13 +1508,15 @@ export default function CaptureBar() {
                   className="capture-home-chip"
                   onClick={() => pinFromChip(def.key, def.chip, def.picker)}
                 >
+                  {chipTool && chipTool.icon ? <span className="chip-ico-emo" aria-hidden="true">{chipTool.icon}</span> : null}
                   {def.label}
                 </button>
               );
             })}
           </div>
+          </div>
           <a className="desk-browse" href="/tools/">
-            or browse the toolbox →
+            Browse all tools →
           </a>
         </div>
         <input

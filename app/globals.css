@@ -390,6 +390,23 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .desk-chips-row { display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-top:20px; }
 .desk-task-chips { margin-top:0; }
 .desk-browse { font-weight:900; border-bottom:2px solid var(--ink); padding-bottom:2px; white-space:nowrap; }
+/* Hero refresh to Leon's Nov 11 mock: upright blue headline line, one flat desk card, white Try pills. */
+.hero-headline { position:relative; }
+.hero-spark { position:absolute; left:-56px; top:2px; width:46px; height:38px; }
+.hero-desk h1 em { color:#0354FB; font-style:normal; }
+.capture-home-card { border:3px solid var(--ink); border-radius:26px; box-shadow:9px 9px 0 var(--ink); padding:26px 28px; }
+.desk-composer { border:0; border-radius:0; background:transparent; box-shadow:none; padding:6px 2px 2px; }
+.desk-composer:focus-within { outline:none; }
+.desk-composer textarea { font-size:1.15rem; min-height:88px; }
+.desk-composer-bar .button { font-family:var(--font-display),serif; font-size:1.2rem; min-height:58px; padding:0 32px; border-radius:12px; box-shadow:5px 5px 0 var(--orange); }
+.desk-icon-btn svg { width:21px; height:21px; }
+.desk-chips-row { justify-content:flex-start; }
+.desk-try-group { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.desk-try { font-weight:900; opacity:.55; }
+.desk-task-chips .capture-home-chip { background:white; display:inline-flex; align-items:center; gap:8px; padding:9px 16px; }
+.chip-ico-emo { font-size:1rem; line-height:1; }
+.desk-browse { margin-left:auto; }
+@media (max-width:700px){.hero-spark{display:none}.desk-browse{margin-left:0}}
 .desk-hat-line { margin:16px 0 0; font-family:var(--font-display),serif; font-style:italic; font-weight:800; font-size:1.12rem; }
 .desk-peek { position:absolute; right:-8px; top:36%; width:96px; height:96px; object-fit:cover; border:var(--line); border-radius:50%; background:var(--cream); z-index:3; pointer-events:none; animation:desk-peek 3.4s ease forwards; }
 @keyframes desk-peek { 0% { transform:translateX(72%); opacity:0; } 12% { transform:translateX(0); opacity:1; } 78% { transform:translateX(0); opacity:1; } 100% { transform:translateX(72%); opacity:0; } }
