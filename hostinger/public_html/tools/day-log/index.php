@@ -117,9 +117,6 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .edit-row select{padding:8px;border:1px solid #d9c9a3;border-radius:8px;font:inherit;font-size:13.5px;background:#fff}
 .edit-row .x{border:1px solid #d9c9a3;background:#fff;border-radius:8px;width:32px;height:32px;cursor:pointer;font-weight:900;flex:none;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;font-size:15px}
 .mini-btn{border:1px solid #d9c9a3;background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13.5px;font-weight:700}
-.jot-item{display:flex;gap:8px;align-items:center;margin:5px 0;padding:8px 10px;background:#fffdf6;border:1px solid #eee3cb;border-radius:10px}
-.jot-item span{flex:1}
-.jot-x{border:1px solid #d9c9a3;background:#fff;border-radius:8px;width:28px;height:28px;cursor:pointer;font-weight:900;flex:none;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;font-size:14px}
 .edit-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
 .del-log{color:#a33327}
 .del-log.armed{background:#a33327;color:#fff;border-color:#a33327}
@@ -133,20 +130,16 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .wave-strip.anim .wave-bars span:nth-child(2){animation-delay:.1s}.wave-strip.anim .wave-bars span:nth-child(3){animation-delay:.22s}.wave-strip.anim .wave-bars span:nth-child(4){animation-delay:.34s}.wave-strip.anim .wave-bars span:nth-child(5){animation-delay:.46s}.wave-strip.anim .wave-bars span:nth-child(6){animation-delay:.58s}.wave-strip.anim .wave-bars span:nth-child(7){animation-delay:.7s}
 @keyframes wavePulse{0%,100%{height:8px}50%{height:30px}}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-@media (min-width:861px){.tool-head{display:flex;gap:30px;align-items:flex-start;margin-top:6px}.tool-head .tool-mascot-page{width:190px;flex:none;margin-top:4px}.tool-head-text{flex:1;min-width:0;padding-top:6px}}
-@media (max-width:860px){.tool-head,.tool-head-text{display:contents}main.shell .lede.bb-desc{order:40}}
-@media (min-width:861px){.dl-duo{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:24px;align-items:start}}
-.jot-note{background:#fdf8ef;border:1px solid #e7dcc3;border-radius:12px;padding:18px}
-.jot-note h2{font-size:20px;margin:0 0 6px}
-.jot-note .jot-item{background:#fff}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/day-log-sticker.png" alt="Day Log"><div class="tool-head-text"><h1>Day Log</h1><p class="lede bb-desc">5 min/day. Increase your productivity. You're busy out there working on your business. Sometimes things get forgotten or deprioritized; when you look back, you forget what you did the past week. Spend 5 min every evening with Bum Bum, brain dump what you did, challenges faced, lessons learned and what to achieve. Bum bum reads what you've logged and sends you a daily email keeping you on track! He also summarizes highlights and growth on a weekly and monthly basis.</p></div></div>
+.jot-form{border-top:1px solid #eee3cb;margin-top:16px;padding-top:14px}
+.jot-form h3{margin:0 0 4px;font-size:15.5px}
+.jot-form .hint{font-size:13.5px;opacity:.75;margin:0 0 10px}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/day-log-sticker.png" alt="Day Log"><h1>Day Log</h1><p class="lede bb-desc">5 min/day. Increase your productivity. You're busy out there working on your business. Sometimes things get forgotten or deprioritized; when you look back, you forget what you did the past week. Spend 5 min every evening with Bum Bum, brain dump what you did, challenges faced, lessons learned and what to achieve. Bum bum reads what you've logged and sends you a daily email keeping you on track! He also summarizes highlights and growth on a weekly and monthly basis.</p>
 <?php if (!$user): ?>
 <section class="panel"><h2>Day Log lives in your account</h2><p class="lede">The scorecard only works if yesterday's list is waiting for you, so Day Log needs a free account to file into. Your logs are your words, and nobody else sees them.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/day-log/') ?>">Sign in or create a free account</a></p></section>
 <?php else: ?>
 
 <div id="yesterdaySlot"></div>
 
-<div class="dl-duo">
 <section class="panel" id="logPanel">
 <h2>Today's log</h2>
 <div class="read-note" style="margin-top:0">
@@ -162,20 +155,18 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="mic-row"><button type="button" class="mic-btn" id="micBtn">Record</button><button type="button" class="button" id="fileBtn" disabled style="opacity:.45">File my day</button><span class="mic-status" id="micStatus"></span></div>
 <p id="fileStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="batchError" class="error"></p>
-</section>
-
-<section class="jot-note" id="jotPanel">
-<h2>Learnings as they land</h2>
-<p class="meta" style="margin-top:0">Lessons evaporate by evening. Jot each one here the moment it lands, in a line or two. Tonight, when you file your day, they join the Learnings section in your own words. Jotting is free, as often as you like, and a learning jotted after filing still joins today's record.</p>
+<div class="jot-form">
+<h3>Learnings as they land</h3>
+<p class="hint">A lesson landed mid-day? Jot it here in a line or two. When you file tonight, it lands in the day's Learnings in your own words. Jotting is free, and one jotted after filing still joins today's record.</p>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
-<input type="text" id="jotText" maxlength="300" placeholder="What did you just learn?" autocomplete="off" style="flex:1;min-width:220px;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff">
-<button type="button" class="button" id="jotBtn">Jot it down</button>
+<input type="text" id="jotText" maxlength="300" placeholder="What did you just learn?" autocomplete="off" style="flex:1;min-width:200px;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff">
+<button type="button" class="button secondary" id="jotBtn">Jot it down</button>
 </div>
 <p id="jotStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="jotError" class="error"></p>
-<div id="jotList"></div>
-</section>
 </div>
+</section>
+
 
 <section class="panel hidden" id="resultPanel">
 <div class="filed-head"><h2 style="margin:0">Your day, summarized</h2><button type="button" class="mini-btn" id="filedToggle">Show</button></div>
@@ -248,7 +239,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Closing your day in five minutes, the short guide</h2>
 <h3>How it works here</h3>
-<p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next morning, a recap email arrives with tomorrow's priorities on top. One action per day filed, and re-filing the same day replaces the earlier version at no extra cost. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you. Lessons that land mid-day do not have to wait for the evening: jot them into the Learnings box the moment they happen, and they wait on the page until you file, then join the day's learnings in your own words.</p>
+<p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next morning, a recap email arrives with tomorrow's priorities on top. One action per day filed, and re-filing the same day replaces the earlier version at no extra cost. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you. Lessons that land mid-day do not have to wait for the evening: jot them down under the log box the moment they happen, and they join the day's learnings in your own words when you file.</p>
 <h3>Your voice is never kept</h3>
 <p>Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Transcription tries your browser's live transcription first; on browsers without it, the recording is transcribed by Whisper and then discarded. The recording is only a way to get your words into the box.</p>
 <h3>Write tomorrow's list so it can be scored</h3>
@@ -495,11 +486,6 @@ fileBtn.addEventListener('click',async()=>{
 /* --- Ad-hoc learnings: jot during the day, appended at filing --- */
 const jotText=document.querySelector('#jotText');
 const jotBtn=document.querySelector('#jotBtn');
-function renderJottings(list){
-  const box=document.querySelector('#jotList');
-  if(!list||!list.length){box.innerHTML='<p class="meta" style="margin:8px 0 0">Nothing jotted yet today.</p>';return}
-  box.innerHTML=list.map(j=>'<div class="jot-item"><span>'+esc(j.text)+'</span><button type="button" class="jot-x" data-jot="'+j.id+'" aria-label="Remove learning">&times;</button></div>').join('');
-}
 function syncFiledLearnings(data){
   if(!data||!data.structured||!dlResult||dlResult.date!==localToday())return;
   dlResult.structured=data.structured;
@@ -523,27 +509,16 @@ async function addJot(){
   jotBtn.disabled=false;
   if(!response.ok){status.textContent='';err.textContent=(data&&data.error)||'That jotting tripped. Try once more.';return}
   jotText.value='';
-  status.textContent=data.dupe?'Already jotted. It is on the list below.':(data.filed?'Saved, and added to today\u2019s filed log.':'Saved. It joins tonight\u2019s log when you file.');
-  renderJottings(data.jottings);
+  status.textContent=data.dupe?'Already jotted today.':(data.filed?'Saved, and added to today\u2019s filed log.':'Saved. It lands in tonight\u2019s Learnings when you file.');
   syncFiledLearnings(data);
   bbTrack('daylog_jot',{filed:!!data.filed});
 }
 jotBtn.addEventListener('click',addJot);
 jotText.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addJot()}});
-document.querySelector('#jotList').addEventListener('click',async e=>{
-  const x=e.target.closest('.jot-x');
-  if(!x)return;
-  const{response,data}=await apiCall({action:'unjot',id:Number(x.dataset.jot),todayLocal:localToday()});
-  if(!response.ok)return;
-  renderJottings(data.jottings);
-  syncFiledLearnings(data);
-  document.querySelector('#jotStatus').textContent=data.filed?'Removed from today\u2019s list and from the filed log.':'Removed.';
-});
 
 /* --- Context + history on load --- */
 (async()=>{
   const{response,data}=await apiCall({action:'context',todayLocal:localToday()});
-  if(response.ok&&data.jottings)renderJottings(data.jottings);
   if(response.ok&&data.yesterday&&data.yesterday.tomorrow&&data.yesterday.tomorrow.length){
     const items=data.yesterday.tomorrow.map(i=>'<li>'+esc(i)+'</li>').join('');
     document.querySelector('#yesterdaySlot').innerHTML='<div class="read-note"><b>Yesterday ('+esc(data.yesterday.date)+') you aimed for:</b><ul style="margin:6px 0 0;padding-left:20px">'+items+'</ul><p style="margin:6px 0 0">Today\u2019s first prompt scores this list. Answer honestly; not mentioned is a fine answer.</p></div>';
