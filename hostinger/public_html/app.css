@@ -14,7 +14,7 @@
 .tool-head .tool-mascot-page{width:132px;margin:0;flex:none}
 .tool-head h1{margin:0 0 6px}
 .tool-head .bb-desc{margin:0;max-width:none}
-@media (max-width:640px){.tool-head{gap:16px}.tool-head .tool-mascot-page{width:88px}}
+@media (max-width:640px){.tool-head{flex-direction:column;align-items:flex-start;gap:12px}.tool-head .tool-mascot-page{width:104px}.crumbs{display:none}}
 .sticker{background:#fff;border:2px solid var(--line);border-radius:18px;box-shadow:6px 6px 0 var(--line);padding:8px}
 @media(max-width:700px){.nav{position:relative;height:76px}.nav nav{display:none;position:absolute;top:calc(100% - 6px);left:0;right:0;z-index:90;background:#f6f0df;border:2px solid #1a291c;border-radius:14px;box-shadow:5px 5px 0 #1a291c;flex-direction:column;align-items:stretch;gap:4px;padding:14px}.nav nav.open{display:flex}.nav nav a{padding:12px 14px;border-radius:10px}.menu-toggle{display:inline-flex}}
 .menu-toggle{display:none;border:2px solid #1a291c;background:#ffd84d;border-radius:10px;width:48px;height:48px;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;box-shadow:3px 3px 0 #1a291c;margin-top:0}
