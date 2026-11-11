@@ -666,10 +666,10 @@ export const TOOL_DOCS: ToolDoc[] = [
     href: "/tools/split-pdf/",
     icon: "/bum/icons/split-pdf.png",
     summary:
-      "Split PDF pulls pages out of a PDF in your browser. Take a page range as a new PDF, keeping the order you type, or split every page into its own file and download the set as a ZIP.",
+      "Split PDF pulls pages out of a PDF in your browser. Type pages in groups and each group becomes its own PDF, or split every page into its own file and download the set as a ZIP.",
     steps: [
       "Drop your PDF into the splitter. Bum Bum reads its page count.",
-      "Choose a page range, like 1-3, 5, 8-10, or split every page into its own file.",
+      "Choose your page groups, like 1-2, 3, or split every page into its own file.",
       "Split the PDF.",
       "Download the new PDF, or the ZIP of single pages.",
     ],
@@ -684,7 +684,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Password-protected PDFs cannot be opened here. Unlock the file as its owner first, then split the copy.",
     ],
     faq: [
-      ["How do page ranges work?", "Type the pages you want, like 1-3, 5, 8-10. Single pages and ranges can be mixed, and the new PDF keeps the order you type them in."],
+      ["How do page ranges work?", "Each group you type becomes its own PDF. Typing 1-2, 3 gives you two files: one with pages 1 and 2, one with page 3. When there is more than one group, the files arrive together in a ZIP."],
       ["What does splitting every page give me?", "One PDF per page, gathered into a single ZIP download, named by page number."],
     ],
     updated: "November 11, 2026",

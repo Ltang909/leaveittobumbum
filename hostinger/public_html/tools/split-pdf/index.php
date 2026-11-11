@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Split PDF | Pull Pages out of a PDF in Your Browser | Leave It to Bum Bum</title>
-<meta name="description" content="Free PDF splitter that runs in your browser. Pull a page range out as a new PDF, or split every page into its own file. No sign-up, and your PDF never leaves your device.">
+<meta name="description" content="Free PDF splitter that runs in your browser. Pull pages out in groups, each group as its own PDF, or split every page into its own file. No sign-up, and your PDF never leaves your device.">
 <meta property="og:title" content="Split PDF | Pull Pages out of a PDF in Your Browser | Leave It to Bum Bum">
-<meta property="og:description" content="Free PDF splitter that runs in your browser. Pull a page range out as a new PDF, or split every page into its own file. No sign-up, and your PDF never leaves your device.">
+<meta property="og:description" content="Free PDF splitter that runs in your browser. Pull pages out in groups, each group as its own PDF, or split every page into its own file. No sign-up, and your PDF never leaves your device.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/split-pdf/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/split-pdf.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Split PDF | Pull Pages out of a PDF in Your Browser | Leave It to Bum Bum">
-<meta name="twitter:description" content="Free PDF splitter that runs in your browser. Pull a page range out as a new PDF, or split every page into its own file. No sign-up, and your PDF never leaves your device.">
+<meta name="twitter:description" content="Free PDF splitter that runs in your browser. Pull pages out in groups, each group as its own PDF, or split every page into its own file. No sign-up, and your PDF never leaves your device.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/split-pdf.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/split-pdf/">
 <script type="application/ld+json">
@@ -19,7 +19,7 @@
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Free PDF splitter that runs in your browser. Pull a page range out as a new PDF, or split every page into its own file. No sign-up, and your PDF never leaves your device.",
+  "description": "Free PDF splitter that runs in your browser. Pull pages out in groups, each group as its own PDF, or split every page into its own file. No sign-up, and your PDF never leaves your device.",
   "url": "https://leaveittobumbum.com/tools/split-pdf/"
 }
 </script>
@@ -30,7 +30,7 @@
   "mainEntity": [
     { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. This splitter is free, uses no actions, and needs no sign-up. Drop your PDF in and download the pieces." } },
     { "@type": "Question", "name": "Does my PDF upload anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. Splitting happens right in your browser, on your device. Your PDF is never sent to Bum Bum or anyone else." } },
-    { "@type": "Question", "name": "How do page ranges work?", "acceptedAnswer": { "@type": "Answer", "text": "Type the pages you want, like 1-3, 5, 8-10. Single pages and ranges can be mixed, and the new PDF keeps the order you type them in." } },
+    { "@type": "Question", "name": "How do page ranges work?", "acceptedAnswer": { "@type": "Answer", "text": "Each group you type becomes its own PDF. Typing 1-2, 3 gives you two files: one with pages 1 and 2, one with page 3. When there is more than one group, the files arrive together in a ZIP. A single group downloads as a plain PDF." } },
     { "@type": "Question", "name": "What does splitting every page give me?", "acceptedAnswer": { "@type": "Answer", "text": "One PDF per page, gathered into a single ZIP download. A 12-page statement becomes 12 small PDFs named by page number." } },
     { "@type": "Question", "name": "Can it open a password-protected PDF?", "acceptedAnswer": { "@type": "Answer", "text": "No. A locked PDF has to be unlocked by its owner first. If you know the password, open the file in a PDF reader, print or save it without protection, and split that copy." } },
     { "@type": "Question", "name": "Will the pages lose quality?", "acceptedAnswer": { "@type": "Answer", "text": "No. Pages are copied exactly as they are, with the same text, images, and layout. Nothing is re-rendered or compressed." } }
@@ -80,10 +80,10 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div id="fileList"></div>
 <div id="splitControls" class="hidden">
 <div class="mode-opts" role="radiogroup" aria-label="What do you want?">
-<label class="mode-opt"><input type="radio" name="splitMode" value="range" checked><span><b>Pull out some pages</b><br><span class="mode-sub">One new PDF with just the pages you pick.</span></span></label>
+<label class="mode-opt"><input type="radio" name="splitMode" value="range" checked><span><b>Pull out some pages</b><br><span class="mode-sub">A PDF for each group you type: 1-2 makes one file, 3 makes the next.</span></span></label>
 <label class="mode-opt"><input type="radio" name="splitMode" value="each"><span><b>Split into single pages</b><br><span class="mode-sub">A ZIP download with one PDF for every page.</span></span></label>
 </div>
-<div class="range-row" id="rangeWrap"><label for="rangeInput">Which pages?</label><input type="text" id="rangeInput" placeholder="2-4, 7" size="22"> <span class="hc-note" id="rangeHint"></span></div>
+<div class="range-row" id="rangeWrap"><label for="rangeInput">Which pages?</label><input type="text" id="rangeInput" placeholder="1-2, 3" size="22"> <span class="hc-note" id="rangeHint"></span></div>
 <div class="btnrow">
 <button type="button" class="button" id="splitBtn" disabled>Split my PDF</button>
 <button type="button" class="mini-btn" id="clearBtn">Clear</button>
@@ -96,7 +96,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2>Questions, answered</h2>
 <details><summary>Do I need an account?</summary><p>No. This splitter is free, uses no actions, and needs no sign-up. Drop your PDF in and download the pieces.</p></details>
 <details><summary>Does my PDF upload anywhere?</summary><p>No. Splitting happens right in your browser, on your device. Your PDF is never sent to Bum Bum or anyone else.</p></details>
-<details><summary>How do page ranges work?</summary><p>Type the pages you want, like 1-3, 5, 8-10. Single pages and ranges can be mixed, and the new PDF keeps the order you type them in.</p></details>
+<details><summary>How do page ranges work?</summary><p>Each group you type becomes its own PDF. Typing 1-2, 3 gives you two files: one with pages 1 and 2, one with page 3. When there is more than one group, the files arrive together in a ZIP. A single group downloads as a plain PDF.</p></details>
 <details><summary>What does splitting every page give me?</summary><p>One PDF per page, gathered into a single ZIP download. A 12-page statement becomes 12 small PDFs named by page number.</p></details>
 <details><summary>Can it open a password-protected PDF?</summary><p>No. A locked PDF has to be unlocked by its owner first. If you know the password, open the file in a PDF reader, print or save it without protection, and split that copy.</p></details>
 <details><summary>Will the pages lose quality?</summary><p>No. Pages are copied exactly as they are, with the same text, images, and layout. Nothing is re-rendered or compressed.</p></details>
@@ -104,7 +104,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2>Split PDF, the short guide</h2>
 <p>Most PDFs arrive as bundles: a contract with the signing page buried at the back, a bank statement covering a whole quarter, a report where only one section matters to the person you are sending it to. This splitter pulls out the pages that matter and leaves the rest behind, on your own device.</p>
-<p>Choosing a split: a range suits sending one part of a document, like pages 4 to 6 for the quote inside a long proposal. Splitting every page suits sorting, where each page becomes its own file you can name, file, and forward one at a time.</p>
+<p>Choosing a split: groups suit pulling a document apart into its pieces, like the signed page as one file and the quote pages as another. Splitting every page suits sorting, where each page becomes its own file you can name, file, and forward one at a time.</p>
 <p>Working through this splitter's family: <a href="/tools/pdf-merger/">PDF Merger</a> stitches PDFs together, <a href="/tools/jpg-to-pdf/">JPG to PDF</a> turns images into a fresh PDF, and <a href="/tools/pdf-compressor/">PDF Compressor</a> shrinks a PDF that is too big to email. Your files stay on your device in all of them.</p>
 </section>
 <?php $bbTool = 'split-pdf'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
@@ -124,26 +124,36 @@ function refresh(){
   $("splitControls").classList.toggle("hidden",!current);
   $("rangeWrap").style.display=getMode()==="range"?"":"none";
 }
-function parseRanges(text,count){
-  var out=[],seen={};
+function parseGroups(text,count){
+  var groups=[];
   var parts=String(text||"").split(",");
   for(var i=0;i<parts.length;i++){
     var p=parts[i].trim();if(!p)continue;
+    var group=[],seen={};
     var m=p.match(/^(\d+)\s*-\s*(\d+)$/);
     if(m){
       var a=parseInt(m[1],10),b=parseInt(m[2],10);
       if(a>b){var t=a;a=b;b=t;}
       for(var n=a;n<=b;n++){
         if(n<1||n>count)return null;
-        if(!seen[n]){seen[n]=1;out.push(n);}
+        if(!seen[n]){seen[n]=1;group.push(n);}
       }
     }else if(/^\d+$/.test(p)){
       var s=parseInt(p,10);
       if(s<1||s>count)return null;
-      if(!seen[s]){seen[s]=1;out.push(s);}
+      group.push(s);
     }else return null;
+    if(group.length)groups.push(group);
   }
-  return out.length?out:null;
+  return groups.length?groups:null;
+}
+function groupName(base,group){
+  if(group.length===1)return base+"-page-"+group[0]+".pdf";
+  return base+"-pages-"+group[0]+"-"+group[group.length-1]+".pdf";
+}
+function groupLabel(group){
+  if(group.length===1)return "page "+group[0];
+  return "pages "+group[0]+"-"+group[group.length-1];
 }
 async function addFile(file){
   if(!/\.pdf$/i.test(file.name)&&!/pdf/i.test(file.type||"")){setStatus("That is not a PDF. Drop a file ending in .pdf.",true);return;}
@@ -199,15 +209,29 @@ $("splitBtn").addEventListener("click",async function(){
       saveBlob(zb,base+"-pages.zip");
       setStatus("Your ZIP is downloading: "+current.count+" PDF"+(current.count===1?"":"s")+", one page each.");
     }else{
-      var pages=parseRanges($("rangeInput").value,current.count);
-      if(!pages){setStatus("That range does not work for a "+current.count+"-page PDF. Use pages between 1 and "+current.count+", like 1-3, 5.",true);btn.disabled=false;btn.textContent=old;refresh();return;}
-      var nd2=await PDFLib.PDFDocument.create();
-      var idx=pages.map(function(p){return p-1;});
-      var cp=await nd2.copyPages(current.doc,idx);
-      cp.forEach(function(pg){nd2.addPage(pg);});
-      var out=await nd2.save();
-      saveBlob(new Blob([out],{type:"application/pdf"}),base+"-pages.pdf");
-      setStatus("Your PDF is downloading: pages "+pages.join(", ")+".");
+      var groups=parseGroups($("rangeInput").value,current.count);
+      if(!groups){setStatus("That does not work for a "+current.count+"-page PDF. Use pages between 1 and "+current.count+", like 1-2, 3.",true);btn.disabled=false;btn.textContent=old;refresh();return;}
+      async function buildGroup(group){
+        var nd=await PDFLib.PDFDocument.create();
+        var idx=group.map(function(p){return p-1;});
+        var cp=await nd.copyPages(current.doc,idx);
+        cp.forEach(function(pg){nd.addPage(pg);});
+        return nd.save();
+      }
+      if(groups.length===1){
+        var out1=await buildGroup(groups[0]);
+        saveBlob(new Blob([out1],{type:"application/pdf"}),groupName(base,groups[0]));
+        setStatus("Your PDF is downloading: "+groupLabel(groups[0])+".");
+      }else{
+        var zip2=new window.JSZip();
+        for(var gi=0;gi<groups.length;gi++){
+          setStatus("Building file "+(gi+1)+" of "+groups.length+"...");
+          zip2.file(groupName(base,groups[gi]),await buildGroup(groups[gi]));
+        }
+        var zb2=await zip2.generateAsync({type:"blob"});
+        saveBlob(zb2,base+"-split.zip");
+        setStatus("Your ZIP is downloading: "+groups.length+" PDFs ("+groups.map(groupLabel).join(", ")+").");
+      }
     }
     if(window.BBDropStrip)window.BBDropStrip.show('split-pdf');
   }catch(e){setStatus("Splitting failed. The PDF may use features this browser tool cannot copy.",true);}
