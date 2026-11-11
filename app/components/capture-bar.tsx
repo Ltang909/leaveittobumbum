@@ -59,9 +59,16 @@ const FACE_PEEK = "/bum/cat-peeking.png";
 const FACE_BOX = "/bum/cat-box-v2.png";
 const FACE_PETPET = "/bum/petpet/box.png";
 
-// One fixed line now (Leon's call, Nov 11): the @ menu is the desk's
-// whole trick, so the placeholder says so instead of rotating examples.
-const PLACEHOLDERS = ["@ shows everything Bum Bum can do"];
+// The lead line teaches the @ trick; the worked examples rotate after
+// it, about five seconds each (Leon's calls, Nov 11).
+const PLACEHOLDERS = [
+  "Start with @ to pick a tool, or describe what you need done",
+  "Drop a receipt, get a spreadsheet…",
+  "Photo of an event poster? Add it to your calendar",
+  "Netflix $15.99 a month, track it as part of your subscriptions",
+  "transcribe your spoken thoughts",
+  "Photo of your meal? Turn it into tracked calories and macros",
+];
 
 // While a tool is pinned with @, the rotating examples step aside for a
 // sample of what that tool actually wants. Log-style tools get an
@@ -443,7 +450,7 @@ export default function CaptureBar() {
     const t = window.setInterval(() => {
       if (focusedRef.current || document.hidden || pinnedRef.current) return;
       setPhIndex((i) => (i + 1) % PLACEHOLDERS.length);
-    }, 3400);
+    }, 5000);
     return () => window.clearInterval(t);
   }, []);
 
