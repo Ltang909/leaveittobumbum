@@ -133,13 +133,17 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .wave-strip.anim .wave-bars span:nth-child(2){animation-delay:.1s}.wave-strip.anim .wave-bars span:nth-child(3){animation-delay:.22s}.wave-strip.anim .wave-bars span:nth-child(4){animation-delay:.34s}.wave-strip.anim .wave-bars span:nth-child(5){animation-delay:.46s}.wave-strip.anim .wave-bars span:nth-child(6){animation-delay:.58s}.wave-strip.anim .wave-bars span:nth-child(7){animation-delay:.7s}
 @keyframes wavePulse{0%,100%{height:8px}50%{height:30px}}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/day-log-sticker.png" alt="Day Log"><h1>Day Log</h1><p class="lede bb-desc">5 min/day. Increase your productivity. You're busy out there working on your business. Sometimes things get forgotten or deprioritized; when you look back, you forget what you did the past week. Spend 5 min every evening with Bum Bum, brain dump what you did, challenges faced, lessons learned and what to achieve. Bum bum reads what you've logged and sends you a daily email keeping you on track! He also summarizes highlights and growth on a weekly and monthly basis.</p>
+@media (min-width:861px){.tool-head{display:flex;gap:30px;align-items:flex-start;margin-top:6px}.tool-head .tool-mascot-page{width:190px;flex:none;margin-top:4px}.tool-head-text{flex:1;min-width:0;padding-top:6px}}
+@media (max-width:860px){.tool-head,.tool-head-text{display:contents}main.shell .lede.bb-desc{order:40}}
+@media (min-width:861px){.dl-duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}}
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Day Log"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/day-log-sticker.png" alt="Day Log"><div class="tool-head-text"><h1>Day Log</h1><p class="lede bb-desc">5 min/day. Increase your productivity. You're busy out there working on your business. Sometimes things get forgotten or deprioritized; when you look back, you forget what you did the past week. Spend 5 min every evening with Bum Bum, brain dump what you did, challenges faced, lessons learned and what to achieve. Bum bum reads what you've logged and sends you a daily email keeping you on track! He also summarizes highlights and growth on a weekly and monthly basis.</p></div></div>
 <?php if (!$user): ?>
 <section class="panel"><h2>Day Log lives in your account</h2><p class="lede">The scorecard only works if yesterday's list is waiting for you, so Day Log needs a free account to file into. Your logs are your words, and nobody else sees them.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/day-log/') ?>">Sign in or create a free account</a></p></section>
 <?php else: ?>
 
 <div id="yesterdaySlot"></div>
 
+<div class="dl-duo">
 <section class="panel" id="jotPanel">
 <h2>Learnings as they land</h2>
 <p class="meta" style="margin-top:0">Lessons evaporate by evening. Jot each one here the moment it lands, in a line or two. Tonight, when you file your day, they join the Learnings section in your own words. Jotting is free, as often as you like, and a learning jotted after filing still joins today's record.</p>
@@ -168,6 +172,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p id="fileStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="batchError" class="error"></p>
 </section>
+</div>
 
 <section class="panel hidden" id="resultPanel">
 <div class="filed-head"><h2 style="margin:0">Your day, summarized</h2><button type="button" class="mini-btn" id="filedToggle">Show</button></div>
