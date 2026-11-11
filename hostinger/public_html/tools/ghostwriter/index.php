@@ -245,4 +245,4 @@ loadPacks();
 <h3>Capture warm, polish later</h3>
 <p>Generate the pack while the thought is warm, then edit with fresh eyes. Capturing and polishing are different jobs. Do them one at a time: get the ramble down first, then edit the pack.</p>
 <h3>Read the guide</h3><p>Turning rough thoughts into content is one job among many: see where it fits in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

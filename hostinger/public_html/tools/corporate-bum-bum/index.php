@@ -492,4 +492,4 @@ refresh().then(function(){
 <p>Add the application the minute you submit it, while the posting link is still in front of you. Reconstructing a month of applications from your sent folder is the spreadsheet dread this tool exists to replace.</p>
 <h3>The follow-up that works</h3>
 <p>Five business days after applying is the sweet spot: polite, expected, and often the thing that resurfaces your name. The tracker never contacts an employer on your behalf. It tells you who and when; the email is yours.</p>
-<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-track-job-applications/">How to track job applications (a system that survives 50 applications)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-track-job-applications/">How to track job applications (a system that survives 50 applications)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

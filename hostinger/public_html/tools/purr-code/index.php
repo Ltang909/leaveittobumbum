@@ -422,4 +422,4 @@ draw();
 <p>Keep contrast strong between the dots and the background. Pretty colors that sit too close together make a code that looks great and scans never. Tracking is optional and shows scan counts, so a poster or a menu can prove it is working.</p>
 </section>
 <?php $bbTool = 'purr-code'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

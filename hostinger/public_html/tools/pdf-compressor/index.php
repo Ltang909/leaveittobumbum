@@ -319,4 +319,4 @@ compressBtn.addEventListener('click',async()=>{
   compressBtn.disabled=false;
   setTimeout(()=>compProgress.classList.add('hidden'),900);
 });
-</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

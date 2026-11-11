@@ -335,4 +335,4 @@ try{bbTrack('tool_opened',{tool:'email-signature-generator'})}catch(e){}
 </details>
 </section>
 <?php $bbTool = 'email-signature-generator'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>
