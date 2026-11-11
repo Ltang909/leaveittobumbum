@@ -5,11 +5,11 @@
 <meta property="og:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/purrsuit/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-purrsuit.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/purrsuit.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Client Follow-Up Tracker | A Tiny CRM That Tells You Who to Contact Today | Leave It to Bum Bum">
 <meta name="twitter:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-purrsuit.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/purrsuit.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/purrsuit/">
 <script type="application/ld+json">
 {

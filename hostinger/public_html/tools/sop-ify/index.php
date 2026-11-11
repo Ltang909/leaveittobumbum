@@ -5,11 +5,11 @@
 <meta property="og:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/sop-ify/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-sop-ify.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/sop-ify.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SOP Generator | Turn a Messy Process Dump Into a Step-by-Step Playbook | Leave It to Bum Bum">
 <meta name="twitter:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-sop-ify.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/sop-ify.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/sop-ify/">
 <script type="application/ld+json">
 {

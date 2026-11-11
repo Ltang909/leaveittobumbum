@@ -9,11 +9,11 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
 <meta property="og:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/purr-code/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-purr-code.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/purr-code.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="QR Code Generator | Branded QR Codes in Your Colors | Leave It to Bum Bum">
 <meta name="twitter:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-purr-code.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/purr-code.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/purr-code/">
 <script type="application/ld+json">
 {

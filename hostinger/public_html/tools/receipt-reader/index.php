@@ -5,11 +5,11 @@
 <meta property="og:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/receipt-reader/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/receipt-reader.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Receipt Scanner | Scan Receipts Into Clean Tables in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/receipt-reader.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/receipt-reader/">
 <script type="application/ld+json">
 {

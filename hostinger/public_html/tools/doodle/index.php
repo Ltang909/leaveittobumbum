@@ -5,11 +5,11 @@
 <meta property="og:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/doodle/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-doodle.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/doodle.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Online Sketchpad | Draw in Your Browser, Export PNG or SVG | Leave It to Bum Bum">
 <meta name="twitter:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-doodle.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/doodle.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/doodle/">
 <script type="application/ld+json">
 {

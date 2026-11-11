@@ -5,11 +5,11 @@
 <meta property="og:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-trimmer/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-video-trimmer.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/video-trimmer.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Free Video Trimmer Online | Trim Videos in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-video-trimmer.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/video-trimmer.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-trimmer/">
 <script type="application/ld+json">
 {

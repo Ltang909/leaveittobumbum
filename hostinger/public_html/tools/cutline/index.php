@@ -5,11 +5,11 @@
 <meta property="og:description" content="Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/cutline/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-cutline.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/cutline.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Subscription Tracker | Find Subscriptions You Forgot About | Leave It to Bum Bum">
 <meta name="twitter:description" content="Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-cutline.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/cutline.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/cutline/">
 <script type="application/ld+json">
 {

@@ -5,11 +5,11 @@
 <meta property="og:description" content="Free invoice generator that runs in your browser. Fill in your details, add items, set tax, and download a clean invoice PDF. No sign-up, and your numbers never leave your device.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/invoice-generator/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/invoice-generator.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/invoice-generator.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Invoice Generator | Make and Download an Invoice PDF | Leave It to Bum Bum">
 <meta name="twitter:description" content="Free invoice generator that runs in your browser. Fill in your details, add items, set tax, and download a clean invoice PDF. No sign-up, and your numbers never leave your device.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/invoice-generator.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/invoice-generator.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/invoice-generator/">
 <script type="application/ld+json">
 {

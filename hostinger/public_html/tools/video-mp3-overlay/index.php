@@ -5,11 +5,11 @@
 <meta property="og:description" content="Drop in a video and an MP3, snip the good bits of the song, pin them where they belong, and Bum Bum mixes them over your video right in your browser. Nothing gets uploaded. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-mp3-overlay/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/video-mp3-overlay.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/video-mp3-overlay.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Video MP3 Overlay | Put an MP3 Over Your Video, In Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Drop in a video and an MP3, snip the good bits of the song, pin them where they belong, and Bum Bum mixes them over your video right in your browser. Nothing gets uploaded. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/video-mp3-overlay.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/video-mp3-overlay.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-mp3-overlay/">
 <script type="application/ld+json">
 {

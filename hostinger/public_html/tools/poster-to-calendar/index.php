@@ -5,11 +5,11 @@
 <meta property="og:description" content="Snap a photo of any event poster, flyer, or screenshot. Bum Bum reads the date, time, and place and builds a ready-to-save calendar event. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/poster-to-calendar/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/poster-to-calendar.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Poster to Calendar | Turn Event Posters Into Calendar Events | Leave It to Bum Bum">
 <meta name="twitter:description" content="Snap a photo of any event poster, flyer, or screenshot. Bum Bum reads the date, time, and place and builds a ready-to-save calendar event. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/poster-to-calendar.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/poster-to-calendar/">
 <script type="application/ld+json">
 {

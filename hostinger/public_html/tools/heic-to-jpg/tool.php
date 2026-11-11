@@ -16,11 +16,11 @@ $bbDesc = 'Convert HEIC photos from your iPhone to JPG, PNG, or PDF right in you
 <meta property="og:description" content="<?= htmlspecialchars($bbDesc) ?>">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/<?= $bbSlug ?>/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/heic-to-jpg.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/heic-to-<?= $bbHeicMode ?>.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="<?= htmlspecialchars($bbM['title']) ?>">
 <meta name="twitter:description" content="<?= htmlspecialchars($bbDesc) ?>">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/heic-to-jpg.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/heic-to-<?= $bbHeicMode ?>.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/<?= $bbSlug ?>/">
 <script type="application/ld+json">
 {

@@ -10,11 +10,11 @@
 <meta property="og:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/clips/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-clips.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/clips.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Free Screen Recorder Online | Record Your Screen in the Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-clips.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/clips.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/clips/">
 <script type="application/ld+json">
 {
