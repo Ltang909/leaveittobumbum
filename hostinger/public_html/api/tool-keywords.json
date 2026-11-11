@@ -201,7 +201,6 @@
  ],
  "image-converter": [
   "convert image",
-  "PNG to JPG",
   "WebP to PNG",
   "JPG to WebP",
   "image format converter",
@@ -372,5 +371,49 @@
   "pdf too big to email",
   "pdf file too big",
   "pdf too big to upload"
+ ],
+ "sound-human": [
+  "AI Copy writer",
+  "Humanize AI output"
+ ],
+ "heic-to-jpg": [
+  "Iphone Photos as JPG",
+  "iphone pic to jpg"
+ ],
+ "invoice-generator": [
+  "Generate invoice",
+  "invoice generator"
+ ],
+ "jpg-to-pdf": [
+  "jpg to pdf",
+  "jpeg to pdf",
+  "convert jpg to pdf",
+  "JPG to PDF converter",
+  "image to pdf",
+  "images to pdf",
+  "photo to pdf",
+  "make a pdf from images",
+  "turn jpg into pdf",
+  "combine images into a pdf"
+ ],
+ "split-pdf": [
+  "split pdf",
+  "pdf splitter",
+  "split a pdf",
+  "extract pages from a pdf",
+  "separate pdf pages",
+  "pull pages out of a pdf",
+  "split pdf into separate files",
+  "divide a pdf",
+  "save pdf pages as separate files"
+ ],
+ "png-to-jpg": [
+  "PNG to JPG",
+  "convert png to jpg",
+  "png to jpeg",
+  "convert png to jpeg",
+  "PNG to JPG converter",
+  "change png to jpg",
+  "turn a png into a jpg"
  ]
 }
