@@ -10,6 +10,15 @@
 //     action=history                                 -> { "ok": true, "logs": [ ... ] }
 //     action=save        answers={...} todayLocal=<YYYY-MM-DD> tzName=<IANA> idempotencyKey=<uuid>
 //                        -> { "ok": true, "structured": {...}, "reflection": [...], "email_sent": bool, "usage": {...} }
+//     action=jot         text=<learning> todayLocal=<YYYY-MM-DD>
+//                        -> { "ok": true, "jottings": [...], "filed": bool, "structured": {...}|null }
+//     action=unjot       id=<jotting id>
+//                        -> { "ok": true, "jottings": [...], "filed": bool, "structured": {...}|null }
+//
+// Ad-hoc learnings: a learning jotted during the day is stored verbatim in
+// day_log_jottings and appended to that day's learnings when the day is
+// filed (or immediately, if the day is already filed). Jotting is free and
+// never metered; only the evening file itself uses the day's one action.
 //
 // Storage rule (the product promise): we keep the words, never the voice.
 // Audio is transcribed and discarded; only text is stored, in day_logs.
@@ -47,6 +56,64 @@ function dl_ensure_table(): void {
         PRIMARY KEY (id),
         UNIQUE KEY uq_user_date (user_id, log_date)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+function dl_ensure_jottings(): void {
+    db()->exec("CREATE TABLE IF NOT EXISTS day_log_jottings (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id BIGINT UNSIGNED NOT NULL,
+        log_date DATE NOT NULL,
+        text VARCHAR(300) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        KEY idx_user_date (user_id, log_date)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+function dl_fetch_jottings(int $userId, string $date): array {
+    try {
+        dl_ensure_jottings();
+        $stmt = db()->prepare('SELECT id, text FROM day_log_jottings WHERE user_id = ? AND log_date = ? ORDER BY id ASC');
+        $stmt->execute([$userId, $date]);
+        $out = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $out[] = ['id' => (int) $row['id'], 'text' => (string) $row['text']];
+        }
+        return $out;
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+// Jotted learnings join the filed day's learnings verbatim: the model never
+// rewrites them, and dedupe is by the words themselves, so saying one again
+// in the evening log does not double it.
+function dl_merge_jottings(array $structured, array $jottings): array {
+    $learnings = $structured['learnings'] ?? [];
+    $seen = [];
+    foreach ($learnings as $l) $seen[mb_strtolower(trim((string) $l))] = true;
+    foreach ($jottings as $j) {
+        $t = trim((string) ($j['text'] ?? ''));
+        if ($t === '' || isset($seen[mb_strtolower($t)])) continue;
+        $learnings[] = $t;
+        $seen[mb_strtolower($t)] = true;
+        if (count($learnings) >= 20) break;
+    }
+    $structured['learnings'] = array_values($learnings);
+    return $structured;
+}
+
+function dl_unmerge_jotting(array $structured, string $text): array {
+    $target = mb_strtolower(trim($text));
+    $learnings = $structured['learnings'] ?? [];
+    foreach ($learnings as $i => $l) {
+        if (mb_strtolower(trim((string) $l)) === $target) {
+            array_splice($learnings, $i, 1);
+            break;
+        }
+    }
+    $structured['learnings'] = array_values($learnings);
+    return $structured;
 }
 
 function dl_fetch_log(int $userId, string $date): ?array {
@@ -224,6 +291,7 @@ if ($action === 'context' || $action === 'history') {
                 'tomorrow' => $prevStructured['tomorrow'] ?? [],
             ] : null,
             'today' => $todayRow ? ['date' => $todayRow['log_date'], 'structured' => dl_structured($todayRow)] : null,
+            'jottings' => dl_fetch_jottings($userId, $today),
         ]);
     }
     $stmt = db()->prepare('SELECT log_date, structured FROM day_logs WHERE user_id = ? ORDER BY log_date DESC LIMIT 30');
@@ -673,6 +741,10 @@ if ($action === 'save') {
         jsonResponse(['error' => 'Bum Bum could not structure that. Your words are still on the page; try filing once more.'], 502);
     }
 
+    // Learnings jotted during the day ride along verbatim. Structured is
+    // rebuilt from scratch on every save, so re-filing never doubles them.
+    $structured = dl_merge_jottings($structured, dl_fetch_jottings($userId, $today));
+
     $stmt = db()->prepare('INSERT INTO day_logs (user_id, log_date, answers, structured) VALUES (?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE answers = VALUES(answers), structured = VALUES(structured)');
     $stmt->execute([$userId, $today, json_encode($answers), json_encode($structured)]);
@@ -719,6 +791,7 @@ if ($action === 'update' || $action === 'delete') {
         } catch (Throwable $e) { /* best effort */ }
         db()->prepare('DELETE FROM day_log_notion_pushes WHERE user_id = ? AND log_date = ?')->execute([$userId, $date]);
         db()->prepare('DELETE FROM day_logs WHERE user_id = ? AND log_date = ?')->execute([$userId, $date]);
+        try { db()->prepare('DELETE FROM day_log_jottings WHERE user_id = ? AND log_date = ?')->execute([$userId, $date]); } catch (Throwable $e) { /* jottings table may not exist yet */ }
         // If the email loop's recap pointer names this day, reset the loop.
         try { db()->prepare('DELETE FROM day_log_email_state WHERE user_id = ? AND last_recap_log_date = ?')->execute([$userId, $date]); } catch (Throwable $e) { /* state table may not exist yet */ }
         jsonResponse(['ok' => true]);
@@ -731,7 +804,7 @@ if ($action === 'update' || $action === 'delete') {
         'challenges' => dl_clean_list($in['challenges'] ?? []),
         'overcome' => dl_clean_list($in['overcome'] ?? []),
         'tomorrow' => dl_clean_list($in['tomorrow'] ?? [], 5),
-        'learnings' => dl_clean_list($in['learnings'] ?? []),
+        'learnings' => dl_clean_list($in['learnings'] ?? [], 20),
         'reflection' => [],
     ];
     foreach ((array) ($in['reflection'] ?? []) as $r) {
@@ -747,6 +820,65 @@ if ($action === 'update' || $action === 'delete') {
     $stmt->execute([json_encode($structured), $userId, $date]);
     $notion = dl_notion_push($userId, $date, $structured);
     jsonResponse(['ok' => true, 'structured' => $structured, 'notion' => $notion]);
+}
+
+/* --- Ad-hoc learnings: jot during the day, appended to the evening file --- */
+if ($action === 'jot' || $action === 'unjot') {
+    try {
+        dl_ensure_jottings();
+    } catch (Throwable $e) {
+        jsonResponse(['error' => 'Learnings storage is not ready yet. Try again in a bit.'], 500);
+    }
+
+    if ($action === 'unjot') {
+        $id = (int) ($input['id'] ?? 0);
+        $stmt = db()->prepare('SELECT log_date, text FROM day_log_jottings WHERE id = ? AND user_id = ?');
+        $stmt->execute([$id, $userId]);
+        $jot = $stmt->fetch();
+        if (!$jot) jsonResponse(['error' => 'That learning is already gone.'], 404);
+        db()->prepare('DELETE FROM day_log_jottings WHERE id = ? AND user_id = ?')->execute([$id, $userId]);
+        $date = (string) $jot['log_date'];
+        $filed = dl_fetch_log($userId, $date);
+        $structured = null;
+        if ($filed !== null) {
+            $s = dl_structured($filed);
+            if ($s !== null) {
+                $structured = dl_unmerge_jotting($s, (string) $jot['text']);
+                db()->prepare('UPDATE day_logs SET structured = ? WHERE user_id = ? AND log_date = ?')
+                    ->execute([json_encode($structured), $userId, $date]);
+                dl_notion_push($userId, $date, $structured);
+            }
+        }
+        jsonResponse(['ok' => true, 'jottings' => dl_fetch_jottings($userId, $date), 'filed' => $filed !== null, 'structured' => $structured]);
+    }
+
+    $today = trim((string) ($input['todayLocal'] ?? ''));
+    if (!dl_valid_date($today)) jsonResponse(['error' => 'Invalid date.'], 422);
+    $text = dl_clean(mb_substr(trim((string) ($input['text'] ?? '')), 0, 300));
+    if ($text === '') jsonResponse(['error' => 'Type the learning first, then save it.'], 422);
+    $existingJots = dl_fetch_jottings($userId, $today);
+    if (count($existingJots) >= 30) jsonResponse(['error' => 'That is a full day of learning. Jot the next one tomorrow.'], 422);
+    foreach ($existingJots as $j) {
+        if (mb_strtolower($j['text']) === mb_strtolower($text)) {
+            jsonResponse(['ok' => true, 'jottings' => $existingJots, 'filed' => dl_fetch_log($userId, $today) !== null, 'structured' => null, 'dupe' => true]);
+        }
+    }
+    $stmt = db()->prepare('INSERT INTO day_log_jottings (user_id, log_date, text) VALUES (?, ?, ?)');
+    $stmt->execute([$userId, $today, $text]);
+    $filed = dl_fetch_log($userId, $today);
+    $structured = null;
+    if ($filed !== null) {
+        // The day is already filed: the learning joins the record now,
+        // and the Notion page rewrites to match.
+        $s = dl_structured($filed);
+        if ($s !== null) {
+            $structured = dl_merge_jottings($s, dl_fetch_jottings($userId, $today));
+            db()->prepare('UPDATE day_logs SET structured = ? WHERE user_id = ? AND log_date = ?')
+                ->execute([json_encode($structured), $userId, $today]);
+            dl_notion_push($userId, $today, $structured);
+        }
+    }
+    jsonResponse(['ok' => true, 'jottings' => dl_fetch_jottings($userId, $today), 'filed' => $filed !== null, 'structured' => $structured]);
 }
 
 jsonResponse(['error' => 'Unknown action.'], 400);

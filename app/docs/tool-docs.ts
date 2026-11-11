@@ -826,6 +826,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     goodToKnow: [
       "One action per day filed. Re-filing the same day replaces the earlier version and costs no extra action.",
+      "Learnings can be jotted the moment they land, all day, free and as often as you like. They are appended to the filed day's learnings in your own words, and one jotted after filing still joins that day's record.",
       "Filed a day and spotted a mistake? Open it in Past logs and edit any jot note, including the scorecard marks. Saving is free, and your Notion page updates to match. Delete this day removes a log entirely and archives its Notion page.",
       "Recap emails go out every morning, and only once you have filed a log. Miss a day and you get a single nudge; after that, no emails until you log again.",
       "Optional: connect Google Calendar from Advanced settings on the Day Log page, and your top list also lands as an all-day event on recap mornings. Disconnect any time; the emails keep coming either way.",
@@ -840,16 +841,18 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Write tomorrow's items so they can be checked off. 'Send the proposal' is easy to score the next day; 'work on business stuff' is too vague to mark.",
       "Do the brain-dump prompt out loud and unfiltered. The structure step is good at finding the plan inside a ramble.",
       "File before you plan tomorrow anywhere else. The log's list is the one that gets scored.",
+      "Jot learnings when they land, not at 9 PM. The evening ramble carries the story of the day; the jot box keeps the lessons exact.",
     ],
     faq: [
       ["Where does my voice go?", "Recordings are transcribed and discarded. Only the text of your log is kept, in your account."],
+      ["Can I capture a learning before I file?", "Yes. Jot it into Day Log as it happens, free and as often as you like. When you file that evening, jottings are appended to the day's learnings in your own words. Jot one after filing and it still joins the day's record."],
       ["What if I skip a day?", "Nothing breaks. The scorecard compares against your most recent filed day, whenever that was."],
       ["How does the scorecard work?", "When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone."],
       ["Can I fix a day after filing it?", "Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action."],
       ["Can I type instead of talking?", "Yes. The one big box takes typing too, and you can mix talking and typing in the same log."],
       ["Can my top list go on my calendar?", "Yes. Connect Google Calendar in Advanced settings and, on the mornings your recap email goes out, your top list also lands as an all-day event. It is optional, and disconnecting stops the events, not the emails."],
     ],
-    updated: "November 7, 2026",
+    updated: "November 11, 2026",
   },
   {
     key: "email-signature-generator",

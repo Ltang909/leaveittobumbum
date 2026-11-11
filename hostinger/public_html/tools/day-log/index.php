@@ -68,6 +68,11 @@ if ($user) {
       "@type": "Question",
       "name": "Can Day Log copy my logs to Notion?",
       "acceptedAnswer": { "@type": "Answer", "text": "Yes. In Advanced settings, connect a Notion page or database with your own integration token and each filed day becomes its own Notion page of jot notes, titled with the date. Re-filing a day rewrites its page." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I capture a learning before I file?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Jot learnings into Day Log as they happen during the day, free and as often as you like. When you file that evening, they are appended to the day's learnings in your own words. Jot one after filing and it still joins the day's record." }
     }
   ]
 }
@@ -112,6 +117,9 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .edit-row select{padding:8px;border:1px solid #d9c9a3;border-radius:8px;font:inherit;font-size:13.5px;background:#fff}
 .edit-row .x{border:1px solid #d9c9a3;background:#fff;border-radius:8px;width:32px;height:32px;cursor:pointer;font-weight:900;flex:none;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;font-size:15px}
 .mini-btn{border:1px solid #d9c9a3;background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13.5px;font-weight:700}
+.jot-item{display:flex;gap:8px;align-items:center;margin:5px 0;padding:8px 10px;background:#fffdf6;border:1px solid #eee3cb;border-radius:10px}
+.jot-item span{flex:1}
+.jot-x{border:1px solid #d9c9a3;background:#fff;border-radius:8px;width:28px;height:28px;cursor:pointer;font-weight:900;flex:none;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;font-size:14px}
 .edit-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
 .del-log{color:#a33327}
 .del-log.armed{background:#a33327;color:#fff;border-color:#a33327}
@@ -131,6 +139,18 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php else: ?>
 
 <div id="yesterdaySlot"></div>
+
+<section class="panel" id="jotPanel">
+<h2>Learnings as they land</h2>
+<p class="meta" style="margin-top:0">Lessons evaporate by evening. Jot each one here the moment it lands, in a line or two. Tonight, when you file your day, they join the Learnings section in your own words. Jotting is free, as often as you like, and a learning jotted after filing still joins today's record.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<input type="text" id="jotText" maxlength="300" placeholder="What did you just learn?" autocomplete="off" style="flex:1;min-width:220px;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff">
+<button type="button" class="button" id="jotBtn">Jot it down</button>
+</div>
+<p id="jotStatus" class="mic-status" style="margin-top:8px"></p>
+<p id="jotError" class="error"></p>
+<div id="jotList"></div>
+</section>
 
 <section class="panel" id="logPanel">
 <h2>Today's log</h2>
@@ -214,12 +234,13 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <details><summary>Can I type instead of talking?</summary><p>Yes. The one big box takes typing too. Talk, type, or mix both in the same log.</p></details>
 <details><summary>Can I fix a day after filing it?</summary><p>Yes. Open the day in Past logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action.</p></details>
 <details><summary>Can Day Log copy my logs to Notion?</summary><p>Yes. In Advanced settings, connect a Notion page or database with your own integration token and each filed day becomes its own Notion page of jot notes, titled with the date. Re-filing a day rewrites its page.</p></details>
+<details><summary>Can I capture a learning before I file?</summary><p>Yes. Jot learnings into Day Log as they happen during the day, free and as often as you like. When you file that evening, they are appended to the day's learnings in your own words. Jot one after filing and it still joins the day's record.</p></details>
 </section>
 
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Closing your day in five minutes, the short guide</h2>
 <h3>How it works here</h3>
-<p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next morning, a recap email arrives with tomorrow's priorities on top. One action per day filed, and re-filing the same day replaces the earlier version at no extra cost. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you.</p>
+<p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next morning, a recap email arrives with tomorrow's priorities on top. One action per day filed, and re-filing the same day replaces the earlier version at no extra cost. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you. Lessons that land mid-day do not have to wait for the evening: jot them into the Learnings box the moment they happen, and they wait on the page until you file, then join the day's learnings in your own words.</p>
 <h3>Your voice is never kept</h3>
 <p>Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Transcription tries your browser's live transcription first; on browsers without it, the recording is transcribed by Whisper and then discarded. The recording is only a way to get your words into the box.</p>
 <h3>Write tomorrow's list so it can be scored</h3>
@@ -463,9 +484,58 @@ fileBtn.addEventListener('click',async()=>{
   loadHistory();
 });
 
+/* --- Ad-hoc learnings: jot during the day, appended at filing --- */
+const jotText=document.querySelector('#jotText');
+const jotBtn=document.querySelector('#jotBtn');
+function renderJottings(list){
+  const box=document.querySelector('#jotList');
+  if(!list||!list.length){box.innerHTML='<p class="meta" style="margin:8px 0 0">Nothing jotted yet today.</p>';return}
+  box.innerHTML=list.map(j=>'<div class="jot-item"><span>'+esc(j.text)+'</span><button type="button" class="jot-x" data-jot="'+j.id+'" aria-label="Remove learning">&times;</button></div>').join('');
+}
+function syncFiledLearnings(data){
+  if(!data||!data.structured||!dlResult||dlResult.date!==localToday())return;
+  dlResult.structured=data.structured;
+  const s=data.structured;
+  document.querySelector('#resultBody').innerHTML=reflectionHtml(s.reflection)
+    +sectionHtml('Done today',s.done)
+    +sectionHtml('Set out but did not happen',s.missed)
+    +sectionHtml('Challenges',s.challenges)
+    +sectionHtml('Beating them',s.overcome)
+    +sectionHtml('Tomorrow\u2019s top list',s.tomorrow)
+    +sectionHtml('Learnings',s.learnings);
+}
+async function addJot(){
+  const text=jotText.value.trim();
+  const err=document.querySelector('#jotError');
+  const status=document.querySelector('#jotStatus');
+  err.textContent='';
+  if(!text){err.textContent='Type the learning first, then jot it down.';return}
+  jotBtn.disabled=true; status.textContent='Saving...';
+  const{response,data}=await apiCall({action:'jot',text,todayLocal:localToday()});
+  jotBtn.disabled=false;
+  if(!response.ok){status.textContent='';err.textContent=(data&&data.error)||'That jotting tripped. Try once more.';return}
+  jotText.value='';
+  status.textContent=data.dupe?'Already jotted. It is on the list below.':(data.filed?'Saved, and added to today\u2019s filed log.':'Saved. It joins tonight\u2019s log when you file.');
+  renderJottings(data.jottings);
+  syncFiledLearnings(data);
+  bbTrack('daylog_jot',{filed:!!data.filed});
+}
+jotBtn.addEventListener('click',addJot);
+jotText.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addJot()}});
+document.querySelector('#jotList').addEventListener('click',async e=>{
+  const x=e.target.closest('.jot-x');
+  if(!x)return;
+  const{response,data}=await apiCall({action:'unjot',id:Number(x.dataset.jot),todayLocal:localToday()});
+  if(!response.ok)return;
+  renderJottings(data.jottings);
+  syncFiledLearnings(data);
+  document.querySelector('#jotStatus').textContent=data.filed?'Removed from today\u2019s list and from the filed log.':'Removed.';
+});
+
 /* --- Context + history on load --- */
 (async()=>{
   const{response,data}=await apiCall({action:'context',todayLocal:localToday()});
+  if(response.ok&&data.jottings)renderJottings(data.jottings);
   if(response.ok&&data.yesterday&&data.yesterday.tomorrow&&data.yesterday.tomorrow.length){
     const items=data.yesterday.tomorrow.map(i=>'<li>'+esc(i)+'</li>').join('');
     document.querySelector('#yesterdaySlot').innerHTML='<div class="read-note"><b>Yesterday ('+esc(data.yesterday.date)+') you aimed for:</b><ul style="margin:6px 0 0;padding-left:20px">'+items+'</ul><p style="margin:6px 0 0">Today\u2019s first prompt scores this list. Answer honestly; not mentioned is a fine answer.</p></div>';
