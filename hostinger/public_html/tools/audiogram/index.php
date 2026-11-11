@@ -562,4 +562,4 @@ againBtn.addEventListener('click',()=>{
 <p>Choose a background with a calm middle. Animated captions are hard to follow over a busy photo, however good the audio is.</p>
 </section>
 <?php $bbTool = 'audiogram'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

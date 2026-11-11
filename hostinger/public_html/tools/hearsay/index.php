@@ -222,4 +222,4 @@ loadScans();
 <p>Your scans are saved, so you can rerun the same questions next month and see whether you are gaining or losing ground. Results are a snapshot of real answers and vary run to run, the way real AI answers do. When a competitor gets cited on a question you should own, treat it as the next page to write.</p>
 </section>
 <?php $bbTool = 'hearsay'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

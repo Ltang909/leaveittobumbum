@@ -422,4 +422,4 @@ refresh();
 <h3>Keep the pipeline honest</h3>
 <p>Someone who has gone quiet for a month belongs in a later stage, not in today's list forever. A short, current list gets worked through. A long, stale one gets ignored, and follow-ups get missed that way in bigger CRMs too. Bum Bum never emails your clients from this tool; the words are always yours to send.</p>
 <h3>Read the guide</h3><p>We compared the field: <a href="/blog/best-free-crm-small-business/">comparing free CRMs for a small business</a>, from full sales pipelines to tiny follow-up trackers like this one.</p></section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

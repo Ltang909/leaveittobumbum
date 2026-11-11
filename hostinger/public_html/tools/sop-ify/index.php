@@ -287,4 +287,4 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <p>The login that lives in a spreadsheet, the step everyone forgets, the exception that happens every month. Playbooks fail on the steps nobody wrote down. Start with the task you dread handing over. That usually means the steps live only in your head, and writing the SOP gets them down where a helper can use them.</p>
 </section>
 <?php $bbTool = 'sop-ify'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

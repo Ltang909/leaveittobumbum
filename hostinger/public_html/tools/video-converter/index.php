@@ -353,4 +353,4 @@ againBtn.addEventListener('click',()=>{
 <p>Animated GIFs are capped at 15 seconds, because a GIF longer than that is a video wearing a costume. Trim the moment first with the Video Trimmer, then convert; a tight four-second GIF beats a wandering fifteen-second one. When the destination is unknown, pick MP4. Everything plays MP4.</p>
 </section>
 <?php $bbTool = 'video-converter'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

@@ -394,4 +394,4 @@ $("downloadBtn").addEventListener("click",async function(){
 addItem("",1,"");
 render();
 })();
-</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

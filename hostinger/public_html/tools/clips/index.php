@@ -616,5 +616,5 @@ if(!screenOK){
 <h3>When a recording beats a meeting</h3>
 <p>Walkthroughs, bug reports, and status updates are usually better as a two-minute recording than as another call on the calendar. Record it once, send the file, and everyone watches it at their own speed. Screen capture needs a desktop browser; mobile browsers do not offer it.</p>
 <h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-record-your-screen-for-free/">How to record your screen for free (no software to install)</a>.</p><p>Screen recording is one of the everyday jobs we rounded up in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
-<script src="/tools/drop-strip.js?v=20261030r1"></script></body>
+<script src="/tools/drop-strip.js?v=20261111r1"></script></body>
 </html>

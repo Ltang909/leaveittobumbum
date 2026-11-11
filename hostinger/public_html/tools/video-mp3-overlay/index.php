@@ -501,4 +501,4 @@ againBtn.addEventListener('click',()=>{
 <p>Pin a snippet a breath before the moment it is for. Music that lands exactly on the action feels late, because the ear registers the hit after the eye sees it.</p>
 </section>
 <?php $bbTool = 'video-mp3-overlay'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

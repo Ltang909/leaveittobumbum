@@ -1419,8 +1419,21 @@
       var panel = dz.closest ? dz.closest(".panel") : null;
       return panel || dz;
     }
+    // A canvas tool's work area is the canvas itself (the sketchpad
+    // draws; it has no .dropzone and its wrap is not a .panel, so the
+    // scan below used to sail past it and land on the guide panel at
+    // the bottom of the page).
+    var cv = main.querySelector("canvas");
+    if (cv && anchorVisible(cv)) {
+      var cvPanel = cv.closest ? cv.closest(".panel") : null;
+      return cvPanel || cv.parentElement || cv;
+    }
     var panels = main.querySelectorAll(".panel");
     for (var i = 0; i < panels.length; i++) {
+      // The FAQ section starts the content tail (FAQ, guide, more
+      // tools): panels from there on are reading material, never the
+      // tool, so the scan stops at it.
+      if (panels[i].id === "faq") break;
       if (!anchorVisible(panels[i])) continue;
       if (panels[i].querySelector("input, textarea, select, form, canvas, button")) return panels[i];
     }

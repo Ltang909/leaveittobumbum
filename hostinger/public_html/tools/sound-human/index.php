@@ -182,4 +182,4 @@ try{bbTrack('tool_opened',{tool:'sound-human'})}catch(e){}
 <p>Each habit above has a name and a reason it gives AI writing away. The full rundown, with examples, is in our article: <a href="/blog/how-to-make-ai-sound-more-human/">How to Make AI Sound More Human</a>.</p>
 </section>
 <?php $bbTool = 'sound-human'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261030r1"></script></body></html>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>
