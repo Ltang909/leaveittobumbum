@@ -46,9 +46,10 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .dropzone p{margin:6px 0}
 .hidden{display:none!important}
 .mode-opts{display:grid;gap:10px;margin-top:16px}
-.mode-opt{display:flex;gap:10px;align-items:flex-start;border:1px solid #e2d7bf;border-radius:12px;background:#fff;padding:12px 14px;cursor:pointer}
+.mode-opt{display:flex;gap:10px;align-items:flex-start;margin:0;border:1px solid #e2d7bf;border-radius:12px;background:#fff;padding:12px 14px;cursor:pointer;text-align:left}
 .mode-opt:has(input:checked){border-color:#b3a37e;background:#fffdf8}
-.mode-opt input{margin-top:3px;accent-color:#2f2a22}
+.mode-opt input{width:auto;padding:0;border:none;flex:none;margin:3px 0 0;accent-color:#2f2a22}
+.mode-opt>span{flex:1;min-width:0}
 .mode-opt .mode-sub{font-size:13px;opacity:.75;font-weight:400}
 .range-row{margin-top:12px}
 .range-row label{font-weight:700;font-size:14px;display:block}
@@ -159,7 +160,7 @@ async function addFile(file){
     row.querySelector(".st").textContent=current.count+" page"+(current.count===1?"":"s");
     list.appendChild(row);
     $("rangeHint").textContent="This PDF has "+current.count+" page"+(current.count===1?"":"s")+", numbered 1 to "+current.count+".";
-    setStatus("Loaded: "+current.count+" page"+(current.count===1?"":"s")+". Pick what you want below.");
+    setStatus("Loaded: "+current.count+" page"+(current.count===1?"":"s")+".");
   }catch(e){
     current=null;$("fileList").textContent="";
     setStatus("Bum Bum could not read that PDF. It may be password-protected or damaged.",true);
