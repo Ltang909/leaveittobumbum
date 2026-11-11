@@ -6,7 +6,7 @@ import { SiteHeader, SiteFooter } from "./components/chrome";
 import { useRequestTool } from "./components/request-tool";
 import { PlanCta } from "./components/plan-ctas";
 import CaptureBar from "./components/capture-bar";
-import { DeskFaceProvider, useDeskFace } from "./lib/desk-face";
+import { DeskFaceProvider } from "./lib/desk-face";
 
 const plans = [
   { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["All current tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
@@ -50,49 +50,34 @@ const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "Ar
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 
-// The hero portrait: this is Bum Bum. Booping cycles his faces, and the
-// front desk borrows the same portrait for its own moments (a working
-// face while you type, the routed tool's persona as a hat) through the
-// shared desk-face state.
+// The hero cat: Bum Bum as a cutout peeking over the desk, art supplied
+// by Leon (Nov 11, 2026) with the burst and rays baked in. Booping still
+// earns a quip, and the Konami party dance still applies.
 function HeroPortrait({ party }: { party: boolean }) {
-  const { mood, hat } = useDeskFace();
-  const [face, setFace] = useState(0);
   const [quip, setQuip] = useState<string | null>(null);
   const [boingKey, setBoingKey] = useState(0);
-  const [portraitOk, setPortraitOk] = useState(true);
 
   function boopBumBum() {
-    setFace((f) => (f + 1) % FACES.length);
     setBoingKey((k) => k + 1);
     setQuip(QUIPS[Math.floor(Math.random() * QUIPS.length)]);
     window.setTimeout(() => setQuip(null), 2600);
   }
 
-  const override = mood || hat;
-  const src = override || FACES[face].src;
-  const alt = override ? "Bum Bum, on the job" : FACES[face].alt;
-
   return (
-    <div className="hero-portrait" aria-label="Bum Bum, chief tiny-tool operator">
-      <div className="portrait-burst"></div>
+    <div className="hero-portrait hero-cat" aria-label="Bum Bum, chief tiny-tool operator">
       <div
         key={boingKey}
-        className={`portrait-frame boopable${boingKey && !party ? " boing" : ""}${party ? " dance" : ""}`}
+        className={`hero-cat-boop boopable${boingKey && !party ? " boing" : ""}${party ? " dance" : ""}`}
         onClick={boopBumBum}
         onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); boopBumBum(); } }}
         role="button"
         tabIndex={0}
         aria-label="Boop Bum Bum"
       >
-        <img
-          src={src}
-          alt={alt}
-          onLoad={(event) => { setPortraitOk(true); event.currentTarget.style.display = ""; }}
-          onError={(event) => { setPortraitOk(false); event.currentTarget.style.display = "none"; }}
-        />
-        {!portraitOk && <div className="photo-fallback"><span>🐈</span><small>Bum Bum’s portrait<br />is clocking in</small></div>}
-        <div className="scribble scribble-one">this is Bum Bum</div>
+        <img className="hero-cat-img" src="/bum/hero-cat.png" alt="Bum Bum the cat peeking over the desk" />
       </div>
+      <div className="hero-cat-tag">this is Bum Bum</div>
+      <svg className="hero-cat-arrow" viewBox="0 0 60 56" aria-hidden="true"><path d="M54 6C42 24 28 38 12 47" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" /><path d="M21 45 L11 48 L13 37" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
       {quip && <div className="quip-bubble" role="status">{quip}</div>}
     </div>
   );
@@ -158,10 +143,8 @@ export default function Home() {
         <DeskFaceProvider>
           <div className="hero-top">
             <div className="hero-copy">
-              <p className="eyebrow"><span>●</span> Small business busywork, handled</p>
-              <h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1>
+              <div className="hero-headline"><svg className="hero-spark" viewBox="0 0 48 40" aria-hidden="true"><path d="M7 31l11-5M13 13l10 6M28 5l3 11" stroke="#FFD84D" strokeWidth="5" strokeLinecap="round" fill="none" /></svg><h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1></div>
               <p className="lede">Little tools that handle the fiddly stuff stealing your afternoon.</p>
-              <p className="fine">Start free. No card required, and nobody books you a call with a guy named Chad.</p>
             </div>
             <HeroPortrait party={party} />
           </div>
@@ -179,7 +162,7 @@ export default function Home() {
       </section>
 
       <section className="how">
-        <div className="shell"><div className="section-heading light"><div><p className="kicker">No software degree required</p><h2>Three steps.<br />Then, nap.</h2></div></div><div className="steps"><article><b>01</b><h3>Pick the annoying task</h3><p>Find the busywork with your name on it.</p></article><article><b>02</b><h3>Hand over the messy bits</h3><p>Paste in rough notes, numbers, or files. Bum Bum sorts it out.</p></article><article><b>03</b><h3>Get the finished thing</h3><p>Copy it, send it, save it. One action spent, afternoon reclaimed.</p></article></div></div>
+        <div className="shell"><p className="way-kicker">No software degree required</p><h2 className="way-title">A simpler way to<br /><span className="way-under">get more done.<svg className="way-swoosh" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path d="M4 15 C 70 5, 200 3, 296 9" fill="none" stroke="#FFD84D" strokeWidth="9" strokeLinecap="round" /></svg></span></h2><div className="way-panels"><article className="way-panel"><div className="way-icon"><svg viewBox="0 0 120 112" aria-hidden="true"><path d="M93 4v11M104 10l-7 9M83 10l6 9" stroke="#FFD84D" strokeWidth="4.5" strokeLinecap="round" fill="none" /><rect x="16" y="16" width="66" height="82" rx="14" fill="#FFF6E3" stroke="#17150F" strokeWidth="3" /><rect x="27" y="29" width="12" height="12" rx="3" fill="#fff" stroke="#17150F" strokeWidth="2.5" /><path d="M29.8 35.2l2.6 2.6 4.4-5" stroke="#F5A800" strokeWidth="2.6" fill="none" strokeLinecap="round" /><rect x="27" y="51" width="12" height="12" rx="3" fill="#fff" stroke="#17150F" strokeWidth="2.5" /><path d="M29.8 57.2l2.6 2.6 4.4-5" stroke="#F5A800" strokeWidth="2.6" fill="none" strokeLinecap="round" /><rect x="27" y="73" width="12" height="12" rx="3" fill="#fff" stroke="#17150F" strokeWidth="2.5" /><path d="M48 35h23M48 57h23M48 79h23" stroke="#17150F" strokeWidth="3" strokeLinecap="round" /></svg></div><div><h3>Turn your to-do list into done.</h3><p>Invoicing, follow ups, receipts, emails and more.</p></div></article><article className="way-panel"><div className="way-icon"><svg viewBox="0 0 120 112" aria-hidden="true"><path d="M99 4v11M110 10l-7 9M89 10l6 9" stroke="#FFD84D" strokeWidth="4.5" strokeLinecap="round" fill="none" /><rect x="13" y="26" width="84" height="56" rx="10" fill="#FFF6E3" stroke="#17150F" strokeWidth="3" /><path d="M42 45l2.3 6.2L50.5 53.5l-6.2 2.3L42 62l-2.3-6.2L33.5 53.5l6.2-2.3Z" fill="#FFD84D" stroke="#17150F" strokeWidth="1.6" /><path d="M65 40l1.7 4.6 4.6 1.7-4.6 1.7L65 52.6l-1.7-4.6-4.6-1.7 4.6-1.7Z" fill="#FFD84D" stroke="#17150F" strokeWidth="1.4" /><path d="M7 88h96l-7 12H14Z" fill="#FFF6E3" stroke="#17150F" strokeWidth="3" /><path d="M47 94h16" stroke="#2864DC" strokeWidth="3" strokeLinecap="round" /></svg></div><div><h3>Tools created to do exactly what you need.</h3><p>Drop in your notes, files, or ideas and Bum Bum handles the rest.</p></div></article><article className="way-panel"><div className="way-icon"><svg viewBox="0 0 120 112" aria-hidden="true"><path d="M45 4c-4 6 4 8 0 14M63 4c-4 6 4 8 0 14" stroke="#FFF6E3" strokeWidth="3" fill="none" strokeLinecap="round" /><path d="M99 8v11M110 14l-7 9M89 14l6 9" stroke="#FFD84D" strokeWidth="4.5" strokeLinecap="round" fill="none" /><rect x="24" y="30" width="58" height="60" rx="11" fill="#FFF6E3" stroke="#17150F" strokeWidth="3" /><path d="M82 44c13 1 13 27 0 30" fill="none" stroke="#17150F" strokeWidth="3" /><g fill="#FFD84D"><ellipse cx="53" cy="68" rx="9" ry="7" /><circle cx="39" cy="56" r="3.4" /><circle cx="48" cy="51.5" r="3.4" /><circle cx="58" cy="51.5" r="3.4" /><circle cx="67" cy="56" r="3.4" /></g></svg></div><div><h3>More time for what you actually like.</h3><p>Go touch grass!</p></div></article></div></div>
       </section>
 
       <section className="pricing shell" id="pricing">

@@ -59,8 +59,10 @@ const FACE_PEEK = "/bum/cat-peeking.png";
 const FACE_BOX = "/bum/cat-box-v2.png";
 const FACE_PETPET = "/bum/petpet/box.png";
 
+// The lead line teaches the @ trick; the worked examples rotate after
+// it, about five seconds each (Leon's calls, Nov 11).
 const PLACEHOLDERS = [
-  "Start with @ to pick a tool, or just describe the job…",
+  "Start with @ to pick a tool, or describe what you need done",
   "Drop a receipt, get a spreadsheet…",
   "Photo of an event poster? Add it to your calendar",
   "Netflix $15.99 a month, track it as part of your subscriptions",
@@ -448,7 +450,7 @@ export default function CaptureBar() {
     const t = window.setInterval(() => {
       if (focusedRef.current || document.hidden || pinnedRef.current) return;
       setPhIndex((i) => (i + 1) % PLACEHOLDERS.length);
-    }, 3400);
+    }, 5000);
     return () => window.clearInterval(t);
   }, []);
 
@@ -1239,10 +1241,6 @@ export default function CaptureBar() {
       }}
     >
       <div className="capture-home-card desk-card" ref={cardRef}>
-        <div className="desk-head">
-          <h2 className="desk-greeting">What are we handling today?</h2>
-        </div>
-        <p className="desk-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>
         <div className="desk-composer-wrap">
           <div className="desk-composer">
             {pinned && (
@@ -1341,7 +1339,7 @@ export default function CaptureBar() {
                 aria-label={recording ? "Stop recording" : "Dictate instead"}
                 title={recording ? "Stop recording" : "Dictate instead"}
               >
-                🎤
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0" /><path d="M12 19v3" /></svg>
               </button>
               <button
                 type="button"
@@ -1352,7 +1350,7 @@ export default function CaptureBar() {
                 aria-label="Take a photo"
                 title="Take a photo"
               >
-                📷
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" /><circle cx="12" cy="13" r="3.5" /></svg>
               </button>
               <span className="desk-composer-spacer" />
               <button type="button" className="button" onClick={submit} disabled={busy}>
@@ -1497,27 +1495,6 @@ export default function CaptureBar() {
             </div>
           )}
         </div>
-        <div className="desk-chips-row">
-          <div className="capture-home-chips desk-task-chips">
-            {chipKeys.map((k) => {
-              const def = CHIP_POOL.find((c) => c.key === k);
-              if (!def) return null;
-              return (
-                <button
-                  key={def.key}
-                  type="button"
-                  className="capture-home-chip"
-                  onClick={() => pinFromChip(def.key, def.chip, def.picker)}
-                >
-                  {def.label}
-                </button>
-              );
-            })}
-          </div>
-          <a className="desk-browse" href="/tools/">
-            or browse the toolbox →
-          </a>
-        </div>
         <input
           ref={fileInputRef}
           type="file"
@@ -1559,6 +1536,32 @@ export default function CaptureBar() {
           </div>
         )}
       </div>
+        <div className="desk-chips-row">
+          <div className="desk-try-group">
+          <span className="desk-try">Try:</span>
+          <div className="capture-home-chips desk-task-chips">
+            {chipKeys.map((k) => {
+              const def = CHIP_POOL.find((c) => c.key === k);
+              if (!def) return null;
+              const chipTool = tools.find((x) => x.key === def.key);
+              return (
+                <button
+                  key={def.key}
+                  type="button"
+                  className="capture-home-chip"
+                  onClick={() => pinFromChip(def.key, def.chip, def.picker)}
+                >
+                  {chipTool && chipTool.icon ? <span className="chip-ico-emo" aria-hidden="true">{chipTool.icon}</span> : null}
+                  {def.label}
+                </button>
+              );
+            })}
+          </div>
+          </div>
+          <a className="desk-browse" href="/tools/">
+            Browse all tools →
+          </a>
+        </div>
       {peek && <img className="desk-peek" src={FACE_PEEK} alt="" aria-hidden="true" />}
       {crossing && (
         <div className="desk-crossing-lane" aria-hidden="true">
