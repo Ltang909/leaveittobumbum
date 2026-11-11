@@ -78,6 +78,7 @@ function HeroPortrait({ party }: { party: boolean }) {
       </div>
       <div className="hero-cat-tag">this is Bum Bum</div>
       <svg className="hero-cat-arrow" viewBox="0 0 60 56" aria-hidden="true"><path d="M54 6C42 24 28 38 12 47" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" /><path d="M21 45 L11 48 L13 37" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <svg className="hero-cat-arrow-mobile" viewBox="0 0 24 44" aria-hidden="true"><path d="M12 3C10.5 15 13 25 12 36" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" /><path d="M4.5 28.5 L12 38.5 L19.5 28.5" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
       {quip && <div className="quip-bubble" role="status">{quip}</div>}
     </div>
   );
