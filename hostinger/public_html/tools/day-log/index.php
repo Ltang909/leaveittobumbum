@@ -139,7 +139,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .prompt-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0 4px}
 .chip{background:#fffdf6;border:1px solid #e2d7bf;border-radius:10px;padding:9px 14px;font-weight:700;font-size:14.5px}
 .dl-file{width:100%;padding:14px;font-size:16.5px;margin-top:12px}
-.log-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
+.log-cards{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px;scroll-snap-type:x proximity}
+.log-cards .log-card{flex:0 0 232px;scroll-snap-align:start}
 .log-card{text-align:left;background:#fff;border:2px solid #e2d7bf;border-radius:14px;padding:14px;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:5px}
 .log-card:hover{border-color:#b3a37e}
 .log-card.active{border-color:#1a291c;box-shadow:3px 3px 0 var(--line)}
@@ -186,13 +187,11 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </div>
 <div id="panelJot" class="hidden">
 <div class="jot-form" style="border-top:0;margin-top:2px;padding-top:0">
-<h3>Learnings as they land</h3>
-<p class="hint">A lesson landed mid-day? Jot it here in a line or two. When you file tonight, it lands in the day's Learnings in your own words. Jotting is free, and one jotted after filing still joins today's record.</p>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<input type="text" id="jotText" maxlength="300" placeholder="What did you just learn?" autocomplete="off" style="flex:1;min-width:200px;padding:10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff">
-<button type="button" class="button secondary" id="jotBtn">Jot it down</button>
-</div>
-<p id="jotStatus" class="mic-status" style="margin-top:8px"></p>
+<h3 style="font-size:21px;margin:8px 0 10px">Learnings as they land</h3>
+<p class="hint" style="line-height:1.6;margin:0 0 18px">A lesson landed mid-day? Jot it here while it is fresh. When you file tonight, it lands in the day's Learnings in your own words. Jotting is free, and one jotted after filing still joins today's record.</p>
+<textarea id="jotText" maxlength="1000" rows="5" placeholder="What did you just learn?" style="width:100%;padding:14px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;background:#fff;resize:vertical;line-height:1.55"></textarea>
+<div style="margin-top:16px"><button type="button" class="button secondary" id="jotBtn" style="padding:11px 26px">Jot it down</button></div>
+<p id="jotStatus" class="mic-status" style="margin-top:12px"></p>
 <p id="jotError" class="error"></p>
 </div>
 </div>
@@ -215,12 +214,14 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 
 <section class="panel" id="lookbackPanel">
-<h2>Look back</h2>
-<p class="meta" style="margin-top:0">Turn a stretch of logs into highlights: accomplishments, learnings, and how you are growing over time. One action per fresh summary; re-opening the same stretch is free.</p>
+<details style="border-top:0;border-bottom:0;padding:0">
+<summary style="font-size:21px;font-weight:900">Look back</summary>
+<p class="meta" style="margin-top:10px">Turn a stretch of logs into highlights: accomplishments, learnings, and how you are growing over time. One action per fresh summary; re-opening the same stretch is free.</p>
 <div class="btnrow"><button type="button" class="button secondary" id="sumWeek">Summarize my week</button><button type="button" class="button secondary" id="sumMonth">Summarize my month</button></div>
 <p id="sumStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="sumError" class="error"></p>
 <div id="sumBody"></div>
+</details>
 </section>
 
 <section class="panel" id="advancedPanel">
@@ -546,7 +547,7 @@ async function addJot(){
   bbTrack('daylog_jot',{filed:!!data.filed});
 }
 jotBtn.addEventListener('click',addJot);
-jotText.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addJot()}});
+jotText.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();addJot()}});
 
 /* --- Tabs: talk through your day, or note a mid day learning --- */
 function openType(){document.querySelector('#typeZone').classList.remove('hidden')}
