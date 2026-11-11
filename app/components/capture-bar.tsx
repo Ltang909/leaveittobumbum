@@ -1493,32 +1493,6 @@ export default function CaptureBar() {
             </div>
           )}
         </div>
-        <div className="desk-chips-row">
-          <div className="desk-try-group">
-          <span className="desk-try">Try:</span>
-          <div className="capture-home-chips desk-task-chips">
-            {chipKeys.map((k) => {
-              const def = CHIP_POOL.find((c) => c.key === k);
-              if (!def) return null;
-              const chipTool = tools.find((x) => x.key === def.key);
-              return (
-                <button
-                  key={def.key}
-                  type="button"
-                  className="capture-home-chip"
-                  onClick={() => pinFromChip(def.key, def.chip, def.picker)}
-                >
-                  {chipTool && chipTool.icon ? <span className="chip-ico-emo" aria-hidden="true">{chipTool.icon}</span> : null}
-                  {def.label}
-                </button>
-              );
-            })}
-          </div>
-          </div>
-          <a className="desk-browse" href="/tools/">
-            Browse all tools →
-          </a>
-        </div>
         <input
           ref={fileInputRef}
           type="file"
@@ -1560,6 +1534,32 @@ export default function CaptureBar() {
           </div>
         )}
       </div>
+        <div className="desk-chips-row">
+          <div className="desk-try-group">
+          <span className="desk-try">Try:</span>
+          <div className="capture-home-chips desk-task-chips">
+            {chipKeys.map((k) => {
+              const def = CHIP_POOL.find((c) => c.key === k);
+              if (!def) return null;
+              const chipTool = tools.find((x) => x.key === def.key);
+              return (
+                <button
+                  key={def.key}
+                  type="button"
+                  className="capture-home-chip"
+                  onClick={() => pinFromChip(def.key, def.chip, def.picker)}
+                >
+                  {chipTool && chipTool.icon ? <span className="chip-ico-emo" aria-hidden="true">{chipTool.icon}</span> : null}
+                  {def.label}
+                </button>
+              );
+            })}
+          </div>
+          </div>
+          <a className="desk-browse" href="/tools/">
+            Browse all tools →
+          </a>
+        </div>
       {peek && <img className="desk-peek" src={FACE_PEEK} alt="" aria-hidden="true" />}
       {crossing && (
         <div className="desk-crossing-lane" aria-hidden="true">
