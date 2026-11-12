@@ -63,6 +63,14 @@
         "@type": "Answer",
         "text": "Yes. Import a CSV and Client Follow-Up Tracker matches them up for you."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use it as a simple client tracker?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Log each interaction as it happens, check the timeline when you need the history, and work from the morning follow-up list so nobody waits too long for a reply. It covers the everyday client tracking most solo businesses need, with no CRM setup first."
+      }
     }
   ]
 }
@@ -412,6 +420,10 @@ refresh();
 <summary>Can I import my contacts?</summary>
 <p>Yes. Import a CSV and Client Follow-Up Tracker matches them up for you.</p>
 </details>
+<details>
+<summary>Can I use it as a simple client tracker?</summary>
+<p>Yes. Log each interaction as it happens, check the timeline when you need the history, and work from the morning follow-up list so nobody waits too long for a reply. It covers the everyday client tracking most solo businesses need, with no CRM setup first.</p>
+</details>
 </section>
 <?php $bbTool = 'purrsuit'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Following up without a CRM, the short guide</h2>
@@ -421,5 +433,5 @@ refresh();
 <p>Set the follow-up date before you close the tab after every call. Two days is a good default for a warm conversation. The tracker does the remembering; your only job is telling it when future-you should care.</p>
 <h3>Keep the pipeline honest</h3>
 <p>Someone who has gone quiet for a month belongs in a later stage, not in today's list forever. A short, current list gets worked through. A long, stale one gets ignored, and follow-ups get missed that way in bigger CRMs too. Bum Bum never emails your clients from this tool; the words are always yours to send.</p>
-<h3>Read the guide</h3><p>We compared the field: <a href="/blog/best-free-crm-small-business/">comparing free CRMs for a small business</a>, from full sales pipelines to tiny follow-up trackers like this one.</p></section>
+<h3>Read the guide</h3><p>We compared the field: <a href="/blog/best-free-crm-small-business/">comparing free CRMs for a small business</a>, from full sales pipelines to tiny follow-up trackers like this one. Follow-up trackers also get their own head-to-head: <a href="/blog/best-free-client-follow-up-tracker/">the best free client follow-up trackers</a>, with this one in the lineup.</p></section>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

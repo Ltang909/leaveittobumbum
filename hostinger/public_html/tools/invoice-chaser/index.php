@@ -63,6 +63,14 @@
         "@type": "Answer",
         "text": "That is exactly who this is for. The chaser adapts its timing to each client's real payment pattern."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I get invoice reminder email templates?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On our blog: the invoice reminder templates at https://leaveittobumbum.com/blog/invoice-reminder-templates/ cover every stage of late, from the friendly heads-up before the due date to the final notice, ready to copy and adjust."
+      }
     }
   ]
 }
@@ -378,6 +386,10 @@ refresh().then(function(){
 <details>
 <summary>What if a client always pays late?</summary>
 <p>That is exactly who this is for. The chaser adapts its timing to each client's real payment pattern.</p>
+</details>
+<details>
+<summary>Where can I get invoice reminder email templates?</summary>
+<p>On our blog: the <a href="/blog/invoice-reminder-templates/">invoice reminder templates</a> cover every stage of late, from the friendly heads-up before the due date to the final notice, ready to copy and adjust.</p>
 </details>
 </section>
 <?php $bbTool = 'invoice-chaser'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
