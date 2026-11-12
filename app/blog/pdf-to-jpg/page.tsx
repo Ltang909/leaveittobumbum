@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/pdf-to-jpg/" },
+  openGraph: { url: "/blog/pdf-to-jpg/" },
   title: "How to Convert PDF Pages to JPG (In Your Browser) | Leave It to Bum Bum",
   description: "Turn every page of a PDF into JPG images, right in your browser: no uploads, per-page downloads or one ZIP. For the forms and platforms that demand pictures.",
 };

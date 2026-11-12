@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/jpg-to-webp/" },
+  openGraph: { url: "/blog/jpg-to-webp/" },
   title: "How to Convert JPG to WebP (Shrink Images for Your Website) | Leave It to Bum Bum",
   description: "Convert JPG to WebP in your browser and cut image weight on your website without a visible quality drop. When WebP is the right call, and when it is not.",
 };

@@ -3,6 +3,8 @@ import { SiteHeader, SiteFooter } from "../components/chrome";
 import RequestsView from "./requests-view";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/requests/" },
+  openGraph: { url: "/requests/" },
   title: "Community request queue | Leave It to Bum Bum",
   description: "See what tools the community has requested, upvote the ones you want, and add your own.",
 };

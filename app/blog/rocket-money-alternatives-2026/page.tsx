@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/rocket-money-alternatives-2026/" },
+  openGraph: { url: "/blog/rocket-money-alternatives-2026/" },
   title: "5 Best Rocket Money Alternatives in 2026 to Track Subscriptions | Leave It to Bum Bum",
   description: "Looking for a Rocket Money alternative? Compare five subscription trackers and budgeting apps, including simple options for managing recurring payments.",
 };

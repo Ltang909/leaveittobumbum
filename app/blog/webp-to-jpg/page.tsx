@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/webp-to-jpg/" },
+  openGraph: { url: "/blog/webp-to-jpg/" },
   title: "How to Convert WebP to JPG (The Format Everything Accepts) | Leave It to Bum Bum",
   description: "Convert WebP to JPG in your browser when a form, app, or client needs the most accepted image format there is. One minute, no uploads, one honest caveat.",
 };

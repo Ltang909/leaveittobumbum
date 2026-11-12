@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/wave-alternatives-2026/" },
+  openGraph: { url: "/blog/wave-alternatives-2026/" },
   title: "5 Best Wave Alternatives in 2026 for Freelancers | Leave It to Bum Bum",
   description: "Looking for a Wave alternative after features moved behind the Pro paywall? Compare five options for invoicing, accounting, and chasing late payments.",
 };

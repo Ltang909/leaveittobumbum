@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/png-to-webp/" },
+  openGraph: { url: "/blog/png-to-webp/" },
   title: "How to Convert PNG to WebP (Transparency Kept, File Shrunk) | Leave It to Bum Bum",
   description: "Convert PNG to WebP in your browser: keep transparency, lose most of the file size. The web-ready version of your graphics, in about a minute.",
 };

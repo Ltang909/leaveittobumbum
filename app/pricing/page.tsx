@@ -3,6 +3,8 @@ import { SiteHeader, SiteFooter } from "../components/chrome";
 import { PlanCta } from "../components/plan-ctas";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/pricing/" },
+  openGraph: { url: "/pricing/" },
   title: "Pricing | Leave It to Bum Bum",
   description: "One shared meter covers every tool and your whole team. Every completed result uses one action.",
 };

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/how-to-trim-a-video-online/" },
+  openGraph: { url: "/blog/how-to-trim-a-video-online/" },
   title: "How to Trim a Video Online (No Editor Needed) | Leave It to Bum Bum",
   description: "Most video edits are just cutting the beginning, the end, or one bad section. Here is how to trim a video in your browser, plus the small details that make the cut look clean.",
 };

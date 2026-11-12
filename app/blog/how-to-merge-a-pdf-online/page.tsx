@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/how-to-merge-a-pdf-online/" },
+  openGraph: { url: "/blog/how-to-merge-a-pdf-online/" },
   title: "How to Merge a PDF Online (Without Uploading Your Files) | Leave It to Bum Bum",
   description: "Merge several PDFs into one, in the order you choose, right in your browser. No uploads, no quality loss, nothing to install. Here is the whole process, plus the ordering tips that save a shuffle later.",
 };

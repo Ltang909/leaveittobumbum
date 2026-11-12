@@ -19,6 +19,8 @@ export async function generateMetadata({
   return {
     title: `${g.title} | Docs | Leave It to Bum Bum`,
     description: g.summary,
+    alternates: { canonical: `/docs/${slug}/` },
+    openGraph: { url: `/docs/${slug}/` },
   };
 }
 

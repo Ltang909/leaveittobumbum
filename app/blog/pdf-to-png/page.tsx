@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/pdf-to-png/" },
+  openGraph: { url: "/blog/pdf-to-png/" },
   title: "How to Convert PDF Pages to PNG (Crispest Text, In Your Browser) | Leave It to Bum Bum",
   description: "Turn PDF pages into crisp PNG images in your browser: lossless pages for documents, diagrams, and screenshots of pages. No uploads, ZIP bundle included.",
 };

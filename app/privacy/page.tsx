@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacy/" },
+  openGraph: { url: "/privacy/" },
   title: "Privacy Policy | Leave It to Bum Bum",
   description: "What Leave It to Bum Bum collects, what it doesn't, and how to ask for your data.",
 };

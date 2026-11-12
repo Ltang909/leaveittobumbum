@@ -4,6 +4,8 @@ import { TOOL_DOCS } from "./tool-docs";
 import DocsSearch from "./docs-search";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/docs/" },
+  openGraph: { url: "/docs/" },
   title: "Docs | Leave It to Bum Bum",
   description:
     "Everything about Bum Bum in plain English: how the tools work, what an action is, plans, the trackers, the Monday note, and the 36-hour promise.",

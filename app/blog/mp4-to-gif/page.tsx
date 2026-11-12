@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/mp4-to-gif/" },
+  openGraph: { url: "/blog/mp4-to-gif/" },
   title: "How to Turn an MP4 Into a GIF (In Your Browser) | Leave It to Bum Bum",
   description: "Turn the first seconds of an MP4 into a looping GIF, right in your browser. Why short clips win, what gets left behind, and how to keep the file lean.",
 };

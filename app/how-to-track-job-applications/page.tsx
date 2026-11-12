@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/how-to-track-job-applications/" },
+  openGraph: { url: "/how-to-track-job-applications/" },
   title: "How to track job applications (a system that survives 50 applications) | Leave It to Bum Bum",
   description: "Spreadsheets break down around 30 applications. The columns that matter, a follow-up cadence that keeps you top of mind, and a 15-minute weekly review that keeps nothing stale.",
 };

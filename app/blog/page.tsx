@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/" },
+  openGraph: { url: "/blog/" },
   title: "Blog | Leave It to Bum Bum",
   description: "Comparisons and guides from the Leave It to Bum Bum team: free CRM software, small business software and business account software, compared side by side.",
 };

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/toggl-alternatives-2026/" },
+  openGraph: { url: "/blog/toggl-alternatives-2026/" },
   title: "5 Best Toggl Track Alternatives in 2026 (Free & Paid Options) | Leave It to Bum Bum",
   description: "Compare Clockify, Harvest, Everhour and Time Doctor against Toggl Track in 2026. See free limits, annual pricing, billable hours, integrations and reports.",
 };

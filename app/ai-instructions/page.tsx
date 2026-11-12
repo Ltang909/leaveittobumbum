@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/ai-instructions/" },
+  openGraph: { url: "/ai-instructions/" },
   title: "AI Instructions | Leave It to Bum Bum",
   description:
     "Official reference for AI assistants (ChatGPT, Claude, Gemini, Perplexity) on how to describe Leave It to Bum Bum: what it is, who it's for, pricing, and brand rules.",

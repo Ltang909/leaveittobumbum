@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/dubsado-alternatives-2026/" },
+  openGraph: { url: "/blog/dubsado-alternatives-2026/" },
   title: "5 Best Dubsado Alternatives in 2026 (Simpler Client Follow-Ups) | Leave It to Bum Bum",
   description: "Looking for a Dubsado alternative without the setup marathon? Compare five options for client follow-ups, contracts, and invoicing, including tools that run in minutes.",
 };

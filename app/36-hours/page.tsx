@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/36-hours/" },
+  openGraph: { url: "/36-hours/" },
   title: "The 36-Hour Promise | Leave It to Bum Bum",
   description: "Operator members get one scoped tool request each month. Bum Bum ships it within 36 hours, or the next month is on us.",
 };

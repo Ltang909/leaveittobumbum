@@ -3,6 +3,8 @@ import { SiteHeader, SiteFooter } from "../components/chrome";
 import DiyCalculator from "./calculator";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/build-vs-buy/" },
+  openGraph: { url: "/build-vs-buy/" },
   title: "Build vs. Buy: The Honest Math | Leave It to Bum Bum",
   description: "Could you vibe-code it yourself? Honestly, yeah. Here is what that actually costs once you count building, QA, and maintenance, and why the 36-hour promise exists.",
 };

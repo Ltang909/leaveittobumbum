@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/honeybook-alternatives-2026/" },
+  openGraph: { url: "/blog/honeybook-alternatives-2026/" },
   title: "5 Best HoneyBook Alternatives in 2026 for Solopreneurs | Leave It to Bum Bum",
   description: "Looking for a HoneyBook alternative after the price increases? Compare five options for invoicing, contracts, and client follow-ups, including simpler tools for freelancers and solopreneurs.",
 };

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/mp4-to-webm/" },
+  openGraph: { url: "/blog/mp4-to-webm/" },
   title: "How to Convert MP4 to WebM (Smaller Video for the Web) | Leave It to Bum Bum",
   description: "Convert MP4 to WebM in your browser for lighter web pages and faster-loading embeds. What WebM buys you, and where MP4 still wins.",
 };

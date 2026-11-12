@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/how-to-compress-a-pdf/" },
+  openGraph: { url: "/blog/how-to-compress-a-pdf/" },
   title: "How to Compress a PDF (Without Uploading Your Files) | Leave It to Bum Bum",
   description: "Shrink a PDF in your browser until it fits the email or upload limit. No uploads, three levels from tiniest to crispest, and the one tradeoff stated plainly before you start.",
 };

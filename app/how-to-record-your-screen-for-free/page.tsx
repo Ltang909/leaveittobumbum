@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/how-to-record-your-screen-for-free/" },
+  openGraph: { url: "/how-to-record-your-screen-for-free/" },
   title: "How to record your screen for free (no software to install) | Leave It to Bum Bum",
   description: "Record your screen right in the browser: a tab, a window, or the full screen, with mic and camera bubble. Practical tips for a clean one-take recording you can send anywhere.",
 };

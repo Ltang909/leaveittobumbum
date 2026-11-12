@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/trust/" },
+  openGraph: { url: "/trust/" },
   title: "Trust & Safety | Leave It to Bum Bum",
   description: "Who operates Leave It to Bum Bum, what happens to your files and data, how they are protected, and how cancelling works.",
 };

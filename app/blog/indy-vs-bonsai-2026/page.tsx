@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/indy-vs-bonsai-2026/" },
+  openGraph: { url: "/blog/indy-vs-bonsai-2026/" },
   title: "Indy vs Bonsai (2026): Pricing, Contracts, Invoices & Fees | Leave It to Bum Bum",
   description: "Indy vs Bonsai in 2026: compare free plans, annual prices, proposals, contracts, invoicing, payment processing fees, time tracking and tax features.",
 };

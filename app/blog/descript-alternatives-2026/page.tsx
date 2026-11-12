@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/descript-alternatives-2026/" },
+  openGraph: { url: "/blog/descript-alternatives-2026/" },
   title: "5 Best Descript Alternatives in 2026 (Free & Simple Options) | Leave It to Bum Bum",
   description: "Explore five Descript alternatives in 2026 for screen recording, video editing, and content creation, including simpler tools for everyday recordings.",
 };

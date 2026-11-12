@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/how-to-scan-receipts-into-a-spreadsheet/" },
+  openGraph: { url: "/how-to-scan-receipts-into-a-spreadsheet/" },
   title: "How to scan receipts into a spreadsheet | Leave It to Bum Bum",
   description: "Turn a shoebox of receipts into a clean spreadsheet: the fields worth capturing, photo tips for clean scans, and how to get the CSV into Excel or Google Sheets.",
 };
