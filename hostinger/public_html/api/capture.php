@@ -4,11 +4,12 @@ declare(strict_types=1);
 /**
  * Bum Bum universal capture: the "log anything" router.
  *
- * One box on the dashboard takes text (or a voice transcript) and files it
- * into the right tool: a note, a receipt, a subscription, a job application,
- * or an invoice. The user never picks a tool; Bum Bum does.
- * Action requests ("crop a picture") are declined honestly instead of being
- * misfiled: the box records things, it doesn't perform tasks.
+ * One box takes text (or a voice transcript) and routes it to the right
+ * tool in the whole catalog. Record requests (a note, a receipt, a
+ * subscription, a job application, an invoice to chase) are filed into
+ * the five record tools. Every other request is a job for one of the
+ * doing tools, and the box points at that tool in the suggest shape.
+ * The user never picks a tool; Bum Bum does.
  *
  * How it works:
  *   1. Session + CSRF (same as every other tool endpoint). The subject may
@@ -19,13 +20,17 @@ declare(strict_types=1);
  *   3b. Task-intent fast path ("convert mp4 to wav", "crop a picture"):
  *      the box can't run tools, so it points at the right one. No LLM.
  *   3c. Keyword layer (tool-keywords.json, the user's own keyword table):
- *      decisive phrase matches against all 21 tools route without the
- *      router LLM. Native destinations file via the same extraction path
- *      a pin uses; the other tools get the suggest shape so the client
- *      opens them with the words in hand. Weak, tied, or no matches fall
- *      through to the LLM router completely unchanged.
- *   4. Otherwise a cheap Groq model (default openai/gpt-oss-20b) routes to
- *      one tool and extracts fields as strict JSON.
+ *      decisive phrase matches against the whole catalog route without
+ *      the router LLM. Native destinations file via the same extraction
+ *      path a pin uses; the other tools get the suggest shape so the
+ *      client opens them with the words in hand. Weak, tied, or no
+ *      matches fall through to the LLM router, which also receives the
+ *      keyword layer's top scores as hints.
+ *   4. Otherwise a Groq model (default openai/gpt-oss-120b) routes to
+ *      any tool in the catalog and extracts fields as strict JSON.
+ *      Record tools file; doing tools get the suggest shape. A router
+ *      failure answers honestly that the desk could not sort the
+ *      request; it never files the words as a note.
  *   5. Low confidence (< 0.6) or a forced `tool` mismatch returns options
  *      for the user to pick; nothing is charged.
  *   6. Execution is a server-side loopback POST to the tool's own API with
@@ -551,45 +556,131 @@ function capture_destination_fields(string $text, string $tool): array {
     return $fields;
 }
 
-/* LLM router                                                          */
+/* ------------------------------------------------------------------ */
+/* Router catalog: every tool the desk can pick. The five record tools  */
+/* file directly (fields extracted below); every other tool is a        */
+/* destination the user is taken to, in the suggest shape the keyword   */
+/* layer already uses. Descriptions are written for the router: when    */
+/* to pick the tool, plus the disambiguation that matters (invoice      */
+/* maker vs chaser, notes vs Day Log, HEIC vs other image converts).    */
+/* Keys, names, and URLs mirror tools/registry.json through             */
+/* capture_targets() and capture_nav_destinations().                    */
+/* ------------------------------------------------------------------ */
+
+function capture_router_descriptions(): array {
+    return [
+        'clips' => 'record your screen in the browser and download the clip',
+        'purrsuit' => 'a client follow-up tracker: who to follow up with today and what to say',
+        'doodle' => 'draw or sketch something, or sign on a picture, and export it as PNG or SVG',
+        'poster-to-calendar' => 'turn a photo of an event poster or flyer into a calendar event',
+        'meal-scanner' => 'estimate calories and protein, carbs, and fat from a photo of a meal',
+        'gap-scout' => 'compare a resume against job postings and list the skills the resume is missing',
+        'video-trimmer' => 'trim or cut a video down to the good part',
+        'image-converter' => 'convert an image between formats such as PNG, JPG, and WebP (not iPhone HEIC photos)',
+        'image-cropper' => 'crop an image to a box or a preset size',
+        'ghostwriter' => 'Voice to Content: turn a spoken ramble into hooks, a short video script, and a caption for social posts',
+        'audiogram' => 'turn an MP3 audio file into a captioned video',
+        'purr-code' => 'make a QR code',
+        'sop-ify' => 'turn messy process notes into a clean step-by-step SOP document',
+        'hearsay' => 'check what AI models say about a brand',
+        'video-converter' => 'convert a video to another format (MP4, WebM, GIF) or pull the audio out of a video',
+        'video-mp3-overlay' => 'put an MP3 soundtrack onto a video',
+        'day-log' => 'log a whole day: what got done, what was missed, and priorities for tomorrow, with a recap by email',
+        'email-signature-generator' => 'build an email signature from a name, title, and contact details',
+        'pdf-merger' => 'combine several PDFs into one PDF',
+        'pdf-to-image' => 'turn PDF pages into JPG, PNG, or WebP images',
+        'pdf-compressor' => 'shrink a PDF so it fits an email or upload limit',
+        'sound-human' => 'get a prompt add-on to paste into ChatGPT or Claude so AI writing sounds human',
+        'heic-to-jpg' => 'convert iPhone HEIC photos to JPG, PNG, or PDF',
+        'invoice-generator' => 'create a brand-new invoice document and download it as a PDF',
+        'jpg-to-pdf' => 'turn JPG or PNG images into one PDF, in order',
+        'split-pdf' => 'pull pages out of a PDF, or split a PDF into separate files',
+        'png-to-jpg' => 'convert a PNG image to JPG (use image-converter for other image conversions)',
+    ];
+}
+
+/* Non-decisive keyword scores, reused as hints for the router: the     */
+/* top few tools the user's own phrase table leaned toward. The         */
+/* decisive winner is handled earlier in the flow and never gets here.  */
+function capture_kw_hints(string $text, int $limit = 3): array {
+    $table = capture_kw_table();
+    if ($table === null) return [];
+    $tokens = capture_kw_tokens($text);
+    if ($tokens === []) return [];
+    $scores = [];
+    foreach ($table as $tool => $entries) {
+        $score = 0;
+        $seen = [];
+        foreach ($entries as $e) {
+            $k = implode(' ', $e['tokens']);
+            if (isset($seen[$k])) continue;
+            $seen[$k] = true;
+            if (capture_kw_phrase_hit($e['tokens'], $tokens)) $score += $e['points'];
+        }
+        if ($score > 0) $scores[$tool] = $score;
+    }
+    arsort($scores);
+    return array_keys(array_slice($scores, 0, $limit, true));
+}
+
+/* LLM router: one model call against the whole catalog. Record tools   */
+/* return fields to file; doing tools return a navigate marker the      */
+/* caller answers with the suggest shape. A failed call, an unparseable */
+/* answer, or an unknown tool key returns the honest could-not-sort     */
+/* answer, never a note.                                                */
 /* ------------------------------------------------------------------ */
 
 function capture_llm_route(string $text): array {
+    $down = ['tool' => 'unsupported',
+        'fields' => ['message' => 'Bum Bum could not sort that one. Try picking the tool with the @ menu, or say it another way. Nothing was logged.'],
+        'confidence' => 0.0, 'via' => 'fallback'];
     $key = (string) (config()['groq_api_key'] ?? '');
-    if ($key === '' || $key === 'replace_me') {
-        return ['tool' => 'notes', 'fields' => ['text' => $text], 'confidence' => 0.5, 'via' => 'fallback'];
-    }
+    if ($key === '' || $key === 'replace_me') return $down;
     $model = trim((string) (config()['capture_model'] ?? ''));
-    if ($model === '') $model = 'openai/gpt-oss-20b';
+    if ($model === '') $model = 'openai/gpt-oss-120b';
 
-    $system = 'You are Bum Bum\'s capture router. The user typed or dictated a quick log entry. '
-        . 'Pick the ONE tool it belongs to and extract its fields. '
-        . 'TOOLS: '
-        . 'notes: a thought, idea, reminder, or journal entry. fields: {"text"}. '
+    $system = 'You are Bum Bum\'s front desk router. The user typed or dictated a request. '
+        . 'Pick the ONE tool it belongs to. There are two kinds of tools. '
+        . 'RECORD tools file the words into the user\'s records; extract their fields. '
+        . 'DO tools perform a task; the user is taken to the tool, so return the tool key with empty fields. '
+        . 'RECORD TOOLS: '
+        . 'notes: a thought, idea, reminder, or journal entry the user wants saved as text. fields: {"text"}. '
         . 'receipt-reader: a ONE-TIME purchase or expense with an amount. fields: {"vendor","total","date","currency"}. '
-        . 'corporate-bum-bum: a job application or career move. fields: {"company","role","job_url","location","salary"}. '
-        . 'invoice-chaser: an invoice to chase, a client who owes money. fields: {"client_name","amount","due_date","invoice_no","notes"}. '
+        . 'corporate-bum-bum: a job application or career move to track. fields: {"company","role","job_url","location","salary"}. '
+        . 'invoice-chaser: an invoice a client owes, is late on, or needs a reminder about. fields: {"client_name","amount","due_date","invoice_no","notes"}. '
         . 'cutline: a RECURRING subscription or membership (Netflix, Spotify, a SaaS plan). fields: {"name","price","cadence","category"}. '
         . 'cadence must be one of: weekly, monthly, quarterly, semiannual, annual. '
         . 'category must be one of: streaming, music, software, cloud_storage, fitness, reading, gaming, food_delivery, other. '
-        . 'unsupported: the user wants Bum Bum to DO, MAKE, or TRANSFORM something (crop, edit, resize, build, generate, create, summarize, remind) rather than record information. fields: {"reason": "short verb phrase, e.g. crop a picture"}. '
+        . 'DO TOOLS: ';
+    foreach (capture_router_descriptions() as $k => $desc) {
+        $system .= $k . ': ' . $desc . '. ';
+    }
+    $system .= 'unsupported: no tool above fits. fields: {"reason": "short verb phrase, e.g. wash a car"}. '
         . 'EXAMPLES: "idea: neon backgrounds for every tiktok" -> notes. '
         . '"lunch with Priya $24" -> receipt-reader. '
         . '"applied to Stripe for growth lead" -> corporate-bum-bum. '
         . '"invoice Acme $2000 due Friday" -> invoice-chaser. '
-        . '"log a subscription" -> cutline. '
+        . '"make an invoice for Acme, $2000" -> invoice-generator. '
         . '"Netflix $15.99 a month" -> cutline. '
-        . '"crop a picture" -> unsupported with reason "crop a picture". '
-        . '"make me a logo" -> unsupported. '
+        . '"crop a picture" -> image-cropper. '
+        . '"separate the signed pages out of this contract" -> split-pdf. '
+        . '"turn this voice memo into a post" -> ghostwriter. '
         . 'RULES: Output STRICT JSON only: {"tool":"<key>","fields":{...},"confidence":0.0-1.0}. '
-        . '"tool" must be exactly one of: notes, receipt-reader, corporate-bum-bum, invoice-chaser, cutline, unsupported. '
-        . 'If the input asks Bum Bum to perform, create, or transform something instead of recording information, use unsupported with confidence 1.0. '
-        . 'Never file an action request as a note. '
+        . '"tool" must be exactly one of the tool keys listed above, or unsupported. '
+        . 'For DO tools, fields must be {}. '
+        . 'A request to DO, MAKE, or TRANSFORM something belongs to the DO tool that does it, never to notes, and never to unsupported when a DO tool fits. '
+        . 'notes is only for words the user wants recorded as text: a thought, an idea, a reminder to self, a journal entry. '
+        . 'A rundown of the user\'s whole day belongs to day-log, not notes. '
         . 'The words subscription, membership, recurring, per month, or /month ALWAYS mean cutline, never receipt-reader. '
         . 'Receipt-reader is only for one-time purchases. '
         . 'If a cutline entry has no name, set confidence below 0.6 so the user is asked. '
         . 'Never invent amounts, dates, or names the user did not mention. Omit unknown optional fields. '
         . 'Use YYYY-MM-DD for dates; assume the current year. No em dashes anywhere.';
+    $hints = capture_kw_hints($text);
+    if ($hints !== []) {
+        $system .= ' KEYWORD HINTS: the user\'s own phrase table leaned toward: ' . implode(', ', $hints)
+            . '. Treat these as weak evidence only; meaning wins.';
+    }
 
     $payload = [
         'model' => $model,
@@ -615,18 +706,26 @@ function capture_llm_route(string $text): array {
     $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    $fallback = ['tool' => 'notes', 'fields' => ['text' => $text], 'confidence' => 0.5, 'via' => 'fallback'];
-    if ($raw === false || $err !== '' || $code < 200 || $code >= 300) return $fallback;
+    if ($raw === false || $err !== '' || $code < 200 || $code >= 300) return $down;
     $data = json_decode((string) $raw, true);
     $content = $data['choices'][0]['message']['content'] ?? '';
     if (is_string($content) && preg_match('/```(?:json)?\s*(\{.*\})\s*```/s', $content, $m)) $content = $m[1];
     $parsed = is_string($content) ? json_decode($content, true) : null;
-    if (!is_array($parsed)) return $fallback;
+    if (!is_array($parsed)) return $down;
     $tool = (string) ($parsed['tool'] ?? '');
-    if (!isset(capture_targets()[$tool])) return $fallback;
-    $fields = is_array($parsed['fields'] ?? null) ? $parsed['fields'] : [];
     $confidence = (float) ($parsed['confidence'] ?? 0.5);
     $confidence = max(0.0, min(1.0, $confidence));
+    $nav = capture_nav_destinations();
+    if (isset($nav[$tool])) {
+        return ['tool' => $tool, 'fields' => [], 'confidence' => $confidence, 'via' => 'llm',
+            'navigate' => ['tool' => $tool, 'name' => $nav[$tool]['name'], 'url' => $nav[$tool]['url']]];
+    }
+    if ($tool === 'unsupported') {
+        $fields = is_array($parsed['fields'] ?? null) ? $parsed['fields'] : [];
+        return ['tool' => 'unsupported', 'fields' => $fields, 'confidence' => $confidence, 'via' => 'llm'];
+    }
+    if (!isset(capture_targets()[$tool])) return $down;
+    $fields = is_array($parsed['fields'] ?? null) ? $parsed['fields'] : [];
     return ['tool' => $tool, 'fields' => $fields, 'confidence' => $confidence, 'via' => 'llm'];
 }
 
@@ -784,6 +883,17 @@ function capture_idempotency(array $input): string {
     return $key;
 }
 
+/* The ask-don't-guess answer: the record tools as tappable options,     */
+/* with the router's guess and its fields riding along so a pick needs   */
+/* one tap. Nothing is charged.                                          */
+function capture_ambiguous(string $guess, array $fields, string $text): void {
+    $options = [];
+    foreach (capture_targets() as $key => $t) {
+        $options[] = ['tool' => $key, 'tool_name' => $t['name']];
+    }
+    jsonResponse(['ok' => false, 'ambiguous' => true, 'guess' => $guess, 'fields' => $fields, 'options' => $options, 'text' => $text]);
+}
+
 /* ------------------------------------------------------------------ */
 /* main                                                                */
 /* ------------------------------------------------------------------ */
@@ -899,6 +1009,17 @@ if ($forced !== '' && isset($targets[$forced])) {
     }
 }
 
+// A router pick of a doing tool: answer with the suggest shape, the
+// same way a keyword navigate does, so the client opens the tool with
+// the user's words in hand. Nothing is filed and nothing is charged.
+if (is_array($route) && !empty($route['navigate'])) {
+    $nav = $route['navigate'];
+    jsonResponse(['ok' => true, 'logged' => false,
+        'message' => 'That\'s a job for ' . $nav['name'] . '. The log box only files text into tools, so open it there to get it done. Nothing was logged.',
+        'suggest_name' => $nav['name'], 'suggest_url' => $nav['url'],
+        'tool' => $nav['tool'], 'via' => $route['via'] ?? 'llm']);
+}
+
 $tool = $route['tool'];
 $fields = is_array($route['fields']) ? $route['fields'] : [];
 $confidence = (float) ($route['confidence'] ?? 0);
@@ -906,6 +1027,9 @@ $confidence = (float) ($route['confidence'] ?? 0);
 // The box files things into tools; it doesn't perform tasks. Be honest
 // about that instead of misfiling an action request as a note.
 if ($tool === 'unsupported') {
+    if (!empty($fields['message'])) {
+        jsonResponse(['ok' => true, 'logged' => false, 'message' => (string) $fields['message']]);
+    }
     $reason = trim((string) ($fields['reason'] ?? ''));
     if ($reason === '') $reason = 'do that';
     jsonResponse(['ok' => true, 'logged' => false,
@@ -915,28 +1039,24 @@ if ($tool === 'unsupported') {
 // Low confidence and no forced tool: ask, don't guess. Nothing is charged.
 // The router's field guess rides along so the user's pick needs one tap.
 if ($confidence < 0.6 && $forced === '') {
-    $options = [];
-    foreach ($targets as $key => $t) {
-        $options[] = ['tool' => $key, 'tool_name' => $t['name']];
-    }
-    jsonResponse(['ok' => false, 'ambiguous' => true, 'guess' => $tool, 'fields' => $fields, 'options' => $options, 'text' => $text]);
+    capture_ambiguous($tool, $fields, $text);
 }
 
-// Defensive fallbacks only for router-chosen tools, never for explicit picks.
+// Defensive checks only for router-chosen tools, never for explicit
+// picks. A record pick missing the field that makes it that record is
+// a guess, not a filing: ask, with the guess in hand. These used to
+// refile the words as a note, which is how action requests and
+// half-formed records kept landing in Notes.
 if ($forced === '') {
     if ($tool === 'notes' && empty($fields['text'])) $fields['text'] = $text;
     if ($tool === 'receipt-reader' && empty($fields['total'])) {
-        // Router found no amount: not really a receipt. Save as a note instead.
-        $tool = 'notes';
-        $fields = ['text' => $text];
+        capture_ambiguous($tool, $fields, $text);
     }
     if ($tool === 'corporate-bum-bum' && trim((string) ($fields['company'] ?? '')) === '') {
-        $tool = 'notes';
-        $fields = ['text' => $text];
+        capture_ambiguous($tool, $fields, $text);
     }
     if ($tool === 'invoice-chaser' && trim((string) ($fields['client_name'] ?? '')) === '') {
-        $tool = 'notes';
-        $fields = ['text' => $text];
+        capture_ambiguous($tool, $fields, $text);
     }
 } elseif ($tool === 'notes' && empty($fields['text'])) {
     $fields['text'] = $text;
