@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/invoice-reminder-templates/" },
+  openGraph: { url: "/blog/invoice-reminder-templates/" },
   title: "Invoice Reminder Templates for Every Stage of Late | Leave It to Bum Bum",
   description: "Copy-ready invoice reminder templates for each stage: the friendly heads-up before the due date, the gentle nudge, the firm follow-up, and the final notice.",
 };
@@ -16,7 +18,7 @@ const postingLd = {
   "headline": HEADLINE,
   "description": DESC,
   "datePublished": "2026-11-02",
-  "dateModified": "2026-11-02",
+  "dateModified": "2026-11-12",
   "author": { "@type": "Organization", "name": "LeaveItToBumBum", "url": "https://leaveittobumbum.com/" },
   "publisher": {
     "@type": "Organization",
@@ -59,12 +61,12 @@ export default function InvoiceReminderTemplates() {
       <section className="page-head shell blog-head">
         <p className="kicker">Blog</p>
         <h1>Invoice Reminder Templates for Every Stage of Late</h1>
-        <p className="lede">Updated November 2, 2026 · By the LeaveItToBumBum team</p>
+        <p className="lede">Updated November 12, 2026 · By the LeaveItToBumBum team</p>
       </section>
       <section className="shell">
         <div className="prose blog-wide">
           <p>Most late invoices are not a money problem. They are an attention problem: your invoice is sitting in an inbox under forty other things. A good reminder sequence fixes that without damaging the relationship, as long as each message matches how late the payment actually is.</p>
-          <p>Here are templates for the four stages. Swap in your details, keep the invoice number and amount in every message, and attach the invoice again each time. Making someone search for the original is how reminders go to die.</p>
+          <p>Here are templates for the four stages. Swap in your details, keep the invoice number and amount in every message, and attach the invoice again each time. Making someone search for the original is how reminders go to die. If the original invoice still needs making, the <a href="/tools/invoice-generator/">Invoice Generator</a> builds one in your browser, so you always have a clean copy ready to attach.</p>
           <h2>Stage 1: The heads-up (a few days before the due date)</h2>
           <p><strong>Subject: Invoice [number] due [date]</strong></p>
           <p>Hi [name], a quick heads-up that invoice [number] for [amount] is due on [date]. I have attached a copy here so it is handy. Let me know if you need anything else from me to process it. Thanks, [your name]</p>

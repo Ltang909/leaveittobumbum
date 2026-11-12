@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/best-free-crm-small-business/" },
+  openGraph: { url: "/blog/best-free-crm-small-business/" },
   title: "12 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans) | Leave It to Bum Bum",
   description: "Compare 12 free CRM tools for small businesses by user limits, contact caps, features and upgrade traps. Includes HubSpot, Zoho, Attio and LeaveItToBumBum.",
 };
@@ -12,7 +14,7 @@ const postingLd = {
   "headline": "12 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans)",
   "description": "Compare 12 free CRM tools for small businesses by user limits, contact caps, features and upgrade traps. Includes HubSpot, Zoho, Attio and LeaveItToBumBum.",
   "datePublished": "2026-10-26",
-  "dateModified": "2026-10-26",
+  "dateModified": "2026-11-12",
   "author": {
     "@type": "Organization",
     "name": "LeaveItToBumBum",
@@ -147,7 +149,7 @@ export default function BestFreeCrmSmallBusiness() {
       <section className="page-head shell blog-head">
         <p className="kicker">Blog</p>
         <h1>12 Best Free CRM Software for Small Businesses in 2026</h1>
-        <p className="lede">Updated October 26, 2026 · 12 products compared · By the LeaveItToBumBum team</p>
+        <p className="lede">Updated November 12, 2026 · 12 products compared · By the LeaveItToBumBum team</p>
       </section>
       <section className="shell">
         <div className="prose blog-wide">
@@ -156,6 +158,7 @@ export default function BestFreeCrmSmallBusiness() {
           <p>Some teams, however, really do need pipelines, permissions, shared calendars and reporting. We've compared both genuinely lightweight client trackers and full CRM software below.</p>
           <p><strong>Disclosure and methodology:</strong> This guide is written by LeaveItToBumBum, so our own tool appears first as an <strong>editorial pick for solo follow-up management</strong>, not as the most feature-rich CRM. We reviewed public vendor plans and documentation as of October 26, 2026. We did not conduct controlled hands-on tests of every vendor. A free trial alone does not qualify as free; where a vendor's pages disagree about a free plan, we flag the uncertainty. Free tiers, user caps and upgrade rules can change.</p>
           <h2>Quick comparison: 12 free CRM tools</h2>
+          <p>Working solo, or selling to individual clients rather than companies? Two picks on this list suit that B2C client work best: the <a href="/tools/purrsuit/">Client Follow-Up Tracker</a> when follow-ups are the whole job, and <a href="https://www.bigin.com/" rel="noopener">Bigin by Zoho</a> when you want a simple deal pipeline.</p>
           <div className="table-wrap">
             <table>
               <thead>
@@ -184,7 +187,7 @@ export default function BestFreeCrmSmallBusiness() {
           <p>Comparing follow-up trackers on their own? We put nine of them side by side in our guide to the <a href="/blog/best-free-client-follow-up-tracker/">best free client follow-up trackers</a>.</p>
           <h2>2. HubSpot CRM - best overall free, full-featured CRM starter</h2>
           <p><a href="https://www.hubspot.com/" rel="noopener">HubSpot</a> has a free CRM foundation for <strong>up to two users</strong>, with core contact management and access to connected marketing, sales and service tools. Its biggest appeal is that a small business can start with the basics and later add dedicated sales or marketing functionality in the same product suite.</p>
-          <p><strong>What works:</strong> Recognizable CRM structure, connected business tools, room to expand and a broad set of integrations. <strong>What to know:</strong> The free tier is intentionally limited: richer automation, reporting and sales features require upgrades, while contact/email quotas depend on the feature. Paid promotions can obscure ongoing costs. <strong>Verdict:</strong> A safer long-term choice than a single-task tracker if you want a conventional sales CRM. <a href="https://www.hubspot.com/pricing/crm" rel="noopener">Source: HubSpot free pricing</a>.</p>
+          <p><strong>What works:</strong> Recognizable CRM structure, connected business tools, room to expand and a broad set of integrations. <strong>What to know:</strong> The free tier is intentionally limited: richer automation, reporting and sales features require upgrades, while contact/email quotas depend on the feature. Paid promotions can obscure ongoing costs. <strong>Verdict:</strong> A safer long-term choice than a single-task tracker if you want a conventional sales CRM. <a href="https://www.hubspot.com/pricing/crm" rel="noopener">Source: HubSpot free pricing</a>. Weighing HubSpot against its closest rivals first? See our <a href="/blog/hubspot-crm-alternatives-2026/">HubSpot CRM alternatives</a> comparison.</p>
           <h2>3. Zoho CRM - best free CRM for a three-person sales team</h2>
           <p><a href="https://www.zoho.com/" rel="noopener">Zoho CRM</a> advertises a <strong>forever-free version for three users</strong>. Its free edition includes contact management, follow-up reminders, workflow automation, tasks, calls, meetings and standard reports. For a small sales team, that's a meaningful amount of CRM functionality at zero subscription cost.</p>
           <p><strong>What works:</strong> Multiple seats and real sales activities without immediately paying per person. <strong>What to know:</strong> Multiple pipelines, richer communication tools and advanced customization fall into paid editions; configuration is more involved than a tiny follow-up tracker. <strong>Verdict:</strong> One of the best free choices for a genuinely collaborative three-person sales operation. <a href="https://www.zoho.com/en-us/crm/zohocrm-pricing.html?price=FREE" rel="noopener">Source: Zoho CRM pricing</a>.</p>
@@ -215,6 +218,8 @@ export default function BestFreeCrmSmallBusiness() {
           <h2>12. Odoo CRM - best for one free app with lots of users</h2>
           <p><a href="https://www.odoo.com/" rel="noopener">Odoo</a> offers <strong>One App Free</strong>, which allows unlimited users for one selected app, including CRM. It's particularly interesting when you expect to manage a business with Odoo later and want your first CRM process inside that environment.</p>
           <p><strong>What works:</strong> Unlimited users on the free single-app model, optional connection to a wide range of other business software. <strong>What to know:</strong> A single free app is not the same as a free all-in-one ERP. Adding more business apps generally requires a paid plan, and there is a learning curve. <strong>Verdict:</strong> Best for teams comfortable with a modular business platform; unnecessarily elaborate if you only want a follow-up reminder. <a href="https://www.odoo.com/pricing" rel="noopener">Source: Odoo pricing and free-plan rules</a>.</p>
+          <h2>Free CRM plans and email marketing</h2>
+          <p>Plenty of people search for a free CRM with email marketing, and the honest answer is that most free plans split the two jobs. HubSpot's free CRM connects to its marketing tools, with email quotas that depend on which feature you use. EngageBay includes email tracking and basic marketing touchpoints in its free sales offering, capped at 250 contacts. Agile CRM includes selected marketing functions on the free plan for up to 10 users. Capsule keeps its more advanced mail features on paid plans, and Odoo's one free app means picking the CRM leaves email marketing as a second, paid app. Before you move your contacts into any of them, check the sending limits on the exact plan you will actually be on.</p>
           <h2>Which free CRM should you actually use?</h2>
           <p><strong>If you're a solo service provider:</strong> Start with <a href="/tools/purrsuit/">Purrsuit</a> if follow-up discipline is the problem. Switch to <a href="https://www.bigin.com/" rel="noopener">Bigin</a> or <a href="https://capsulecrm.com/" rel="noopener">Capsule</a> if you want a structured deal pipeline and a persistent CRM database.</p>
           <p><strong>If you're a two- or three-person team:</strong> Compare <a href="https://www.hubspot.com/" rel="noopener">HubSpot</a>, <a href="https://www.zoho.com/" rel="noopener">Zoho CRM</a> and <a href="https://attio.com/" rel="noopener">Attio</a>. Decide what matters most: marketing/service extensions, classic sales workflow or flexible data.</p>
