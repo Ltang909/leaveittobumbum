@@ -391,7 +391,6 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .desk-browse { font-weight:900; border-bottom:2px solid var(--ink); padding-bottom:2px; white-space:nowrap; }
 /* Hero refresh to Leon's Nov 11 mock: upright blue headline line, one flat desk card, white Try pills. */
 .hero-headline { position:relative; }
-.hero-spark { position:absolute; left:-56px; top:2px; width:46px; height:38px; }
 .hero-desk h1 em { color:#0354FB; font-style:normal; }
 .hero-top { grid-template-columns:minmax(0,1.45fr) minmax(0,.55fr); }
 @media (max-width:900px){.hero-top{grid-template-columns:1fr}}
@@ -411,7 +410,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .desk-task-chips .capture-home-chip { background:white; display:inline-flex; align-items:center; gap:8px; padding:9px 16px; }
 .chip-ico-emo { font-size:1rem; line-height:1; }
 .desk-browse { margin-left:auto; }
-@media (max-width:700px){.hero-spark{display:none}.desk-browse{margin-left:0}.hero-portrait{min-height:260px}}
+@media (max-width:700px){.desk-browse{margin-left:0}.hero-portrait{min-height:260px}}
 /* Hero cat cutout (Leon's supplied art, Nov 11): paws over the desk card, tilted tag + arrow. */
 .hero-top { position:relative; z-index:2; }
 .capture-home { position:relative; z-index:1; }

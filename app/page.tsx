@@ -140,7 +140,7 @@ export default function Home() {
         <DeskFaceProvider>
           <div className="hero-top">
             <div className="hero-copy">
-              <div className="hero-headline"><svg className="hero-spark" viewBox="0 0 48 40" aria-hidden="true"><path d="M7 31l11-5M13 13l10 6M28 5l3 11" stroke="#FFD84D" strokeWidth="5" strokeLinecap="round" fill="none" /></svg><h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1></div>
+              <div className="hero-headline"><h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1></div>
               <p className="lede">Little tools that handle the fiddly stuff stealing your afternoon.</p>
             </div>
             <HeroPortrait party={party} />
