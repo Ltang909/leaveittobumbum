@@ -50,6 +50,18 @@ CARDS = {
     'jpg-to-pdf': ("JPG to PDF Converter", "Turn your images into one tidy PDF."),
     'split-pdf': ("Split PDF", "Pull the pages you need out of any PDF."),
     'png-to-jpg': ("PNG to JPG Converter", "Turn PNGs into smaller JPGs in seconds."),
+    'webp-to-png': ("WebP to PNG Converter", "Turn WebP images into PNGs in seconds."),
+    'webp-to-jpg': ("WebP to JPG Converter", "Turn WebP images into JPGs in seconds."),
+    'png-to-webp': ("PNG to WebP Converter", "Turn PNGs into WebP files in seconds."),
+    'jpg-to-webp': ("JPG to WebP Converter", "Turn JPGs into WebP files in seconds."),
+    'jpg-to-png': ("JPG to PNG Converter", "Turn JPGs into PNGs in seconds."),
+    'pdf-to-jpg': ("PDF to JPG Converter", "Turn PDF pages into JPG images in seconds."),
+    'pdf-to-png': ("PDF to PNG Converter", "Turn PDF pages into PNG images in seconds."),
+    'png-converter': ("PNG Converter", "Every PNG conversion, in and out, in one place."),
+    'jpg-converter': ("JPG Converter", "Every JPG conversion, in and out, in one place."),
+    'webp-converter': ("WebP Converter", "Every WebP conversion, in and out, in one place."),
+    'heic-converter': ("HEIC Converter", "Turn iPhone HEIC photos into JPG, PNG, or PDF."),
+    'pdf-converter': ("PDF Converter", "Turn PDFs into images, merge, split, and shrink."),
 }
 
 def wrap(d, text, font, maxw):
