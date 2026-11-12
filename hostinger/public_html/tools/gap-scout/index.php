@@ -527,4 +527,4 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 <p>Use postings for the same kind of role. Mixing five unrelated jobs produces a gap list for a job that does not exist, and tailoring toward it helps with none of them.</p>
 <h3>Patterns before hobbies</h3>
 <p>A skill appearing in four of five postings is a pattern worth your effort. A skill in exactly one is that hiring manager's hobby. Work the list in that order and stop when the patterns run out.</p>
-<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-tailor-your-resume-to-a-job-description/">How to tailor your resume to a job description</a>.</p></section></main><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-tailor-your-resume-to-a-job-description/">How to tailor your resume to a job description</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>
