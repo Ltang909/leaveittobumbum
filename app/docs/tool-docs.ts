@@ -49,7 +49,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["What format does my recording download as?", "MP4 wherever your browser can record it, which covers most people. A few browsers (Firefox among them) record WebM instead, so the format follows your browser."],
       ["Why doesn't the floating bubble follow me into other tabs and windows?", "The floating bubble is a small mirror that lives on this page, and websites are not allowed to draw inside other tabs or apps, so it cannot travel with you. Tools that seem to do it use a browser extension, which has permissions a website does not. Your finished recording still includes your camera in the corner either way, because it is blended into the video as you record. To see yourself while you work in another window, share your entire screen and keep the bubble up."],
     ],
-    updated: U,
+    updated: "November 12, 2026",
   },
   {
     key: "notes",
@@ -78,7 +78,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Where does my recording go?", "Nowhere, on desktop. It stays in your browser. On iPhone it is sent to our server for transcription because iPhone browsers cannot transcribe live."],
       ["Can I download my transcripts?", "Yes, any note in your library can be copied or downloaded as text, and the audio too when you want it."],
     ],
-    updated: U,
+    updated: "November 12, 2026",
   },
   {
     key: "cutline",
@@ -136,7 +136,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["How is this different from a big CRM?", "It skips deal-pipeline setup, required fields, and admin settings. It tracks who the contact is, where things stand, and who needs a nudge today."],
       ["Can I import my contacts?", "Yes, there is a CSV import on the page. Name and company are enough to start."],
     ],
-    updated: U,
+    updated: "November 12, 2026",
   },
   {
     key: "corporate-bum-bum",
@@ -222,7 +222,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Does it actually send the emails?", "Yes, with your approval each time. Nothing sends itself; you read the draft and tap send."],
       ["Will it annoy my clients?", "The drafts start friendly and firm up gradually, and the timing adapts to when each client usually pays. You can edit every word before sending."],
     ],
-    updated: U,
+    updated: "November 12, 2026",
   },
   {
     key: "receipt-reader",

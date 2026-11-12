@@ -63,6 +63,14 @@
     },
     {
       "@type": "Question",
+      "name": "Can I record my screen with sound?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Turn on the microphone option and your voice records along with the screen, and you can add the camera bubble at the same time if you want your face in the corner. Make a short test recording first to check your levels before the real take."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Why doesn't the floating bubble follow me into other tabs and windows?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -597,6 +605,10 @@ if(!screenOK){
 <details>
 <summary>Can I include my webcam in the recording?</summary>
 <p>Yes. Add your mic and a little camera bubble if you want to be in the recording.</p>
+</details>
+<details>
+<summary>Can I record my screen with sound?</summary>
+<p>Yes. Turn on the microphone option and your voice records along with the screen, and you can add the camera bubble at the same time if you want your face in the corner. Make a short test recording first to check your levels before the real take.</p>
 </details>
 <details>
 <summary>Why doesn't the floating bubble follow me into other tabs and windows?</summary>

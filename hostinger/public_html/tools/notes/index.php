@@ -63,6 +63,14 @@
         "@type": "Answer",
         "text": "Yes. On iPhone your words still appear live while you record. Short pieces of your audio are sent to our server as you speak and transcribed on the spot. The audio itself is never stored."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I transcribe iPhone voice memos?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Play the voice memo on your iPhone and record it here as it plays, or record a fresh note in the browser instead. Either way, you get a transcript you can copy or download."
+      }
     }
   ]
 }
@@ -175,6 +183,10 @@ loadNotes();
 <details>
 <summary>Does it work on iPhone?</summary>
 <p>Yes. On iPhone your words still appear live while you record. Short pieces of your audio are sent to our server as you speak and transcribed on the spot. The audio itself is never stored.</p>
+</details>
+<details>
+<summary>Can I transcribe iPhone voice memos?</summary>
+<p>Yes. Play the voice memo on your iPhone and record it here as it plays, or record a fresh note in the browser instead. Either way, you get a transcript you can copy or download.</p>
 </details>
 </section>
 <?php $bbTool = 'notes'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>

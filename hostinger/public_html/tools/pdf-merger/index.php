@@ -63,6 +63,14 @@
         "@type": "Answer",
         "text": "Yes. Use the up and down buttons on each file to arrange the order, then merge."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Why did one of my PDFs fail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Usually because it is password-protected or damaged. Unlock it with the password in your usual PDF app, save an unprotected copy, and drop that in."
+      }
     }
   ]
 }
