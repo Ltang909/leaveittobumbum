@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/how-to-write-an-sop/" },
+  openGraph: { url: "/blog/how-to-write-an-sop/" },
   title: "How to Write an SOP That People Actually Follow | Leave It to Bum Bum",
   description: "An SOP only works if someone else can follow it without asking you questions. Here is a simple way to write standard operating procedures for a small business, step by step.",
 };

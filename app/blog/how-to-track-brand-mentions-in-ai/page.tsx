@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/how-to-track-brand-mentions-in-ai/" },
+  openGraph: { url: "/blog/how-to-track-brand-mentions-in-ai/" },
   title: "How to Track When AI Mentions Your Brand | Leave It to Bum Bum",
   description: "Customers now ask ChatGPT and other AI assistants who to hire. Here is how to check what those answers say about your business, and how to keep checking without making it a second job.",
 };

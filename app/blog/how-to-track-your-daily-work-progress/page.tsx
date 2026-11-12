@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/how-to-track-your-daily-work-progress/" },
+  openGraph: { url: "/blog/how-to-track-your-daily-work-progress/" },
   title: "How to Track Your Daily Work Progress in Just 5 Minutes | Leave It to Bum Bum",
   description: "A daily work log takes five minutes: what to track, the minute-by-minute routine, how to review it weekly and monthly, and how Day Log scores yesterday's priorities for you.",
 };

@@ -3,6 +3,8 @@ import { SiteHeader, SiteFooter } from "../components/chrome";
 import CrewCards from "./crew-cards";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/team/" },
+  openGraph: { url: "/team/" },
   title: "The Team | Leave It to Bum Bum",
   description: "Meet the elite squad behind Leave It to Bum Bum. One visionary cat, one middle manager, and two humans who keep the snacks coming.",
 };

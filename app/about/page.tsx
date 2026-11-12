@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/about/" },
+  openGraph: { url: "/about/" },
   title: "About | Leave It to Bum Bum",
   description: "Why tiny tools, who Bum Bum is, and the 36-hour Operator promise.",
 };

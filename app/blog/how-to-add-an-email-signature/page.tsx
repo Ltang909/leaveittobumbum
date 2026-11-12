@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/how-to-add-an-email-signature/" },
+  openGraph: { url: "/blog/how-to-add-an-email-signature/" },
   title: "How to Add an Email Signature in Gmail, Outlook, and Apple Mail | Leave It to Bum Bum",
   description: "Add a professional email signature in minutes: what to include, how to build one free, the exact steps for Gmail, Outlook, and Apple Mail, and fixes for images that do not show.",
 };

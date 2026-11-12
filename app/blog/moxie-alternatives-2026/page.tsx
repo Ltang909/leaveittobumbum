@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/moxie-alternatives-2026/" },
+  openGraph: { url: "/blog/moxie-alternatives-2026/" },
   title: "6 Best Moxie Alternatives in 2026 (For Freelancers & Small Teams) | Leave It to Bum Bum",
   description: "Compare Moxie alternatives including Bonsai, Indy, HoneyBook, Dubsado, Bloom and Leave It To Bum Bum. See real pricing, contracts, portals and payment trade-offs.",
 };

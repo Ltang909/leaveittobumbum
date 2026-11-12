@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/hubspot-crm-alternatives-2026/" },
+  openGraph: { url: "/blog/hubspot-crm-alternatives-2026/" },
   title: "5 Best HubSpot CRM Alternatives in 2026 for Small Businesses | Leave It to Bum Bum",
   description: "Looking for a simpler HubSpot CRM alternative? Compare five tools for contact management, client follow-ups, and small business sales.",
 };

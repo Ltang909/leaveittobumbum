@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/capcut-alternatives-2026/" },
+  openGraph: { url: "/blog/capcut-alternatives-2026/" },
   title: "5 Best CapCut Alternatives in 2026 for Quick Video Edits | Leave It to Bum Bum",
   description: "Looking for a CapCut alternative after the price increases and paywalls? Compare five options for trimming, converting, and editing short videos in 2026.",
 };

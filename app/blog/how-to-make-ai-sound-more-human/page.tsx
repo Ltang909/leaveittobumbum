@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/how-to-make-ai-sound-more-human/" },
+  openGraph: { url: "/blog/how-to-make-ai-sound-more-human/" },
   title: "How to Make AI Sound More Human | Leave It to Bum Bum",
   description: "AI writing gets spotted for specific, nameable habits: formulaic contrast writing, performative profundity, spatial metaphor inflation, and a filler vocabulary. What each one is, how to spot it, and the prompt instructions that fix it.",
 };

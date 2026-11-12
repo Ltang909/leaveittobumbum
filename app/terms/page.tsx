@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/terms/" },
+  openGraph: { url: "/terms/" },
   title: "Terms of Service | Leave It to Bum Bum",
   description: "The plain-language terms for using Leave It to Bum Bum's tiny tools.",
 };

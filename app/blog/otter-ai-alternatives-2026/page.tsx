@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/otter-ai-alternatives-2026/" },
+  openGraph: { url: "/blog/otter-ai-alternatives-2026/" },
   title: "5 Best Otter.ai Alternatives in 2026 (Including Free Options) | Leave It to Bum Bum",
   description: "Need a simpler alternative to Otter.ai? Compare five transcription and voice note tools for meetings, personal notes, and everyday ideas.",
 };

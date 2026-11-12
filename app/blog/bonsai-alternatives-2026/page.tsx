@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/bonsai-alternatives-2026/" },
+  openGraph: { url: "/blog/bonsai-alternatives-2026/" },
   title: "6 Best Bonsai Alternatives for Freelancers in 2026 (Prices & Fees Compared) | Leave It to Bum Bum",
   description: "Looking beyond Bonsai? Compare Indy, Moxie, HoneyBook, Dubsado, Wave and Leave It To Bum Bum by price, contracts, invoicing, payment fees and fit.",
 };

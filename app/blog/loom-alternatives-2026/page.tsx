@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/loom-alternatives-2026/" },
+  openGraph: { url: "/blog/loom-alternatives-2026/" },
   title: "5 Best Loom Alternatives in 2026 (Free & Paid) | Leave It to Bum Bum",
   description: "Looking for a Loom alternative? Compare five screen recording tools for 2026, including free options for freelancers, small businesses, and teams.",
 };

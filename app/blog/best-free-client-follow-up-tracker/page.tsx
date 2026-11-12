@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/best-free-client-follow-up-tracker/" },
+  openGraph: { url: "/blog/best-free-client-follow-up-tracker/" },
   title: "Best Free Client Follow-Up Trackers in 2026: 9 Tools Compared | Leave It to Bum Bum",
   description: "Compare 9 free client follow-up trackers for freelancers and solopreneurs: LeaveItToBumBum Purrsuit, ClientPlot, Bigin, HubSpot, Zoho CRM, Capsule, Trello, FWD Tools and Google Sheets, by free plan, limits and best fit.",
 };

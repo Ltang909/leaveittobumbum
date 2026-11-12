@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/how-to-tailor-your-resume-to-a-job-description/" },
+  openGraph: { url: "/how-to-tailor-your-resume-to-a-job-description/" },
   title: "How to tailor your resume to a job description | Leave It to Bum Bum",
   description: "How recruiters and screening software scan your resume, how to pull the skills a posting repeats, and the two-column gap check that shows exactly what to fix. Honest tailoring only.",
 };

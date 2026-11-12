@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/how-to-find-subscriptions-you-forgot-about/" },
+  openGraph: { url: "/how-to-find-subscriptions-you-forgot-about/" },
   title: "How to find subscriptions you forgot about (and cancel them) | Leave It to Bum Bum",
   description: "Forgotten subscriptions hide in app stores, PayPal, and old email receipts. A 20-minute audit finds them all, plus the calendar trick that stops free trials from billing you.",
 };

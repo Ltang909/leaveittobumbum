@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/how-to-turn-voice-notes-into-text/" },
+  openGraph: { url: "/how-to-turn-voice-notes-into-text/" },
   title: "How to turn voice notes into text | Leave It to Bum Bum",
   description: "Talk it out and get text you can use: how voice note transcription works, how to clean up a raw transcript, and how to turn rambles into docs, posts, and to-do lists.",
 };

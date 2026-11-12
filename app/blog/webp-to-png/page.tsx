@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/webp-to-png/" },
+  openGraph: { url: "/blog/webp-to-png/" },
   title: "How to Convert WebP to PNG (Free, In Your Browser) | Leave It to Bum Bum",
   description: "Convert WebP images to PNG right in your browser: no uploads, no quality loss, transparency kept. Here is why WebP files get refused, and the one-minute fix.",
 };

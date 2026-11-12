@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/how-to-make-an-audiogram/" },
+  openGraph: { url: "/blog/how-to-make-an-audiogram/" },
   title: "How to Make an Audiogram for Your Podcast Clips | Leave It to Bum Bum",
   description: "An audiogram turns your best podcast moment into a video people can actually stop scrolling for. Here is how to make one, from picking the clip to posting it.",
 };
