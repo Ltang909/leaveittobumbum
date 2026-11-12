@@ -16,8 +16,11 @@ import { useDeskFace } from "../lib/desk-face";
 // to the tool page, which picks them up via /tools/capture-handoff.js.
 // Guests are welcome; the account prompt does its own asking later, per
 // the delayed-prompt pattern. On top of that brain, the desk layer:
-// example jobs rotate through the placeholder, typing @name calls a
-// tool directly (fuzzy-matched dropdown, the pick pins the destination),
+// The desk is tool-first: nothing files or opens until a tool is
+// picked. Typing with no pin searches the tool list (a short search
+// opens the picker over the box), typing @name does the same
+// mid-sentence, and the pick pins the destination. The pinned tool
+// then prompts for its input in the box, or opens directly.
 // he swaps hats when he routes something, reads along while you type
 // (his hero portrait does the faces now), peeks once if you leave him
 // hanging, and carries your file across the screen on its way to the
@@ -59,19 +62,13 @@ const FACE_PEEK = "/bum/cat-peeking.png";
 const FACE_BOX = "/bum/cat-box-v2.png";
 const FACE_PETPET = "/bum/petpet/box.png";
 
-// The lead line teaches the @ trick; the worked examples rotate after
-// it, about five seconds each (Leon's calls, Nov 11).
-const PLACEHOLDERS = [
-  "Start with @ to pick a tool, or describe what you need done",
-  "Drop a receipt, get a spreadsheet…",
-  "Photo of an event poster? Add it to your calendar",
-  "Netflix $15.99 a month, track it as part of your subscriptions",
-  "transcribe your spoken thoughts",
-  "Photo of your meal? Turn it into tracked calories and macros",
-];
+// The idle placeholder teaches the one move that starts everything.
+// It used to rotate worked examples; the tool-first desk made them
+// noise, so the line stands still now (Leon's call, Nov 11).
+const PLACEHOLDER_IDLE = "Start with @ to pick a tool";
 
-// While a tool is pinned with @, the rotating examples step aside for a
-// sample of what that tool actually wants. Log-style tools get an
+// While a tool is pinned, the box prompts with a sample of what that
+// tool actually wants. Log-style tools get an
 // "e.g. ..." in their real input shape; file-first tools get the drop
 // instruction instead, since the desk is their drop zone too.
 const PIN_PLACEHOLDERS: Record<string, string> = {
@@ -100,6 +97,13 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   "video-converter": "Drop the video here to convert it…",
   "day-log": "e.g. Finished the proposal, the client call ran long, tomorrow I chase the invoice…",
   "email-signature-generator": "e.g. Make me a clean email signature for Gmail…",
+  "heic-to-jpg": "Drop the iPhone photos here to turn them into JPGs…",
+  "invoice-generator": "Hit Do it! and the invoice maker opens, blank and ready…",
+  "jpg-to-pdf": "Drop the images here to make one PDF…",
+  "split-pdf": "Drop the PDF here to pull pages out of it…",
+  "png-to-jpg": "Drop the PNG here to turn it into a JPG…",
+  "sound-human": "e.g. Paste the AI-sounding draft, get the add-ons that fix the voice…",
+  "video-mp3-overlay": "Hit Do it! to open it, then add your video and the MP3 there…",
 };
 
 // The task chips under the desk: a pool of chips, one per tool. When a
@@ -383,17 +387,17 @@ export default function CaptureBar() {
   const [pinned, setPinned] = useState<Tool | null>(null);
   const [mention, setMention] = useState<{ start: number; query: string } | null>(null);
   const [mentionIndex, setMentionIndex] = useState(0);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerIndex, setPickerIndex] = useState(0);
   const deskFace = useDeskFace();
   const [recording, setRecording] = useState(false);
   const [peek, setPeek] = useState(false);
   const [crossing, setCrossing] = useState<{ img: string; name: string } | null>(null);
-  const [phIndex, setPhIndex] = useState(0);
   const [chipKeys, setChipKeys] = useState<string[]>(DEFAULT_CHIP_KEYS);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const focusedRef = useRef(false);
-  const pinnedRef = useRef<Tool | null>(null);
   const sessionWarmRef = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -413,11 +417,6 @@ export default function CaptureBar() {
   const recTimerRef = useRef(0);
   const discardRecRef = useRef(false);
   const [recElapsed, setRecElapsed] = useState("0:00");
-
-  // Keep a ref mirror of the pin so the rotation timer can see it.
-  useEffect(() => {
-    pinnedRef.current = pinned;
-  }, [pinned]);
 
   // The session chip draw: four prompts drawn once when a session
   // starts and kept in sessionStorage, so every visitor meets a
@@ -441,17 +440,6 @@ export default function CaptureBar() {
       ssSet(CHIPS_STORAGE_KEY, JSON.stringify(keys));
     }
     setChipKeys(keys);
-  }, []);
-
-  // Rotating example jobs in the placeholder. Pauses while the desk has
-  // your attention (focused), the tab is hidden, or a tool is pinned
-  // (the pinned sample placeholder owns the box then).
-  useEffect(() => {
-    const t = window.setInterval(() => {
-      if (focusedRef.current || document.hidden || pinnedRef.current) return;
-      setPhIndex((i) => (i + 1) % PLACEHOLDERS.length);
-    }, 5000);
-    return () => window.clearInterval(t);
   }, []);
 
   // The composer grows with what you give it, like a chat box should.
@@ -686,7 +674,7 @@ export default function CaptureBar() {
         setText(d.transcript);
         setResult({
           kind: "message",
-          text: "Heard you. Tap Do it! to file it, or @ a tool first: Voice Notes to Text keeps the note, Voice to Content makes it posts, SOP Generator makes it a procedure.",
+          text: "Heard you. Now pick the tool for those words: @Voice Notes to Text keeps the note, @Voice to Content makes it posts, @SOP Generator makes it a procedure.",
         });
         if (textRef.current) textRef.current.focus();
       } else {
@@ -1134,6 +1122,29 @@ export default function CaptureBar() {
     setMention(null);
   }
 
+  // Tool-first desk: words typed with no pin and no @ are a tool
+  // search, not a filing. Short, name-shaped text (a few words, no
+  // punctuation) opens the picker over the whole box; longer text is
+  // content waiting for its tool and leaves the picker closed.
+  function looksLikeToolSearch(value: string): boolean {
+    const v = value.trim();
+    if (!v || v.length > 42) return false;
+    if (!/^[A-Za-z0-9 \-]*$/.test(v)) return false;
+    return v.split(/\s+/).length <= 4;
+  }
+
+  // Picking from the picker pins the tool and keeps the words, the
+  // same courtesy selectMention extends to an @ pick: if the words
+  // turn out to be content, the pinned tool's submit takes them; if
+  // they were just the search, the pin placeholder tells the user
+  // what to type over them.
+  function selectPicker(tool: Tool) {
+    setPickerOpen(false);
+    setPinned(tool);
+    bbTrack("desk_mention_selected", { tool: tool.key, via: "picker" });
+    if (textRef.current) textRef.current.focus();
+  }
+
   function selectMention(tool: Tool) {
     if (!mention) return;
     const el = textRef.current;
@@ -1199,16 +1210,35 @@ export default function CaptureBar() {
       }
       return;
     }
-    if (!text.trim() || busy) return;
-    clearHat();
-    idemRef.current = idem();
-    trackComposerSubmitted();
-    bbTrack("capture_started", { surface: "home", kind: "text" });
-    void sendText(undefined, undefined, idemRef.current);
+    // No pin: the desk is tool-first, so bare words file nothing. A
+    // short search with the picker open picks its highlighted tool.
+    // An empty box opens the full tool list. Anything else opens the
+    // full list over the words and asks for the pick, keeping the
+    // words for whichever tool gets chosen.
+    if (busy) return;
+    if (pickerOpen && pickerMatches.length > 0) {
+      const tool = pickerMatches[activePickerIndex];
+      if (tool) selectPicker(tool);
+      return;
+    }
+    if (!text.trim()) {
+      setMention({ start: 0, query: "" });
+      setMentionIndex(0);
+      if (textRef.current) textRef.current.focus();
+      return;
+    }
+    setResult({
+      kind: "message",
+      text: "Pick the tool first, then give it your words. Tap one above, or start with @. Nothing was logged.",
+    });
+    setMention({ start: text.length, query: "" });
+    setMentionIndex(0);
   }
 
   const mentionMatches = mention ? matchTools(mention.query) : [];
   const activeMentionIndex = mentionMatches.length ? Math.min(mentionIndex, mentionMatches.length - 1) : 0;
+  const pickerMatches = pickerOpen && !pinned && !mention ? matchTools(text) : [];
+  const activePickerIndex = pickerMatches.length ? Math.min(pickerIndex, pickerMatches.length - 1) : 0;
 
   return (
     <section
@@ -1270,6 +1300,12 @@ export default function CaptureBar() {
               onChange={(e) => {
                 setText(e.target.value);
                 syncMention(e.target.value, e.target.selectionStart ?? e.target.value.length);
+                if (!pinned && looksLikeToolSearch(e.target.value)) {
+                  setPickerOpen(true);
+                  setPickerIndex(0);
+                } else {
+                  setPickerOpen(false);
+                }
                 if (e.target.value.trim()) flashFace(FACE_WORK, 1500);
               }}
               onFocus={() => {
@@ -1277,7 +1313,10 @@ export default function CaptureBar() {
               }}
               onBlur={() => {
                 focusedRef.current = false;
-                window.setTimeout(() => setMention(null), 150);
+                window.setTimeout(() => {
+                  setMention(null);
+                  setPickerOpen(false);
+                }, 150);
               }}
               onSelect={(e) => {
                 syncMention(e.currentTarget.value, e.currentTarget.selectionStart ?? e.currentTarget.value.length);
@@ -1306,6 +1345,29 @@ export default function CaptureBar() {
                     return;
                   }
                 }
+                if (!mention && pickerOpen && pickerMatches.length > 0) {
+                  if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setPickerIndex((i) => (i + 1) % pickerMatches.length);
+                    return;
+                  }
+                  if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setPickerIndex((i) => (i - 1 + pickerMatches.length) % pickerMatches.length);
+                    return;
+                  }
+                  if (e.key === "Enter" || e.key === "Tab") {
+                    e.preventDefault();
+                    const tool = pickerMatches[activePickerIndex];
+                    if (tool) selectPicker(tool);
+                    return;
+                  }
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    setPickerOpen(false);
+                    return;
+                  }
+                }
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   submit();
@@ -1315,10 +1377,10 @@ export default function CaptureBar() {
                 stagedImage && !pinned
                   ? "Photo ready. @Receipt Reader, @Poster to Calendar, or @Meal Scanner…"
                   : pinned
-                    ? PIN_PLACEHOLDERS[pinned.key] || PLACEHOLDERS[phIndex]
-                    : PLACEHOLDERS[phIndex]
+                    ? PIN_PLACEHOLDERS[pinned.key] || PLACEHOLDER_IDLE
+                    : PLACEHOLDER_IDLE
               }
-              aria-label="Type anything to log it"
+              aria-label="Pick a tool with @, then type"
               autoComplete="off"
               maxLength={2000}
             />
@@ -1399,6 +1461,35 @@ export default function CaptureBar() {
           {mention && mention.query.trim() !== "" && mentionMatches.length === 0 && (
             <div className="desk-mention-list desk-mention-empty" role="status">
               No tool matches “{mention.query}”. Bum Bum is stumped.
+            </div>
+          )}
+          {!mention && pickerOpen && !pinned && pickerMatches.length > 0 && (
+            <div className="desk-mention-list" role="listbox" aria-label="Pick a tool to start">
+              {pickerMatches.map((tool, i) => (
+                <button
+                  key={tool.key}
+                  type="button"
+                  role="option"
+                  aria-selected={i === activePickerIndex}
+                  className={"desk-mention-item" + (i === activePickerIndex ? " active" : "")}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    selectPicker(tool);
+                  }}
+                  onMouseEnter={() => setPickerIndex(i)}
+                >
+                  {tool.iconImg ? <img src={tool.iconImg} alt="" /> : <span className="desk-mention-emoji" aria-hidden="true">{tool.icon}</span>}
+                  <span className="desk-mention-text">
+                    <b>{tool.name}</b>
+                    <small>{tool.description}</small>
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+          {!mention && pickerOpen && !pinned && text.trim() !== "" && pickerMatches.length === 0 && (
+            <div className="desk-mention-list desk-mention-empty" role="status">
+              No tool matches “{text.trim()}”. Try the tool name, like @PDF Compressor.
             </div>
           )}
         </div>
