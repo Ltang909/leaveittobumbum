@@ -352,4 +352,4 @@ convertBtn.addEventListener('click',async()=>{
   setTimeout(()=>convProgress.classList.add('hidden'),900);
   resultList.scrollIntoView({behavior:'smooth',block:'center'});
 });
-</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>
+</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>
