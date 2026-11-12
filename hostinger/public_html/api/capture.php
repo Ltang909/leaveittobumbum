@@ -217,6 +217,13 @@ function capture_nav_destinations(): array {
         'jpg-to-pdf' => ['name' => 'JPG to PDF', 'url' => '/tools/jpg-to-pdf/'],
         'split-pdf' => ['name' => 'Split PDF', 'url' => '/tools/split-pdf/'],
         'png-to-jpg' => ['name' => 'PNG to JPG Converter', 'url' => '/tools/png-to-jpg/'],
+        'webp-to-png' => ['name' => 'WebP to PNG Converter', 'url' => '/tools/webp-to-png/'],
+        'webp-to-jpg' => ['name' => 'WebP to JPG Converter', 'url' => '/tools/webp-to-jpg/'],
+        'png-to-webp' => ['name' => 'PNG to WebP Converter', 'url' => '/tools/png-to-webp/'],
+        'jpg-to-webp' => ['name' => 'JPG to WebP Converter', 'url' => '/tools/jpg-to-webp/'],
+        'jpg-to-png' => ['name' => 'JPG to PNG Converter', 'url' => '/tools/jpg-to-png/'],
+        'pdf-to-jpg' => ['name' => 'PDF to JPG Converter', 'url' => '/tools/pdf-to-jpg/'],
+        'pdf-to-png' => ['name' => 'PDF to PNG Converter', 'url' => '/tools/pdf-to-png/'],
     ];
 }
 
@@ -596,6 +603,13 @@ function capture_router_descriptions(): array {
         'jpg-to-pdf' => 'turn JPG or PNG images into one PDF, in order',
         'split-pdf' => 'pull pages out of a PDF, or split a PDF into separate files',
         'png-to-jpg' => 'convert a PNG image to JPG (use image-converter for other image conversions)',
+        'webp-to-png' => 'convert a WebP image to PNG (use image-converter for other image conversions)',
+        'webp-to-jpg' => 'convert a WebP image to JPG (use image-converter for other image conversions)',
+        'png-to-webp' => 'convert a PNG image to WebP (use image-converter for other image conversions)',
+        'jpg-to-webp' => 'convert a JPG image to WebP (use image-converter for other image conversions)',
+        'jpg-to-png' => 'convert a JPG image to PNG (use image-converter for other image conversions)',
+        'pdf-to-jpg' => 'convert PDF pages to JPG images (use pdf-to-image for other PDF image formats)',
+        'pdf-to-png' => 'convert PDF pages to PNG images (use pdf-to-image for other PDF image formats)',
     ];
 }
 
