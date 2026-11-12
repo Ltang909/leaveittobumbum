@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/indy-alternatives-2026/" },
+  openGraph: { url: "/blog/indy-alternatives-2026/" },
   title: "5 Best Indy Alternatives in 2026 for Freelancers | Leave It to Bum Bum",
   description: "Looking for an Indy alternative after the price increases? Compare five options for proposals, invoicing, and follow-ups, including simpler tools that do one job well.",
 };
@@ -16,7 +18,7 @@ const postingLd = {
   "headline": HEADLINE,
   "description": DESC,
   "datePublished": "2026-11-02",
-  "dateModified": "2026-11-10",
+  "dateModified": "2026-11-12",
   "author": { "@type": "Organization", "name": "LeaveItToBumBum", "url": "https://leaveittobumbum.com/" },
   "publisher": {
     "@type": "Organization",
@@ -72,7 +74,7 @@ export default function IndyAlternatives() {
       <section className="page-head shell blog-head">
         <p className="kicker">Blog</p>
         <h1>5 Best Indy Alternatives in 2026 for Freelancers</h1>
-        <p className="lede">Updated November 2, 2026 · 5 tools compared · By the LeaveItToBumBum team</p>
+        <p className="lede">Updated November 12, 2026 · 5 tools compared · By the LeaveItToBumBum team</p>
       </section>
       <section className="shell">
         <div className="prose blog-wide">
@@ -95,8 +97,10 @@ export default function IndyAlternatives() {
               </tbody>
             </table>
           </div>
+          <h2>What Indy charges now</h2>
+          <p>Indy's free plan covers 3 proposals, 3 contracts, and 3 invoices a month. Indy Pro costs $25 per month billed monthly. The annual plan is $225 per year, and prepaying two years up front ($300 total) brings the rate down to $12.50 per month. Long-time users on Trustpilot trace that Pro price from $5.99 a month to $12, then to $25, so the rate you signed up at may bear little resemblance to the rate on your latest renewal.</p>
           <h2>1. Leave It to Bum Bum: Best for the weekly jobs</h2>
-          <p><a href="/">Leave It to Bum Bum</a> splits the freelancer admin stack into small tools that each do one job: the <a href="/tools/invoice-chaser/">Invoice Chaser</a> for late payments, the <a href="/tools/purrsuit/">Client Follow-Up Tracker</a> for promised follow-ups, and <a href="/tools/cutline/">Cutline</a> for tracking your own subscriptions, so the next surprise price hike is one you see coming.</p>
+          <p><a href="/">Leave It to Bum Bum</a> splits the freelancer admin stack into small tools that each do one job: the <a href="/tools/invoice-generator/">Invoice Generator</a> for making the invoice itself, the <a href="/tools/invoice-chaser/">Invoice Chaser</a> for late payments, the <a href="/tools/purrsuit/">Client Follow-Up Tracker</a> for promised follow-ups, and <a href="/tools/cutline/">Cutline</a> for tracking your own subscriptions, so the next surprise price hike is one you see coming.</p>
           <p>No per-seat pricing, no two-year prepay to unlock a fair rate, and a free tier that is not capped at three of anything per month.</p>
           <p><strong>Why consider it?</strong></p>
           <ul>
@@ -113,13 +117,13 @@ export default function IndyAlternatives() {
           <p>Bonsai covers the same ground as Indy: proposals, contracts, invoicing, and time tracking. Essentials ($25 per month) is the first tier with invoicing. One consideration: Zoom acquired Bonsai in late 2025 and says its capabilities will be incorporated into Zoom over time, so the standalone roadmap is less certain than it was.</p>
           <p><strong>Best for:</strong> Freelancers who want what Indy offers, from a bigger, more established vendor.</p>
           <h2>3. Wave: Best free invoicing and accounting</h2>
-          <p>Wave's Starter plan is free and includes invoicing and real accounting. Unrestricted automatic payment reminders require Pro ($19 per month), and a few previously free features moved behind that paywall in recent years, but for straightforward billing it is the strongest free option here.</p>
+          <p>Wave's Starter plan is free and includes invoicing and real accounting. Unrestricted automatic payment reminders require Pro ($19 per month), and a few previously free features moved behind that paywall in recent years, but for straightforward billing it is the strongest free option here. If all you need is the invoice document itself, a single-purpose <a href="/tools/invoice-generator/">Invoice Generator</a> skips the accounting setup entirely.</p>
           <p><strong>Best for:</strong> Freelancers who need proper books, not just documents.</p>
           <h2>4. Dubsado: Best for contracts and portals</h2>
-          <p>Dubsado (Starter $35 per month, Premier $55) goes deeper than Indy on forms, contracts, and client portals, with workflow automation on Premier. The tradeoff is setup: reviews consistently describe a long configuration process before it pays off.</p>
+          <p>Dubsado (Starter $35 per month, Premier $55) goes deeper than Indy on forms, contracts, and client portals, with workflow automation on Premier. The tradeoff is setup: reviews consistently describe a long configuration process before it pays off. Weighing Dubsado against the wider field? See our full <a href="/blog/dubsado-alternatives-2026/">Dubsado alternatives</a> comparison.</p>
           <p><strong>Best for:</strong> Studios with a repeatable client journey they want automated.</p>
           <h2>5. Moxie: Best lower-cost suite</h2>
-          <p>Moxie starts at $12 per month (Pro $25) and is well reviewed by freelancers (4.7 out of 5 on Trustpilot). Portal access and automations sit on the higher tiers, but the pricing has stayed calm while competitors hiked.</p>
+          <p>Moxie starts at $12 per month (Pro $25) and is well reviewed by freelancers (4.7 out of 5 on Trustpilot). Portal access and automations sit on the higher tiers, but the pricing has stayed calm while competitors hiked. Weighing Moxie against the wider field? See our full <a href="/blog/moxie-alternatives-2026/">Moxie alternatives</a> comparison.</p>
           <p><strong>Best for:</strong> Solopreneurs who want a suite without renewal roulette.</p>
           <h2>Is Indy worth it in 2026?</h2>
           <p>Indy Pro is $25 per month billed monthly, $225 a year on the annual plan, or $300 prepaid for two years to get the $12.50 rate. The product itself still does its job. The question its own users keep asking in public is whether the billing relationship is trustworthy: rates that changed faster than the product did, and support that stopped answering.</p>

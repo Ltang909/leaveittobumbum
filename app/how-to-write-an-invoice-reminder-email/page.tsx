@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/how-to-write-an-invoice-reminder-email/" },
+  openGraph: { url: "/how-to-write-an-invoice-reminder-email/" },
   title: "How to write an invoice reminder email (with templates) | Leave It to Bum Bum",
   description: "When to send an invoice reminder, what to say at 7, 14, and 30 days late, and four copy-paste email templates that get you paid without burning the relationship.",
 };
@@ -70,6 +72,8 @@ export default function InvoiceReminderEmailGuide() {
           </ul>
           <h2>The easier way</h2>
           <p>Writing these from scratch for every late invoice eats real time, and remembering who got which email is its own headache. <a href="/tools/invoice-chaser/">Invoice Reminder</a> writes the chase email for you, sends it as your billing assistant, and learns which tone gets each client to pay. You approve the words, it does the awkward part.</p>
+          <h2>Send it, then chase it</h2>
+          <p>Every reminder above assumes the invoice already went out clean: right amount, right due date, a payment link that works. If you still build invoices inside a document or a spreadsheet, the <a href="/tools/invoice-generator/">Invoice Generator</a> makes one in your browser with the totals and tax calculated for you. Send that, then let <a href="/tools/invoice-chaser/">Invoice Reminder</a> track the due date and run the reminder ladder from there.</p>
         </div>
       </section>
       <SiteFooter />
