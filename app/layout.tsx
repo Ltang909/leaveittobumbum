@@ -35,6 +35,11 @@ const organizationLd = {
   name: "Leave It to Bum Bum",
   url: "https://leaveittobumbum.com/",
   logo: "https://leaveittobumbum.com/bum/favicon-cat.png",
+  sameAs: [
+    "https://www.instagram.com/leaveittobumbum/",
+    "https://www.linkedin.com/in/leaveittobumbum/",
+    "https://ca.pinterest.com/0s5nekxyh3lt53n8j9balgylnaznz9/",
+  ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

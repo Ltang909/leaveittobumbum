@@ -382,13 +382,21 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .desk-composer textarea:focus { outline:none; }
 .desk-composer:focus-within { outline:3px solid var(--orange); outline-offset:2px; }
 .desk-composer-bar { display:flex; align-items:center; gap:10px; margin-top:10px; }
-.desk-icon-btn { flex:none; width:46px; height:46px; border:var(--line); border-radius:50%; background:var(--cream); color:var(--ink); font-size:1.3rem; font-weight:900; line-height:1; cursor:pointer; display:grid; place-items:center; box-shadow:3px 3px 0 var(--ink); }
-.desk-icon-btn:hover { transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink); }
-.desk-icon-btn.recording { background:var(--orange); color:white; }
+.desk-icon-btn { flex:none; width:36px; height:36px; border:1.5px solid rgba(23,21,15,.22); border-radius:50%; background:transparent; color:rgba(23,21,15,.52); font-size:1.05rem; font-weight:700; line-height:1; cursor:pointer; display:grid; place-items:center; box-shadow:none; transition:background .15s ease, color .15s ease, border-color .15s ease; }
+.desk-icon-btn:hover { background:var(--cream); color:var(--ink); border-color:rgba(23,21,15,.45); }
+.desk-icon-btn.recording { background:var(--orange); border-color:var(--orange); color:white; }
 .desk-composer-spacer { flex:1; }
 .desk-chips-row { display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-top:20px; }
 .desk-task-chips { margin-top:0; }
 .desk-browse { font-weight:900; border-bottom:2px solid var(--ink); padding-bottom:2px; white-space:nowrap; }
+/* Homepage FAQ: question headings with short, quotable answers. */
+.faq-home { padding:64px 0 8px; }
+.faq-home h2 { font-family:var(--font-display),serif; font-size:clamp(1.7rem,3.4vw,2.5rem); line-height:1.08; letter-spacing:-.02em; margin:6px 0 28px; }
+.faq-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px 36px; }
+.faq-item h3 { font-family:var(--font-display),serif; font-size:1.12rem; line-height:1.25; margin:0 0 6px; }
+.faq-item p { margin:0; font-size:.98rem; line-height:1.55; opacity:.85; }
+.faq-item a { font-weight:900; color:var(--ink); }
+@media (max-width:700px){ .faq-grid { grid-template-columns:1fr; } }
 /* Hero refresh to Leon's Nov 11 mock: upright blue headline line, one flat desk card, white Try pills. */
 .hero-headline { position:relative; }
 .hero-desk h1 em { color:#0354FB; font-style:normal; }
@@ -404,7 +412,7 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .desk-composer:focus-within { outline:none; }
 .desk-composer textarea { font-size:1.1rem; min-height:34px; }
 .desk-composer-bar .button { font-family:var(--font-display),serif; font-size:1.2rem; min-height:58px; padding:0 32px; border-radius:12px; box-shadow:5px 5px 0 var(--orange); }
-.desk-icon-btn svg { width:21px; height:21px; }
+.desk-icon-btn svg { width:18px; height:18px; }
 .desk-chips-row { justify-content:flex-start; }
 .desk-try-group { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
 .desk-task-chips .capture-home-chip { background:white; display:inline-flex; align-items:center; gap:8px; padding:9px 16px; }
