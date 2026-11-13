@@ -13,6 +13,49 @@ const plans = [
   { name: "Operator", price: "$49", note: "per month", credits: "Unlimited actions", features: ["Everything in Poke around", "Unlimited team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
 ];
 
+// Straight answers in question form, written to be quoted as-is by
+// search and answer engines. Every fact here already appears elsewhere
+// on this page or on /pricing/; keep the two in step when prices move.
+// The visible section and the FAQPage JSON-LD render from this one list.
+const FAQS: { q: string; a: string; href?: string; hrefText?: string }[] = [
+  {
+    q: "What is Leave It to Bum Bum?",
+    a: "Small online tools for the fiddly parts of running a small business: reading receipts, chasing invoices, transcribing voice notes, tracking subscriptions. Start at the front desk, pick a tool, hand over the job, and get a finished result.",
+  },
+  {
+    q: "How much does Leave It to Bum Bum cost?",
+    a: "Poke around is free: 75 actions a month, no card needed. Operator is $49 a month with unlimited actions and unlimited team members.",
+    href: "/pricing/",
+    hrefText: "See full pricing",
+  },
+  {
+    q: "What is an action?",
+    a: "One completed result. A finished clip, a batch of receipts read, an invoice chased, a playbook written: each one uses one action, and every tool shares the same monthly bucket.",
+  },
+  {
+    q: "What is the 36-hour promise?",
+    a: "Operator members can request one scoped tool each month. Once the scope is agreed, Bum Bum builds and ships it within 36 hours. Miss the window and your next month is on us.",
+  },
+  {
+    q: "Do I need an account to try the tools?",
+    a: "No. The front desk works for guests. An account keeps everything you file in one place and gives you 75 actions a month free.",
+  },
+  {
+    q: "Where do my files go?",
+    a: "The file tools run in your browser. Your PDFs, images, and videos stay on your device and are never uploaded to a server.",
+  },
+];
+
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 const QUIPS = [
   "mrrp.",
   "that click cost 0 actions. you're welcome.",
@@ -141,7 +184,7 @@ export default function Home() {
           <div className="hero-top">
             <div className="hero-copy">
               <div className="hero-headline"><h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1></div>
-              <p className="lede">Little tools that handle the fiddly stuff stealing your afternoon.</p>
+              <p className="lede">Tools that read receipts, chase invoices, transcribe voice notes and more.</p>
             </div>
             <HeroPortrait party={party} />
           </div>
@@ -171,9 +214,27 @@ export default function Home() {
 
       <section className="guarantee" id="guarantee"><div className="shell guarantee-inner"><div className="guarantee-number" title="psst, triple-click me" onClick={(event) => { if (event.detail === 3) { setNapping(true); window.setTimeout(() => setNapping(false), 3200); } }}>36<span>HRS</span>{napping && <div className="nap-bubble">😴 Bum Bum is napping. The 36-hour clock respects nap time.</div>}</div><div><p className="kicker">The Operator promise</p><h2>A missing tool should not become a six-month project.</h2><p>Operator members get one scoped request each month. Once we agree on the tiny, useful version, Bum Bum ships it within 36 hours.</p><details><summary>What counts as a scoped request? <span>+</span></summary><p>One focused workflow that can be built in about four working hours. It can use approved existing services, but it cannot include regulated data, complex migrations, mobile app store review, or work waiting on a third party. The clock begins when scope and access are confirmed. Weekends and US federal holidays are excluded. If we miss the window, your next month is on us.</p></details><p className="section-more section-more-left"><a href="/36-hours/">Read the full 36-hour promise <Arrow /></a></p><p className="section-more section-more-left"><a href="/build-vs-buy/">Could you just build it yourself? We did the math <Arrow /></a></p></div></div></section>
 
+      <section className="faq-home shell" id="faq">
+        <p className="kicker">Straight answers</p>
+        <h2>Questions people actually ask.</h2>
+        <div className="faq-grid">
+          {FAQS.map((f) => (
+            <article className="faq-item" key={f.q}>
+              <h3>{f.q}</h3>
+              <p>{f.a}{f.href ? <> <a href={f.href}>{f.hrefText} <Arrow /></a></> : null}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="closing shell"><p className="kicker">Your to-don’t list starts here</p><h2>There has to be one thing<br />you would happily never do again.</h2><button className="button" onClick={() => openRequest()}>Tell Bum Bum <Arrow /></button></section>
 
       <SiteFooter />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
 
       {requestModal}
 

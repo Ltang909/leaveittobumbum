@@ -12,6 +12,10 @@ Cancelling: cancel or downgrade any time from the account page; the plan runs un
 
 Plan history: a plan called Helper ($12/month) was discontinued on October 30, 2026 and is no longer sold. Older pages or posts that mention Helper pricing are out of date. Current plans are only the free tiers and Operator.
 
+## For AI agents
+
+Every page on this site has a plain markdown version: add .md to the page path (for example, https://leaveittobumbum.com/pricing.md; the homepage version is https://leaveittobumbum.com/index.md). Each page links to its markdown version with rel="alternate" type="text/markdown".
+
 ## Tools
 
 - [Screen Recorder](https://leaveittobumbum.com/tools/clips/): Record your screen right in your browser. Download the clip, keep it forever.
