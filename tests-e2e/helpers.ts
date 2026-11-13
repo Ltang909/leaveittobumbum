@@ -4,8 +4,10 @@ import { join } from 'node:path';
 export const FIXTURES = join(__dirname, 'fixtures');
 export const fixture = (name: string) => join(FIXTURES, name);
 
-/** The 21 live tools, mirroring hostinger/public_html/tools/registry.json.
- *  `primary` is each page's primary control (real id from the page source). */
+/** The 31 live tools, mirroring hostinger/public_html/tools/registry.json.
+ *  `primary` is each page's primary control (real id from the page source).
+ *  Day Log is accounts-only: for a guest its primary control is the
+ *  sign-in CTA, which is all a signed-out visitor ever sees. */
 export type ToolDef = { key: string; name: string; url: string; primary: string };
 export const TOOLS: ToolDef[] = [
   { key: 'clips', name: 'Screen Recorder', url: '/tools/clips/', primary: '#startBtn' },
@@ -21,14 +23,24 @@ export const TOOLS: ToolDef[] = [
   { key: 'gap-scout', name: 'Resume Gap Checker', url: '/tools/gap-scout/', primary: '#analyzeBtn' },
   { key: 'video-trimmer', name: 'Video Trimmer', url: '/tools/video-trimmer/', primary: '#dropzone' },
   { key: 'image-converter', name: 'Image Converter', url: '/tools/image-converter/', primary: '#dropzone' },
+  { key: 'pdf-merger', name: 'PDF Merger', url: '/tools/pdf-merger/', primary: '#dropzone' },
+  { key: 'pdf-to-image', name: 'PDF to Image', url: '/tools/pdf-to-image/', primary: '#dropzone' },
   { key: 'image-cropper', name: 'Image Cropper', url: '/tools/image-cropper/', primary: '#dropzone' },
   { key: 'ghostwriter', name: 'Voice to Content', url: '/tools/ghostwriter/', primary: '#gwPasteText' },
+  { key: 'sound-human', name: 'Sound Human', url: '/tools/sound-human/', primary: '#promptIn' },
   { key: 'audiogram', name: 'Audiogram Maker', url: '/tools/audiogram/', primary: '#agMp3Drop' },
   { key: 'purr-code', name: 'QR Code Generator', url: '/tools/purr-code/', primary: '#pcUrl' },
   { key: 'sop-ify', name: 'SOP Generator', url: '/tools/sop-ify/', primary: '#sopDump' },
   { key: 'hearsay', name: 'AI Mention Tracker', url: '/tools/hearsay/', primary: '#hsBrand' },
   { key: 'video-converter', name: 'Video Converter', url: '/tools/video-converter/', primary: '#vcDrop' },
   { key: 'video-mp3-overlay', name: 'Video MP3 Overlay', url: '/tools/video-mp3-overlay/', primary: '#vmMp3Drop' },
+  { key: 'day-log', name: 'Day Log', url: '/tools/day-log/', primary: 'a[href*="/account/?next="]' },
+  { key: 'email-signature-generator', name: 'Email Signature Maker', url: '/tools/email-signature-generator/', primary: '#sigForm' },
+  { key: 'pdf-compressor', name: 'PDF Compressor', url: '/tools/pdf-compressor/', primary: '#dropzone' },
+  { key: 'invoice-generator', name: 'Invoice Generator', url: '/tools/invoice-generator/', primary: '#invForm' },
+  { key: 'heic-to-jpg', name: 'HEIC to JPG', url: '/tools/heic-to-jpg/', primary: '#dropzone' },
+  { key: 'jpg-to-pdf', name: 'JPG to PDF', url: '/tools/jpg-to-pdf/', primary: '#dropzone' },
+  { key: 'split-pdf', name: 'Split PDF', url: '/tools/split-pdf/', primary: '#dropzone' },
 ];
 
 /** Social links every footer (Next chrome AND the PHP tool-page footer)

@@ -22,14 +22,30 @@ test.describe('public pages', () => {
     await expect(page.locator('.desk-browse')).toHaveAttribute('href', '/tools/');
   });
 
-  test('/tools/ lists all 21 tools', async ({ page }) => {
+  test('/tools/ lists all 31 tools', async ({ page }) => {
     await page.goto('/tools/');
     await expect(page.locator('h1')).toContainText('Every tiny tool');
+    // The grid paginates client-side (16 + 15); walk both pages and
+    // check every registry tool gets a card. Cards are matched by href:
+    // the card title renders as joined spans ("SubscriptionTracker"),
+    // so name-text matching no longer works.
     const cards = page.locator('.tool-grid .tool-card');
-    await expect(cards).toHaveCount(TOOLS.length);
-    for (const tool of TOOLS) {
-      await expect(page.locator('.tool-card', { hasText: tool.name }).first()).toBeVisible();
+    await expect(cards.first()).toBeVisible();
+    const hrefs = new Set<string>();
+    for (const pageNo of [1, 2]) {
+      if (pageNo > 1) {
+        await page.getByRole('button', { name: String(pageNo), exact: true }).click();
+        await expect(cards.first()).not.toHaveAttribute('href', '/tools/clips/');
+      }
+      for (const href of await cards.evaluateAll((els) => els.map((el) => el.getAttribute('href')))) {
+        if (href) hrefs.add(href);
+      }
     }
+    expect(
+      TOOLS.filter((tool) => !hrefs.has(tool.url)).map((tool) => tool.key),
+      'every registry tool should have a card on one of the grid pages',
+    ).toEqual([]);
+    expect(hrefs.size, 'the grid should not carry extra tool cards').toBe(TOOLS.length);
   });
 
   test('/team/ carries the crew copy verbatim', async ({ page }) => {
