@@ -200,6 +200,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="prompt-chips">
 <span class="chip">&#127919; What did you do today?</span>
 <span class="chip">&#9889; What challenged you?</span>
+<span class="chip">&#128161; What did you learn?</span>
 <span class="chip">&#128197; What are you committing to tomorrow?</span>
 </div>
 <button type="button" class="button dl-file" id="fileBtn" disabled style="opacity:.45">File my day</button>
