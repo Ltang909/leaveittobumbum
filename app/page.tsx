@@ -184,7 +184,7 @@ export default function Home() {
           <div className="hero-top">
             <div className="hero-copy">
               <div className="hero-headline"><h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1></div>
-              <p className="lede">Tools that read receipts, chase invoices, transcribe voice notes and more.</p>
+              <p className="lede">Tools that read receipts, chase invoices, transcribe notes and more.</p>
             </div>
             <HeroPortrait party={party} />
           </div>
