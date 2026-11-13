@@ -5,11 +5,11 @@
 <meta property="og:description" content="Snap a photo of any event poster, flyer, or screenshot. Bum Bum reads the date, time, and place and builds a ready-to-save calendar event. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/poster-to-calendar/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/poster-to-calendar.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Poster to Calendar | Turn Event Posters Into Calendar Events | Leave It to Bum Bum">
 <meta name="twitter:description" content="Snap a photo of any event poster, flyer, or screenshot. Bum Bum reads the date, time, and place and builds a ready-to-save calendar event. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/poster-to-calendar.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/poster-to-calendar/">
 <script type="application/ld+json">
 {
@@ -69,7 +69,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Poster to Calendar | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Poster to Calendar","item":"https://leaveittobumbum.com/tools/poster-to-calendar/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Poster to Calendar","description":"Snap a photo of an event poster and get a ready-to-save calendar event.","step":[{"@type":"HowToStep","position":1,"name":"Snap or upload a photo of the poster. Screenshots work too."},{"@type":"HowToStep","position":2,"name":"Bum Bum reads it and fills in the event title, date, time, and place."},{"@type":"HowToStep","position":3,"name":"Check the details and fix anything it misread."},{"@type":"HowToStep","position":4,"name":"Save it to your calendar with the download or the Google Calendar button."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Poster to Calendar","description":"Snap a photo of an event poster and get a ready-to-save calendar event.","step":[{"@type":"HowToStep","position":1,"name":"Snap or upload a photo of the poster. Screenshots work too."},{"@type":"HowToStep","position":2,"name":"Bum Bum reads it and fills in the event title, date, time, and place."},{"@type":"HowToStep","position":3,"name":"Check the details and fix anything it misread."},{"@type":"HowToStep","position":4,"name":"Save it to your calendar with the download or the Google Calendar button."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s;min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 @media(max-width:860px){.dropzone{min-height:360px}}
@@ -99,12 +99,13 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .queue-item{display:flex;gap:12px;align-items:center;border:1px solid #e2d7bf;border-radius:12px;background:#fff;padding:8px 12px;margin-top:8px}
+.sample-line{text-align:center;font-size:13px;opacity:.85;margin:10px 0 0}.sample-link{background:none;border:0;padding:0;font:inherit;font-weight:800;color:inherit;text-decoration:underline;cursor:pointer}
 .queue-item img{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid #e7dcc3}
 .queue-item .meta{font-size:13px;opacity:.75}
 .mini{border:1px solid #ddd1b8;background:#fff;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Poster to Calendar"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/poster-to-calendar.png" alt="Poster to Calendar"><h1>Posters in, calendar events out.</h1><p class="lede bb-desc">See an event you want to go to? Snap the poster. Bum Bum reads the photo, flyer, or screenshot, pulls out the title, date, time, and place, and builds the calendar event for you. Check the details, fix anything it misread, then save it to your calendar with one tap. If the poster lists a whole lineup, you get an event for each one. One action per poster read. Your photo is read to pull the details, then discarded; it is never stored.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Poster to Calendar"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/poster-to-calendar.png" alt="Poster to Calendar"><div><h1>Poster to Calendar</h1><p class="lede bb-desc">Posters in, calendar events out. Snap a poster and Bum Bum pulls out the event details.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to read posters</h2><a class="button" href="/account/?next=<?= urlencode('/tools/poster-to-calendar/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/poster-to-calendar/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/poster-to-calendar/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -125,6 +126,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <button type="button" class="button secondary" id="btnGallery">Upload images</button>
 <button type="button" class="button secondary" id="btnCamera">Use camera</button>
 </div>
+<p class="meta sample-line">No poster handy? <button type="button" id="sampleBtn" class="sample-link">Try a sample poster</button> first. Free, and the events land in editable cards, just like a real read.</p>
 <div id="queueList"></div>
 <div class="btnrow"><button type="button" class="button hidden" id="processBtn">Read poster</button></div>
 <div class="progress-wrap hidden" id="batchProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Warming up...</p></div>
@@ -164,13 +166,17 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>All of them. The .ics download works with Apple Calendar, Outlook, and most others. The Google Calendar button adds the event in one tap.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap receipts, get clean tables.</p>
-<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
-<p><a href="/tools/sop-ify/">SOP Generator</a> - Turn a chaotic process brain-dump into a clean step-by-step playbook.</p>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Posters into calendar events, the short guide</h2>
+<h3>How it works here</h3>
+<p>Take a photo of an event poster, flyer, or screenshot, and get a ready-to-save calendar event with the title, date, time, and place filled in. One read covers up to six events on the poster for one action. Relative dates get resolved for you: a poster that says Friday means the coming Friday. Your photo is read and discarded, never stored.</p>
+<h3>Photos that read well</h3>
+<p>Square-on beats artistic. A crooked photo can be straightened first with the Image Cropper, or simply retaken head-on; dates read far more reliably that way. Screenshots of digital posters work just as well as photos of paper ones.</p>
+<h3>Honest about what it is</h3>
+<p>If a photo holds no event at all, a pet, a selfie, a menu, Bum Bum says so instead of guessing. And always eyeball the year on posters near New Year; humans get that wrong too. No poster handy? The sample poster on this page drops in editable events for free, so you can see the whole flow first.</p>
 </section>
-</main>
+<?php $bbTool = 'poster-to-calendar'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 <script src="/tools/error-scenes.js"></script>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/poster-to-calendar.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}bbTrack('tool_opened',{tool:'poster-to-calendar'});
@@ -197,6 +203,35 @@ let cardCount=0;
 
 document.querySelector('#btnGallery').addEventListener('click',()=>fileGallery.click());
 document.querySelector('#btnCamera').addEventListener('click',()=>fileCamera.click());
+function sampleEvents(){
+  const pad=n=>String(n).padStart(2,'0');
+  const fmt=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  const now=new Date();
+  const fri=new Date(now.getFullYear(),now.getMonth(),now.getDate()+((5-now.getDay()+7)%7));
+  const sat=new Date(fri);sat.setDate(fri.getDate()+1);
+  const sun=new Date(fri);sun.setDate(fri.getDate()+2);
+  return [
+    {title:'Riverside Fall Fest: Opening Night Market',date:fmt(fri),startTime:'17:00',endTime:'21:00',allDay:false,location:'Riverside Park, Main Gates',description:'Opening night of the fall festival. Food stalls, local makers, and live music on the bandstand.'},
+    {title:'Fall Harvest Farmers Market',date:fmt(sat),startTime:'09:00',endTime:'13:00',allDay:false,location:'Riverside Park, North Lawn',description:'Over 40 local vendors with produce, baking, and preserves. Free entry, rain or shine.'},
+    {title:'Pumpkin Carving Contest',date:fmt(sun),startTime:'13:00',endTime:'15:00',allDay:false,location:'Riverside Park, Pavilion',description:'Bring your own pumpkin or buy one at the gate. Prizes for kids and grown-ups.'}
+  ];
+}
+document.querySelector('#sampleBtn').addEventListener('click',async()=>{
+  if(batchRunning)return;
+  if(queue.some(q=>q.sample)){batchError.textContent='The sample is already in your list below.';return}
+  bbTrack('sample_started',{tool:'poster-to-calendar'});
+  try{
+    const resp=await fetch('/bum/sample-poster.png');
+    if(!resp.ok)throw new Error('load');
+    const blob=await resp.blob();
+    const dataUrl=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)});
+    queue.push({id:crypto.randomUUID(),dataUrl,name:'Sample poster',status:'queued',sample:true});
+    renderQueue();
+    processBtn.click();
+  }catch(e){
+    batchError.textContent='The sample poster would not load. Try again?';
+  }
+});
 dropzone.addEventListener('click',()=>fileGallery.click());
 dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileGallery.click()}});
 dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('over')});
@@ -242,13 +277,14 @@ function renderQueue(){
   queueList.innerHTML='';
   queue.forEach(q=>{
     const div=document.createElement('div');div.className='queue-item';
-    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?'Could not read it':q.status==='blocked'?'Waiting on actions':'Queued';
+    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?(q.noEvents?'No events found':'Could not read it'):q.status==='blocked'?'Waiting on actions':'Queued';
     div.innerHTML='<img src="'+q.dataUrl+'" alt=""><div><b>'+esc(q.name)+'</b><div class="meta">'+label+'</div></div>';
     queueList.appendChild(div);
   });
   const pending=queue.filter(q=>q.status==='queued');
   processBtn.classList.toggle('hidden',!pending.length||batchRunning);
-  processBtn.textContent=pending.length>1?'Read '+pending.length+' posters ('+pending.length+' actions)':'Read this poster (1 action)';
+  const paidPending=pending.filter(q=>!q.sample).length;
+  processBtn.textContent=pending.length>1?'Read '+pending.length+' posters ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')':(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this poster (1 action)');
 }
 
 function downscale(dataUrl){
@@ -285,22 +321,30 @@ processBtn.addEventListener('click',async()=>{
   batchProgress.classList.remove('hidden');
   barFill.style.width='5%';
   const todo=queue.filter(q=>q.status==='queued');
-  let done=0,blocked=false,lastFail=null;
+  let done=0,blocked=false,lastFail=null,sawNoEvents=false,noEventsMsg='';
   for(const q of todo){
     q.status='reading';renderQueue();
     progText.textContent='Reading poster '+(done+1)+' of '+todo.length+'...';
     try{
-      const small=await downscale(q.dataUrl);
-      const t=localToday();
-      const{response,data}=await apiCall({action:'parse',image:small,idempotencyKey:q.id,todayLocal:t.date,weekdayLocal:t.weekday,tzName:t.tz});
-      if(response.status===402)throw new Error('actions');
-      if(!response.ok){const err=new Error(data.error||'read failed');err.serverMsg=data.error||'';throw err}
-      (data.events||[]).forEach(ev=>addCard(ev,q.name));
+      let events;
+      if(q.sample){
+        progText.textContent='Reading the sample poster...';
+        await new Promise(r=>setTimeout(r,1100));
+        events=sampleEvents();
+      }else{
+        const small=await downscale(q.dataUrl);
+        const t=localToday();
+        const{response,data}=await apiCall({action:'parse',image:small,idempotencyKey:q.id,todayLocal:t.date,weekdayLocal:t.weekday,tzName:t.tz});
+        if(response.status===402)throw new Error('actions');
+        if(!response.ok){const err=new Error(data.error||'read failed');err.serverMsg=data.error||'';err.noEvents=data.code==='no_events';throw err}
+        events=data.events||[];
+      }
+      events.forEach(ev=>addCard(ev,q.name));
       q.status='done';
-      bbTrack('poster_parsed',{events:(data.events||[]).length});
+      bbTrack('poster_parsed',{events:events.length,...(q.sample?{sample:true}:{})});
     }catch(e){
       if(e.message==='actions'){q.status='blocked';blocked=true}
-      else{q.status='error';lastFail=e}
+      else{q.status='error';q.noEvents=!!e.noEvents;if(e.noEvents){sawNoEvents=true;noEventsMsg=e.serverMsg||''}else lastFail=e}
     }
     done++;
     barFill.style.width=(5+done/todo.length*90)+'%';
@@ -312,8 +356,11 @@ processBtn.addEventListener('click',async()=>{
     queue.forEach(q=>{if(q.status==='queued')q.status='blocked'});
     batchError.textContent='Out of actions for this month. The posters above were read; the rest are waiting.';
     renderQueue();
+  }else if(sawNoEvents&&!lastFail){
+    showScene('empty_input',{petpet:'I sniffed it twice. Nothing poster-shaped.',bumbum:'This tool reads event posters and flyers. If yours is in that photo, try it straight on, whole poster in frame, no glare.',cta:'Try another photo',onCta:()=>{clearScene();document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'})}});
+    if(noEventsMsg)batchError.textContent=noEventsMsg;
   }else if(lastFail&&done===todo.length&&queue.some(q=>q.status==='error')){
-    showScene('processing_failed',{onCta:()=>{queue.forEach(q=>{if(q.status==='error')q.status='queued'});clearScene();renderQueue();processBtn.click()}});
+    showScene('processing_failed',{onCta:()=>{queue.forEach(q=>{if(q.status==='error'&&!q.noEvents)q.status='queued'});clearScene();renderQueue();processBtn.click()}});
     if(lastFail.serverMsg)batchError.textContent=lastFail.serverMsg;
   }
   barFill.style.width='100%';
@@ -479,4 +526,4 @@ function gcalUrl(e){
     (e.location?'&location='+encodeURIComponent(e.location):'')+
     (tz?'&ctz='+encodeURIComponent(tz):'');
 }
-</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

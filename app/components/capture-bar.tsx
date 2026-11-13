@@ -16,8 +16,11 @@ import { useDeskFace } from "../lib/desk-face";
 // to the tool page, which picks them up via /tools/capture-handoff.js.
 // Guests are welcome; the account prompt does its own asking later, per
 // the delayed-prompt pattern. On top of that brain, the desk layer:
-// example jobs rotate through the placeholder, typing @name calls a
-// tool directly (fuzzy-matched dropdown, the pick pins the destination),
+// The desk is tool-first: nothing files or opens until a tool is
+// picked. Typing with no pin searches the tool list (a short search
+// opens the picker over the box), typing @name does the same
+// mid-sentence, and the pick pins the destination. The pinned tool
+// then prompts for its input in the box, or opens directly.
 // he swaps hats when he routes something, reads along while you type
 // (his hero portrait does the faces now), peeks once if you leave him
 // hanging, and carries your file across the screen on its way to the
@@ -59,17 +62,13 @@ const FACE_PEEK = "/bum/cat-peeking.png";
 const FACE_BOX = "/bum/cat-box-v2.png";
 const FACE_PETPET = "/bum/petpet/box.png";
 
-const PLACEHOLDERS = [
-  "Start with @ to pick a tool, or just describe the job…",
-  "Drop a receipt, get a spreadsheet…",
-  "Photo of an event poster? Add it to your calendar",
-  "Netflix $15.99 a month, track it as part of your subscriptions",
-  "transcribe your spoken thoughts",
-  "Photo of your meal? Turn it into tracked calories and macros",
-];
+// The idle placeholder teaches the one move that starts everything.
+// It used to rotate worked examples; the tool-first desk made them
+// noise, so the line stands still now (Leon's call, Nov 11).
+const PLACEHOLDER_IDLE = "Start with @ to pick a tool";
 
-// While a tool is pinned with @, the rotating examples step aside for a
-// sample of what that tool actually wants. Log-style tools get an
+// While a tool is pinned, the box prompts with a sample of what that
+// tool actually wants. Log-style tools get an
 // "e.g. ..." in their real input shape; file-first tools get the drop
 // instruction instead, since the desk is their drop zone too.
 const PIN_PLACEHOLDERS: Record<string, string> = {
@@ -87,15 +86,27 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   "video-trimmer": "Drop the video here to trim it…",
   "image-converter": "Drop the image here to convert it…",
   "image-cropper": "Drop the image here to crop it…",
+  "pdf-merger": "Drop the PDFs here to merge them…",
+  "pdf-to-image": "Drop the PDF here to turn its pages into images…",
+  "pdf-compressor": "Drop the PDF here to make it smaller…",
   ghostwriter: "e.g. Paste a ramble or transcript, get hooks, a script, and a caption…",
   audiogram: "Hit Do it! to open it, then drop your MP3 there…",
   "purr-code": "e.g. https://yourshop.com, whatever the code should open…",
   "sop-ify": "e.g. First we check the inbox, then we chase anything older than a day…",
   hearsay: "e.g. Just your brand name. He checks what the AIs say about it…",
   "video-converter": "Drop the video here to convert it…",
+  "day-log": "e.g. Finished the proposal, the client call ran long, tomorrow I chase the invoice…",
+  "email-signature-generator": "e.g. Make me a clean email signature for Gmail…",
+  "heic-to-jpg": "Drop the iPhone photos here to turn them into JPGs…",
+  "invoice-generator": "Hit Do it! and the invoice maker opens, blank and ready…",
+  "jpg-to-pdf": "Drop the images here to make one PDF…",
+  "split-pdf": "Drop the PDF here to pull pages out of it…",
+  "png-to-jpg": "Drop the PNG here to turn it into a JPG…",
+  "sound-human": "e.g. Paste the AI-sounding draft, get the add-ons that fix the voice…",
+  "video-mp3-overlay": "Hit Do it! to open it, then add your video and the MP3 there…",
 };
 
-// The task chips under the desk: a pool of twenty, one per tool. When a
+// The task chips under the desk: a pool of chips, one per tool. When a
 // session starts, four are drawn at random and kept for the whole session
 // (persisted in sessionStorage), so different visitors meet different
 // tools first and the set never reshuffles mid-session. "picker" chips
@@ -115,6 +126,9 @@ const CHIP_POOL: ChipDef[] = [
   { key: "meal-scanner", chip: "meal", label: "Scan my meal", picker: "image/*" },
   { key: "image-converter", chip: "image-convert", label: "Convert an image", picker: "image/*" },
   { key: "image-cropper", chip: "image-crop", label: "Crop an image", picker: "image/*" },
+  { key: "pdf-merger", chip: "pdf-merge", label: "Merge PDFs", picker: "application/pdf,.pdf" },
+  { key: "pdf-to-image", chip: "pdf-image", label: "PDF to images", picker: "application/pdf,.pdf" },
+  { key: "pdf-compressor", chip: "pdf-compress", label: "Compress a PDF", picker: "application/pdf,.pdf" },
   { key: "video-trimmer", chip: "video-trim", label: "Trim a video", picker: "video/*" },
   { key: "video-converter", chip: "video-convert", label: "Convert a video", picker: "video/*" },
   { key: "clips", chip: "screen-record", label: "Record my screen" },
@@ -174,7 +188,7 @@ const NATIVE_TOOLS = ["notes", "receipt-reader", "corporate-bum-bum", "invoice-c
 // window.__bbCaptureHandoff and load /tools/capture-handoff.js, so the
 // IndexedDB stash actually gets picked up on arrival. Values are the
 // file kinds each page can swallow.
-const FILE_HANDOFF_KINDS: Record<string, ("audio" | "video" | "image")[]> = {
+const FILE_HANDOFF_KINDS: Record<string, ("audio" | "video" | "image" | "pdf")[]> = {
   notes: ["audio"],
   "receipt-reader": ["image"],
   "poster-to-calendar": ["image"],
@@ -183,6 +197,9 @@ const FILE_HANDOFF_KINDS: Record<string, ("audio" | "video" | "image")[]> = {
   "image-cropper": ["image"],
   "video-trimmer": ["video"],
   "video-converter": ["video"],
+  "pdf-merger": ["pdf"],
+  "pdf-to-image": ["pdf"],
+  "pdf-compressor": ["pdf"],
 };
 
 // Tiny subsequence fuzzy matcher for the @ menu. Whole-string for names
@@ -249,10 +266,11 @@ function idem(): string {
   return Array.from(a, (b) => ("0" + b.toString(16)).slice(-2)).join("");
 }
 
-function fileKind(file: File): "audio" | "video" | "image" | "other" {
+function fileKind(file: File): "audio" | "video" | "image" | "pdf" | "other" {
   if (file.type.startsWith("audio/")) return "audio";
   if (file.type.startsWith("video/")) return "video";
   if (file.type.startsWith("image/")) return "image";
+  if (file.type === "application/pdf" || /\.pdf$/i.test(file.name || "")) return "pdf";
   return "other";
 }
 
@@ -350,7 +368,7 @@ function FilePreview({ file }: { file: File }) {
     return <video className={cls} src={url} preload="metadata" muted playsInline aria-hidden="true" />;
   return (
     <span className={cls + " bb-file-preview-icon"} aria-hidden="true">
-      {file.type.startsWith("audio/") ? "🎵" : file.type.startsWith("video/") ? "🎬" : "📎"}
+      {file.type.startsWith("audio/") ? "🎵" : file.type.startsWith("video/") ? "🎬" : file.type === "application/pdf" ? "📄" : "📎"}
     </span>
   );
 }
@@ -369,17 +387,17 @@ export default function CaptureBar() {
   const [pinned, setPinned] = useState<Tool | null>(null);
   const [mention, setMention] = useState<{ start: number; query: string } | null>(null);
   const [mentionIndex, setMentionIndex] = useState(0);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerIndex, setPickerIndex] = useState(0);
   const deskFace = useDeskFace();
   const [recording, setRecording] = useState(false);
   const [peek, setPeek] = useState(false);
   const [crossing, setCrossing] = useState<{ img: string; name: string } | null>(null);
-  const [phIndex, setPhIndex] = useState(0);
   const [chipKeys, setChipKeys] = useState<string[]>(DEFAULT_CHIP_KEYS);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const focusedRef = useRef(false);
-  const pinnedRef = useRef<Tool | null>(null);
   const sessionWarmRef = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -399,11 +417,6 @@ export default function CaptureBar() {
   const recTimerRef = useRef(0);
   const discardRecRef = useRef(false);
   const [recElapsed, setRecElapsed] = useState("0:00");
-
-  // Keep a ref mirror of the pin so the rotation timer can see it.
-  useEffect(() => {
-    pinnedRef.current = pinned;
-  }, [pinned]);
 
   // The session chip draw: four prompts drawn once when a session
   // starts and kept in sessionStorage, so every visitor meets a
@@ -427,17 +440,6 @@ export default function CaptureBar() {
       ssSet(CHIPS_STORAGE_KEY, JSON.stringify(keys));
     }
     setChipKeys(keys);
-  }, []);
-
-  // Rotating example jobs in the placeholder. Pauses while the desk has
-  // your attention (focused), the tab is hidden, or a tool is pinned
-  // (the pinned sample placeholder owns the box then).
-  useEffect(() => {
-    const t = window.setInterval(() => {
-      if (focusedRef.current || document.hidden || pinnedRef.current) return;
-      setPhIndex((i) => (i + 1) % PLACEHOLDERS.length);
-    }, 3400);
-    return () => window.clearInterval(t);
   }, []);
 
   // The composer grows with what you give it, like a chat box should.
@@ -672,7 +674,7 @@ export default function CaptureBar() {
         setText(d.transcript);
         setResult({
           kind: "message",
-          text: "Heard you. Tap Do it! to file it, or @ a tool first: Voice Notes to Text keeps the note, Voice to Content makes it posts, SOP Generator makes it a procedure.",
+          text: "Heard you. Now pick the tool for those words: @Voice Notes to Text keeps the note, @Voice to Content makes it posts, @SOP Generator makes it a procedure.",
         });
         if (textRef.current) textRef.current.focus();
       } else {
@@ -873,6 +875,15 @@ export default function CaptureBar() {
         });
         return;
       }
+      if (kind === "pdf") {
+        // Same rule for PDFs: never route one past a pin that cannot
+        // receive it.
+        setResult({
+          kind: "message",
+          text: pinned.name + " cannot take a PDF. Unpin it above the box, or @ one of the PDF tools: PDF Merger, PDF to Image, PDF Compressor.",
+        });
+        return;
+      }
     }
     if (kind === "audio") {
       stashAndGo(f, "/tools/notes/", "Voice Notes to Text", "file");
@@ -884,10 +895,19 @@ export default function CaptureBar() {
       // visitor picks a photo tool and hits Do it!.
       setStagedImage(f);
       setResult({ kind: "idle" });
+    } else if (kind === "pdf") {
+      // No pin: two PDF tools want different jobs from a PDF, so he
+      // asks rather than guesses, the same rule as photos.
+      setResult({
+        kind: "message",
+        text: "A PDF. Three tools want it: @PDF Merger stitches several PDFs into one, @PDF to Image turns pages into JPG, PNG, or WebP images, and @PDF Compressor shrinks it until it fits the email or upload limit. Pin one above the box, then drop the PDF again.",
+        suggestName: "PDF Merger",
+        suggestUrl: "/tools/pdf-merger/",
+      });
     } else {
       setResult({
         kind: "message",
-        text: "That file type has Bum Bum stumped. He takes photos, videos, and audio here. Anything else, the toolbox probably has a tool for it.",
+        text: "That file type has Bum Bum stumped. He takes photos, videos, audio, and PDFs here. Anything else, the toolbox probably has a tool for it.",
         suggestName: "the toolbox",
         suggestUrl: "/tools/",
       });
@@ -1074,17 +1094,21 @@ export default function CaptureBar() {
   // just text.
   function syncMention(value: string, caret: number) {
     let start = -1;
-    for (let i = caret - 1; i >= 0; i--) {
+    // Tool names can hold spaces (Day Log, PDF Merger), so the scan
+    // back to the @ crosses single spaces too. It stays bounded (42
+    // chars) and stops at a newline, so a stray @ in a long sentence
+    // does not hold the menu open.
+    for (let i = caret - 1; i >= 0 && caret - i <= 42; i--) {
       const ch = value[i];
       if (ch === "@") {
         start = i;
         break;
       }
-      if (/\s/.test(ch)) break;
+      if (ch === "\n") break;
     }
     if (start >= 0 && (start === 0 || /\s/.test(value[start - 1]))) {
       const query = value.slice(start + 1, caret);
-      if (/^[A-Za-z0-9-]*$/.test(query)) {
+      if (/^[A-Za-z0-9 \-]*$/.test(query) && !query.includes("  ")) {
         setMention({ start, query });
         setMentionIndex(0);
         if (!sessionWarmRef.current) {
@@ -1096,6 +1120,29 @@ export default function CaptureBar() {
       }
     }
     setMention(null);
+  }
+
+  // Tool-first desk: words typed with no pin and no @ are a tool
+  // search, not a filing. Short, name-shaped text (a few words, no
+  // punctuation) opens the picker over the whole box; longer text is
+  // content waiting for its tool and leaves the picker closed.
+  function looksLikeToolSearch(value: string): boolean {
+    const v = value.trim();
+    if (!v || v.length > 42) return false;
+    if (!/^[A-Za-z0-9 \-]*$/.test(v)) return false;
+    return v.split(/\s+/).length <= 4;
+  }
+
+  // Picking from the picker pins the tool and keeps the words, the
+  // same courtesy selectMention extends to an @ pick: if the words
+  // turn out to be content, the pinned tool's submit takes them; if
+  // they were just the search, the pin placeholder tells the user
+  // what to type over them.
+  function selectPicker(tool: Tool) {
+    setPickerOpen(false);
+    setPinned(tool);
+    bbTrack("desk_mention_selected", { tool: tool.key, via: "picker" });
+    if (textRef.current) textRef.current.focus();
   }
 
   function selectMention(tool: Tool) {
@@ -1163,16 +1210,35 @@ export default function CaptureBar() {
       }
       return;
     }
-    if (!text.trim() || busy) return;
-    clearHat();
-    idemRef.current = idem();
-    trackComposerSubmitted();
-    bbTrack("capture_started", { surface: "home", kind: "text" });
-    void sendText(undefined, undefined, idemRef.current);
+    // No pin: the desk is tool-first, so bare words file nothing. A
+    // short search with the picker open picks its highlighted tool.
+    // An empty box opens the full tool list. Anything else opens the
+    // full list over the words and asks for the pick, keeping the
+    // words for whichever tool gets chosen.
+    if (busy) return;
+    if (pickerOpen && pickerMatches.length > 0) {
+      const tool = pickerMatches[activePickerIndex];
+      if (tool) selectPicker(tool);
+      return;
+    }
+    if (!text.trim()) {
+      setMention({ start: 0, query: "" });
+      setMentionIndex(0);
+      if (textRef.current) textRef.current.focus();
+      return;
+    }
+    setResult({
+      kind: "message",
+      text: "Pick the tool first, then give it your words. Tap one above, or start with @. Nothing was logged.",
+    });
+    setMention({ start: text.length, query: "" });
+    setMentionIndex(0);
   }
 
   const mentionMatches = mention ? matchTools(mention.query) : [];
   const activeMentionIndex = mentionMatches.length ? Math.min(mentionIndex, mentionMatches.length - 1) : 0;
+  const pickerMatches = pickerOpen && !pinned && !mention ? matchTools(text) : [];
+  const activePickerIndex = pickerMatches.length ? Math.min(pickerIndex, pickerMatches.length - 1) : 0;
 
   return (
     <section
@@ -1205,10 +1271,6 @@ export default function CaptureBar() {
       }}
     >
       <div className="capture-home-card desk-card" ref={cardRef}>
-        <div className="desk-head">
-          <h2 className="desk-greeting">What are we handling today?</h2>
-        </div>
-        <p className="desk-hint">Psst: type @ and Bum Bum shows you everything he can do.</p>
         <div className="desk-composer-wrap">
           <div className="desk-composer">
             {pinned && (
@@ -1238,6 +1300,12 @@ export default function CaptureBar() {
               onChange={(e) => {
                 setText(e.target.value);
                 syncMention(e.target.value, e.target.selectionStart ?? e.target.value.length);
+                if (!pinned && looksLikeToolSearch(e.target.value)) {
+                  setPickerOpen(true);
+                  setPickerIndex(0);
+                } else {
+                  setPickerOpen(false);
+                }
                 if (e.target.value.trim()) flashFace(FACE_WORK, 1500);
               }}
               onFocus={() => {
@@ -1245,7 +1313,10 @@ export default function CaptureBar() {
               }}
               onBlur={() => {
                 focusedRef.current = false;
-                window.setTimeout(() => setMention(null), 150);
+                window.setTimeout(() => {
+                  setMention(null);
+                  setPickerOpen(false);
+                }, 150);
               }}
               onSelect={(e) => {
                 syncMention(e.currentTarget.value, e.currentTarget.selectionStart ?? e.currentTarget.value.length);
@@ -1274,6 +1345,29 @@ export default function CaptureBar() {
                     return;
                   }
                 }
+                if (!mention && pickerOpen && pickerMatches.length > 0) {
+                  if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setPickerIndex((i) => (i + 1) % pickerMatches.length);
+                    return;
+                  }
+                  if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setPickerIndex((i) => (i - 1 + pickerMatches.length) % pickerMatches.length);
+                    return;
+                  }
+                  if (e.key === "Enter" || e.key === "Tab") {
+                    e.preventDefault();
+                    const tool = pickerMatches[activePickerIndex];
+                    if (tool) selectPicker(tool);
+                    return;
+                  }
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    setPickerOpen(false);
+                    return;
+                  }
+                }
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   submit();
@@ -1283,10 +1377,10 @@ export default function CaptureBar() {
                 stagedImage && !pinned
                   ? "Photo ready. @Receipt Reader, @Poster to Calendar, or @Meal Scanner…"
                   : pinned
-                    ? PIN_PLACEHOLDERS[pinned.key] || PLACEHOLDERS[phIndex]
-                    : PLACEHOLDERS[phIndex]
+                    ? PIN_PLACEHOLDERS[pinned.key] || PLACEHOLDER_IDLE
+                    : PLACEHOLDER_IDLE
               }
-              aria-label="Type anything to log it"
+              aria-label="Pick a tool with @, then type"
               autoComplete="off"
               maxLength={2000}
             />
@@ -1294,8 +1388,8 @@ export default function CaptureBar() {
               <button
                 type="button"
                 className="desk-icon-btn"
-                onClick={() => openFilePicker("image/*,video/*,audio/*")}
-                aria-label="Attach a photo, video, or audio file"
+                onClick={() => openFilePicker("image/*,video/*,audio/*,application/pdf,.pdf")}
+                aria-label="Attach a photo, video, audio file, or PDF"
                 title="Attach a file"
               >
                 +
@@ -1307,7 +1401,7 @@ export default function CaptureBar() {
                 aria-label={recording ? "Stop recording" : "Dictate instead"}
                 title={recording ? "Stop recording" : "Dictate instead"}
               >
-                🎤
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0" /><path d="M12 19v3" /></svg>
               </button>
               <button
                 type="button"
@@ -1318,7 +1412,7 @@ export default function CaptureBar() {
                 aria-label="Take a photo"
                 title="Take a photo"
               >
-                📷
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" /><circle cx="12" cy="13" r="3.5" /></svg>
               </button>
               <span className="desk-composer-spacer" />
               <button type="button" className="button" onClick={submit} disabled={busy}>
@@ -1367,6 +1461,35 @@ export default function CaptureBar() {
           {mention && mention.query.trim() !== "" && mentionMatches.length === 0 && (
             <div className="desk-mention-list desk-mention-empty" role="status">
               No tool matches “{mention.query}”. Bum Bum is stumped.
+            </div>
+          )}
+          {!mention && pickerOpen && !pinned && pickerMatches.length > 0 && (
+            <div className="desk-mention-list" role="listbox" aria-label="Pick a tool to start">
+              {pickerMatches.map((tool, i) => (
+                <button
+                  key={tool.key}
+                  type="button"
+                  role="option"
+                  aria-selected={i === activePickerIndex}
+                  className={"desk-mention-item" + (i === activePickerIndex ? " active" : "")}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    selectPicker(tool);
+                  }}
+                  onMouseEnter={() => setPickerIndex(i)}
+                >
+                  {tool.iconImg ? <img src={tool.iconImg} alt="" /> : <span className="desk-mention-emoji" aria-hidden="true">{tool.icon}</span>}
+                  <span className="desk-mention-text">
+                    <b>{tool.name}</b>
+                    <small>{tool.description}</small>
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+          {!mention && pickerOpen && !pinned && text.trim() !== "" && pickerMatches.length === 0 && (
+            <div className="desk-mention-list desk-mention-empty" role="status">
+              No tool matches “{text.trim()}”. Try the tool name, like @PDF Compressor.
             </div>
           )}
         </div>
@@ -1463,31 +1586,10 @@ export default function CaptureBar() {
             </div>
           )}
         </div>
-        <div className="desk-chips-row">
-          <div className="capture-home-chips desk-task-chips">
-            {chipKeys.map((k) => {
-              const def = CHIP_POOL.find((c) => c.key === k);
-              if (!def) return null;
-              return (
-                <button
-                  key={def.key}
-                  type="button"
-                  className="capture-home-chip"
-                  onClick={() => pinFromChip(def.key, def.chip, def.picker)}
-                >
-                  {def.label}
-                </button>
-              );
-            })}
-          </div>
-          <a className="desk-browse" href="/tools/">
-            or browse the toolbox →
-          </a>
-        </div>
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*,video/*,audio/*"
+          accept="image/*,video/*,audio/*,application/pdf,.pdf"
           style={{ display: "none" }}
           onChange={(e) => {
             const f = e.target.files && e.target.files[0];
@@ -1525,6 +1627,31 @@ export default function CaptureBar() {
           </div>
         )}
       </div>
+        <div className="desk-chips-row">
+          <div className="desk-try-group">
+          <div className="capture-home-chips desk-task-chips">
+            {chipKeys.map((k) => {
+              const def = CHIP_POOL.find((c) => c.key === k);
+              if (!def) return null;
+              const chipTool = tools.find((x) => x.key === def.key);
+              return (
+                <button
+                  key={def.key}
+                  type="button"
+                  className="capture-home-chip"
+                  onClick={() => pinFromChip(def.key, def.chip, def.picker)}
+                >
+                  {chipTool && chipTool.icon ? <span className="chip-ico-emo" aria-hidden="true">{chipTool.icon}</span> : null}
+                  {def.label}
+                </button>
+              );
+            })}
+          </div>
+          </div>
+          <a className="desk-browse" href="/tools/">
+            Browse all tools →
+          </a>
+        </div>
       {peek && <img className="desk-peek" src={FACE_PEEK} alt="" aria-hidden="true" />}
       {crossing && (
         <div className="desk-crossing-lane" aria-hidden="true">

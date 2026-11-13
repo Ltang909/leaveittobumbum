@@ -4,7 +4,7 @@ import { getStripe, planPrices } from "@/lib/stripe";
 export async function POST(request: Request) {
   try {
     const { plan } = await request.json();
-    if (plan !== "helper" && plan !== "operator") return NextResponse.json({ error: "Choose a valid plan." }, { status: 400 });
+    if (plan !== "operator") return NextResponse.json({ error: "Choose a valid plan." }, { status: 400 });
     const price = planPrices[plan];
     if (!price) return NextResponse.json({ error: "Checkout is being connected. Please email hello@leaveittobumbum.com." }, { status: 503 });
     const site = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;

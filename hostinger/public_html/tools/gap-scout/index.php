@@ -5,11 +5,11 @@
 <meta property="og:description" content="Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/gap-scout/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-gap-scout.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/gap-scout.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Resume Gap Checker | Compare Your Resume to Any Job Description | Leave It to Bum Bum">
 <meta name="twitter:description" content="Upload your resume and up to 5 job descriptions. See the skills they keep asking for that your resume never mentions. Free, private, in your browser.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-gap-scout.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/gap-scout.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/gap-scout/">
 <script type="application/ld+json">
 {
@@ -68,7 +68,7 @@
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Resume Gap Checker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Resume Gap Checker","item":"https://leaveittobumbum.com/tools/gap-scout/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Resume Gap Checker","item":"https://leaveittobumbum.com/tools/gap-scout/"}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -121,7 +121,7 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .warn-note{background:#fdf6e3;border:1px solid #e7d08a;border-radius:10px;padding:10px 14px;font-size:14px;margin-top:10px}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Resume Gap Checker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/gap-scout.png" alt="Resume Gap Checker"><h1>Find the gaps before they do.</h1><p class="lede bb-desc">Upload your resume, drop in up to 5 job descriptions, and Bum Bum shows you the skills they keep asking for that your resume never mentions, with the exact line from each posting as proof. Paste the text or a link and Bum Bum fetches it. Everything happens in your browser, your resume never leaves your device, and it is free.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Resume Gap Checker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/gap-scout.png" alt="Resume Gap Checker"><div><h1>Resume Gap Checker</h1><p class="lede bb-desc">Find the gaps before they do. Match your resume against up to 5 job posts and see missing skills.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to scout gaps</h2><a class="button" href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -519,10 +519,12 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 <p>Paste the text or drop in a link and Resume Gap Checker fetches it for you.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/corporate-bum-bum/">Job Application Tracker</a> - A job application tracker that tells you who to follow up with today and what to say.</p>
-<p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
-<p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap photos of up to 10 receipts at once.</p>
-</section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-tailor-your-resume-to-a-job-description/">How to tailor your resume to a job description</a>.</p></section></main><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'gap-scout'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Finding the gaps in your resume, the short guide</h2>
+<h3>How it works here</h3>
+<p>Your resume is compared against up to five job descriptions, and you get the skills they keep asking for that your resume never mentions, with the exact line from each posting as proof. Everything runs in your browser: your resume never leaves your device, and nothing is uploaded or stored. One finished check uses one action.</p>
+<h3>Compare like with like</h3>
+<p>Use postings for the same kind of role. Mixing five unrelated jobs produces a gap list for a job that does not exist, and tailoring toward it helps with none of them.</p>
+<h3>Patterns before hobbies</h3>
+<p>A skill appearing in four of five postings is a pattern worth your effort. A skill in exactly one is that hiring manager's hobby. Work the list in that order and stop when the patterns run out.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-tailor-your-resume-to-a-job-description/">How to tailor your resume to a job description</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

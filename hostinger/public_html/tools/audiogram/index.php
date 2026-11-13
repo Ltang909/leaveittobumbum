@@ -5,11 +5,11 @@
 <meta property="og:description" content="Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/audiogram/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-audiogram.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/audiogram.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Audiogram Maker | Turn an MP3 Into a Captioned Video | Leave It to Bum Bum">
 <meta name="twitter:description" content="Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-audiogram.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/audiogram.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/audiogram/">
 <script type="application/ld+json">
 {
@@ -69,7 +69,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Audiogram Maker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Audiogram Maker","item":"https://leaveittobumbum.com/tools/audiogram/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Audiogram Maker","description":"Turn an MP3 into a video, with captions or without.","step":[{"@type":"HowToStep","position":1,"name":"Upload an MP3 and a background image."},{"@type":"HowToStep","position":2,"name":"Bum Bum transcribes your audio, or skips it entirely with No captions; the audio itself is never kept."},{"@type":"HowToStep","position":3,"name":"Pick a caption style (or none) and aspect ratio."},{"@type":"HowToStep","position":4,"name":"Download your video, ready for the feed."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Audiogram Maker","description":"Turn an MP3 into a video, with captions or without.","step":[{"@type":"HowToStep","position":1,"name":"Upload an MP3 and a background image."},{"@type":"HowToStep","position":2,"name":"Bum Bum transcribes your audio, or skips it entirely with No captions; the audio itself is never kept."},{"@type":"HowToStep","position":3,"name":"Pick a caption style (or none) and aspect ratio."},{"@type":"HowToStep","position":4,"name":"Download your video, ready for the feed."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .ag-drop{border:2px dashed var(--line);border-radius:12px;padding:26px 18px;text-align:center;cursor:pointer;background:#fff;margin:0 0 12px}
 .ag-drop.over{border-color:var(--accent,#b3541e);background:#fff8f2}
@@ -96,7 +96,7 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 #agGen{font-size:18px;padding:14px 26px;margin-top:12px}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/audiogram.png" alt="Audiogram Maker"><h1>MP3 in. Video out.</h1><p class="lede bb-desc">Upload an MP3 and a background image. Bum Bum transcribes your audio (or skips it entirely with No captions), you pick a caption style or none at all, and you get a video ready for the feed. Your audio is only transcribed, it is never kept. One finished video uses one action.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/audiogram.png" alt="Audiogram Maker"><div><h1>Audiogram Maker</h1><p class="lede bb-desc">MP3 in. Video out. Upload an MP3 and a background image, and Bum Bum builds the captioned video.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Audiogram Maker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -111,7 +111,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">1. Your ingredients</h2>
 <div class="ag-drop" id="agMp3Drop" role="button" tabindex="0"><strong>Drop your MP3 here, or tap to pick one</strong><span>Up to 25 MB. Sent for transcription only with captions; with No captions it never leaves your browser.</span><input type="file" id="agMp3" accept="audio/mpeg,.mp3"></div>
 <p class="ag-fileline" id="agMp3Info"></p>
-<div class="ag-drop" id="agImgDrop" role="button" tabindex="0"><strong>Drop a background image here, or tap to pick one</strong><span>Stays in your browser. Never uploaded anywhere.</span><input type="file" id="agImg" accept="image/*"></div>
+<div class="ag-drop" id="agImgDrop" role="button" tabindex="0"><strong>Drop a background image here, or tap to pick one</strong><span>Your image stays in your browser and is never uploaded anywhere.</span><input type="file" id="agImg" accept="image/*"></div>
 <p class="ag-fileline" id="agImgInfo"></p>
 <p id="agUploadErr" class="error"></p>
 <div class="ag-step"><button id="agToStyle" class="button" type="button" disabled>Continue</button></div>
@@ -148,7 +148,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 const TOOL_KEY='audiogram';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 <?php if ($out): ?>
@@ -501,10 +501,14 @@ againBtn.addEventListener('click',()=>{
 <p>Vertical, square, and widescreen, ready for any feed.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Turning audio into video, the short guide</h2>
+<h3>How it works here</h3>
+<p>Upload an MP3 and a background image, pick a caption style, and download a captioned MP4 ready for the feed. The transcription that makes the captions is automatic, and your audio is never stored after. Setting up and previewing are free; one finished video uses one action.</p>
+<h3>Pick the shape first</h3>
+<p>Vertical for Reels and TikTok, square for feeds. Caption styles and sizes cover the usual formats, but the shape decision comes before all of them. Choosing the wrong shape means rendering the video again, so pick the shape before anything else.</p>
+<h3>Readable captions</h3>
+<p>Choose a background with a calm middle. Animated captions are hard to follow over a busy photo, however good the audio is.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'audiogram'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

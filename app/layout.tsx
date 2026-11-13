@@ -7,6 +7,10 @@ const body = Nunito_Sans({ subsets: ["latin"], variable: "--font-body" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://leaveittobumbum.com"),
+  // The homepage is a client component and cannot export its own metadata,
+  // so its canonical lives here. Every other route overrides this with its
+  // own self-referencing canonical in its page metadata.
+  alternates: { canonical: "/" },
   title: "Leave It to Bum Bum | Tiny tools for busy businesses",
   description: "Useful little tools for the annoying parts of running a small business. Start free, then pay as your business uses more.",
   icons: { icon: "/bum/favicon-cat.png" },
@@ -31,6 +35,11 @@ const organizationLd = {
   name: "Leave It to Bum Bum",
   url: "https://leaveittobumbum.com/",
   logo: "https://leaveittobumbum.com/bum/favicon-cat.png",
+  sameAs: [
+    "https://www.instagram.com/leaveittobumbum/",
+    "https://www.linkedin.com/in/leaveittobumbum/",
+    "https://ca.pinterest.com/0s5nekxyh3lt53n8j9balgylnaznz9/",
+  ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -5,11 +5,11 @@
 <meta property="og:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/sop-ify/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-sop-ify.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/sop-ify.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SOP Generator | Turn a Messy Process Dump Into a Step-by-Step Playbook | Leave It to Bum Bum">
 <meta name="twitter:description" content="Dump your process, messy and rambling. Get a clean step-by-step playbook a new helper could follow with zero context. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-sop-ify.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/sop-ify.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/sop-ify/">
 <script type="application/ld+json">
 {
@@ -68,7 +68,7 @@
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"SOP Generator | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"SOP Generator","item":"https://leaveittobumbum.com/tools/sop-ify/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"SOP Generator","item":"https://leaveittobumbum.com/tools/sop-ify/"}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .sop-field{margin:0 0 16px}
 .sop-field label{display:block;font-weight:800;margin-bottom:8px}
@@ -100,7 +100,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .hidden{display:none!important}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"SOP Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/sop-ify.png" alt="SOP Generator"><h1>Chaos in. Playbook out.</h1><p class="lede bb-desc">Dump how you do the thing, all messy and rambling. Get back a clean step-by-step playbook a brand-new helper could follow with zero prior context.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"SOP Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/sop-ify.png" alt="SOP Generator"><div><h1>SOP Generator</h1><p class="lede bb-desc">Chaos in. Playbook out. Dump the messy process and get a clean step-by-step playbook.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use SOP Generator</h2><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -140,7 +140,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 const TOOL_KEY='sop-ify';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 <?php if ($out): ?>
 document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
@@ -277,10 +277,14 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <p>Hand it to a helper, save it as your process doc, or use it to train the next person.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
-<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Turning a brain-dump into a playbook, the short guide</h2>
+<h3>How it works here</h3>
+<p>Paste the messy version of how you do a thing, or talk it out loud if the process lives in your head better than on a keyboard, and get a clean step-by-step playbook a brand-new helper could follow with zero prior context. Your playbooks are saved in your account and nothing is shared. One finished playbook uses one action.</p>
+<h3>Do not pre-organize</h3>
+<p>You do not need to organize your input first. Paste or say it in whatever order it comes out, and let the tool arrange it. Organizing it yourself means doing part of the work you are trying to hand off.</p>
+<h3>Include the annoying parts</h3>
+<p>The login that lives in a spreadsheet, the step everyone forgets, the exception that happens every month. Playbooks fail on the steps nobody wrote down. Start with the task you dread handing over. That usually means the steps live only in your head, and writing the SOP gets them down where a helper can use them.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'sop-ify'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

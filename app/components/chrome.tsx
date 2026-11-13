@@ -26,7 +26,7 @@ function ActionsPill() {
   if (!usage) return null;
   if (usage.unlimited) {
     return (
-      <a className="usage-pill" href="/account/">
+      <a className="usage-pill unlimited" href="/account/">
         Unlimited actions
       </a>
     );
@@ -83,6 +83,7 @@ export function SiteFooter() {
         <b>Bum Bum</b>
         <a href="/about/">About</a>
         <a href="/team/">Team</a>
+        <a href="/blog/">Blog</a>
         <a href="/docs/">Docs</a>
         <a href="/ai-instructions/">AI Instructions</a>
       </nav>
@@ -91,6 +92,12 @@ export function SiteFooter() {
         <a href="/privacy/">Privacy</a>
         <a href="/terms/">Terms</a>
         <a href="mailto:hello@leaveittobumbum.com">Contact</a>
+      </nav>
+      <nav className="footer-links" aria-label="Directories">
+        <b>Find us on</b>
+        <a href="https://dang.ai/" target="_blank" rel="noopener">Dang.ai</a>
+        <a href="https://fazier.com/" target="_blank" rel="noopener" aria-label="Launched on Fazier"><img className="footer-badge" src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" alt="Launched on Fazier" /></a>
+        <a href="https://www.toolpilot.ai/" target="_blank" rel="noopener" aria-label="Featured on ToolPilot"><img className="footer-badge" src="/badges/toolpilot-featured-white.png" alt="Featured on ToolPilot" /></a>
       </nav>
       <div className="footer-bottom">
         <p>© {new Date().getFullYear()} Leave It to Bum Bum</p>

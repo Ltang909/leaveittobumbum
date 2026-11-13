@@ -10,11 +10,11 @@
 <meta property="og:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/clips/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-clips.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/clips.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Free Screen Recorder Online | Record Your Screen in the Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-clips.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/clips.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/clips/">
 <script type="application/ld+json">
 {
@@ -63,6 +63,22 @@
     },
     {
       "@type": "Question",
+      "name": "Can I record my screen with sound?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Turn on the microphone option and your voice records along with the screen, and you can add the camera bubble at the same time if you want your face in the corner. Make a short test recording first to check your levels before the real take."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why doesn't the floating bubble follow me into other tabs and windows?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The floating bubble is a small mirror that lives on this page, and websites are not allowed to draw inside other tabs or apps, so it cannot travel with you. Tools that seem to do it use a browser extension, which has permissions a website does not. Your finished recording still includes your camera in the corner either way, because it is blended into the video as you record. To see yourself while you work in another window, share your entire screen and keep the bubble up."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Can I trim the recording before downloading?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -74,7 +90,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Screen Recorder | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Screen Recorder","item":"https://leaveittobumbum.com/tools/clips/"}]}</script>
-<link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
+<link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 #speedPicker button{background:#fff;color:var(--ink)}
 #speedPicker button.speed-on{background:var(--ink);color:var(--lime)}
@@ -84,9 +100,7 @@
 <body>
 <?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?>
 <main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Screen Recorder"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?>
-<p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/clips.png" alt="Screen Recorder">
-<h1>Show them instead of telling them</h1>
-<p class="lede bb-desc">Screen Recorder records your screen right in your browser. Pick a tab, a window, or your whole screen, add your mic and a little camera bubble if you want to be in it, then trim and tweak the speed before you download. Nothing uploads anywhere, your video never leaves your computer. One finished recording uses one action.</p>
+<p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/clips.png" alt="Screen Recorder"><div><h1>Screen Recorder</h1><p class="lede bb-desc">Show them instead of telling them. Record your screen right in your browser, mic and camera too.</p></div></div>
 <?php if (!$user && !$isGuest): ?>
 <section class="panel"><h2>Sign in to use Screen Recorder</h2><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Sign in or create an account</a></section>
 <?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
@@ -96,7 +110,7 @@
 <?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php if ($usage && empty($usage['unlimited']) && $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>
+<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>
 <?php else: ?>
 <section class="panel hidden" id="no-screen">
 <h2>Clips needs a desktop browser</h2>
@@ -146,7 +160,7 @@ const TOOL_KEY='clips';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 const LIMIT=<?= (int) ($usage['limit'] ?? 75) ?>;
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:LIMIT})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all ${LIMIT} free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all ${LIMIT} free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function showUpgrade(){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();document.querySelectorAll('#upgrade-slot [data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:'limit',tool:TOOL_KEY})))}
 function fmt(ms){const s=Math.floor(ms/1000);const h=Math.floor(s/3600);const m=Math.floor(s%3600/60);const sec=s%60;const p=n=>String(n).padStart(2,'0');return (h?p(h)+':':'')+p(m)+':'+p(sec)}
 const screenOK=!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia);
@@ -191,7 +205,7 @@ if(!screenOK){
   let screenVideoEl=null,camVideoEl=null,compCanvas=null,compCtx=null,drawRAF=0;
   let recordedBlob=null,editBlobUrl='',editSpeed=1;
   let pipWin=null,bubbleTimerEl=null,fallbackBubble=null;
-  function pickMime(){const c=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t}return ''}
+  function pickMime(){const c=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t}return ''}
   function setError(m){errorEl.textContent=m}
   function stopTracks(){[screenStream,micStream,camStream].forEach(s=>{if(s)s.getTracks().forEach(t=>t.stop())});screenStream=null;micStream=null;camStream=null;if(drawRAF)cancelAnimationFrame(drawRAF);drawRAF=0;screenVideoEl=null;camVideoEl=null;compCanvas=null;compCtx=null;if(mixCtx){mixCtx.close().catch(()=>{});mixCtx=null}closeBubbleWindow()}
   function doStop(){if(recorder&&recorder.state!=='inactive')recorder.stop()}
@@ -207,7 +221,7 @@ if(!screenOK){
       try{
         pipWin=await window.documentPictureInPicture.requestWindow({width:280,height:340});
         const link=pipWin.document.createElement('link');
-        link.rel='stylesheet';link.href='/app.css?v=6';
+        link.rel='stylesheet';link.href='/app.css?v=11';
         pipWin.document.head.appendChild(link);
         const style=pipWin.document.createElement('style');
         style.textContent='html,body{margin:0;padding:16px;min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}'+
@@ -593,16 +607,26 @@ if(!screenOK){
 <p>Yes. Add your mic and a little camera bubble if you want to be in the recording.</p>
 </details>
 <details>
+<summary>Can I record my screen with sound?</summary>
+<p>Yes. Turn on the microphone option and your voice records along with the screen, and you can add the camera bubble at the same time if you want your face in the corner. Make a short test recording first to check your levels before the real take.</p>
+</details>
+<details>
+<summary>Why doesn't the floating bubble follow me into other tabs and windows?</summary>
+<p>The floating bubble is a small mirror that lives on this page, and websites are not allowed to draw inside other tabs or apps, so it cannot travel with you. Tools that seem to do it use a browser extension, which has permissions a website does not. Your finished recording still includes your camera in the corner either way, because it is blended into the video as you record. To see yourself while you work in another window, share your entire screen and keep the bubble up.</p>
+</details>
+<details>
 <summary>Can I trim the recording before downloading?</summary>
 <p>Yes. Trim the start and end and tweak the playback speed before you download.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video.</p>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
-</section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-record-your-screen-for-free/">How to record your screen for free (no software to install)</a>.</p><p>Screen recording is one of the everyday jobs we rounded up in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
-<script src="/tools/drop-strip.js?v=20261026r15"></script></body>
+<?php $bbTool = 'clips'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Recording your screen, the short guide</h2>
+<h3>How it works here</h3>
+<p>Pick a tab, a window, or your whole screen, add your microphone and a small camera bubble if you want to be in it, and record. Everything happens in your browser: nothing uploads anywhere, and Bum Bum keeps no copy. When you stop, you can trim the result and tweak the playback speed before you download. One finished recording uses one action; recording and previewing are free.</p>
+<h3>Set up in thirty seconds</h3>
+<p>Close unrelated tabs before you record a single tab, because the picker shows everything you have open. Then make a short test recording first. It saves you from discovering a muted microphone at minute nine of the real take.</p>
+<h3>When a recording beats a meeting</h3>
+<p>Walkthroughs, bug reports, and status updates are usually better as a two-minute recording than as another call on the calendar. Record it once, send the file, and everyone watches it at their own speed. Screen capture needs a desktop browser; mobile browsers do not offer it.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-record-your-screen-for-free/">How to record your screen for free (no software to install)</a>.</p><p>Screen recording is one of the everyday jobs we rounded up in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
+<script src="/tools/drop-strip.js?v=20261111r1"></script></body>
 </html>

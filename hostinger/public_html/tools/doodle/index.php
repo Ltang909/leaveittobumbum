@@ -5,11 +5,11 @@
 <meta property="og:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/doodle/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-doodle.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/doodle.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Online Sketchpad | Draw in Your Browser, Export PNG or SVG | Leave It to Bum Bum">
 <meta name="twitter:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-doodle.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/doodle.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/doodle/">
 <script type="application/ld+json">
 {
@@ -68,7 +68,7 @@
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Online Sketchpad | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Online Sketchpad","item":"https://leaveittobumbum.com/tools/doodle/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Online Sketchpad","item":"https://leaveittobumbum.com/tools/doodle/"}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .doodle-layout{display:grid;gap:16px;margin-top:20px}
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
@@ -95,7 +95,7 @@ input[type=range].size{width:140px;accent-color:var(--ink);margin:0}
 @media(max-width:560px){.tool-group{width:100%;justify-content:flex-start}}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Online Sketchpad"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/doodle.png" alt="Online Sketchpad"><h1>A tiny canvas for big ideas.</h1><p class="lede bb-desc">Online Sketchpad is a pocket sketchpad. Draw with a finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Saving or copying your doodle uses one action.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Online Sketchpad"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/doodle.png" alt="Online Sketchpad"><div><h1>Online Sketchpad</h1><p class="lede bb-desc">A tiny canvas for big ideas. Draw with a finger, stylus, or mouse, right in your browser.</p></div></div>
 <div class="doodle-layout">
 <div class="toolbar">
 <div class="tool-group"><span class="lbl">Tool</span><div class="seg" role="group" aria-label="Pen or eraser"><button type="button" id="penBtn" class="on">Pen</button><button type="button" id="eraserBtn">Eraser</button></div></div>
@@ -174,7 +174,7 @@ async function spendDoodleAction(){
     const data=await res.json().catch(()=>({}));
     if(res.status===402){
       if(data&&data.signup_required)return false;
-      document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">Saving a doodle uses one action. Helper gives you 1,500 actions for $12/month.</p><p><a class="button" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" href="/account/">See your usage</a></p></div>';
+      document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">Saving a doodle uses one action. Operator gives you unlimited actions for $49/month.</p><p><a class="button secondary" href="/account/">See your usage</a></p></div>';
       return false;
     }
     if(!res.ok){alert(data.error||'Could not save. Try again.');return false}
@@ -242,10 +242,14 @@ try{bbTrack('tool_opened',{tool:'doodle'})}catch(e){}
 <p>Copy it to your clipboard or download it as an image file.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/purr-code/">QR Code Generator</a> - Your link, but cute.</p>
-<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">A sketchpad in your browser, the short guide</h2>
+<h3>How it works here</h3>
+<p>Draw with a finger, stylus, or mouse, right in your browser. Nothing leaves your device while you draw; your sketch only goes anywhere when you choose to save, copy, or download it. Drawing is free and unlimited. Saving or copying a doodle uses one action, and exports come out as PNG or SVG.</p>
+<h3>Signatures that survive export</h3>
+<p>Signing something? Draw big, then shrink it into place. Big signatures export cleaner than small, careful ones, because the lines have more room to be smooth.</p>
+<h3>PNG or SVG</h3>
+<p>SVG keeps lines crisp at any size, so it is the one to pick for anything printed or shown large. PNG is the everyday choice for dropping a sketch into a document, a message, or a post.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'doodle'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

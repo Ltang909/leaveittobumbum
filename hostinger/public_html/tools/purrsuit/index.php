@@ -5,11 +5,11 @@
 <meta property="og:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/purrsuit/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-purrsuit.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/purrsuit.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Client Follow-Up Tracker | A Tiny CRM That Tells You Who to Contact Today | Leave It to Bum Bum">
 <meta name="twitter:description" content="A tiny CRM for people who hate CRMs. Track leads, and every morning get told who to follow up with and what to say. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-purrsuit.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/purrsuit.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/purrsuit/">
 <script type="application/ld+json">
 {
@@ -45,7 +45,7 @@
       "name": "How is Client Follow-Up Tracker different from a big CRM?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It does one job: it tells you who to follow up with every morning and what to say. No pipelines to configure, no fields to customize, no training needed."
+        "text": "It does one job: it tells you who to follow up with every morning and what to say. There are no pipelines to configure and no custom fields to set up, and it needs no training to use."
       }
     },
     {
@@ -63,12 +63,20 @@
         "@type": "Answer",
         "text": "Yes. Import a CSV and Client Follow-Up Tracker matches them up for you."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use it as a simple client tracker?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Log each interaction as it happens, check the timeline when you need the history, and work from the morning follow-up list so nobody waits too long for a reply. It covers the everyday client tracking most solo businesses need, with no CRM setup first."
+      }
     }
   ]
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Client Follow-Up Tracker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Client Follow-Up Tracker","item":"https://leaveittobumbum.com/tools/purrsuit/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Client Follow-Up Tracker","item":"https://leaveittobumbum.com/tools/purrsuit/"}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer}
@@ -142,13 +150,14 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .quiet{box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Client Follow-Up Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/purrsuit.png" alt="Client Follow-Up Tracker"><h1>Never let a lead go cold.</h1><p class="lede bb-desc">Client Follow-Up Tracker is a tiny CRM for people who hate CRMs. Add the humans, move them down the pipeline, and every morning Client Follow-Up Tracker tells you exactly who to follow up with and what to say. Adding a contact uses one action. Everything else is free.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Client Follow-Up Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/purrsuit.png" alt="Client Follow-Up Tracker"><div><h1>Client Follow-Up Tracker</h1><p class="lede bb-desc">Never let a lead go cold. A tiny follow-up tracker for people who hate CRMs.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Client Follow-Up Tracker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a></p></div>
 <?php else: ?>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
 <?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
+<?php require dirname(__DIR__, 2) . '/includes/weekly-note.php'; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
 <div class="stat-row"><div class="stat-card" data-stat="pipeline" role="button" tabindex="0" aria-pressed="false"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card" data-stat="won" role="button" tabindex="0" aria-pressed="false"><b id="statWon">$0</b><span>won</span></div><div class="stat-card" data-stat="all" role="button" tabindex="0" aria-pressed="false"><b id="statCount">0</b><span>contacts</span></div></div><p class="stat-hint hidden" id="statHint" role="status"></p>
 <section class="panel"><div class="yp-head"><h2>Your people</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="chips" id="stageChips"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
@@ -168,7 +177,7 @@ let FILTER='all';
 const PIPELINE_STAGES=['new','talking','quoted'];
 function filterMatch(c){if(FILTER==='all')return true;if(FILTER==='pipeline')return PIPELINE_STAGES.includes(c.stage);return c.stage===FILTER}
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function money(n){return new Intl.NumberFormat(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n||0)}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/purrsuit.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
@@ -401,7 +410,7 @@ refresh();
 </details>
 <details>
 <summary>How is Client Follow-Up Tracker different from a big CRM?</summary>
-<p>It does one job: it tells you who to follow up with every morning and what to say. No pipelines to configure, no fields to customize, no training needed.</p>
+<p>It does one job: it tells you who to follow up with every morning and what to say. There are no pipelines to configure and no custom fields to set up, and it needs no training to use.</p>
 </details>
 <details>
 <summary>What does the morning follow-up tell me?</summary>
@@ -411,12 +420,18 @@ refresh();
 <summary>Can I import my contacts?</summary>
 <p>Yes. Import a CSV and Client Follow-Up Tracker matches them up for you.</p>
 </details>
+<details>
+<summary>Can I use it as a simple client tracker?</summary>
+<p>Yes. Log each interaction as it happens, check the timeline when you need the history, and work from the morning follow-up list so nobody waits too long for a reply. It covers the everyday client tracking most solo businesses need, with no CRM setup first.</p>
+</details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/corporate-bum-bum/">Job Application Tracker</a> - A job application tracker that tells you who to follow up with today and what to say.</p>
-<p><a href="/tools/invoice-chaser/">Invoice Reminder</a> - Track who owes you what.</p>
-<p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
-</section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>We compared the field: <a href="/blog/best-free-crm-small-business/">comparing free CRMs for a small business</a>, from full sales pipelines to tiny follow-up trackers like this one.</p></section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'purrsuit'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Following up without a CRM, the short guide</h2>
+<h3>How it works here</h3>
+<p>Add the humans, move them down the pipeline, and every morning the tracker tells you exactly who to follow up with and what to say. Follow-ups that come due also show up in the Monday note for that week. Adding a contact uses one action; everything else is free, and you can import contacts from a CSV instead of typing them one by one.</p>
+<h3>The two-minute habit</h3>
+<p>Set the follow-up date before you close the tab after every call. Two days is a good default for a warm conversation. The tracker does the remembering; your only job is telling it when future-you should care.</p>
+<h3>Keep the pipeline honest</h3>
+<p>Someone who has gone quiet for a month belongs in a later stage, not in today's list forever. A short, current list gets worked through. A long, stale one gets ignored, and follow-ups get missed that way in bigger CRMs too. Bum Bum never emails your clients from this tool; the words are always yours to send.</p>
+<h3>Read the guide</h3><p>We compared the field: <a href="/blog/best-free-crm-small-business/">comparing free CRMs for a small business</a>, from full sales pipelines to tiny follow-up trackers like this one. Follow-up trackers also get their own head-to-head: <a href="/blog/best-free-client-follow-up-tracker/">the best free client follow-up trackers</a>, with this one in the lineup.</p></section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

@@ -5,11 +5,11 @@
 <meta property="og:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-trimmer/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-video-trimmer.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/video-trimmer.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Free Video Trimmer Online | Trim Videos in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-video-trimmer.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/video-trimmer.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-trimmer/">
 <script type="application/ld+json">
 {
@@ -69,7 +69,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Video Trimmer | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Video Trimmer","item":"https://leaveittobumbum.com/tools/video-trimmer/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Video Trimmer","description":"Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.","step":[{"@type":"HowToStep","position":1,"name":"Drop a video into Video Trimmer."},{"@type":"HowToStep","position":2,"name":"Mark where the good part starts and ends."},{"@type":"HowToStep","position":3,"name":"Bum Bum snips it right in your browser; your video never leaves your device."},{"@type":"HowToStep","position":4,"name":"Download the trimmed clip."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Video Trimmer","description":"Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.","step":[{"@type":"HowToStep","position":1,"name":"Drop a video into Video Trimmer."},{"@type":"HowToStep","position":2,"name":"Mark where the good part starts and ends."},{"@type":"HowToStep","position":3,"name":"Bum Bum snips it right in your browser; your video never leaves your device."},{"@type":"HowToStep","position":4,"name":"Download the trimmed clip."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -96,7 +96,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Video Trimmer"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/video-trimmer.png" alt="Video Trimmer"><h1>Keep the good part.</h1><p class="lede bb-desc">Drop in a video, mark where the good part starts and ends, and Bum Bum snips it <b>right in your browser</b>. Your video never leaves your device. One action per trim.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Video Trimmer"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/video-trimmer.png" alt="Video Trimmer"><div><h1>Video Trimmer</h1><p class="lede bb-desc">Keep the good part. Drop in a video, mark the start and end, and Bum Bum snips it <b>right in your browser</b>.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to trim videos</h2><a class="button" href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -156,12 +156,16 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>Mark where the good part starts and ends, preview the snip, then download it.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video.</p>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Trimming video in your browser, the short guide</h2>
+<h3>How it works here</h3>
+<p>Drop in a video, mark where the good part starts and ends, and download the cut. The trim happens in your browser and your video never leaves your device; Bum Bum keeps no copy. One action per trim, and marking and previewing are free. If your browser can play the video, the trimmer can usually cut it.</p>
+<h3>Mark wide, then tighten</h3>
+<p>Mark a little wide on the first pass, then narrow in. You can always trim away an extra second of dead air later. A word clipped at the start cannot be put back. For a clip headed to social, trim to the moment itself and leave any background or context for the caption.</p>
+<h3>Big files, honest limits</h3>
+<p>Rendering happens on your device, so very large files take a while and some patience. That is the trade for never uploading them: your computer does the work a server would otherwise do with your footage on it.</p>
 </section>
+<?php $bbTool = 'video-trimmer'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -230,7 +234,7 @@ trimBtn.addEventListener('click',async()=>{
   try{
     step='quota';progText.textContent='Checking your actions...';
     const st=await apiCall({action:'status'});
-    if(st.response.ok&&st.data.usage&&Number(st.data.usage.remaining)<=0)throw new Error('actions');
+    if(st.response.ok&&st.data.usage&&!st.data.usage.unlimited&&Number(st.data.usage.remaining)<=0)throw new Error('actions');
     step='engine';progText.textContent='Loading the trimmer (first trim downloads it, about 30 MB)...';barFill.style.width='8%';
     const ff=await getFFmpeg(s=>{step=s});
     step='reading';barFill.style.width='18%';progText.textContent='Reading your video...';ffLogs.length=0;
@@ -266,4 +270,4 @@ trimBtn.addEventListener('click',async()=>{
     else trimError.textContent='Something went wrong finishing the trim. Try again?';
   }finally{trimBtn.disabled=false;setTimeout(()=>trimProgress.classList.add('hidden'),900)}
 });
-</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

@@ -9,11 +9,11 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
 <meta property="og:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/purr-code/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-purr-code.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/purr-code.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="QR Code Generator | Branded QR Codes in Your Colors | Leave It to Bum Bum">
 <meta name="twitter:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-purr-code.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/purr-code.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/purr-code/">
 <script type="application/ld+json">
 {
@@ -73,7 +73,7 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"QR Code Generator | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"QR Code Generator","item":"https://leaveittobumbum.com/tools/purr-code/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use QR Code Generator","description":"Your link, but cute.","step":[{"@type":"HowToStep","position":1,"name":"Paste the link you want the QR code to open."},{"@type":"HowToStep","position":2,"name":"Pick soft dots or classic style, colors, and size."},{"@type":"HowToStep","position":3,"name":"Preview it as much as you like, free."},{"@type":"HowToStep","position":4,"name":"Export your QR code and turn on scan tracking if you want it."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use QR Code Generator","description":"Your link, but cute.","step":[{"@type":"HowToStep","position":1,"name":"Paste the link you want the QR code to open."},{"@type":"HowToStep","position":2,"name":"Pick soft dots or classic style, colors, and size."},{"@type":"HowToStep","position":3,"name":"Preview it as much as you like, free."},{"@type":"HowToStep","position":4,"name":"Export your QR code and turn on scan tracking if you want it."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .pc-grid{display:grid;grid-template-columns:1fr;gap:18px}
 @media(min-width:900px){.pc-grid{grid-template-columns:1fr 1fr;align-items:start}}
@@ -114,7 +114,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .hidden{display:none!important}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"QR Code Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/purr-code.png" alt="QR Code Generator"><h1>QR codes, but cute.</h1><p class="lede bb-desc">Your link, dressed up. Soft dots, pretty colors, and a cat in the middle. Preview as much as you like, exporting uses one action. Turn on tracking to see how many times your code gets scanned.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"QR Code Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/purr-code.png" alt="QR Code Generator"><div><h1>QR Code Generator</h1><p class="lede bb-desc">QR codes, but cute. Your link, dressed up with soft dots, pretty colors, and a cat in the middle.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use QR Code Generator</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -169,7 +169,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 const TOOL_KEY='purr-code';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 <?php if ($out): ?>
 document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
@@ -412,10 +412,14 @@ draw();
 <p>No. Your codes work as long as your link does.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/doodle/">Online Sketchpad</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
-<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
-<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">QR codes that actually scan, the short guide</h2>
+<h3>How it works here</h3>
+<p>Your link becomes a branded code: soft dots, pretty colors, and a cat in the middle, ready to print. The code encodes your link and nothing else. Previewing is free; exporting a code uses one action. Codes do not expire, so a printed code keeps working as long as the link does.</p>
+<h3>Test at the real size</h3>
+<p>Print one, stick it where it will live, and scan it from a customer's distance. A code that scans beautifully off your monitor can fail off a menu across a table.</p>
+<h3>Contrast is king</h3>
+<p>Keep contrast strong between the dots and the background. Pretty colors that sit too close together make a code that looks great and scans never. Tracking is optional and shows scan counts, so a poster or a menu can prove it is working.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'purr-code'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

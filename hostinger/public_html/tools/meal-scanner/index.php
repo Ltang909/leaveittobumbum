@@ -5,11 +5,11 @@
 <meta property="og:description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/meal-scanner/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/meal-scanner.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Meal Scanner | Snap Your Food, Get Calories and Macros | Leave It to Bum Bum">
 <meta name="twitter:description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-receipt-reader.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/meal-scanner.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/meal-scanner/">
 <script type="application/ld+json">
 {
@@ -37,7 +37,7 @@
       "name": "How accurate is it?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It is an approximation, on purpose. Every scan gives you a range, not a single fake-exact number, because portion size is the swing factor in any photo estimate. Expect it to land in the right neighborhood, not on the exact gram."
+        "text": "It is an approximation, on purpose. Every scan gives you a range, because portion size is the swing factor in any photo estimate. Expect it to land in the right neighborhood. Gram-level precision is more than a photo can honestly give."
       }
     },
     {
@@ -61,7 +61,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Meal Scanner | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Meal Scanner","item":"https://leaveittobumbum.com/tools/meal-scanner/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Meal Scanner","description":"Snap a photo of your meal and get estimated calories and macros.","step":[{"@type":"HowToStep","position":1,"name":"Snap or upload a photo of your meal. Screenshots work too."},{"@type":"HowToStep","position":2,"name":"Bum Bum reads the plate and estimates each item's calories, protein, carbs, and fat, with a range."},{"@type":"HowToStep","position":3,"name":"Fix anything it misjudged, especially portions."},{"@type":"HowToStep","position":4,"name":"Add the meal to your running total for the day, kept right in your browser."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Meal Scanner","description":"Snap a photo of your meal and get estimated calories and macros.","step":[{"@type":"HowToStep","position":1,"name":"Snap or upload a photo of your meal. Screenshots work too."},{"@type":"HowToStep","position":2,"name":"Bum Bum reads the plate and estimates each item's calories, protein, carbs, and fat, with a range."},{"@type":"HowToStep","position":3,"name":"Fix anything it misjudged, especially portions."},{"@type":"HowToStep","position":4,"name":"Add the meal to your running total for the day, kept right in your browser."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s;min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 @media(max-width:860px){.dropzone{min-height:360px}}
@@ -116,13 +116,14 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 .queue-item{display:flex;gap:12px;align-items:center;border:1px solid #e2d7bf;border-radius:12px;background:#fff;padding:8px 12px;margin-top:8px}
+.sample-line{text-align:center;font-size:13px;opacity:.85;margin:10px 0 0}.sample-link{background:none;border:0;padding:0;font:inherit;font-weight:800;color:inherit;text-decoration:underline;cursor:pointer}
 .queue-item img{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid #e7dcc3}
 .queue-item .meta{font-size:13px;opacity:.75}
 .mini{border:1px solid #ddd1b8;background:#fff;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer}
 .day-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Meal Scanner"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/meal-scanner.png" alt="Meal Scanner"><h1>Plates in, numbers out.</h1><p class="lede bb-desc">Too busy to type your lunch into a tracker? Snap the plate instead. Bum Bum reads the photo and estimates the calories, protein, carbs, and fat in seconds. No database searching, no barcode scanning, no weighing anything. Every estimate comes as an <b>honest range</b>, not a fake-exact number, because any app that claims to know your burrito to the calorie is lying to you. Fix what it misjudged, then add the meal to your running total for the day. One action per meal scanned. Your photo is read to pull the numbers, then discarded; your totals live only in your browser.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Meal Scanner"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/meal-scanner.png" alt="Meal Scanner"><div><h1>Meal Scanner</h1><p class="lede bb-desc">Plates in, numbers out. Snap your plate and Bum Bum estimates calories, protein, carbs, and fat.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to scan meals</h2><a class="button" href="/account/?next=<?= urlencode('/tools/meal-scanner/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/meal-scanner/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/meal-scanner/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -143,6 +144,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <button type="button" class="button secondary" id="btnGallery">Upload images</button>
 <button type="button" class="button secondary" id="btnCamera">Use camera</button>
 </div>
+<p class="meta sample-line">No meal photo handy? <button type="button" id="sampleBtn" class="sample-link">Try a sample meal</button> first. Free, and every number is editable, just like a real scan.</p>
 <div id="queueList"></div>
 <div class="btnrow"><button type="button" class="button hidden" id="processBtn">Scan meal</button></div>
 <div class="progress-wrap hidden" id="batchProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Warming up...</p></div>
@@ -188,13 +190,17 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>Every number is editable. Change a portion with the size picker, type over any figure, remove what it imagined, or add the side of fries it politely overlooked.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap receipts, get clean tables.</p>
-<p><a href="/tools/poster-to-calendar/">Poster to Calendar</a> - Snap a poster, get a ready-to-save calendar event.</p>
-<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Meal photos into honest numbers, the short guide</h2>
+<h3>How it works here</h3>
+<p>One photo of your plate becomes estimated calories, protein, carbs, and fat. You skip the database searching, barcode scanning, and weighing that tracker apps usually ask for. Your photo is read and discarded, never stored, and your running day total lives in your own browser, not in your account. One photo read uses one action.</p>
+<h3>Why a range is the honest answer</h3>
+<p>Every estimate here comes as a range instead of a fake-exact number, because vision estimates of portions typically run 20 to 40 percent off in either direction. A single precise-looking number would claim an accuracy the photo cannot support, so the range is the more honest answer.</p>
+<h3>Better reads</h3>
+<p>Include something for scale, like cutlery or your hand at the edge of the frame; portion guesses improve fast. Sauce-heavy plate? Edit the item after the read and note the sauce, because hidden calories mostly live there. No meal photo handy? The sample meal on this page shows the full result for free, every number editable.</p>
 </section>
-</main>
+<?php $bbTool = 'meal-scanner'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?>
 <script src="/tools/error-scenes.js"></script>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/meal-scanner.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}bbTrack('tool_opened',{tool:'meal-scanner'});
@@ -220,6 +226,27 @@ let cardCount=0;
 
 document.querySelector('#btnGallery').addEventListener('click',()=>fileGallery.click());
 document.querySelector('#btnCamera').addEventListener('click',()=>fileCamera.click());
+const SAMPLE_MEAL={mealName:'Salmon plate (sample)',items:[
+{name:'Grilled salmon fillet',portion:'1 fillet, about 190 g',calories:360,caloriesLow:310,caloriesHigh:430,protein:42,carbs:0,fat:20,uncertain:false},
+{name:'Quinoa with herbs',portion:'About 1 cup, cooked',calories:220,caloriesLow:190,caloriesHigh:260,protein:8,carbs:39,fat:4,uncertain:false},
+{name:'Roasted sweet potato wedges',portion:'6 wedges',calories:180,caloriesLow:150,caloriesHigh:220,protein:2,carbs:41,fat:4,uncertain:true},
+{name:'Steamed broccoli',portion:'5 florets, about 1 1/2 cups',calories:80,caloriesLow:65,caloriesHigh:100,protein:5,carbs:13,fat:1,uncertain:false}],notes:['Cooking oil and sauces swing the salmon and sweet potato numbers more than anything else on the plate.']};
+document.querySelector('#sampleBtn').addEventListener('click',async()=>{
+  if(batchRunning)return;
+  if(queue.some(q=>q.sample)){batchError.textContent='The sample is already in your list below.';return}
+  bbTrack('sample_started',{tool:'meal-scanner'});
+  try{
+    const resp=await fetch('/bum/sample-meal.jpg');
+    if(!resp.ok)throw new Error('load');
+    const blob=await resp.blob();
+    const dataUrl=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)});
+    queue.push({id:crypto.randomUUID(),dataUrl,name:'Sample meal',status:'queued',sample:true});
+    renderQueue();
+    processBtn.click();
+  }catch(e){
+    batchError.textContent='The sample meal would not load. Try again?';
+  }
+});
 dropzone.addEventListener('click',()=>fileGallery.click());
 dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileGallery.click()}});
 dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('over')});
@@ -271,7 +298,8 @@ function renderQueue(){
   });
   const pending=queue.filter(q=>q.status==='queued');
   processBtn.classList.toggle('hidden',!pending.length||batchRunning);
-  processBtn.textContent=pending.length>1?'Scan '+pending.length+' meals ('+pending.length+' actions)':'Scan this meal (1 action)';
+  const paidPending=pending.filter(q=>!q.sample).length;
+  processBtn.textContent=pending.length>1?'Scan '+pending.length+' meals ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')':(pending[0]&&pending[0].sample?'Scan this sample (free)':'Scan this meal (1 action)');
 }
 
 function downscale(dataUrl){
@@ -305,13 +333,21 @@ processBtn.addEventListener('click',async()=>{
     q.status='reading';renderQueue();
     progText.textContent='Scanning meal '+(done+1)+' of '+todo.length+'...';
     try{
-      const small=await downscale(q.dataUrl);
-      const{response,data}=await apiCall({action:'parse',image:small,idempotencyKey:q.id});
-      if(response.status===402)throw new Error('actions');
-      if(!response.ok){const err=new Error(data.error||'scan failed');err.serverMsg=data.error||'';err.noFood=data.code==='no_food';throw err}
-      addCard(data.meal,q.name);
+      let meal;
+      if(q.sample){
+        progText.textContent='Scanning the sample meal...';
+        await new Promise(r=>setTimeout(r,1100));
+        meal=SAMPLE_MEAL;
+      }else{
+        const small=await downscale(q.dataUrl);
+        const{response,data}=await apiCall({action:'parse',image:small,idempotencyKey:q.id});
+        if(response.status===402)throw new Error('actions');
+        if(!response.ok){const err=new Error(data.error||'scan failed');err.serverMsg=data.error||'';err.noFood=data.code==='no_food';throw err}
+        meal=data.meal;
+      }
+      addCard(meal,q.name);
       q.status='done';
-      bbTrack('meal_scanned',{items:(data.meal.items||[]).length});
+      bbTrack('meal_scanned',{items:(meal.items||[]).length,...(q.sample?{sample:true}:{})});
     }catch(e){
       if(e.message==='actions'){q.status='blocked';blocked=true}
       else{q.status='error';q.noFood=!!e.noFood;if(e.noFood)sawNoFood=true;else lastFail=e}
@@ -465,4 +501,4 @@ document.querySelector('#newBatchBtn').addEventListener('click',()=>{
   renderQueue();
   document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'});
 });
-</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+</script></main><script>window.__bbCaptureHandoff=function(f){try{loadFiles([f])}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

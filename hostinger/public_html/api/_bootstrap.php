@@ -4,6 +4,13 @@ declare(strict_types=1);
 const PLAN_LIMITS = ['free' => 75, 'helper' => 1500, 'operator' => 6000];
 const PLAN_SEATS = ['free' => 0, 'helper' => 3, 'operator' => 10];
 
+// Two plans are sold: Poke around (free) and Operator. Operator is
+// unlimited (no action cap, no seat cap); enforcement and display branch
+// on planIsUnlimited(), never on the numeric tables above. The tables
+// keep their Helper entries on purpose: Helper is no longer sold, but
+// any legacy row still on it keeps metering at its real limits.
+function planIsUnlimited(string $plan): bool { return $plan === 'operator'; }
+
 // Guest actions: visitors can use the tools with no account. Every visitor
 // gets a server-minted guest identity (signed cookie + DB row) and a small
 // lifetime allowance. At the limit they are asked to sign up, and everything
@@ -397,7 +404,6 @@ function billingUser(array $user): array {
 }
 
 function teamSeats(int $ownerId, string $plan): array {
-    $limit = PLAN_SEATS[$plan] ?? 0;
     try {
         $stmt = db()->prepare("SELECT COUNT(*) FROM team_members WHERE owner_user_id = ? AND status IN ('invited','active')");
         $stmt->execute([$ownerId]);
@@ -405,12 +411,16 @@ function teamSeats(int $ownerId, string $plan): array {
     } catch (Throwable $e) {
         $used = 0;
     }
+    if (planIsUnlimited($plan)) {
+        return ['used' => $used, 'limit' => 0, 'remaining' => PHP_INT_MAX, 'unlimited' => true];
+    }
+    $limit = PLAN_SEATS[$plan] ?? 0;
     return ['used' => $used, 'limit' => $limit, 'remaining' => max(0, $limit - $used)];
 }
 
 function usageFor(array $user): array {
     $period = periodKey($user);
-    if (isAdmin($user)) {
+    if (isAdmin($user) || planIsUnlimited((string) ($user['plan'] ?? ''))) {
         $stmt = db()->prepare('SELECT used_actions FROM usage_periods WHERE user_id = ? AND period_key = ?');
         $stmt->execute([$user['id'], $period]);
         $used = (int) ($stmt->fetchColumn() ?: 0);
@@ -434,6 +444,7 @@ function consumeAction(int $userId, string $plan, string $period, string $tool, 
         $emailStmt->execute([$userId]);
         $unlimited = isAdmin(['email' => (string) $emailStmt->fetchColumn()]);
     } catch (Throwable $e) { $unlimited = false; }
+    if (!$unlimited && planIsUnlimited($plan)) $unlimited = true;
     $pdo->beginTransaction();
     try {
         $existing = $pdo->prepare('SELECT id FROM action_ledger WHERE user_id = ? AND idempotency_key = ?');

@@ -6,13 +6,55 @@ import { SiteHeader, SiteFooter } from "./components/chrome";
 import { useRequestTool } from "./components/request-tool";
 import { PlanCta } from "./components/plan-ctas";
 import CaptureBar from "./components/capture-bar";
-import { DeskFaceProvider, useDeskFace } from "./lib/desk-face";
+import { DeskFaceProvider } from "./lib/desk-face";
 
 const plans = [
   { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["All current tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
-  { name: "Helper", price: "$12", note: "per month", credits: "1,500 actions each month", features: ["Everything in Poke around", "3 team members", "Email support", "$6 per extra 1,000 actions"], cta: "Choose Helper", plan: "helper" },
-  { name: "Operator", price: "$49", note: "per month", credits: "6,000 actions each month", features: ["Everything in Helper", "10 team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
+  { name: "Operator", price: "$49", note: "per month", credits: "Unlimited actions", features: ["Everything in Poke around", "Unlimited team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
 ];
+
+// Straight answers in question form, written to be quoted as-is by
+// search and answer engines. Every fact here already appears elsewhere
+// on this page or on /pricing/; keep the two in step when prices move.
+// The visible section and the FAQPage JSON-LD render from this one list.
+const FAQS: { q: string; a: string; href?: string; hrefText?: string }[] = [
+  {
+    q: "What is Leave It to Bum Bum?",
+    a: "Small online tools for the fiddly parts of running a small business: reading receipts, chasing invoices, transcribing voice notes, tracking subscriptions. Start at the front desk, pick a tool, hand over the job, and get a finished result.",
+  },
+  {
+    q: "How much does Leave It to Bum Bum cost?",
+    a: "Poke around is free: 75 actions a month, no card needed. Operator is $49 a month with unlimited actions and unlimited team members.",
+    href: "/pricing/",
+    hrefText: "See full pricing",
+  },
+  {
+    q: "What is an action?",
+    a: "One completed result. A finished clip, a batch of receipts read, an invoice chased, a playbook written: each one uses one action, and every tool shares the same monthly bucket.",
+  },
+  {
+    q: "What is the 36-hour promise?",
+    a: "Operator members can request one scoped tool each month. Once the scope is agreed, Bum Bum builds and ships it within 36 hours. Miss the window and your next month is on us.",
+  },
+  {
+    q: "Do I need an account to try the tools?",
+    a: "No. The front desk works for guests. An account keeps everything you file in one place and gives you 75 actions a month free.",
+  },
+  {
+    q: "Where do my files go?",
+    a: "The file tools run in your browser. Your PDFs, images, and videos stay on your device and are never uploaded to a server.",
+  },
+];
+
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
 
 const QUIPS = [
   "mrrp.",
@@ -51,51 +93,36 @@ const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "Ar
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 
-// The hero portrait: this is Bum Bum. Booping cycles his faces, and the
-// front desk borrows the same portrait for its own moments (a working
-// face while you type, the routed tool's persona as a hat) through the
-// shared desk-face state.
+// The hero cat: Bum Bum as a cutout peeking over the desk, art supplied
+// by Leon (Nov 11, 2026) with the burst and rays baked in. Booping still
+// earns a quip, and the Konami party dance still applies.
 function HeroPortrait({ party }: { party: boolean }) {
-  const { mood, hat } = useDeskFace();
-  const [face, setFace] = useState(0);
   const [quip, setQuip] = useState<string | null>(null);
   const [boingKey, setBoingKey] = useState(0);
-  const [portraitOk, setPortraitOk] = useState(true);
 
   function boopBumBum() {
-    setFace((f) => (f + 1) % FACES.length);
     setBoingKey((k) => k + 1);
     setQuip(QUIPS[Math.floor(Math.random() * QUIPS.length)]);
     window.setTimeout(() => setQuip(null), 2600);
   }
 
-  const override = mood || hat;
-  const src = override || FACES[face].src;
-  const alt = override ? "Bum Bum, on the job" : FACES[face].alt;
-
   return (
-    <div className="hero-portrait" aria-label="Bum Bum, chief tiny-tool operator">
-      <div className="portrait-burst"></div>
+    <div className="hero-portrait hero-cat" aria-label="Bum Bum, chief tiny-tool operator">
       <div
         key={boingKey}
-        className={`portrait-frame boopable${boingKey && !party ? " boing" : ""}${party ? " dance" : ""}`}
+        className={`hero-cat-boop boopable${boingKey && !party ? " boing" : ""}${party ? " dance" : ""}`}
         onClick={boopBumBum}
         onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); boopBumBum(); } }}
         role="button"
         tabIndex={0}
         aria-label="Boop Bum Bum"
       >
-        <img
-          src={src}
-          alt={alt}
-          onLoad={(event) => { setPortraitOk(true); event.currentTarget.style.display = ""; }}
-          onError={(event) => { setPortraitOk(false); event.currentTarget.style.display = "none"; }}
-        />
-        {!portraitOk && <div className="photo-fallback"><span>🐈</span><small>Bum Bum’s portrait<br />is clocking in</small></div>}
-        <div className="scribble scribble-one">this is Bum Bum</div>
+        <img className="hero-cat-img" src="/bum/hero-cat.png" alt="Bum Bum the cat peeking over the desk" />
       </div>
+      <div className="hero-cat-tag">this is Bum Bum</div>
+      <svg className="hero-cat-arrow" viewBox="0 0 60 56" aria-hidden="true"><path d="M54 6C42 24 28 38 12 47" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" /><path d="M21 45 L11 48 L13 37" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <svg className="hero-cat-arrow-mobile" viewBox="0 0 24 44" aria-hidden="true"><path d="M12 3C10.5 15 13 25 12 36" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" /><path d="M4.5 28.5 L12 38.5 L19.5 28.5" fill="none" stroke="#17150F" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
       {quip && <div className="quip-bubble" role="status">{quip}</div>}
-      <div className="stamp">BUILT FOR<br /><b>REAL WORK</b></div>
     </div>
   );
 }
@@ -148,10 +175,6 @@ export default function Home() {
     };
   }, []);
 
-  function openTool(tool: { url: string }) {
-    window.location.href = tool.url;
-  }
-
   return (
     <main>
       <SiteHeader />
@@ -160,10 +183,8 @@ export default function Home() {
         <DeskFaceProvider>
           <div className="hero-top">
             <div className="hero-copy">
-              <p className="eyebrow"><span>●</span> Small business busywork, handled</p>
-              <h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1>
-              <p className="lede">Little tools that handle the fiddly stuff stealing your afternoon.</p>
-              <p className="fine">Start free. No card. No call with a guy named Chad.</p>
+              <div className="hero-headline"><h1><span className="h1-line">Don’t wanna do it?</span><br /><em>Leave it to Bum Bum.</em></h1></div>
+              <p className="lede">Tools that read receipts, chase invoices, transcribe notes and more.</p>
             </div>
             <HeroPortrait party={party} />
           </div>
@@ -174,28 +195,46 @@ export default function Home() {
       <section className={`ticker${napZoom ? " zoomies" : ""}`} aria-label="Examples"><div className="ticker-track">{[0, 1].map((copy) => (<div className="ticker-chunk" key={copy} aria-hidden={copy === 1 || undefined}>{["READ MY RECEIPTS", "CHASE THAT INVOICE", "CLIP THE GOOD PART", "FILE THE VOICE NOTE", "POSTER IN, EVENTS OUT", "LEAVE IT TO BUM BUM"].map((t) => (<span key={t} className="ticker-item">{t}<i>✦</i></span>))}</div>))}</div></section>
 
       <section className="toolbox shell" id="toolbox">
-        <div className="section-heading"><div><p className="kicker">Bum Bum’s toolbox</p><h2>Pick the thing you<br />don’t want to do.</h2></div><p>Every finished result uses one action. The shelf keeps growing, so poke around.</p></div>
-        <div className="tool-grid">{homeTools.map((tool, index) => <article className={`tool-card card-${(index % 8) + 1}`} key={tool.key}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span>{(tool.iconImg || tool.mascot) && <img className="tool-mascot" src={tool.iconImg || tool.mascot} alt="" aria-hidden="true" />}</div><h3>{tool.name}</h3><p>{tool.description}</p><button onClick={() => openTool(tool)}>{tool.cta} <Arrow /></button></article>)}</div>
+        <div className="section-heading"><div><p className="kicker">Bum Bum’s toolbox</p><h2>Pick the thing you<br />don’t want to do.</h2></div></div>
+        <div className="tool-grid">{homeTools.map((tool, index) => <a className={`tool-card card-${(index % 8) + 1}`} key={tool.key} href={tool.url}><div className="tool-top"><span className="tool-icon">{tool.icon}</span><span className="tool-tag">{tool.tag}</span></div><h3>{tool.cardTitle ? <>{tool.cardTitle[0]}<br />{tool.cardTitle[1]}</> : tool.name}</h3><p>{tool.description}</p><span className="tool-cta">{tool.cta} <Arrow /></span></a>)}</div>
         <div className="toolbox-more"><a className="button" href="/tools/">Browse the full toolbox <Arrow /></a></div>
         <p className="section-more section-more-left"><a href="#guarantee">Missing something? Bum Bum builds it in 36 hours <Arrow /></a></p>
       </section>
 
       <section className="how">
-        <div className="shell"><div className="section-heading light"><div><p className="kicker">No software degree required</p><h2>Three steps.<br />Then, nap.</h2></div></div><div className="steps"><article><b>01</b><h3>Pick the annoying task</h3><p>Find the busywork with your name on it.</p></article><article><b>02</b><h3>Hand over the messy bits</h3><p>Paste in rough notes, numbers, or files. Bum Bum sorts it out.</p></article><article><b>03</b><h3>Get the finished thing</h3><p>Copy it, send it, save it. One action spent, afternoon reclaimed.</p></article></div></div>
+        <div className="shell"><p className="way-kicker">No software degree required</p><h2 className="way-title">A simpler way to<br /><span className="way-under">get more done.<svg className="way-swoosh" viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path d="M4 15 C 70 5, 200 3, 296 9" fill="none" stroke="#FFD84D" strokeWidth="9" strokeLinecap="round" /></svg></span></h2><div className="way-panels"><article className="way-panel"><div className="way-icon"><svg viewBox="0 0 120 112" aria-hidden="true"><path d="M93 4v11M104 10l-7 9M83 10l6 9" stroke="#FFD84D" strokeWidth="4.5" strokeLinecap="round" fill="none" /><rect x="16" y="16" width="66" height="82" rx="14" fill="#FFF6E3" stroke="#17150F" strokeWidth="3" /><rect x="27" y="29" width="12" height="12" rx="3" fill="#fff" stroke="#17150F" strokeWidth="2.5" /><path d="M29.8 35.2l2.6 2.6 4.4-5" stroke="#F5A800" strokeWidth="2.6" fill="none" strokeLinecap="round" /><rect x="27" y="51" width="12" height="12" rx="3" fill="#fff" stroke="#17150F" strokeWidth="2.5" /><path d="M29.8 57.2l2.6 2.6 4.4-5" stroke="#F5A800" strokeWidth="2.6" fill="none" strokeLinecap="round" /><rect x="27" y="73" width="12" height="12" rx="3" fill="#fff" stroke="#17150F" strokeWidth="2.5" /><path d="M48 35h23M48 57h23M48 79h23" stroke="#17150F" strokeWidth="3" strokeLinecap="round" /></svg></div><div><h3>Turn your to-do list into done.</h3><p>Invoicing, follow ups, receipts, emails and more.</p></div></article><article className="way-panel"><div className="way-icon"><svg viewBox="0 0 120 112" aria-hidden="true"><path d="M99 4v11M110 10l-7 9M89 10l6 9" stroke="#FFD84D" strokeWidth="4.5" strokeLinecap="round" fill="none" /><rect x="13" y="26" width="84" height="56" rx="10" fill="#FFF6E3" stroke="#17150F" strokeWidth="3" /><path d="M42 45l2.3 6.2L50.5 53.5l-6.2 2.3L42 62l-2.3-6.2L33.5 53.5l6.2-2.3Z" fill="#FFD84D" stroke="#17150F" strokeWidth="1.6" /><path d="M65 40l1.7 4.6 4.6 1.7-4.6 1.7L65 52.6l-1.7-4.6-4.6-1.7 4.6-1.7Z" fill="#FFD84D" stroke="#17150F" strokeWidth="1.4" /><path d="M7 88h96l-7 12H14Z" fill="#FFF6E3" stroke="#17150F" strokeWidth="3" /><path d="M47 94h16" stroke="#2864DC" strokeWidth="3" strokeLinecap="round" /></svg></div><div><h3>Tools created to do exactly what you need.</h3><p>Drop in your notes, files, or ideas and Bum Bum handles the rest.</p></div></article><article className="way-panel"><div className="way-icon"><svg viewBox="0 0 120 112" aria-hidden="true"><path d="M45 4c-4 6 4 8 0 14M63 4c-4 6 4 8 0 14" stroke="#FFF6E3" strokeWidth="3" fill="none" strokeLinecap="round" /><path d="M99 8v11M110 14l-7 9M89 14l6 9" stroke="#FFD84D" strokeWidth="4.5" strokeLinecap="round" fill="none" /><rect x="24" y="30" width="58" height="60" rx="11" fill="#FFF6E3" stroke="#17150F" strokeWidth="3" /><path d="M82 44c13 1 13 27 0 30" fill="none" stroke="#17150F" strokeWidth="3" /><g fill="#FFD84D"><ellipse cx="53" cy="68" rx="9" ry="7" /><circle cx="39" cy="56" r="3.4" /><circle cx="48" cy="51.5" r="3.4" /><circle cx="58" cy="51.5" r="3.4" /><circle cx="67" cy="56" r="3.4" /></g></svg></div><div><h3>More time for what you actually like.</h3><p>Go touch grass!</p></div></article></div></div>
       </section>
 
       <section className="pricing shell" id="pricing">
-        <div className="section-heading"><div><p className="kicker">One shared meter</p><h2>Pay for useful work,<br />not a maze of limits.</h2></div><p>Every completed result uses one action: a finished clip, a batch of receipts, a chased invoice, a playbook. Your whole team and every tool share the same monthly bucket.</p></div>
+        <div className="section-heading"><div><p className="kicker">One shared meter</p><h2>One shared meter<br />for all your tools.</h2></div><p>Every completed result uses one action: a finished clip, a batch of receipts, a chased invoice, a playbook. Your whole team and every tool share the same monthly bucket.</p></div>
         <div className="plan-grid">{plans.map((plan) => <article className={`plan ${plan.featured ? "featured" : ""}`} key={plan.name}>{plan.featured && <span className="popular">BUM BUM’S PICK</span>}<h3>{plan.name}</h3><div className="price">{plan.price}<small>{plan.note}</small></div><p className="credits">{plan.credits}</p><ul>{plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul><PlanCta plan={plan.plan} label={plan.cta} href={plan.plan === "free" ? "/tools/" : `/checkout/?plan=${plan.plan}`} featured={plan.featured} /></article>)}</div>
-        <p className="pricing-note">Actions reset monthly and do not roll over. We warn you at 80% and 100%. Paid plans can keep going with simple action packs, or you can pause until the reset.</p>
+        <p className="pricing-note">Actions on Poke around reset monthly and do not roll over. We warn you at 80% and 100%. Operator never runs out.</p>
         <p className="section-more"><a href="/pricing/">How pricing works, in plain English <Arrow /></a></p>
       </section>
 
       <section className="guarantee" id="guarantee"><div className="shell guarantee-inner"><div className="guarantee-number" title="psst, triple-click me" onClick={(event) => { if (event.detail === 3) { setNapping(true); window.setTimeout(() => setNapping(false), 3200); } }}>36<span>HRS</span>{napping && <div className="nap-bubble">😴 Bum Bum is napping. The 36-hour clock respects nap time.</div>}</div><div><p className="kicker">The Operator promise</p><h2>A missing tool should not become a six-month project.</h2><p>Operator members get one scoped request each month. Once we agree on the tiny, useful version, Bum Bum ships it within 36 hours.</p><details><summary>What counts as a scoped request? <span>+</span></summary><p>One focused workflow that can be built in about four working hours. It can use approved existing services, but it cannot include regulated data, complex migrations, mobile app store review, or work waiting on a third party. The clock begins when scope and access are confirmed. Weekends and US federal holidays are excluded. If we miss the window, your next month is on us.</p></details><p className="section-more section-more-left"><a href="/36-hours/">Read the full 36-hour promise <Arrow /></a></p><p className="section-more section-more-left"><a href="/build-vs-buy/">Could you just build it yourself? We did the math <Arrow /></a></p></div></div></section>
 
+      <section className="faq-home shell" id="faq">
+        <p className="kicker">Straight answers</p>
+        <h2>Questions people actually ask.</h2>
+        <div className="faq-grid">
+          {FAQS.map((f) => (
+            <article className="faq-item" key={f.q}>
+              <h3>{f.q}</h3>
+              <p>{f.a}{f.href ? <> <a href={f.href}>{f.hrefText} <Arrow /></a></> : null}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="closing shell"><p className="kicker">Your to-don’t list starts here</p><h2>There has to be one thing<br />you would happily never do again.</h2><button className="button" onClick={() => openRequest()}>Tell Bum Bum <Arrow /></button></section>
 
       <SiteFooter />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
 
       {requestModal}
 

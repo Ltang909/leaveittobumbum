@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/36-hours/" },
+  openGraph: { url: "/36-hours/" },
   title: "The 36-Hour Promise | Leave It to Bum Bum",
   description: "Operator members get one scoped tool request each month. Bum Bum ships it within 36 hours, or the next month is on us.",
 };
@@ -41,7 +43,7 @@ export default function ThirtySixHours() {
         </div>
         <div className="promise-callout">
           <h2>If we miss, next month is on us.</h2>
-          <p>Credited automatically, no forms, no begging. The credit applies to your Operator subscription and shows up on your account page.</p>
+          <p>The credit is applied automatically, with no forms to file. The credit applies to your Operator subscription and shows up on your account page.</p>
           <p><a href="/checkout/?plan=operator">Get the promise <span aria-hidden="true">↗</span></a></p>
         </div>
         <div className="prose">
@@ -66,7 +68,7 @@ export default function ThirtySixHours() {
         </div>
         <div className="prose" style={{ paddingBottom: 110 }}>
           <h2>Questions, probably answered</h2>
-          <details><summary>Does the request have to be my idea? <span>+</span></summary><p>Nope. Describe the pain however you like &mdash; &ldquo;I hate doing X every week&rdquo; is a perfectly good brief. We&rsquo;ll shape it into something buildable.</p></details>
+          <details><summary>Does the request have to be my idea? <span>+</span></summary><p>Nope. Describe the pain however you like &mdash; &ldquo;I hate doing X every week&rdquo; is a perfectly good brief. We&rsquo;ll turn it into a scoped request we can build.</p></details>
           <details><summary>What if my request isn&rsquo;t eligible? <span>+</span></summary><p>We&rsquo;ll tell you within a day, with the reason in plain language and the closest eligible version. An ineligible request never burns your monthly slot.</p></details>
           <details><summary>Can I watch it being built? <span>+</span></summary><p>You&rsquo;ll get updates as it ships, and you can reply to the thread any time. Hovering is optional but permitted.</p></details>
         </div>

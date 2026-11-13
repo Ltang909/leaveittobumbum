@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/how-to-record-your-screen-for-free/" },
+  openGraph: { url: "/how-to-record-your-screen-for-free/" },
   title: "How to record your screen for free (no software to install) | Leave It to Bum Bum",
   description: "Record your screen right in the browser: a tab, a window, or the full screen, with mic and camera bubble. Practical tips for a clean one-take recording you can send anywhere.",
 };
@@ -13,7 +15,7 @@ export default function RecordScreenGuide() {
       <section className="page-head shell">
         <p className="kicker">Guide</p>
         <h1>How to record your screen for free (no software to install)</h1>
-        <p className="lede">Sometimes showing beats explaining. A two-minute screen recording replaces the meeting, the screenshot chain, and the long thread of confused replies.</p>
+        <p className="lede">A short screen recording can explain a process faster than writing it out. A two-minute screen recording replaces the meeting, the screenshot chain, and the long thread of confused replies.</p>
       </section>
       <section className="shell">
         <div className="prose">
@@ -37,7 +39,7 @@ export default function RecordScreenGuide() {
           </ul>
 
           <h2>Get a clean take in one shot</h2>
-          <p>You do not need a perfect take. You need a clear one. A few habits make that easy.</p>
+          <p>Aim for a clear take. It does not have to be flawless, as long as the steps are easy to follow. A few habits make that easy.</p>
           <ul>
           <li><strong>Close the tabs you do not need.</strong> Fewer distractions for you, fewer questions from the person watching.</li>
           <li><strong>Silence notifications.</strong> Turn on Do Not Disturb or Focus mode. A message popping up mid-recording will end up in the clip, and it always picks the worst moment.</li>

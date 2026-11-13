@@ -5,11 +5,11 @@
 <meta property="og:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/ghostwriter/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-ghostwriter.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/ghostwriter.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Voice to Content | Turn a Voice Ramble Into Hooks, a Script, and a Caption | Leave It to Bum Bum">
 <meta name="twitter:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-ghostwriter.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/ghostwriter.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/ghostwriter/">
 <script type="application/ld+json">
 {
@@ -68,7 +68,7 @@
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Voice to Content | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Voice to Content","item":"https://leaveittobumbum.com/tools/ghostwriter/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Voice to Content","item":"https://leaveittobumbum.com/tools/ghostwriter/"}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .notes-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
 .notes-row .button{margin-top:0}
@@ -92,7 +92,7 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 .hidden{display:none!important}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Voice to Content"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/ghostwriter.png" alt="Voice to Content"><h1>You ramble. It writes.</h1><p class="lede bb-desc">Hit record and talk for a minute about your day, your work, whatever is on your mind. Bum Bum turns it into three hooks (each testing a different angle), a 60-second script, and a caption ready to post. Your audio is only raw material, it is never kept. One finished pack uses one action.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Voice to Content"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/ghostwriter.png" alt="Voice to Content"><div><h1>Voice to Content</h1><p class="lede bb-desc">You ramble. It writes. Talk for a minute and Bum Bum drafts hooks, captions, and a post.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Voice to Content</h2><a class="button" href="/account/?next=<?= urlencode('/tools/ghostwriter/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/ghostwriter/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/ghostwriter/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -130,7 +130,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 const TOOL_KEY='ghostwriter';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 <?php if ($out): ?>
@@ -236,11 +236,13 @@ loadPacks();
 <p>English plus Spanish, French, German, Italian, Portuguese, Chinese, Cantonese, Japanese, and Korean.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
-<p><a href="/tools/notes/">Voice Notes to Text</a> - Talk it out and get a live transcript you can copy or download.</p>
-<p><a href="/tools/doodle/">Online Sketchpad</a> - A pocket sketchpad for signatures, diagrams, and masterpieces.</p>
-</section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>Turning rough thoughts into content is one job among many: see where it fits in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'ghostwriter'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Turning a ramble into posts, the short guide</h2>
+<h3>How it works here</h3>
+<p>Talk for about a minute and get a content pack back: three hooks, each testing a different angle, a 60-second script, and a caption ready to post. Your audio is raw material only; it is transcribed, used to build the pack, and never kept. Your packs are saved in your account, so a good hook from Tuesday is still there on Friday. One finished pack uses one action.</p>
+<h3>Talk, do not type</h3>
+<p>This tool is built for the ramble. Start mid-thought: the reason the thing is interesting makes a better hook than a polished introduction ever will.</p>
+<h3>Capture warm, polish later</h3>
+<p>Generate the pack while the thought is warm, then edit with fresh eyes. Capturing and polishing are different jobs. Do them one at a time: get the ramble down first, then edit the pack.</p>
+<h3>Read the guide</h3><p>Turning rough thoughts into content is one job among many: see where it fits in <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

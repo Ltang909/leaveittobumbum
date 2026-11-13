@@ -5,11 +5,11 @@
 <meta property="og:description" content="Crop images in your browser. Drag a box around what you want to keep. Files never leave your device. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/image-cropper/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-image-cropper.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/image-cropper.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Image Cropper | Crop Images Online in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Crop images in your browser. Drag a box around what you want to keep. Files never leave your device. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-image-cropper.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/image-cropper.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/image-cropper/">
 <script type="application/ld+json">
 {
@@ -69,7 +69,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Image Cropper | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Image Cropper","item":"https://leaveittobumbum.com/tools/image-cropper/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Image Cropper","description":"Drag a box around the good part.","step":[{"@type":"HowToStep","position":1,"name":"Upload the image you want to crop."},{"@type":"HowToStep","position":2,"name":"Drag a box around the part you want to keep."},{"@type":"HowToStep","position":3,"name":"Bum Bum crops it right in your browser; your file never leaves your device."},{"@type":"HowToStep","position":4,"name":"Download the cropped image."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Image Cropper","description":"Drag a box around the good part.","step":[{"@type":"HowToStep","position":1,"name":"Upload the image you want to crop."},{"@type":"HowToStep","position":2,"name":"Drag a box around the part you want to keep."},{"@type":"HowToStep","position":3,"name":"Bum Bum crops it right in your browser; your file never leaves your device."},{"@type":"HowToStep","position":4,"name":"Download the cropped image."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s;min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 @media(max-width:860px){.dropzone{min-height:360px}}
@@ -104,7 +104,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Image Cropper"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/image-cropper.png" alt="Image Cropper"><h1>Keep the good part.</h1><p class="lede bb-desc">Drag a box around the bit you actually want. Bum Bum crops your image <b>right in your browser</b> — your files never leave your device. One action per crop.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Image Cropper"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/image-cropper.png" alt="Image Cropper"><div><h1>Image Cropper</h1><p class="lede bb-desc">Keep the good part. Drag a box around the bit you want and Bum Bum crops it in your browser.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to crop images</h2><a class="button" href="/account/?next=<?= urlencode('/tools/image-cropper/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/image-cropper/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/image-cropper/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -161,12 +161,16 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <p>Anything your browser can open, including JPG, PNG, and WebP.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/image-converter/">Image Converter</a> - WebP to PNG, JPG to WebP, whatever to whatever.</p>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Cropping images, the short guide</h2>
+<h3>How it works here</h3>
+<p>Drag a box around the good part and crop, right in your browser. Aspect presets cover the common profile and post shapes, freeform cropping is always there, and you can set an exact crop area instead of eyeballing it. Your files never leave your device. One action per crop.</p>
+<h3>Crop for the destination</h3>
+<p>Start from the preset for wherever the image is going, then adjust. Leave a little breathing room around faces: platforms crop their previews their own way, and foreheads pay the price.</p>
+<h3>Crops that help other tools</h3>
+<p>A poster photo cropped square-on before Poster to Calendar makes its read noticeably more reliable. Cropping is often the two-minute fix that makes the next tool look smart.</p>
 </section>
+<?php $bbTool = 'image-cropper'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main>
 <script>
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -341,4 +345,4 @@ cropBtn.addEventListener('click',async()=>{
   }
   cropBtn.disabled=false;
 });
-</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+</script><script src="/tools/capture-handoff.js?v=20261026r5"></script></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

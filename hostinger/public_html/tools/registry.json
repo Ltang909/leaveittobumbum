@@ -1,8 +1,9 @@
 {
   "tools": [
     {
+      "cardTitle": ["Screen", "Recorder"],
       "cta": "Record a clip",
-      "description": "Record your screen right in your browser. Download the clip, keep it forever.",
+      "description": "Record your screen right in your browser. Download the clip and keep it.",
       "icon": "◉",
       "iconImg": "/bum/icons/clips.png",
       "key": "clips",
@@ -12,6 +13,7 @@
       "mascot": "/bum/cat-sunglasses.png"
     },
     {
+      "cardTitle": ["Voice Notes", "to Text"],
       "cta": "Record a note",
       "description": "Talk it out and get a live transcript you can copy or download.",
       "icon": "♪",
@@ -23,8 +25,9 @@
       "mascot": "/bum/cat-laptop.png"
     },
     {
+      "cardTitle": ["Subscription", "Tracker"],
       "cta": "Track subscriptions",
-      "description": "Every subscription you forgot about, in one place, with renewal reminders.",
+      "description": "All your subscriptions in one place, with renewals flagged in your weekly Monday note.",
       "icon": "✂",
       "iconImg": "/bum/icons/cutline.png",
       "key": "cutline",
@@ -34,6 +37,7 @@
       "mascot": "/bum/cat-bowtie.png"
     },
     {
+      "cardTitle": ["Client Follow-Up", "Tracker"],
       "cta": "Track every lead",
       "description": "A tiny CRM that tells you who to follow up with today and what to say.",
       "icon": "📇",
@@ -45,8 +49,9 @@
       "mascot": "/bum/cat-wink-blep.png"
     },
     {
+      "cardTitle": ["Job Application", "Tracker"],
       "cta": "Track applications",
-      "description": "A job application tracker that tells you who to follow up with today and what to say.",
+      "description": "Track every application and get a nudge when a follow-up is due, plus what to say.",
       "icon": "💼",
       "iconImg": "/bum/icons/corporate-bum-bum.png",
       "key": "corporate-bum-bum",
@@ -61,8 +66,9 @@
       "tag": "Draw",
       "icon": "✏️",
       "iconImg": "/bum/icons/doodle.png",
-      "description": "A pocket sketchpad for signatures, diagrams, and masterpieces. Export as PNG or SVG.",
+      "description": "A pocket sketchpad for signatures and diagrams. Export as PNG or SVG.",
       "url": "/tools/doodle/",
+      "cardTitle": ["Online", "Sketchpad"],
       "cta": "Start doodling",
       "mascot": "/bum/cat-paws-up.png"
     },
@@ -72,8 +78,9 @@
       "tag": "Money",
       "icon": "🧾",
       "iconImg": "/bum/icons/invoice-chaser.png",
-      "description": "Track who owes you what. Bum Bum can chase as your billing assistant, learns when each client usually pays, and emails you a reminder digest.",
+      "description": "Track who owes you what. Bum Bum chases late payers and emails you a digest.",
       "url": "/tools/invoice-chaser/",
+      "cardTitle": ["Invoice", "Reminder"],
       "cta": "Chase invoices",
       "mascot": "/bum/cat-bowtie.png"
     },
@@ -83,8 +90,9 @@
       "tag": "Money",
       "icon": "📸",
       "iconImg": "/bum/icons/receipt-reader.png",
-      "description": "Snap photos of up to 10 receipts at once. Bum Bum reads them in your browser and hands you vendor, date, line items, tax, and total as clean editable tables.",
+      "description": "Snap up to 10 receipts at once and get vendor, date, items, tax, and total as editable tables.",
       "url": "/tools/receipt-reader/",
+      "cardTitle": ["Receipt", "Scanner"],
       "cta": "Read receipts",
       "mascot": "/bum/cat-glasses.png"
     },
@@ -94,8 +102,9 @@
       "tag": "Plan",
       "icon": "🗓️",
       "iconImg": "/bum/icons/poster-to-calendar.png",
-      "description": "Snap a photo of any event poster or flyer. Get a ready-to-save calendar event with the date, time, and place filled in.",
+      "description": "Snap a photo of any event poster. Get a calendar event with date, time, and place.",
       "url": "/tools/poster-to-calendar/",
+      "cardTitle": ["Poster", "to Calendar"],
       "cta": "Snap a poster",
       "mascot": "/bum/cat-curious.png"
     },
@@ -105,14 +114,16 @@
       "tag": "Health",
       "icon": "🥗",
       "iconImg": "/bum/icons/meal-scanner.png",
-      "description": "Snap a photo of your meal. Get estimated calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number.",
+      "description": "Snap a photo of your meal and get estimated calories, protein, carbs, and fat, given as a range.",
       "url": "/tools/meal-scanner/",
+      "cardTitle": ["Meal", "Scanner"],
       "cta": "Scan a meal",
       "mascot": "/bum/cat-excited-v2.png"
     },
     {
+      "cardTitle": ["Resume Gap", "Checker"],
       "cta": "Find my gaps",
-      "description": "Upload your resume and paste in job descriptions. Bum Bum spots the skills they keep asking for that your resume never mentions.",
+      "description": "Upload your resume, paste in job posts, and see the skills they ask for that your resume skips.",
       "icon": "🔍",
       "iconImg": "/bum/icons/gap-scout.png",
       "key": "gap-scout",
@@ -127,8 +138,9 @@
       "tag": "Video",
       "icon": "🎬",
       "iconImg": "/bum/icons/video-trimmer.png",
-      "description": "Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser. Your video never leaves your device.",
+      "description": "Drop in a video, mark the good part, and snip it in your browser. Your video stays on your device.",
       "url": "/tools/video-trimmer/",
+      "cardTitle": ["Video", "Trimmer"],
       "cta": "Trim a video",
       "mascot": "/bum/cat-laptop.png"
     },
@@ -138,10 +150,35 @@
       "tag": "Files",
       "icon": "🖼️",
       "iconImg": "/bum/icons/image-converter.png",
-      "description": "WebP to PNG, JPG to WebP, whatever to whatever. Bum Bum converts your images right in your browser and hands them back in the format you wanted.",
+      "description": "Convert images between WebP, PNG, and JPG right in your browser.",
       "url": "/tools/image-converter/",
+      "cardTitle": ["Image", "Converter"],
       "cta": "Convert images",
       "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "cardTitle": ["PDF", "Merger"],
+      "cta": "Merge PDFs",
+      "description": "Stitch several PDFs into one, in your order, right in your browser. Files stay on your device.",
+      "icon": "📑",
+      "iconImg": "/bum/icons/pdf-merger.png",
+      "key": "pdf-merger",
+      "mascot": "/bum/cat-curious.png",
+      "name": "PDF Merger",
+      "tag": "Files",
+      "url": "/tools/pdf-merger/"
+    },
+    {
+      "cardTitle": ["PDF", "to Image"],
+      "cta": "Convert a PDF",
+      "description": "Turn PDF pages into JPG, PNG, or WebP images in your browser. Download one page or a full zip.",
+      "icon": "🖼️",
+      "iconImg": "/bum/icons/pdf-to-image.png",
+      "key": "pdf-to-image",
+      "mascot": "/bum/cat-laptop.png",
+      "name": "PDF to Image",
+      "tag": "Files",
+      "url": "/tools/pdf-to-image/"
     },
     {
       "key": "image-cropper",
@@ -149,8 +186,9 @@
       "tag": "Files",
       "icon": "✂️",
       "iconImg": "/bum/icons/image-cropper.png",
-      "description": "Drag a box around the good part. Bum Bum crops your image right in your browser, with aspect presets for profile pics and posts.",
+      "description": "Drag a box around the good part and crop in your browser. Presets for pics and posts.",
       "url": "/tools/image-cropper/",
+      "cardTitle": ["Image", "Cropper"],
       "cta": "Crop an image",
       "mascot": "/bum/cat-box-v2.png"
     },
@@ -162,8 +200,21 @@
       "iconImg": "/bum/icons/ghostwriter.png",
       "description": "Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.",
       "url": "/tools/ghostwriter/",
+      "cardTitle": ["Voice", "to Content"],
       "cta": "Get ghostwritten",
       "mascot": "/bum/cat-excited-v2.png"
+    },
+    {
+      "cardTitle": ["Sound", "Human"],
+      "cta": "Copy an add-on",
+      "description": "Prompt add-ons to paste into ChatGPT or Claude so the writing sounds human. Copy and go.",
+      "icon": "✎",
+      "iconImg": "/bum/icons/sound-human.png",
+      "key": "sound-human",
+      "name": "Sound Human",
+      "tag": "Content",
+      "url": "/tools/sound-human/",
+      "mascot": "/bum/cat-laptop.png"
     },
     {
       "key": "audiogram",
@@ -171,8 +222,9 @@
       "tag": "Content",
       "icon": "🎙️",
       "iconImg": "/bum/icons/audiogram.png",
-      "description": "Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4.",
+      "description": "Turn an MP3 into a captioned video. Pick a background, download the MP4.",
       "url": "/tools/audiogram/",
+      "cardTitle": ["Audiogram", "Maker"],
       "cta": "Make an audiogram",
       "mascot": "/bum/cat-laptop.png"
     },
@@ -182,8 +234,9 @@
       "tag": "Design",
       "icon": "🐾",
       "iconImg": "/bum/icons/purr-code.png",
-      "description": "Your link, but cute. Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.",
+      "description": "Branded QR codes with soft dots, pretty colors, and a cat in the middle. Ready to print.",
       "url": "/tools/purr-code/",
+      "cardTitle": ["QR Code", "Generator"],
       "cta": "Make it cute",
       "mascot": "/bum/cat-paws-up.png"
     },
@@ -193,8 +246,9 @@
       "tag": "Team",
       "icon": "📋",
       "iconImg": "/bum/icons/sop-ify.png",
-      "description": "Paste your chaotic process brain-dump. Get a clean step-by-step playbook a brand-new helper can follow.",
+      "description": "Paste messy process notes, get a clean step-by-step playbook a new helper can follow.",
       "url": "/tools/sop-ify/",
+      "cardTitle": ["SOP", "Generator"],
       "cta": "Make it a playbook",
       "mascot": "/bum/cat-bowtie.png"
     },
@@ -204,8 +258,9 @@
       "tag": "Marketing",
       "icon": "👂",
       "iconImg": "/bum/icons/hearsay.png",
-      "description": "Find out what AI models say about your brand. Mention rate, sentiment, direct quotes, and which competitors get cited instead.",
+      "description": "See what AI models say about your brand, with quotes and cited competitors.",
       "url": "/tools/hearsay/",
+      "cardTitle": ["AI Mention", "Tracker"],
       "cta": "Run a scan",
       "mascot": "/bum/cat-curious.png"
     },
@@ -215,8 +270,9 @@
       "tag": "Video",
       "icon": "🔄",
       "iconImg": "/bum/icons/video-converter.png",
-      "description": "Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device.",
+      "description": "Convert a video to MP4, WebM, or animated GIF right in your browser. It stays on your device.",
       "url": "/tools/video-converter/",
+      "cardTitle": ["Video", "Converter"],
       "cta": "Convert a video",
       "mascot": "/bum/cat-laptop.png"
     },
@@ -226,10 +282,95 @@
       "tag": "Video",
       "icon": "🎧",
       "iconImg": "/bum/icons/video-mp3-overlay.png",
-      "description": "Drop in a video and an MP3. Snip the good bits of the song, pin each one where it should play, set the mix, and Bum Bum renders it right in your browser. Nothing gets uploaded.",
+      "description": "Add an MP3 to a video, pin clips where they play, and render it in your browser.",
       "url": "/tools/video-mp3-overlay/",
+      "cardTitle": ["Video MP3", "Overlay"],
       "cta": "Mix my video",
       "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "day-log",
+      "name": "Day Log",
+      "tag": "Plan",
+      "icon": "✎",
+      "iconImg": "/bum/icons/day-log-sticker.png",
+      "description": "Talk through your day in minutes. Get jot notes and tomorrow's priorities by email.",
+      "url": "/tools/day-log/",
+      "cardTitle": ["Day", "Log"],
+      "cta": "File my day",
+      "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "email-signature-generator",
+      "name": "Email Signature Maker",
+      "tag": "Brand",
+      "icon": "✉️",
+      "iconImg": "/bum/icons/email-signature-generator-sticker.png",
+      "description": "Fill in your details, pick a layout, and copy a clean email signature into Gmail or Outlook.",
+      "url": "/tools/email-signature-generator/",
+      "cardTitle": ["Email Signature", "Maker"],
+      "cta": "Make my signature",
+      "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "pdf-compressor",
+      "name": "PDF Compressor",
+      "tag": "Files",
+      "icon": "🗜️",
+      "iconImg": "/bum/icons/pdf-compressor.png",
+      "description": "Shrink a PDF in your browser until it fits the email or upload limit. Pick a level and download.",
+      "url": "/tools/pdf-compressor/",
+      "cardTitle": ["PDF", "Compressor"],
+      "cta": "Compress a PDF",
+      "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "invoice-generator",
+      "name": "Invoice Generator",
+      "tag": "Money",
+      "icon": "📄",
+      "iconImg": "/bum/icons/invoice-generator.png",
+      "description": "Make a clean invoice PDF in your browser. Add items, tax, and a due date, then download and send it.",
+      "url": "/tools/invoice-generator/",
+      "cardTitle": ["Invoice", "Generator"],
+      "cta": "Make an invoice",
+      "mascot": "/bum/cat-bowtie.png"
+    },
+    {
+      "key": "heic-to-jpg",
+      "name": "HEIC to JPG",
+      "tag": "Files",
+      "icon": "📸",
+      "iconImg": "/bum/icons/heic-to-jpg.png",
+      "description": "Turn iPhone HEIC photos into JPG, PNG, or a single PDF, right in your browser.",
+      "url": "/tools/heic-to-jpg/",
+      "cardTitle": ["HEIC to", "JPG"],
+      "cta": "Convert photos",
+      "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "jpg-to-pdf",
+      "name": "JPG to PDF",
+      "tag": "Files",
+      "icon": "📄",
+      "iconImg": "/bum/icons/jpg-to-pdf.png",
+      "description": "Turn JPG and PNG images into one PDF, in your order, right in your browser. Files stay on your device.",
+      "url": "/tools/jpg-to-pdf/",
+      "cardTitle": ["JPG to", "PDF"],
+      "cta": "Make a PDF",
+      "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "split-pdf",
+      "name": "Split PDF",
+      "tag": "Files",
+      "icon": "✂️",
+      "iconImg": "/bum/icons/split-pdf.png",
+      "description": "Pull a page range out of a PDF, or split every page into its own file, right in your browser.",
+      "url": "/tools/split-pdf/",
+      "cardTitle": ["Split", "PDF"],
+      "cta": "Split a PDF",
+      "mascot": "/bum/cat-curious.png"
     }
   ]
 }

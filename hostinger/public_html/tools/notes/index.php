@@ -5,11 +5,11 @@
 <meta property="og:description" content="Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/notes/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-notes.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/notes.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Voice Notes to Text | Transcribe Voice Notes Free in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Talk it out and get a transcript. Record voice notes in your browser, keep a private library, download audio anytime. Recordings stay on your device.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-notes.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/notes.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/notes/">
 <script type="application/ld+json">
 {
@@ -63,12 +63,20 @@
         "@type": "Answer",
         "text": "Yes. On iPhone your words still appear live while you record. Short pieces of your audio are sent to our server as you speak and transcribed on the spot. The audio itself is never stored."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I transcribe iPhone voice memos?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Play the voice memo on your iPhone and record it here as it plays, or record a fresh note in the browser instead. Either way, you get a transcript you can copy or download."
+      }
     }
   ]
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Voice Notes to Text | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Voice Notes to Text","item":"https://leaveittobumbum.com/tools/notes/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Voice Notes to Text","item":"https://leaveittobumbum.com/tools/notes/"}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .notes-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
 .notes-row .button{margin-top:0}
@@ -81,7 +89,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Voice Notes to Text"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/notes.png" alt="Voice Notes to Text"><h1>Talk it out. We'll write it down.</h1><p class="lede bb-desc">Hit record and talk it out. Your words appear as you speak, and when you stop your transcript is saved to your private library, ready to copy or download. Your recording stays in your browser so you can listen back right away, or download the audio to keep it. On iPhone your audio is sent to our server for transcription and never stored. One finished note uses one action.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Voice Notes to Text"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/notes.png" alt="Voice Notes to Text"><div><h1>Voice Notes to Text</h1><p class="lede bb-desc">Talk it out. We'll write it down. Record your voice and get a clean transcript, saved privately.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Voice Notes to Text</h2><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/notes/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/notes/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -101,7 +109,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 const TOOL_KEY='notes';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 <?php if ($out): ?>
@@ -176,11 +184,17 @@ loadNotes();
 <summary>Does it work on iPhone?</summary>
 <p>Yes. On iPhone your words still appear live while you record. Short pieces of your audio are sent to our server as you speak and transcribed on the spot. The audio itself is never stored.</p>
 </details>
+<details>
+<summary>Can I transcribe iPhone voice memos?</summary>
+<p>Yes. Play the voice memo on your iPhone and record it here as it plays, or record a fresh note in the browser instead. Either way, you get a transcript you can copy or download.</p>
+</details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/ghostwriter/">Voice to Content</a> - Ramble for a minute, get three hooks, a 60-second script, and a caption ready to post.</p>
-<p><a href="/tools/sop-ify/">SOP Generator</a> - Paste your chaotic process brain-dump.</p>
-<p><a href="/tools/clips/">Screen Recorder</a> - Record your screen right in your browser.</p>
-</section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-turn-voice-notes-into-text/">How to turn voice notes into text</a>.</p><p>Voice notes are one of the everyday jobs in our roundup of <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script>window.__bbCaptureHandoff=function(f){function tx(){return fetch("/api/session.php").then(function(r){return r.json()}).then(function(sess){var t=f.type||"";var ext=t.indexOf("mp4")>=0||t.indexOf("m4a")>=0?"m4a":(t.indexOf("ogg")>=0?"ogg":(t.indexOf("wav")>=0?"wav":(t.indexOf("mpeg")>=0||t.indexOf("mp3")>=0?"mp3":"webm")));var fd=new FormData();fd.append("audio",f,"note."+ext);fd.append("language",langSel.value);fd.append("csrf",sess.csrf||"");return fetch("/api/voice-transcribe.php",{method:"POST",body:fd}).then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})}).then(function(x){if(!x.ok)throw new Error(x.d.error||"Transcription failed.");return x.d.transcript||""})};try{audioBlob=f;audioMime=f.type||"audio/webm";chunks=[];attempt=crypto.randomUUID();savedEntryId=null;savedText="";saveEditsBtn.classList.add("hidden");setPreviewSrc(URL.createObjectURL(f));setStatus("Transcribing your note...");tx().then(function(t){textEl.value=t||"";textEl.readOnly=false;setActions(true);setStatus(t?"Done. Tweak anything I misheard, it saves automatically.":"Hmm, I did not catch any words. Your audio is still available to download.");saveNote(t||"");}).catch(function(e){textEl.readOnly=false;setActions(true);setStatus("Transcription failed ("+(e&&e.message||"oops")+"). Your audio is still available to download.",true);});}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'notes'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Voice notes that become text, the short guide</h2>
+<h3>How it works here</h3>
+<p>Hit record and talk. Your words appear as a live transcript while you speak, and when you stop, the transcript is saved to your private library, ready to copy or download. The recording itself stays in your browser, so you can listen back right away or download the audio to keep. One finished note uses one action.</p>
+<h3>Talk like you mean it</h3>
+<p>Short notes beat one rambling one: your future self reads three tidy transcripts faster than one saga. Say the structure out loud as you go, like headings, and tidy up after. The transcript arrives as a nearly finished draft, so there is very little writing left to do.</p>
+<h3>One honest exception</h3>
+<p>On iPhone, live transcription is not available in the browser, so there your audio is sent to our server to be transcribed instead. Everywhere else, the words are recognized right on your device and the recording never leaves it.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-turn-voice-notes-into-text/">How to turn voice notes into text</a>.</p><p>Voice notes are one of the everyday jobs in our roundup of <a href="/blog/best-small-business-software/">the best small business software tools</a> for 2026.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script>window.__bbCaptureHandoff=function(f){function tx(){return fetch("/api/session.php").then(function(r){return r.json()}).then(function(sess){var t=f.type||"";var ext=t.indexOf("mp4")>=0||t.indexOf("m4a")>=0?"m4a":(t.indexOf("ogg")>=0?"ogg":(t.indexOf("wav")>=0?"wav":(t.indexOf("mpeg")>=0||t.indexOf("mp3")>=0?"mp3":"webm")));var fd=new FormData();fd.append("audio",f,"note."+ext);fd.append("language",langSel.value);fd.append("csrf",sess.csrf||"");return fetch("/api/voice-transcribe.php",{method:"POST",body:fd}).then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d}})})}).then(function(x){if(!x.ok)throw new Error(x.d.error||"Transcription failed.");return x.d.transcript||""})};try{audioBlob=f;audioMime=f.type||"audio/webm";chunks=[];attempt=crypto.randomUUID();savedEntryId=null;savedText="";saveEditsBtn.classList.add("hidden");setPreviewSrc(URL.createObjectURL(f));setStatus("Transcribing your note...");tx().then(function(t){textEl.value=t||"";textEl.readOnly=false;setActions(true);setStatus(t?"Done. Tweak anything I misheard, it saves automatically.":"Hmm, I did not catch any words. Your audio is still available to download.");saveNote(t||"");}).catch(function(e){textEl.readOnly=false;setActions(true);setStatus("Transcription failed ("+(e&&e.message||"oops")+"). Your audio is still available to download.",true);});}catch(e){}};</script><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

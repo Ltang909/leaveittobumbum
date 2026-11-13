@@ -1,2 +1,9 @@
+# Canonical host: send every www request to the non-www host, path preserved.
+# The condition matches www.leaveittobumbum.com only, so the staging host
+# (staging.leaveittobumbum.com) is not affected by this rule.
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.leaveittobumbum\.com$ [NC]
+RewriteRule ^(.*)$ https://leaveittobumbum.com/$1 [R=301,L]
+
 # Serve the app's 404 page for missing URLs instead of the host default.
 ErrorDocument 404 /404.html

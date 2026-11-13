@@ -20,7 +20,6 @@ return [
         'secret_key' => 'sk_test_replace_me',
         'publishable_key' => 'pk_test_replace_me',
         'webhook_secret' => 'whsec_test_replace_me',
-        'helper_price' => 'price_test_replace_me',
         'operator_price' => 'price_test_replace_me',
         'portal_configuration' => '',
     ],

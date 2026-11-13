@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/about/" },
+  openGraph: { url: "/about/" },
   title: "About | Leave It to Bum Bum",
   description: "Why tiny tools, who Bum Bum is, and the 36-hour Operator promise.",
 };
@@ -19,7 +21,7 @@ export default function About() {
         <div className="prose">
           <h2>Don&apos;t wanna do it? Leave it to Bum Bum.</h2>
           <p>Most small-business software wants to be your whole operating system. Bum Bum thinks that&apos;s rude.</p>
-          <p>Leave It to Bum Bum is a collection of tiny tools that each do exactly one annoying job: build the quote, write the follow-up, clean up the job notes, peek at the profit. No dashboards to learn. No onboarding call with a guy named Chad. Three steps, then nap.</p>
+          <p>Leave It to Bum Bum is a collection of tiny tools that each do exactly one annoying job: build the quote, write the follow-up, clean up the job notes, peek at the profit. There are no dashboards to learn and no onboarding call with a guy named Chad. Pick a tool, do the job in a few steps, and get on with your day.</p>
           <h2>Why &ldquo;tiny tools&rdquo;?</h2>
           <p>Big software makes a big promise and then hands you homework. A tiny tool makes one small promise and keeps it: one click, one useful result. If a missing tool is slowing you down, it shouldn&apos;t become a six-month project &mdash; it should become someone else&apos;s Tuesday afternoon.</p>
           <h2>Who is Bum Bum?</h2>

@@ -1,8 +1,8 @@
 <?php
-// Switch a paid subscription between Helper and Operator via Stripe's
-// subscription-update API. Proration is automatic: upgrades charge the
-// prorated difference and downgrades credit unused time, both applied to
-// the next invoice. The billing cycle date does not move.
+// Switch a paid subscription to Operator via Stripe's subscription-update
+// API. Operator is the only paid plan sold now; the one switch that remains
+// is a legacy Helper subscription moving up. Proration is automatic and the
+// billing cycle date does not move.
 require __DIR__ . '/_bootstrap.php';
 requirePost();
 $input = body();
@@ -13,7 +13,7 @@ $user = requireUser();
 if (teamMembership((int) $user['id'])) jsonResponse(['error' => 'Plan changes happen on your team owner\'s account, not yours.'], 403);
 
 $target = (string) ($input['plan'] ?? '');
-if (!in_array($target, ['helper', 'operator'], true)) jsonResponse(['error' => 'Choose a valid plan.'], 422);
+if ($target !== 'operator') jsonResponse(['error' => 'Choose a valid plan.'], 422);
 
 $stmt = db()->prepare('SELECT id, plan, subscription_status, stripe_customer_id, stripe_subscription_id FROM users WHERE id = ?');
 $stmt->execute([(int) $user['id']]);
@@ -28,7 +28,7 @@ if ($subId === '' || !in_array($status, ['active', 'trialing', 'past_due'], true
 }
 
 $stripe = config()['stripe'];
-$newPrice = $target === 'helper' ? (string) $stripe['helper_price'] : (string) $stripe['operator_price'];
+$newPrice = (string) $stripe['operator_price'];
 if ($newPrice === '') jsonResponse(['error' => 'Plan pricing is not configured.'], 500);
 
 try {
@@ -58,18 +58,9 @@ try {
 $newStatus = (string) ($updated['status'] ?? $status);
 db()->prepare('UPDATE users SET plan = ?, subscription_status = ? WHERE id = ?')->execute([$target, $newStatus, $user['id']]);
 
-$note = '';
-if ($target === 'helper') {
-    $seats = teamSeats((int) $user['id'], 'helper');
-    if ($seats['used'] > $seats['limit']) {
-        $note = ' Heads up: you have ' . $seats['used'] . ' team members but Helper includes ' . $seats['limit'] . ' seats. Remove extras from the Team panel when you are ready.';
-    }
-}
 posthogCapture('plan_changed', 'user_' . $user['id'], ['from' => $current, 'to' => $target]);
 jsonResponse([
     'ok' => true,
     'plan' => $target,
-    'message' => $target === 'operator'
-        ? 'Switched to Operator. The prorated difference lands on your next bill.' . $note
-        : 'Switched to Helper. Unused Operator time becomes credit on your next bill.' . $note,
+    'message' => 'Switched to Operator. The prorated difference lands on your next bill.',
 ]);

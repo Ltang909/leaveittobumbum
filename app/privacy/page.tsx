@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../components/chrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacy/" },
+  openGraph: { url: "/privacy/" },
   title: "Privacy Policy | Leave It to Bum Bum",
   description: "What Leave It to Bum Bum collects, what it doesn't, and how to ask for your data.",
 };
@@ -13,7 +15,7 @@ export default function Privacy() {
       <section className="page-head shell">
         <p className="kicker">Privacy Policy</p>
         <h1>Bum Bum is a cat,<br />not a data broker.</h1>
-        <p className="lede">Last updated: September 2026. Here&apos;s the plain version of what we collect and why.</p>
+        <p className="lede">Last updated: November 9, 2026. Here&apos;s the plain version of what we collect and why.</p>
       </section>
       <div className="page-body shell">
         <div className="prose">
@@ -28,6 +30,23 @@ export default function Privacy() {
             <li>We don&apos;t sell your data. Ever. Bum Bum would rather nap.</li>
             <li>We don&apos;t share your info with advertisers or third parties, except the services required to run the site (hosting, Stripe for payments, email delivery).</li>
             <li>We don&apos;t collect anything we don&apos;t need to run the tools you asked for.</li>
+          </ul>
+          <h2>Connecting Google Calendar (optional)</h2>
+          <p>Day Log can put your morning top list on your Google Calendar. That part is entirely optional, and it only starts if you connect Google Calendar from the Day Log page.</p>
+          <ul>
+            <li><strong>What we ask Google for:</strong> permission to create events on your calendar (the calendar.events scope). We use it for exactly one thing: creating your morning top-list event. We never read, edit, or delete your existing events.</li>
+            <li><strong>What we store:</strong> a Google refresh token, kept on our server against your account, so the morning event can be created without asking you to sign in again. We do not store copies of your calendar. The events themselves live only in your Google Calendar.</li>
+            <li><strong>What gets created:</strong> on the mornings your Day Log recap email goes out, one all-day event holding that day&apos;s top list, counted in the title, with the tasks in the description. The wording comes from your own log, nobody else&apos;s.</li>
+            <li><strong>How to stop it:</strong> disconnect in Day Log&apos;s Advanced settings any time. Disconnecting deletes the stored token and revokes our access with Google. Events already created stay on your calendar, yours to keep or delete.</li>
+          </ul>
+          <p>Leave It To Bum Bum&apos;s use and transfer of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+          <h2>How we protect sensitive data</h2>
+          <p>The most sensitive thing we hold is the Google Calendar refresh token described above. Here is what guards it, and anything else of that kind:</p>
+          <ul>
+            <li><strong>Encryption in transit:</strong> every connection between your browser, our servers, and Google runs over HTTPS (TLS), so data stays encrypted while it moves.</li>
+            <li><strong>Restricted storage:</strong> refresh tokens live only in our production database, on servers with access controls in place. No copies are kept in email, documents, or analytics tools.</li>
+            <li><strong>Restricted use:</strong> stored tokens are used only by Day Log, only for the calendar actions described above. Google user data is never sold, never shared with advertisers or data brokers, and never used to train AI models.</li>
+            <li><strong>Automatic cleanup:</strong> if Google reports a token as revoked or expired, the stored copy is deleted on the spot. Disconnecting in Day Log deletes it right away, and you can email us any time to have it removed by hand.</li>
           </ul>
           <h2>Cookies</h2>
           <p>We use the bare minimum: what&apos;s needed for the site to work (like keeping you signed in) and basic, privacy-friendly analytics so we know which pages are confusing. No creepy cross-site tracking.</p>

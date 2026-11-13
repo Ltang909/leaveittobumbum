@@ -5,11 +5,11 @@
 <meta property="og:description" content="Get paid without the awkward. Bum Bum writes the chase email, sends it as your billing assistant, and learns when each client needs a nudge. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/invoice-chaser/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-invoice-chaser.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/invoice-chaser.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Invoice Reminder Tool | Chase Late Payments Without the Awkward Emails | Leave It to Bum Bum">
 <meta name="twitter:description" content="Get paid without the awkward. Bum Bum writes the chase email, sends it as your billing assistant, and learns when each client needs a nudge. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-invoice-chaser.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/invoice-chaser.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/invoice-chaser/">
 <script type="application/ld+json">
 {
@@ -63,12 +63,20 @@
         "@type": "Answer",
         "text": "That is exactly who this is for. The chaser adapts its timing to each client's real payment pattern."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I get invoice reminder email templates?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On our blog: the invoice reminder templates at https://leaveittobumbum.com/blog/invoice-reminder-templates/ cover every stage of late, from the friendly heads-up before the due date to the final notice, ready to copy and adjust."
+      }
     }
   ]
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Invoice Reminder | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Invoice Reminder","item":"https://leaveittobumbum.com/tools/invoice-chaser/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Invoice Reminder","item":"https://leaveittobumbum.com/tools/invoice-chaser/"}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer}
@@ -122,13 +130,14 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Invoice Reminder"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/invoice-chaser.png" alt="Invoice Reminder"><h1>Get paid without the awkward.</h1><p class="lede bb-desc">Log who owes you what, and Bum Bum writes the chase email in the right tone, sends it <b>as your billing assistant</b> in one tap, and learns how each client actually pays so it knows when to nudge and when to sit tight. Adding an invoice or sending a chase uses one action. Everything else is free.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Invoice Reminder"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/invoice-chaser.png" alt="Invoice Reminder"><div><h1>Invoice Reminder</h1><p class="lede bb-desc">Get paid without the awkward. Log who owes you what and Bum Bum writes the chase email.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to chase invoices</h2><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Create a free account</a></p></div>
 <?php else: ?>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
 <?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
+<?php require dirname(__DIR__, 2) . '/includes/weekly-note.php'; ?>
 <div class="stat-row">
   <div class="stat-card"><b id="statOutstanding">–</b><span>outstanding</span><small id="statOutstandingBy"></small></div>
   <div class="stat-card"><b id="statOverdue">–</b><span>overdue</span><small id="statOverdueBy"></small></div>
@@ -145,7 +154,7 @@ const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 let DATA={invoices:[],stats:{}};
 let FILTER='all';
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/invoice-chaser.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
 function badge(inv){
@@ -378,11 +387,17 @@ refresh().then(function(){
 <summary>What if a client always pays late?</summary>
 <p>That is exactly who this is for. The chaser adapts its timing to each client's real payment pattern.</p>
 </details>
+<details>
+<summary>Where can I get invoice reminder email templates?</summary>
+<p>On our blog: the <a href="/blog/invoice-reminder-templates/">invoice reminder templates</a> cover every stage of late, from the friendly heads-up before the due date to the final notice, ready to copy and adjust.</p>
+</details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/receipt-reader/">Receipt Scanner</a> - Snap photos of up to 10 receipts at once.</p>
-<p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
-<p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
-</section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-write-an-invoice-reminder-email/">How to write an invoice reminder email (with templates)</a>.</p><p>Chasing invoices is one piece of the money puzzle: see how <a href="/blog/best-business-account-software/">the best business account software for small businesses</a> compares side by side.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'invoice-chaser'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Getting paid without the awkward, the short guide</h2>
+<h3>How it works here</h3>
+<p>Track who owes you what, and when a chase is due, Bum Bum writes the email in the right tone. You always see and approve it before anything sends; then it goes out as your billing assistant in one tap. Adding an invoice or sending a chase uses one action each; everything else is free.</p>
+<h3>Timing is most of the tone</h3>
+<p>Chase the day after the due date, politely. Treat the first nudge as a simple reminder, since most late invoices are sitting unread in a busy inbox rather than being deliberately ignored. The chaser also learns how each client actually pays, so a client who always pays on day 20 does not get nudged on day 2.</p>
+<h3>Add invoices when you send them</h3>
+<p>Invoices added only once they are overdue skew the learning, which works from the real dates. A tracker that only holds the problem invoices teaches itself the wrong lesson about everyone.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-write-an-invoice-reminder-email/">How to write an invoice reminder email (with templates)</a>.</p><p>Chasing invoices is one piece of the money puzzle: see how <a href="/blog/best-business-account-software/">the best business account software for small businesses</a> compares side by side.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

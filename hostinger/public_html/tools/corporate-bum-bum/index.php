@@ -5,11 +5,11 @@
 <meta property="og:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/corporate-bum-bum/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/og-corporate-bum-bum.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/corporate-bum-bum.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Job Application Tracker | Track Every Application and Follow-Up | Leave It to Bum Bum">
 <meta name="twitter:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og-corporate-bum-bum.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/corporate-bum-bum.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/corporate-bum-bum/">
 <script type="application/ld+json">
 {
@@ -45,7 +45,7 @@
       "name": "How is this different from a spreadsheet?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It tells you who to follow up with every morning and drafts what to say. A spreadsheet just sits there."
+        "text": "It tells you who to follow up with every morning and drafts what to say. A spreadsheet holds the same list, but it will not remind you or draft the message."
       }
     },
     {
@@ -68,7 +68,7 @@
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Job Application Tracker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Job Application Tracker","item":"https://leaveittobumbum.com/tools/corporate-bum-bum/"}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Job Application Tracker","item":"https://leaveittobumbum.com/tools/corporate-bum-bum/"}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .chip{border:2px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;background:#fff;cursor:pointer;font-family:inherit}
@@ -162,13 +162,14 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 .modal-close{font-weight:700}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Job Application Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/corporate-bum-bum.png" alt="Job Application Tracker"><h1>Your job hunt, in a suit.</h1><p class="lede bb-desc">Job Application Tracker is a job application tracker for people who hate spreadsheets. Add the roles, move them down the pipeline, and every morning it tells you exactly who to follow up with and what to say. Adding an application uses one action. Everything else is free.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Job Application Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/corporate-bum-bum.png" alt="Job Application Tracker"><div><h1>Job Application Tracker</h1><p class="lede bb-desc">Your job hunt, in a suit. Track every application and move roles down the pipeline, no spreadsheet.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Job Application Tracker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a></p></div>
 <?php else: ?>
 <?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/corporate-bum-bum/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
 <?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
+<?php require dirname(__DIR__, 2) . '/includes/weekly-note.php'; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
 <div class="stat-row"><div class="stat-card" data-stat="active" role="button" tabindex="0" aria-pressed="false"><b id="statActive">0</b><span>active applications</span></div><div class="stat-card" data-stat="interviews" role="button" tabindex="0" aria-pressed="false"><b id="statInterviews">0</b><span>in interviews</span></div><div class="stat-card" data-stat="offers" role="button" tabindex="0" aria-pressed="false"><b id="statOffers">0</b><span>offers</span></div></div><p class="stat-hint hidden" id="statHint" role="status"></p>
 <section class="panel"><div class="yp-head"><h2>Your applications</h2><button type="button" class="button secondary" id="csvDownload">Download CSV</button></div><div class="filterbar"><select id="stageFilter" aria-label="Filter by stage"></select><button type="button" class="chip" id="starFilter" aria-pressed="false">★ Starred</button><button type="button" class="chip" id="heldFilter" aria-pressed="false">✓ Interview held</button><input type="search" class="search" id="appSearch" placeholder="Search applications…" aria-label="Search applications" autocomplete="off"></div><div id="contactList"><p class="lede">Loading...</p></div><p id="listError" class="error"></p><p id="usage"></p></section>
@@ -193,7 +194,7 @@ function matchesSearch(c){
   return [c.company,c.role,c.contact_name,c.contact_email,c.location,c.source,c.notes].some(v=>String(v||'').toLowerCase().includes(SEARCH));
 }
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 const CUR_SYMBOLS={CAD:'CA$',USD:'US$',EUR:'\u20AC',GBP:'\u00A3'};
 const CURRENCIES=['CAD','USD','EUR','GBP'];
@@ -472,7 +473,7 @@ refresh().then(function(){
 </details>
 <details>
 <summary>How is this different from a spreadsheet?</summary>
-<p>It tells you who to follow up with every morning and drafts what to say. A spreadsheet just sits there.</p>
+<p>It tells you who to follow up with every morning and drafts what to say. A spreadsheet holds the same list, but it will not remind you or draft the message.</p>
 </details>
 <details>
 <summary>What does the morning follow-up tell me?</summary>
@@ -483,10 +484,12 @@ refresh().then(function(){
 <p>Yes. Import a CSV matched by company and role.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/purrsuit/">Client Follow-Up Tracker</a> - A tiny CRM that tells you who to follow up with today and what to say.</p>
-<p><a href="/tools/gap-scout/">Resume Gap Checker</a> - Upload your resume and paste in job descriptions.</p>
-<p><a href="/tools/cutline/">Subscription Tracker</a> - Every subscription you forgot about, in one place, with renewal reminders.</p>
-</section>
-<section class="panel" aria-label="Guide"><h2>Read the guide</h2><p>The full walkthrough: <a href="/how-to-track-job-applications/">How to track job applications (a system that survives 50 applications)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'corporate-bum-bum'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+<section class="panel" aria-label="Guide"><h2 style="margin-top:0">Tracking a job hunt without the dread, the short guide</h2>
+<h3>How it works here</h3>
+<p>Add the roles you apply to, move them down the pipeline, and every morning the tracker tells you who to follow up with and what to say. Applications with a follow-up due show up in the Monday note for that week. Adding an application uses one action; everything else is free, and a CSV import saves typing a backlog in one by one.</p>
+<h3>Log it when it happens</h3>
+<p>Add the application the minute you submit it, while the posting link is still in front of you. Reconstructing a month of applications from your sent folder is the spreadsheet dread this tool exists to replace.</p>
+<h3>The follow-up that works</h3>
+<p>Five business days after applying is the sweet spot: polite, expected, and often the thing that resurfaces your name. The tracker never contacts an employer on your behalf. It tells you who and when; the email is yours.</p>
+<h3>Read the guide</h3><p>The full walkthrough: <a href="/how-to-track-job-applications/">How to track job applications (a system that survives 50 applications)</a>.</p></section></main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>

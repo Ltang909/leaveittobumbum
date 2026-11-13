@@ -5,11 +5,11 @@
 <meta property="og:description" content="Drop in a video and an MP3, snip the good bits of the song, pin them where they belong, and Bum Bum mixes them over your video right in your browser. Nothing gets uploaded. Free to try.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-mp3-overlay/">
-<meta property="og:image" content="https://leaveittobumbum.com/bum/icons/video-mp3-overlay.png">
+<meta property="og:image" content="https://leaveittobumbum.com/bum/og/video-mp3-overlay.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Video MP3 Overlay | Put an MP3 Over Your Video, In Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Drop in a video and an MP3, snip the good bits of the song, pin them where they belong, and Bum Bum mixes them over your video right in your browser. Nothing gets uploaded. Free to try.">
-<meta name="twitter:image" content="https://leaveittobumbum.com/bum/icons/video-mp3-overlay.png">
+<meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/video-mp3-overlay.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-mp3-overlay/">
 <script type="application/ld+json">
 {
@@ -77,7 +77,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Video MP3 Overlay | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Video MP3 Overlay","item":"https://leaveittobumbum.com/tools/video-mp3-overlay/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Video MP3 Overlay","description":"Lay snippets of an MP3 over a video, mixed in your browser.","step":[{"@type":"HowToStep","position":1,"name":"Drop in a video and an MP3."},{"@type":"HowToStep","position":2,"name":"Snip a favourite part of the MP3 and pin it to the moment in the video where it should play. Add as many snippets as you like."},{"@type":"HowToStep","position":3,"name":"Set the two volumes: the video's own sound, and the MP3 on top."},{"@type":"HowToStep","position":4,"name":"Bum Bum mixes and renders it right in your browser. Download the finished video. One action is used."}]}</script><link rel="stylesheet" href="/app.css?v=6"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use Video MP3 Overlay","description":"Lay snippets of an MP3 over a video, mixed in your browser.","step":[{"@type":"HowToStep","position":1,"name":"Drop in a video and an MP3."},{"@type":"HowToStep","position":2,"name":"Snip a favourite part of the MP3 and pin it to the moment in the video where it should play. Add as many snippets as you like."},{"@type":"HowToStep","position":3,"name":"Set the two volumes: the video's own sound, and the MP3 on top."},{"@type":"HowToStep","position":4,"name":"Bum Bum mixes and renders it right in your browser. Download the finished video. One action is used."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .vm-drop{border:2px dashed var(--line);border-radius:12px;padding:26px 18px;text-align:center;cursor:pointer;background:#fff;margin:0 0 12px}
 .vm-drop.over{border-color:var(--accent,#b3541e);background:#fff8f2}
@@ -114,7 +114,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .vm-vol input[type=number]{width:84px;padding:8px 10px;border:1px solid #ddd1b8;border-radius:10px;font:inherit;font-variant-numeric:tabular-nums}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
-</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Video MP3 Overlay"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><img class="tool-mascot-page" src="/bum/icons/video-mp3-overlay.png" alt="Video MP3 Overlay"><h1>Your video, your soundtrack.</h1><p class="lede bb-desc">Drop in a video and an MP3. Snip the bits of the song you want, pin each one where it should play in the video, set how loud everything sits, and Bum Bum mixes it <b>right in your browser</b>. Nothing gets uploaded. One finished mix uses one action.</p>
+</style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Video MP3 Overlay"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/video-mp3-overlay.png" alt="Video MP3 Overlay"><div><h1>Video MP3 Overlay</h1><p class="lede bb-desc">Your video, your soundtrack. Pin MP3 clips where they should play in your video.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Video MP3 Overlay</h2><a class="button" href="/account/?next=<?= urlencode('/tools/video-mp3-overlay/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/video-mp3-overlay/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/video-mp3-overlay/') ?>">Create a free account</a></p></div>
 <?php else: ?>
@@ -127,7 +127,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php else: ?>
 <section class="panel" id="vmUpload">
 <h2 style="margin-top:0">1. Your video and your MP3</h2>
-<div class="vm-drop" id="vmVideoDrop" role="button" tabindex="0"><strong>Drop your video here, or tap to pick one</strong><span>MP4, WebM, MOV, MKV, or AVI. Up to 100 MB. Never uploaded anywhere.</span><input type="file" id="vmVideoFile" accept="video/*,.mkv,.avi,.mov"></div>
+<div class="vm-drop" id="vmVideoDrop" role="button" tabindex="0"><strong>Drop your video here, or tap to pick one</strong><span>MP4, WebM, MOV, MKV, or AVI. Up to 100 MB, and your file is never uploaded anywhere.</span><input type="file" id="vmVideoFile" accept="video/*,.mkv,.avi,.mov"></div>
 <p class="vm-fileline" id="vmVideoInfo"></p>
 <div class="vm-drop" id="vmMp3Drop" role="button" tabindex="0"><strong>Drop your MP3 here, or tap to pick one</strong><span>The song, the jingle, the voiceover. Up to 30 MB, and it stays on your device too.</span><input type="file" id="vmMp3File" accept="audio/*,.mp3"></div>
 <p class="vm-fileline" id="vmMp3Info"></p>
@@ -179,7 +179,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 const TOOL_KEY='video-mp3-overlay';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Helper gives you 1,500 actions for $12/month. Operator gives you 6,000 actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="helper" href="/checkout/?plan=helper">Get Helper, $12/mo</a> <a class="button secondary" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 <?php if ($out): ?>
@@ -207,7 +207,18 @@ let selIn=0,selOut=0,placements=[],placeN=0,origPct=100,mp3Pct=100;
 let mp3Buffer=null,actx=null,origSrcNode=null,origGainNode=null,mp3GainNode=null,activeSrcs=[],previewOn=false;
 function setProg(p,txt){progWrap.classList.remove('hidden');progBar.style.width=Math.round(p*100)+'%';progText.textContent=txt;}
 function loadScript(src,timeoutMs){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;const to=setTimeout(()=>{s.remove();rej(new Error('script-timeout:'+src))},timeoutMs||90000);s.onload=()=>{clearTimeout(to);res()};s.onerror=()=>{clearTimeout(to);rej(new Error('script-load:'+src))};document.head.appendChild(s)})}
-async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
+let ffLogBuf=[],ffLogOn=false;
+function ffLogTail(n){return ffLogBuf.slice(-(n||12)).join('\n');}
+async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();ff.on('log',({message})=>{if(ffLogOn){ffLogBuf.push(String(message));if(ffLogBuf.length>400)ffLogBuf.shift();}});onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
+async function probeVideo(ff,vName){
+  ffLogBuf=[];ffLogOn=true;
+  try{await ff.exec(['-i',vName]);}catch(e){}
+  ffLogOn=false;
+  const text=ffLogBuf.join('\n');
+  const vm=text.match(/Video:\s*([a-z0-9_]+)/i);
+  const dm=text.match(/Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)/);
+  return{vcodec:vm?vm[1].toLowerCase():'',hasAudio:/:\s*Audio:\s*[a-z0-9_]+/i.test(text),durSec:dm?((+dm[1])*3600+(+dm[2])*60+(+dm[3])):0};
+}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/video-mp3-overlay.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data};}
 function bindDrop(zone,input,onFile){zone.addEventListener('click',()=>input.click());zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});['dragover','dragenter'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('over')}));['dragleave','drop'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('over')}));zone.addEventListener('drop',e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)onFile(f)});input.addEventListener('change',()=>{const f=input.files&&input.files[0];if(f)onFile(f);input.value=''})}
 function extOf(name){const m=String(name||'').toLowerCase().match(/\.([a-z0-9]+)$/);return m?m[1]:'';}
@@ -345,10 +356,10 @@ $('vmPreviewBtn').addEventListener('click',()=>{
 });
 /* ---- Render ---- */
 function volStr(pct){return String(Math.round(pct)/100);}
-function buildFilter(withOrig){
+function buildFilter(withOrig,baseSec){
   const parts=[];
   if(withOrig)parts.push('[0:a]aresample=44100,aformat=channel_layouts=stereo,volume='+volStr(origPct)+'[aorig]');
-  else parts.push('anullsrc=channel_layout=stereo:sample_rate=44100,atrim=0:'+(videoDur||0).toFixed(3)+',asetpts=PTS-STARTPTS,volume='+volStr(origPct)+'[aorig]');
+  else{const trim=(baseSec>0)?',atrim=0:'+baseSec.toFixed(3):'';parts.push('anullsrc=channel_layout=stereo:sample_rate=44100'+trim+',asetpts=PTS-STARTPTS,volume='+volStr(origPct)+'[aorig]');}
   placements.forEach((p,i)=>{
     const d=Math.round(p.at*1000);
     parts.push('[1:a]atrim=start='+p.sin.toFixed(3)+':end='+p.sout.toFixed(3)+',asetpts=PTS-STARTPTS,aresample=44100,aformat=channel_layouts=stereo,volume='+volStr(mp3Pct)+',adelay='+d+'|'+d+'[s'+i+']');
@@ -381,19 +392,28 @@ renderBtn.addEventListener('click',async()=>{
     step='rendering';
     const X264=['-c:v','libx264','-preset','veryfast','-crf','23'];
     const COPY=['-c:v','copy'];
-    const attempts=[
-      {filter:buildFilter(true),vargs:COPY},
-      {filter:buildFilter(true),vargs:X264},
-      {filter:buildFilter(false),vargs:COPY},
-      {filter:buildFilter(false),vargs:X264}
+    setProg(0.17,'Checking the video...');
+    const probe=await probeVideo(ff,vName);
+    const effDur=probe.durSec>0?probe.durSec:((isFinite(videoDur)&&videoDur>0)?videoDur:0);
+    const wanted=[
+      {withOrig:probe.hasAudio,copy:probe.vcodec==='h264'},
+      {withOrig:probe.hasAudio,copy:false},
+      {withOrig:!probe.hasAudio,copy:false}
     ];
-    let code=-1;
+    const seenK={},attempts=wanted.filter(a=>{const k=a.withOrig+'|'+a.copy;if(seenK[k])return false;seenK[k]=1;return true;});
+    let code=-1,lastTail='';
+    ffLogOn=true;
     for(const att of attempts){
       try{await ff.deleteFile('output.mp4')}catch(e){}
-      code=await ff.exec(['-i',vName,'-i',mName,'-filter_complex',att.filter,'-map','0:v:0','-map','[aout]'].concat(att.vargs,['-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']));
+      ffLogBuf=[];
+      const outArgs=['-filter_complex',buildFilter(att.withOrig,effDur),'-map','0:v:0','-map','[aout]'].concat(att.copy?COPY:X264,['-c:a','aac','-b:a','128k','-movflags','faststart']);
+      if(!att.withOrig&&!(effDur>0))outArgs.push('-shortest');
+      code=await ff.exec(['-i',vName,'-i',mName].concat(outArgs,['output.mp4']));
+      lastTail=ffLogTail(12);
       if(code===0)break;
     }
-    if(code!==0)throw new Error('encode-exit-'+code);
+    ffLogOn=false;
+    if(code!==0){const err=new Error('encode-exit-'+code);err.ffmpegTail=lastTail;throw err;}
     step='saving';
     const data=await ff.readFile('output.mp4');
     try{await ff.deleteFile(vName);await ff.deleteFile(mName);await ff.deleteFile('output.mp4')}catch(e){}
@@ -428,7 +448,12 @@ renderBtn.addEventListener('click',async()=>{
     }else if(step==='reading'){
       renderErr.textContent='Bum Bum could not read those files. Try an MP4 video and an MP3?';
     }else if(step==='rendering'){
-      renderErr.textContent='The mix failed on that video. It might be an unusual format or too large for this device. Try an MP4 under 100 MB?';
+      const tail=String((e&&e.ffmpegTail)||'');
+      const tlines=tail.split('\n').map(s=>s.trim()).filter(Boolean);
+      const lastLine=tlines.length?tlines[tlines.length-1].slice(0,140):'';
+      if(tail)console.error('Video MP3 Overlay render failed:\n'+tail);
+      bbTrack('action_failed',{tool:TOOL_KEY,stage:'render',reason:lastLine,mb:Math.round(videoFile.size/1048576)});
+      renderErr.textContent='The mix failed on that video'+(lastLine?' (the engine said: '+lastLine+')':'')+'. The full reason was logged so we can fix this properly. An MP4 of the same clip usually works.';
     }else{
       renderErr.textContent='Something went wrong finishing the mix. Try again?';
     }
@@ -466,10 +491,14 @@ againBtn.addEventListener('click',()=>{
 <p>Videos in MP4, WebM, MOV, MKV, or AVI, up to 100 MB, and an MP3 for the sound you are laying over it.</p>
 </details>
 </section>
-<section class="panel" aria-label="More tiny tools">
-<h2 style="margin-top:0">More tiny tools</h2>
-<p><a href="/tools/video-trimmer/">Video Trimmer</a> - Drop in a video, mark where the good part starts and ends, and Bum Bum snips it right in your browser.</p>
-<p><a href="/tools/video-converter/">Video Converter</a> - Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser.</p>
-<p><a href="/tools/audiogram/">Audiogram Maker</a> - Turn an MP3 into a captioned video. Pick a background, pick a caption style, download the MP4.</p>
+<section class="panel" aria-label="Guide">
+<h2 style="margin-top:0">Putting music on a video, the short guide</h2>
+<h3>How it works here</h3>
+<p>Drop in a video and an MP3. Snip the good bits of the song, pin each one where it should play, and set how loud everything sits. Snippets can repeat, overlap the original audio, and each source has its own volume. A video with no sound of its own still mixes fine. The render happens in your browser; neither file ever leaves your device. One finished mix uses one action, and placing snippets and previewing are free.</p>
+<h3>Mix quieter than feels right</h3>
+<p>Pull the song down further than seems right under dialogue. If you are noticing the music while someone is talking, it is too loud. You can always lift it in the preview; your viewers cannot turn it down.</p>
+<h3>Land it a breath early</h3>
+<p>Pin a snippet a breath before the moment it is for. Music that lands exactly on the action feels late, because the ear registers the hit after the eye sees it.</p>
 </section>
-</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261026r15"></script></body></html>
+<?php $bbTool = 'video-mp3-overlay'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
+</main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>
