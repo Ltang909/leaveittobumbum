@@ -10,6 +10,7 @@
  *                         otherwise the tone re-encoded (transcription specs
  *                         assert terminal pipeline states, not exact words)
  *   fixtures/video.mp4    2s test pattern + tone (video tools)
+ *   fixtures/song-long.mp3 75s modulated tone (Audiogram long-render test)
  *   fixtures/resume.pdf   minimal valid one-page PDF resume (Gap Scout)
  *   fixtures/tiny.jpg     96x96 JPEG; fixtures/tiny.webp 96x96 WebP
  *                         (pair-converter inputs)
@@ -106,6 +107,17 @@ if (!skip('meal.png')) {
     '-frames:v', '1', join(out, 'meal.png'),
   ]);
   done('meal.png');
+}
+
+// --- song-long.mp3 -----------------------------------------------------------
+// 75 seconds of modulated tone: long enough to exercise Audiogram's
+// real-time record + in-browser conversion path. A 4-minute song timed
+// out in production on 2026-11-14 while the only render spec sat in the
+// never-run billable tier; this fixture keeps the weekly render test
+// honest without a multi-minute runtime.
+if (!skip('song-long.mp3')) {
+  ffmpeg(['-f', 'lavfi', '-i', 'sine=frequency=440:duration=75', '-af', 'tremolo=f=0.4:d=0.7', '-ar', '22050', '-codec:a', 'libmp3lame', '-b:a', '48k', join(out, 'song-long.mp3')]);
+  done('song-long.mp3');
 }
 
 // --- tone.wav + speech.mp3 -------------------------------------------------
