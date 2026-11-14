@@ -281,6 +281,28 @@ function saveLyrics(){
 editLyricsBtn.addEventListener('click',openLyrics);
 lyricSaveBtn.addEventListener('click',saveLyrics);
 lyricCancelBtn.addEventListener('click',()=>lyricEditor.classList.add('hidden'));
+function repairWordTimes(ws){
+  // Whisper sometimes stretches one word across a whole intro or
+  // interlude (Borrowed Hours arrived with an 11-second "There's"
+  // covering the music before the vocal starts), so the highlight sat
+  // on that word long before it was sung. Detect spans over 2 seconds
+  // and re-anchor the word to the end its neighbours agree with, at a
+  // typical word length taken from the words around it.
+  const dur=w=>w.end-w.start;
+  for(let i=0;i<ws.length;i++){
+    const w=ws[i];
+    if(dur(w)<=2)continue;
+    const near=[];
+    for(let j=Math.max(0,i-6);j<Math.min(ws.length,i+7);j++){if(j!==i&&dur(ws[j])<=2)near.push(dur(ws[j]));}
+    near.sort((a,b)=>a-b);
+    const nominal=near.length?Math.min(0.8,Math.max(0.25,near[Math.floor(near.length/2)])):0.35;
+    const gapBefore=w.start-(i>0?ws[i-1].end:0);
+    const gapAfter=(i<ws.length-1?ws[i+1].start:Infinity)-w.end;
+    if(gapAfter<=gapBefore)w.start=w.end-nominal;
+    else w.end=w.start+nominal;
+  }
+  return ws;
+}
 async function decodePeaks(file){
   actx=actx||new (window.AudioContext||window.webkitAudioContext)();
   const buf=await actx.decodeAudioData(await file.arrayBuffer());
@@ -314,7 +336,7 @@ transcribeBtn.addEventListener('click',async()=>{
         decodePeaks(audioFile)
       ]);
       if(!resp.ok)throw new Error(resp.data.error||('transcription failed ('+resp.status+')'));
-      words=resp.data.words||[];duration=dec.duration||resp.data.duration||0;peaks=dec.peaks;
+      words=repairWordTimes(resp.data.words||[]);duration=dec.duration||resp.data.duration||0;peaks=dec.peaks;
       if(!words.length||!duration)throw new Error('no words heard');
       cues=groupCues(words);capSizeMemo={};
       bbTrack('transcription_completed',{tool:TOOL_KEY,words:words.length,seconds:Math.round(duration)});
