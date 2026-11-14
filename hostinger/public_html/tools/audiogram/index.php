@@ -553,7 +553,7 @@ async function renderFast(setProg){
   }
   if(!vcfg)return null;
   let Muxer,ArrayBufferTarget;
-  try{({Muxer,ArrayBufferTarget}=await import('/tools/audiogram/vendor/mp4-muxer.mjs'));}catch(_){return null;}
+  try{({Muxer,ArrayBufferTarget}=await import('/tools/audiogram/vendor/mp4-muxer.js'));}catch(_){return null;}
   const muxer=new Muxer({target:new ArrayBufferTarget(),video:{codec:'avc',width:W,height:H},fastStart:'in-memory'});
   let encErr=null;
   const venc=new VideoEncoder({output:(chunk,meta)=>{try{muxer.addVideoChunk(chunk,meta);}catch(e){encErr=encErr||e;}},error:e=>{encErr=encErr||e;}});
