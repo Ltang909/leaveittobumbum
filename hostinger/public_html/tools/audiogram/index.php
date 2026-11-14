@@ -324,21 +324,8 @@ function drawFrame(t){
   const g=ctx.createLinearGradient(0,H*0.45,0,H);
   g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,0.55)');
   ctx.fillStyle=g;ctx.fillRect(0,H*0.45,W,H*0.55);
-  drawWave(ctx,W,H,t);
   const cue=cueAt(t);
   if(cue)drawCaption(ctx,W,H,cue,t,style);
-}
-function drawWave(ctx,W,H,t){
-  const n=peaks.length;if(!n)return;
-  const bw=W/n,bh=H*0.055,y0=H-bh-14;
-  const played=duration>0?t/duration:0;
-  for(let i=0;i<n;i++){
-    const h=Math.max(2,peaks[i]*bh);
-    ctx.fillStyle=(i/n)<=played?'#ff7448':'rgba(255,255,255,0.35)';
-    ctx.fillRect(i*bw+bw*0.2,y0+(bh-h)/2,Math.max(1,bw*0.6),h);
-  }
-  ctx.fillStyle='rgba(255,255,255,0.25)';ctx.fillRect(0,H-6,W,6);
-  ctx.fillStyle='#ff7448';ctx.fillRect(0,H-6,W*played,6);
 }
 function secWindow(lines,active){
   if(lines.length<=5)return{lines,active};
