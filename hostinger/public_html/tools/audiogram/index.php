@@ -165,7 +165,7 @@ const canvas=$('agCanvas'),playBtn=$('agPlay'),timeEl=$('agTime'),statusEl=$('ag
 const renderBtn=$('agRender'),dlLink=$('agDl'),againBtn=$('agAgain'),renderErr=$('agRenderErr');
 const progWrap=$('agProgWrap'),progBar=$('agProg'),progText=$('agProgText'),usageEl=$('agUsage'),liveEl=$('agLive');
 const FFMPEG_VENDOR='/tools/video-trimmer/vendor/';
-let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[];
+let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[],capSizeMemo={};
 let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false;
 let actx=null,mediaSrc=null,ffmpeg=null,renderKey=null,rendering=false,drawPaused=false;
 function setStatus(m,isErr){statusEl.textContent=m;statusEl.classList.toggle('error',!!isErr);}
@@ -266,7 +266,7 @@ transcribeBtn.addEventListener('click',async()=>{
       if(!resp.ok)throw new Error(resp.data.error||('transcription failed ('+resp.status+')'));
       words=resp.data.words||[];duration=dec.duration||resp.data.duration||0;peaks=dec.peaks;
       if(!words.length||!duration)throw new Error('no words heard');
-      cues=groupCues(words);
+      cues=groupCues(words);capSizeMemo={};
       bbTrack('transcription_completed',{tool:TOOL_KEY,words:words.length,seconds:Math.round(duration)});
     }
     setupStudio();
@@ -326,13 +326,47 @@ function drawFrame(t){
   ctx.fillStyle=g;ctx.fillRect(0,H*0.45,W,H*0.55);
   const cue=cueAt(t);
   if(cue)drawCaption(ctx,W,H,cue,t,style);
+  else drawCountdown(ctx,W,H,t);
+}
+function drawCountdown(ctx,W,H,t){
+  // Karaoke lead-in: when a line follows a break of 4+ seconds with no
+  // singing, count 3, 2, 1 into it so the first highlighted word never
+  // lands cold. Applies at the start of the song and after interludes.
+  if(!cues.length||style==='none')return;
+  let prevEnd=0,next=null;
+  for(const c of cues){if(c.start>t){next=c;break;}prevEnd=c.end;}
+  if(!next)return;
+  const remain=next.start-t;
+  if(remain>3||remain<=0||next.start-prevEnd<4)return;
+  const n=Math.ceil(remain),frac=remain-Math.floor(remain);
+  const size=W/4*(0.82+0.18*frac);
+  ctx.font='900 '+size+'px "Nunito Sans",sans-serif';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.lineWidth=Math.max(3,size/11);ctx.strokeStyle='rgba(0,0,0,0.85)';
+  ctx.fillStyle='rgba(255,255,255,0.95)';
+  ctx.strokeText(n,W/2,H*0.60);ctx.fillText(n,W/2,H*0.60);
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';
 }
 function secWindow(lines,active){
   if(lines.length<=5)return{lines,active};
   const start=Math.min(Math.max(0,active-2),lines.length-5);
   return{lines:lines.slice(start,start+5),active:active-start};
 }
-function longestText(lines){return lines.reduce((a,c)=>c.text.length>a.text.length?c:a).text;}
+function longestCueText(){return cues.reduce((a,c)=>c.text.length>a.text.length?c:a).text;}
+function songSize(sty,W){
+  // One font size per style for the whole song, fitted to the longest
+  // caption line anywhere in it, so the text never grows or shrinks
+  // from section to section. Memoized once the webfont has loaded;
+  // before that the measurement would use a fallback font.
+  const key=sty+':'+W;
+  if(capSizeMemo[key])return capSizeMemo[key];
+  const conf={pop:[0.92,W/13],clean:[0.86,W/17],neon:[0.9,W/14],minimal:[0.86,Math.max(13,W/30)]}[sty]||[0.9,W/14];
+  const raw=longestCueText();
+  const txt=(sty==='pop'||sty==='neon')?raw.toUpperCase():raw;
+  const s=fitFont(canvas.getContext('2d'),txt,W*conf[0],conf[1]);
+  if(document.fonts&&document.fonts.status==='loaded')capSizeMemo[key]=s;
+  return s;
+}
 function drawCaption(ctx,W,H,cue,t,sty){
   // Show the whole section the current line belongs to. The line being
   // sung gets the style's full treatment; the section's other lines sit
@@ -341,7 +375,7 @@ function drawCaption(ctx,W,H,cue,t,sty){
   const win=secWindow(allLines,allLines.indexOf(cue));
   const lines=win.lines,active=win.active;
   if(sty==='pop'){
-    const size=fitFont(ctx,longestText(lines).toUpperCase(),W*0.92,W/13);
+    const size=songSize('pop',W);
     ctx.font='900 '+size+'px "Nunito Sans",sans-serif';
     ctx.textBaseline='middle';
     const gap=ctx.measureText(' ').width;
@@ -365,7 +399,7 @@ function drawCaption(ctx,W,H,cue,t,sty){
       }
     });
   }else if(sty==='clean'){
-    const size=fitFont(ctx,longestText(lines),W*0.86,W/17);
+    const size=songSize('clean',W);
     ctx.font='700 '+size+'px "Nunito Sans",sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
     const lh=size*1.35,bh=lines.length*lh+size*0.7;
@@ -376,7 +410,7 @@ function drawCaption(ctx,W,H,cue,t,sty){
       ctx.fillText(c.text,W/2,by+size*0.35+lh*(li+0.5));
     });
   }else if(sty==='neon'){
-    const size=fitFont(ctx,longestText(lines).toUpperCase(),W*0.9,W/14);
+    const size=songSize('neon',W);
     ctx.font='800 '+size+'px "Nunito Sans",sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
     const lh=size*1.32,y0=H*0.60-(lines.length-1)*lh/2;
@@ -396,7 +430,7 @@ function drawCaption(ctx,W,H,cue,t,sty){
     });
     ctx.shadowBlur=0;
   }else{
-    const size=fitFont(ctx,longestText(lines),W*0.86,Math.max(13,W/30));
+    const size=songSize('minimal',W);
     ctx.font='600 '+size+'px "Nunito Sans",sans-serif';
     ctx.textAlign='left';ctx.textBaseline='alphabetic';
     ctx.shadowColor='rgba(0,0,0,0.8)';ctx.shadowBlur=6;
@@ -572,7 +606,7 @@ againBtn.addEventListener('click',()=>{
   cancelAnimationFrame(rafId);
   if(audioEl){audioEl.pause();audioEl=null;}
   if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null;}
-  audioFile=null;bgImg=null;words=[];cues=[];peaks=[];duration=0;rendering=false;
+  audioFile=null;bgImg=null;words=[];cues=[];peaks=[];duration=0;rendering=false;capSizeMemo={};
   mp3Info.textContent='';imgInfo.textContent='';uploadErr.textContent='';renderErr.textContent='';
   usageEl.textContent='';dlLink.classList.add('hidden');liveEl.classList.add('hidden');liveEl.textContent='';
   studioSec.classList.add('hidden');styleSec.classList.add('hidden');uploadSec.classList.remove('hidden');

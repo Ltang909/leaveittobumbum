@@ -705,6 +705,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     goodToKnow: [
       "One finished video uses one action. Setting up and previewing are free.",
       "Caption lines break where the singer pauses, and one section of the song shows at a time: a verse stays on screen as a block, with the line being sung lit up, and clears before the next section starts.",
+      "After a quiet break of a few seconds, a 3, 2, 1 countdown leads back into the singing, and the caption size stays the same from the first line to the last.",
       "Caption styles and sizes cover the usual feed formats, square and vertical included.",
       "The transcription is automatic when you want captions, and your audio is never kept after.",
     ],
