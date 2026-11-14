@@ -100,7 +100,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Audiogram Maker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a></p></div>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
+<?php if ($isGuest && $usage && (int) $usage['used'] >= 2): ?><div class="nudge bb-guest-nudge" data-remaining="<?= (int) $usage['remaining'] ?>"><button type="button" class="bb-guest-nudge-dismiss" aria-label="Dismiss" style="float:right;border:none;background:none;cursor:pointer;font:inherit;font-weight:900;opacity:.55;padding:0 0 0 12px">&times;</button>You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions left. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to save your work and keep going.</div><?php endif; ?>
 <?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php $out = empty($usage['unlimited']) && ($usage['remaining'] ?? 0) <= 0; ?>
 <?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
@@ -268,6 +268,9 @@ function setupStudio(){
   audioUrl=URL.createObjectURL(audioFile);audioEl=new Audio(audioUrl);audioEl.preload='auto';
   audioEl.addEventListener('timeupdate',()=>{timeEl.textContent=fmtT(audioEl.currentTime)+' / '+fmtT(duration)});
   audioEl.addEventListener('ended',()=>{playing=false;playBtn.textContent='Play';audioEl.currentTime=0;});
+  // Drop the old WebAudio tap: it belongs to the previous audio element,
+  // and render() rebuilds it for the current one. Keeping it would record silence.
+  if(mediaSrc){try{mediaSrc.disconnect();}catch(e){}mediaSrc=null;}
   timeEl.textContent='0:00 / '+fmtT(duration);
   playBtn.textContent='Play';playing=false;
   dlLink.classList.add('hidden');renderErr.textContent='';progText.textContent='';progWrap.classList.add('hidden');
@@ -389,6 +392,7 @@ renderBtn.addEventListener('click',async()=>{
   renderErr.textContent='';dlLink.classList.add('hidden');
   renderBtn.disabled=true;rendering=true;
   const setProg=(p,txt)=>{progWrap.classList.remove('hidden');progBar.style.width=Math.round(p*100)+'%';progText.textContent=txt;};
+  let webmMB='';
   try{
     setProg(0.02,'Checking your actions...');
     const st=await apiCall({action:'status'});
@@ -400,34 +404,63 @@ renderBtn.addEventListener('click',async()=>{
     const ff=await getFFmpeg(s=>setProg(s==='engine'?0.08:0.14,'Loading the video engine...'));
     actx=actx||new (window.AudioContext||window.webkitAudioContext)();
     if(actx.state==='suspended')await actx.resume();
-    if(!mediaSrc){mediaSrc=actx.createMediaElementSource(audioEl);mediaSrc.connect(actx.destination);}
+    // Always rebuild the tap for the CURRENT audio element. The old code kept
+    // the first element's tap across "start over", so later renders recorded
+    // a silent audio track from a dead element.
+    if(mediaSrc){try{mediaSrc.disconnect();}catch(e){}mediaSrc=null;}
+    mediaSrc=actx.createMediaElementSource(audioEl);mediaSrc.connect(actx.destination);
     const dest=actx.createMediaStreamDestination();
     mediaSrc.connect(dest);
     const vstream=canvas.captureStream(30);
     const combined=new MediaStream([...vstream.getVideoTracks(),...dest.stream.getAudioTracks()]);
     const mime=pickRecorderMime();
-    const rec=new MediaRecorder(combined,mime?{mimeType:mime,videoBitsPerSecond:8000000}:undefined);
+    const rec=new MediaRecorder(combined,mime?{mimeType:mime,videoBitsPerSecond:3000000}:undefined);
     const chunks=[];
     rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
     const stopped=new Promise(res=>{rec.onstop=res;});
     audioEl.currentTime=0;
     setProg(0.18,'Recording your video...');
     rec.start(250);
+    const wallStart=performance.now();
     if(style!=='none'&&window.BBLiveTranscribe){
       liveEl.classList.remove('hidden');
       liveEl.innerHTML='<span class="bb-dot"></span>Listening... words will appear here in about 5 seconds, then keep updating while your video records.';
       BBLiveTranscribe.start({stream:new MediaStream(dest.stream.getAudioTracks()),lang:'en',mode:'relay',onText:(f,i)=>{const t=(f+(i?(f?' ':'')+i:'')).trim();if(t)liveEl.textContent='Live words: '+t;}});
     }
     await audioEl.play();playing=true;playBtn.textContent='Pause';
-    const tick=()=>{if(rendering&&audioEl)setProg(0.18+0.6*(audioEl.currentTime/Math.max(1,duration)),'Recording your video... '+fmtT(audioEl.currentTime)+' / '+fmtT(duration));};
+    // The recording must never outlive the track. 'ended' is the primary stop,
+    // but if the browser fires it late (or never), these backstops end the
+    // recording instead of producing a runaway video.
+    let stopReason='',resolveEnded=null;
+    const finishRecording=reason=>{if(stopReason)return;stopReason=reason;clearInterval(tickInt);audioEl.onended=null;if(resolveEnded)resolveEnded();};
+    const tick=()=>{
+      if(!rendering||!audioEl||stopReason)return;
+      const ct=audioEl.currentTime,wall=(performance.now()-wallStart)/1000;
+      setProg(0.18+0.6*(ct/Math.max(1,duration)),'Recording your video... '+fmtT(ct)+' / '+fmtT(duration));
+      if(duration>0&&ct>=Math.max(0.5,duration-0.15))finishRecording('end');
+      else if(duration>0&&wall>duration+25)finishRecording('wall');
+      else if(wall>20&&duration>0&&ct<wall*0.4&&ct<duration-2)finishRecording('slow');
+    };
     const tickInt=setInterval(tick,400);
-    await new Promise(res=>{audioEl.onended=()=>res();});
-    clearInterval(tickInt);
+    await new Promise(res=>{resolveEnded=res;audioEl.onended=()=>finishRecording('end');});
     rec.stop();await stopped;
+    if(stopReason==='slow')throw{slow:true};
     mediaSrc.disconnect(dest);
     playing=false;playBtn.textContent='Play';
     setProg(0.82,'Converting to MP4... 0%');
     const webm=new Blob(chunks,{type:rec.mimeType||'video/webm'});
+    webmMB=(webm.size/1048576).toFixed(0);
+    setProg(0.80,'Checking the recording has sound...');
+    try{
+      const detBuf=await actx.decodeAudioData(await webm.arrayBuffer());
+      let peak=0;
+      for(let ch=0;ch<detBuf.numberOfChannels&&peak<0.003;ch++){
+        const d=detBuf.getChannelData(ch);
+        for(let i=0;i<d.length&&peak<0.003;i+=97){const v=Math.abs(d[i]);if(v>peak)peak=v;}
+      }
+      if(peak<0.003)throw{silent:true};
+    }catch(se){if(se&&se.silent)throw se;}
+    setProg(0.81,'Preparing '+webmMB+' MB of video for conversion...');
     await ff.writeFile('input.webm',new Uint8Array(await webm.arrayBuffer()));
     const totalUs=Math.max(1,Math.round((duration||0)*1e6));
     const convProg=({time})=>{
@@ -435,10 +468,17 @@ renderBtn.addEventListener('click',async()=>{
       setProg(0.82+0.18*cp,'Converting to MP4... '+Math.round(cp*100)+'%');
     };
     ff.on('progress',convProg);
+    // Watchdog: a stuck conversion used to hang the page forever. Bound it and fail loudly.
+    const convTimeoutMs=Math.min(900000,Math.max(300000,(duration||60)*2000));
+    let convTimer=null;
+    const convTimeoutP=new Promise((_,rej)=>{convTimer=setTimeout(()=>rej({timeout:true}),convTimeoutMs);});
     let code=1;
     try{
-      code=await ff.exec(['-i','input.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']);
-    }finally{ff.off('progress',convProg);}
+      code=await Promise.race([
+        ff.exec(['-i','input.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']),
+        convTimeoutP
+      ]);
+    }finally{clearTimeout(convTimer);try{ff.off('progress',convProg);}catch(_){}}
     if(code!==0)throw new Error('convert failed');
     const data=await ff.readFile('output.mp4');
     const mp4=new Blob([data],{type:'video/mp4'});
@@ -458,7 +498,18 @@ renderBtn.addEventListener('click',async()=>{
       }
     }catch(_){}
   }catch(e){
-    if(e&&e.limit){
+    if(e&&e.silent){
+      renderErr.textContent='Bum Bum recorded silence instead of your audio, so this export was stopped before it could make a dead video. Hard-refresh this page (Ctrl/Cmd+Shift+R) and render again. If it keeps happening, tell me which browser and device you are on.';
+      setStatus('The recording came back silent. Nothing was rendered.',true);
+    }else if(e&&e.slow){
+      renderErr.textContent='Your audio played back much slower than real time, so the render was stopped instead of making a broken video. This usually means the browser or your audio output is struggling - try closing other tabs, disconnecting any Bluetooth audio devices, or switching browsers, then render again. If it keeps happening, tell me which browser and device you are on.';
+      setStatus('The audio played too slowly to render. Nothing was rendered.',true);
+    }else if(e&&e.timeout){
+      try{if(ffmpeg&&typeof ffmpeg.terminate==='function')ffmpeg.terminate();}catch(_){}
+      ffmpeg=null;
+      renderErr.textContent='The MP4 conversion took too long and was stopped before it could finish. Your files are safe - try closing other tabs and rendering again. If it keeps happening, tell me which browser and device you are on.';
+      setStatus('The conversion timed out. Nothing was rendered.',true);
+    }else if(e&&e.limit){
       bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
       document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
       bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');
