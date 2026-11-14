@@ -178,7 +178,7 @@ const renderBtn=$('agRender'),dlLink=$('agDl'),againBtn=$('agAgain'),renderErr=$
 const progWrap=$('agProgWrap'),progBar=$('agProg'),progText=$('agProgText'),usageEl=$('agUsage'),liveEl=$('agLive');
 const editLyricsBtn=$('agEditLyrics'),lyricEditor=$('agLyricEditor'),lyricFields=$('agLyricFields'),lyricSaveBtn=$('agLyricSave'),lyricCancelBtn=$('agLyricCancel');
 const FFMPEG_VENDOR='/tools/video-trimmer/vendor/';
-let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[],capSizeMemo={};
+let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[],capSizeMemo={},audioBuf=null;
 let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false,seeking=false;
 let actx=null,mediaSrc=null,ffmpeg=null,renderKey=null,rendering=false,drawPaused=false;
 function setStatus(m,isErr){statusEl.textContent=m;statusEl.classList.toggle('error',!!isErr);}
@@ -355,6 +355,7 @@ function repairWordTimes(ws){
 async function decodePeaks(file){
   actx=actx||new (window.AudioContext||window.webkitAudioContext)();
   const buf=await actx.decodeAudioData(await file.arrayBuffer());
+  audioBuf=buf;
   const ch0=buf.getChannelData(0),ch1=buf.numberOfChannels>1?buf.getChannelData(1):null;
   const N=240,peaks=new Array(N).fill(0),step=Math.floor(ch0.length/N);
   for(let i=0;i<N;i++){
@@ -580,6 +581,62 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
   ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
 }
+async function renderFast(setProg){
+  // Fast render: encode the frames directly with the browser's own
+  // H.264 encoder (WebCodecs), then mux the song in with ffmpeg. No
+  // real-time recording and no playback capture, so the silence and
+  // slow-playback failure modes of the recorder path cannot happen,
+  // and the audio comes straight from the file. Returns an MP4 Blob,
+  // or null when this browser cannot do it (the caller then uses the
+  // recorder path).
+  if(!window.VideoEncoder||!window.VideoFrame||!audioFile)return null;
+  const[W,H]=ASPECTS[aspect]||ASPECTS['9:16'];
+  const fps=30,totalFrames=Math.max(1,Math.round(duration*fps));
+  const bitrate=W*H>1000000?5000000:3500000;
+  let vcfg=null;
+  for(const codec of['avc1.640028','avc1.4d0028','avc1.42001f']){
+    const cfg={codec,width:W,height:H,bitrate,framerate:fps};
+    try{const s=await VideoEncoder.isConfigSupported(cfg);if(s&&s.supported){vcfg=cfg;break;}}catch(_){}
+  }
+  if(!vcfg)return null;
+  let Muxer,ArrayBufferTarget;
+  try{({Muxer,ArrayBufferTarget}=await import('/tools/audiogram/vendor/mp4-muxer.mjs'));}catch(_){return null;}
+  const muxer=new Muxer({target:new ArrayBufferTarget(),video:{codec:'avc',width:W,height:H},fastStart:'in-memory'});
+  let encErr=null;
+  const venc=new VideoEncoder({output:(chunk,meta)=>{try{muxer.addVideoChunk(chunk,meta);}catch(e){encErr=encErr||e;}},error:e=>{encErr=encErr||e;}});
+  drawPaused=true;
+  try{
+    venc.configure(vcfg);
+    setProg(0.08,'Rendering your video... 0:00 / '+fmtT(duration));
+    for(let i=0;i<totalFrames;i++){
+      if(encErr)throw encErr;
+      drawFrame(i/fps);
+      const frame=new VideoFrame(canvas,{timestamp:Math.round(i*1000000/fps),duration:Math.round(1000000/fps)});
+      venc.encode(frame,{keyFrame:i%150===0});
+      frame.close();
+      while(venc.encodeQueueSize>10)await new Promise(r=>setTimeout(r,5));
+      if(i%30===0)setProg(0.08+0.74*(i/totalFrames),'Rendering your video... '+fmtT(i/fps)+' / '+fmtT(duration));
+    }
+    await venc.flush();
+    if(encErr)throw encErr;
+    muxer.finalize();
+    setProg(0.86,'Adding your audio...');
+    const ff=await getFFmpeg(()=>{});
+    await ff.writeFile('v.mp4',new Uint8Array(muxer.target.buffer));
+    const ext=((audioFile.name.split('.').pop()||'mp3').toLowerCase().replace(/[^a-z0-9]/g,''))||'mp3';
+    await ff.writeFile('a.'+ext,new Uint8Array(await audioFile.arrayBuffer()));
+    const code=await ff.exec(['-i','v.mp4','-i','a.'+ext,'-map','0:v:0','-map','1:a:0','-c:v','copy','-c:a','aac','-b:a','128k','-movflags','+faststart','output.mp4']);
+    if(code!==0)throw new Error('mux failed');
+    const data=await ff.readFile('output.mp4');
+    setProg(0.97,'Finishing up...');
+    return new Blob([data],{type:'video/mp4'});
+  }catch(e){
+    return null;
+  }finally{
+    drawPaused=false;
+    try{if(venc.state!=='closed')venc.close();}catch(_){}
+  }
+}
 renderBtn.addEventListener('click',async()=>{
   if(rendering||!audioEl)return;
   renderErr.textContent='';dlLink.classList.add('hidden');
@@ -593,6 +650,8 @@ renderBtn.addEventListener('click',async()=>{
       throw{limit:true};
     }
     renderKey=crypto.randomUUID();
+    let mp4=await renderFast(setProg);
+    if(!mp4){
     setProg(0.06,'Loading the video engine (first render downloads it, about 30 MB)...');
     const ff=await getFFmpeg(s=>setProg(s==='engine'?0.08:0.14,'Loading the video engine...'));
     actx=actx||new (window.AudioContext||window.webkitAudioContext)();
@@ -685,7 +744,8 @@ renderBtn.addEventListener('click',async()=>{
     }finally{clearTimeout(convTimer);try{ff.off('progress',convProg);}catch(_){}}
     if(code!==0)throw new Error('convert failed');
     const data=await ff.readFile('output.mp4');
-    const mp4=new Blob([data],{type:'video/mp4'});
+    mp4=new Blob([data],{type:'video/mp4'});
+    }
     if(dlLink.href)URL.revokeObjectURL(dlLink.href);
     dlLink.href=URL.createObjectURL(mp4);dlLink.classList.remove('hidden');
     setProg(1,'Done.');
@@ -731,7 +791,7 @@ againBtn.addEventListener('click',()=>{
   cancelAnimationFrame(rafId);
   if(audioEl){audioEl.pause();audioEl=null;}
   if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null;}
-  audioFile=null;bgImg=null;words=[];cues=[];peaks=[];duration=0;rendering=false;capSizeMemo={};
+  audioFile=null;bgImg=null;words=[];cues=[];peaks=[];duration=0;rendering=false;capSizeMemo={};audioBuf=null;
   mp3Info.textContent='';imgInfo.textContent='';uploadErr.textContent='';renderErr.textContent='';
   usageEl.textContent='';dlLink.classList.add('hidden');liveEl.classList.add('hidden');liveEl.textContent='';
   editLyricsBtn.classList.add('hidden');lyricEditor.classList.add('hidden');
