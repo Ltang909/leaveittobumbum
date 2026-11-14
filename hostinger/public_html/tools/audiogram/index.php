@@ -100,6 +100,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 .ag-lyric-row{display:flex;gap:8px;align-items:center;margin:6px 0}
 .ag-lyric-time{font-size:12px;color:var(--muted);min-width:36px;font-weight:700}
 .ag-lyric-row input{flex:1}
+#agSeek{margin:10px 0 2px}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/audiogram.png" alt="Audiogram Maker"><div><h1>Audiogram Maker</h1><p class="lede bb-desc">MP3 in. Video out. Upload an MP3 and a background image, and Bum Bum builds the captioned video.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Audiogram Maker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a></p></div>
@@ -138,6 +139,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">3. Preview and render</h2>
 <canvas id="agCanvas" width="720" height="1280"></canvas>
 <div class="ag-step"><button id="agPlay" class="button" type="button">Play</button><span id="agTime" style="font-weight:800">0:00 / 0:00</span></div>
+<input type="range" id="agSeek" min="0" max="0" step="0.1" value="0" aria-label="Seek through the track">
 <p id="agStatus" class="ag-status">Have a look. When it feels right, render it.</p>
 <div class="ag-progress hidden" id="agProgWrap"><i id="agProg"></i></div>
 <p id="agProgText" style="font-weight:700"></p>
@@ -171,13 +173,13 @@ const $=id=>document.querySelector('#'+id);
 const uploadSec=$('agUpload'),styleSec=$('agStyle'),studioSec=$('agStudio');
 const mp3Input=$('agMp3'),imgInput=$('agImg'),mp3Info=$('agMp3Info'),imgInfo=$('agImgInfo'),uploadErr=$('agUploadErr');
 const toStyleBtn=$('agToStyle'),transcribeBtn=$('agTranscribe'),back1Btn=$('agBack1'),styleErr=$('agStyleErr');
-const canvas=$('agCanvas'),playBtn=$('agPlay'),timeEl=$('agTime'),statusEl=$('agStatus');
+const canvas=$('agCanvas'),playBtn=$('agPlay'),timeEl=$('agTime'),statusEl=$('agStatus'),seekEl=$('agSeek');
 const renderBtn=$('agRender'),dlLink=$('agDl'),againBtn=$('agAgain'),renderErr=$('agRenderErr');
 const progWrap=$('agProgWrap'),progBar=$('agProg'),progText=$('agProgText'),usageEl=$('agUsage'),liveEl=$('agLive');
 const editLyricsBtn=$('agEditLyrics'),lyricEditor=$('agLyricEditor'),lyricFields=$('agLyricFields'),lyricSaveBtn=$('agLyricSave'),lyricCancelBtn=$('agLyricCancel');
 const FFMPEG_VENDOR='/tools/video-trimmer/vendor/';
 let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[],capSizeMemo={};
-let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false;
+let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false,seeking=false;
 let actx=null,mediaSrc=null,ffmpeg=null,renderKey=null,rendering=false,drawPaused=false;
 function setStatus(m,isErr){statusEl.textContent=m;statusEl.classList.toggle('error',!!isErr);}
 function fmtT(s){s=Math.max(0,s||0);const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+String(sec).padStart(2,'0');}
@@ -357,12 +359,13 @@ function setupStudio(){
   canvas.style.maxWidth=aspect==='16:9'?'100%':'420px';
   if(audioUrl)URL.revokeObjectURL(audioUrl);
   audioUrl=URL.createObjectURL(audioFile);audioEl=new Audio(audioUrl);audioEl.preload='auto';
-  audioEl.addEventListener('timeupdate',()=>{timeEl.textContent=fmtT(audioEl.currentTime)+' / '+fmtT(duration)});
+  audioEl.addEventListener('timeupdate',()=>{timeEl.textContent=fmtT(audioEl.currentTime)+' / '+fmtT(duration);if(!seeking)seekEl.value=audioEl.currentTime;});
   audioEl.addEventListener('ended',()=>{playing=false;playBtn.textContent='Play';audioEl.currentTime=0;});
   // Drop the old WebAudio tap: it belongs to the previous audio element,
   // and render() rebuilds it for the current one. Keeping it would record silence.
   if(mediaSrc){try{mediaSrc.disconnect();}catch(e){}mediaSrc=null;}
   timeEl.textContent='0:00 / '+fmtT(duration);
+  seekEl.max=duration;seekEl.value=0;
   playBtn.textContent='Play';playing=false;
   dlLink.classList.add('hidden');renderErr.textContent='';progText.textContent='';progWrap.classList.add('hidden');
   editLyricsBtn.classList.toggle('hidden',!cues.length);lyricEditor.classList.add('hidden');
@@ -675,6 +678,8 @@ renderBtn.addEventListener('click',async()=>{
     progWrap.classList.add('hidden');progText.textContent='';
   }finally{if(window.BBLiveTranscribe)BBLiveTranscribe.stop();rendering=false;renderBtn.disabled=false;drawPaused=false;}
 });
+seekEl.addEventListener('input',()=>{if(!audioEl)return;seeking=true;audioEl.currentTime=Number(seekEl.value);timeEl.textContent=fmtT(audioEl.currentTime)+' / '+fmtT(duration);});
+seekEl.addEventListener('change',()=>{seeking=false;});
 againBtn.addEventListener('click',()=>{
   cancelAnimationFrame(rafId);
   if(audioEl){audioEl.pause();audioEl=null;}
