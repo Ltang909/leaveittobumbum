@@ -96,6 +96,10 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 #agGen{font-size:18px;padding:14px 26px;margin-top:12px}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+.ag-lyric-sec{font-weight:800;margin:14px 0 4px}
+.ag-lyric-row{display:flex;gap:8px;align-items:center;margin:6px 0}
+.ag-lyric-time{font-size:12px;color:var(--muted);min-width:36px;font-weight:700}
+.ag-lyric-row input{flex:1}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/audiogram.png" alt="Audiogram Maker"><div><h1>Audiogram Maker</h1><p class="lede bb-desc">MP3 in. Video out. Upload an MP3 and a background image, and Bum Bum builds the captioned video.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Audiogram Maker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a></p></div>
@@ -138,6 +142,12 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="ag-progress hidden" id="agProgWrap"><i id="agProg"></i></div>
 <p id="agProgText" style="font-weight:700"></p>
 <p id="agLive" class="ag-status hidden" aria-live="polite"></p>
+<div class="ag-step"><button id="agEditLyrics" class="button secondary hidden" type="button">Edit lyrics</button></div>
+<div id="agLyricEditor" class="hidden">
+<p class="ag-fileline">Fix any words the transcription heard wrong. Clear a line to remove it. The highlight timing adjusts to your words.</p>
+<div id="agLyricFields"></div>
+<div class="ag-step"><button id="agLyricSave" class="button" type="button">Save lyrics</button><button id="agLyricCancel" class="linklike" type="button">Cancel</button></div>
+</div>
 <div class="ag-step"><button id="agRender" class="button" type="button">Render video</button><a id="agDl" class="button secondary hidden" download="audiogram.mp4">Download MP4</a><button id="agAgain" class="linklike" type="button">start over</button></div>
 <p id="agRenderErr" class="error"></p>
 </section>
@@ -164,6 +174,7 @@ const toStyleBtn=$('agToStyle'),transcribeBtn=$('agTranscribe'),back1Btn=$('agBa
 const canvas=$('agCanvas'),playBtn=$('agPlay'),timeEl=$('agTime'),statusEl=$('agStatus');
 const renderBtn=$('agRender'),dlLink=$('agDl'),againBtn=$('agAgain'),renderErr=$('agRenderErr');
 const progWrap=$('agProgWrap'),progBar=$('agProg'),progText=$('agProgText'),usageEl=$('agUsage'),liveEl=$('agLive');
+const editLyricsBtn=$('agEditLyrics'),lyricEditor=$('agLyricEditor'),lyricFields=$('agLyricFields'),lyricSaveBtn=$('agLyricSave'),lyricCancelBtn=$('agLyricCancel');
 const FFMPEG_VENDOR='/tools/video-trimmer/vendor/';
 let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[],capSizeMemo={};
 let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false;
@@ -223,14 +234,53 @@ function groupCues(ws){
     else{cur.words.push(w);cur.end=w.end;cur.chars+=wlen+1;}
   }
   push();
+  assignSections(out);
+  return out;
+}
+function assignSections(out){
   let sec=-1,prev=null;
   for(const c of out){
     if(!prev||c.start-prev.end>=SECTION_GAP)sec++;
     c.sec=sec;prev=c;
   }
   for(const c of out)c.secLines=out.filter(o=>o.sec===c.sec);
-  return out;
 }
+function openLyrics(){
+  lyricFields.innerHTML='';
+  let lastSec=-1;
+  cues.forEach((c,i)=>{
+    if(c.sec!==lastSec){lastSec=c.sec;const h=document.createElement('p');h.className='ag-lyric-sec';h.textContent='Section '+(c.sec+1);lyricFields.appendChild(h);}
+    const row=document.createElement('div');row.className='ag-lyric-row';
+    const lab=document.createElement('span');lab.className='ag-lyric-time';lab.textContent=fmtT(c.start);
+    const inp=document.createElement('input');inp.type='text';inp.value=c.text;inp.dataset.cue=i;inp.setAttribute('aria-label','Lyric line at '+fmtT(c.start));
+    row.appendChild(lab);row.appendChild(inp);lyricFields.appendChild(row);
+  });
+  lyricEditor.classList.remove('hidden');
+  lyricEditor.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function retimeWords(text,start,end){
+  // Spread the edited line's words across its original time slot,
+  // weighted by word length, so the karaoke highlight still tracks.
+  const parts=text.split(/\s+/).filter(Boolean);
+  const weights=parts.map(p=>p.length+1),tot=weights.reduce((a,b)=>a+b,0),span=Math.max(0.01,end-start);
+  let t=start;
+  return parts.map((p,i)=>{const d=span*weights[i]/tot;const w={w:p,start:t,end:t+d};t+=d;return w;});
+}
+function saveLyrics(){
+  const out=[];
+  lyricFields.querySelectorAll('input[data-cue]').forEach(inp=>{
+    const c=cues[Number(inp.dataset.cue)],text=inp.value.trim();
+    if(!c||!text)return;
+    out.push({words:retimeWords(text,c.start,c.end),start:c.start,end:c.end,text});
+  });
+  assignSections(out);
+  cues=out;capSizeMemo={};
+  lyricEditor.classList.add('hidden');
+  setStatus('Lyrics updated. The preview and your render will use your words.');
+}
+editLyricsBtn.addEventListener('click',openLyrics);
+lyricSaveBtn.addEventListener('click',saveLyrics);
+lyricCancelBtn.addEventListener('click',()=>lyricEditor.classList.add('hidden'));
 async function decodePeaks(file){
   actx=actx||new (window.AudioContext||window.webkitAudioContext)();
   const buf=await actx.decodeAudioData(await file.arrayBuffer());
@@ -293,6 +343,7 @@ function setupStudio(){
   timeEl.textContent='0:00 / '+fmtT(duration);
   playBtn.textContent='Play';playing=false;
   dlLink.classList.add('hidden');renderErr.textContent='';progText.textContent='';progWrap.classList.add('hidden');
+  editLyricsBtn.classList.toggle('hidden',!cues.length);lyricEditor.classList.add('hidden');
   cancelAnimationFrame(rafId);
   const loop=()=>{if(!drawPaused)drawFrame(audioEl?audioEl.currentTime:0);rafId=requestAnimationFrame(loop);};
   loop();
@@ -609,6 +660,7 @@ againBtn.addEventListener('click',()=>{
   audioFile=null;bgImg=null;words=[];cues=[];peaks=[];duration=0;rendering=false;capSizeMemo={};
   mp3Info.textContent='';imgInfo.textContent='';uploadErr.textContent='';renderErr.textContent='';
   usageEl.textContent='';dlLink.classList.add('hidden');liveEl.classList.add('hidden');liveEl.textContent='';
+  editLyricsBtn.classList.add('hidden');lyricEditor.classList.add('hidden');
   studioSec.classList.add('hidden');styleSec.classList.add('hidden');uploadSec.classList.remove('hidden');
   toStyleBtn.disabled=true;setStatus('Have a look. When it feels right, render it.');
   uploadSec.scrollIntoView({behavior:'smooth'});

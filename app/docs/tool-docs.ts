@@ -713,6 +713,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     tips: [
       "Vertical for Reels and TikTok, square for feeds. Choosing the wrong shape means rendering the video again.",
       "A background with a calm middle keeps captions readable. Animated captions over a busy photo are hard to follow.",
+      "Heard a word wrong? Open Edit lyrics after transcription and fix any line before you render. The highlight timing follows your words.",
       "A long track renders in real time in your browser, then converts. Keep the tab open while it works, and give a full song a few minutes.",
     ],
     faq: [
