@@ -711,12 +711,13 @@ export const TOOL_DOCS: ToolDoc[] = [
     tips: [
       "Vertical for Reels and TikTok, square for feeds. Choosing the wrong shape means rendering the video again.",
       "A background with a calm middle keeps captions readable. Animated captions over a busy photo are hard to follow.",
+      "A long track renders in real time in your browser, then converts. Keep the tab open while it works, and give a full song a few minutes.",
     ],
     faq: [
       ["What happens to my audio?", "It is transcribed for captions, if you want them, and never kept."],
       ["What video sizes can I make?", "The standard feed shapes, including square and vertical. Pick the one your platform rewards."],
     ],
-    updated: U,
+    updated: "November 14, 2026",
   },
   {
     key: "purr-code",
