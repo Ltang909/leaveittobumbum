@@ -170,7 +170,7 @@ let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false;
 let actx=null,mediaSrc=null,ffmpeg=null,renderKey=null,rendering=false;
 function setStatus(m,isErr){statusEl.textContent=m;statusEl.classList.toggle('error',!!isErr);}
 function fmtT(s){s=Math.max(0,s||0);const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+String(sec).padStart(2,'0');}
-function pickRecorderMime(){const c=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
+function pickRecorderMime(){const c=['video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/audiogram.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data};}
 function loadScript(src,timeoutMs){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;const to=setTimeout(()=>{s.remove();rej(new Error('script-timeout:'+src))},timeoutMs||90000);s.onload=()=>{clearTimeout(to);res()};s.onerror=()=>{clearTimeout(to);rej(new Error('script-load:'+src))};document.head.appendChild(s)})}
 async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
@@ -414,7 +414,7 @@ renderBtn.addEventListener('click',async()=>{
     const vstream=canvas.captureStream(30);
     const combined=new MediaStream([...vstream.getVideoTracks(),...dest.stream.getAudioTracks()]);
     const mime=pickRecorderMime();
-    const rec=new MediaRecorder(combined,mime?{mimeType:mime,videoBitsPerSecond:3000000}:undefined);
+    const rec=new MediaRecorder(combined,mime?{mimeType:mime,videoBitsPerSecond:2000000}:undefined);
     const chunks=[];
     rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
     const stopped=new Promise(res=>{rec.onstop=res;});
@@ -469,7 +469,9 @@ renderBtn.addEventListener('click',async()=>{
     };
     ff.on('progress',convProg);
     // Watchdog: a stuck conversion used to hang the page forever. Bound it and fail loudly.
-    const convTimeoutMs=Math.min(900000,Math.max(300000,(duration||60)*2000));
+    // VP8-first recording (pickRecorderMime) keeps the wasm decode fast enough
+    // that a song-length track converts well inside this bound.
+    const convTimeoutMs=Math.min(1200000,Math.max(300000,(duration||60)*3000));
     let convTimer=null;
     const convTimeoutP=new Promise((_,rej)=>{convTimer=setTimeout(()=>rej({timeout:true}),convTimeoutMs);});
     let code=1;
