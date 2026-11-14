@@ -205,16 +205,31 @@ document.querySelectorAll('#agStyles .style-card').forEach(card=>{
   });
 });
 $('agAspect').addEventListener('change',e=>{aspect=e.target.value;});
+// Caption lines break where the singer pauses: a gap of LINE_GAP or
+// more before the next word always starts a new line, so a line never
+// mixes the end of one sung line with the start of the next. Inside a
+// line the size caps still apply. Lines are then grouped into sections
+// at gaps of SECTION_GAP or more, and the caption styles show one
+// section at a time, so a verse stays on screen as a block and clears
+// before the next section starts.
+const LINE_GAP=0.7,SECTION_GAP=2.0;
 function groupCues(ws){
   const out=[];let cur=null;
   const push=()=>{if(cur&&cur.words.length){cur.text=cur.words.map(w=>w.w).join(' ');out.push(cur);}cur=null;};
   for(const w of ws){
     const wlen=w.w.length;
     if(!cur){cur={words:[w],start:w.start,end:w.end,chars:wlen};}
-    else if(cur.words.length>=6||cur.chars+wlen+1>32){push();cur={words:[w],start:w.start,end:w.end,chars:wlen};}
+    else if(w.start-cur.end>=LINE_GAP||cur.words.length>=6||cur.chars+wlen+1>32){push();cur={words:[w],start:w.start,end:w.end,chars:wlen};}
     else{cur.words.push(w);cur.end=w.end;cur.chars+=wlen+1;}
   }
-  push();return out;
+  push();
+  let sec=-1,prev=null;
+  for(const c of out){
+    if(!prev||c.start-prev.end>=SECTION_GAP)sec++;
+    c.sec=sec;prev=c;
+  }
+  for(const c of out)c.secLines=out.filter(o=>o.sec===c.sec);
+  return out;
 }
 async function decodePeaks(file){
   actx=actx||new (window.AudioContext||window.webkitAudioContext)();
@@ -325,53 +340,83 @@ function drawWave(ctx,W,H,t){
   ctx.fillStyle='rgba(255,255,255,0.25)';ctx.fillRect(0,H-6,W,6);
   ctx.fillStyle='#ff7448';ctx.fillRect(0,H-6,W*played,6);
 }
+function secWindow(lines,active){
+  if(lines.length<=5)return{lines,active};
+  const start=Math.min(Math.max(0,active-2),lines.length-5);
+  return{lines:lines.slice(start,start+5),active:active-start};
+}
+function longestText(lines){return lines.reduce((a,c)=>c.text.length>a.text.length?c:a).text;}
 function drawCaption(ctx,W,H,cue,t,sty){
-  const words=cue.words;
+  // Show the whole section the current line belongs to. The line being
+  // sung gets the style's full treatment; the section's other lines sit
+  // dimmed behind it, and the block clears when the section ends.
+  const allLines=cue.secLines||[cue];
+  const win=secWindow(allLines,allLines.indexOf(cue));
+  const lines=win.lines,active=win.active;
   if(sty==='pop'){
-    const text=cue.text.toUpperCase();
-    const size=fitFont(ctx,text,W*0.92,W/13);
+    const size=fitFont(ctx,longestText(lines).toUpperCase(),W*0.92,W/13);
     ctx.font='900 '+size+'px "Nunito Sans",sans-serif';
-    ctx.textAlign='left';ctx.textBaseline='middle';
-    const widths=words.map(w=>ctx.measureText(w.w.toUpperCase()).width);
+    ctx.textBaseline='middle';
     const gap=ctx.measureText(' ').width;
-    const total=widths.reduce((a,b)=>a+b,0)+gap*(words.length-1);
-    let x=(W-total)/2;const y=H*0.60;
+    const lh=size*1.32,y0=H*0.60-(lines.length-1)*lh/2;
     ctx.lineWidth=Math.max(2,size/9);ctx.strokeStyle='rgba(0,0,0,0.85)';
-    words.forEach((w,i)=>{
-      const ww=w.w.toUpperCase();
-      ctx.fillStyle=(w.end<=t||(t>=w.start&&t<=w.end))?'#ffd93d':'#ffffff';
-      ctx.strokeText(ww,x,y);ctx.fillText(ww,x,y);
-      x+=widths[i]+gap;
+    lines.forEach((c,li)=>{
+      const y=y0+li*lh;
+      if(li===active){
+        const widths=c.words.map(w=>ctx.measureText(w.w.toUpperCase()).width);
+        const total=widths.reduce((a,b)=>a+b,0)+gap*(c.words.length-1);
+        let x=(W-total)/2;ctx.textAlign='left';
+        c.words.forEach((w,i)=>{
+          const ww=w.w.toUpperCase();
+          ctx.fillStyle=(w.end<=t||(t>=w.start&&t<=w.end))?'#ffd93d':'#ffffff';
+          ctx.strokeText(ww,x,y);ctx.fillText(ww,x,y);
+          x+=widths[i]+gap;
+        });
+      }else{
+        ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,0.45)';
+        ctx.strokeText(c.text.toUpperCase(),W/2,y);ctx.fillText(c.text.toUpperCase(),W/2,y);
+      }
     });
   }else if(sty==='clean'){
-    const size=fitFont(ctx,cue.text,W*0.86,W/17);
+    const size=fitFont(ctx,longestText(lines),W*0.86,W/17);
     ctx.font='700 '+size+'px "Nunito Sans",sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
-    const lines=wrapLines(ctx,cue.text,W*0.82);
     const lh=size*1.35,bh=lines.length*lh+size*0.7;
     const by=H-bh-H*0.10;
     roundRect(ctx,W*0.05,by,W*0.9,bh,14);ctx.fillStyle='rgba(0,0,0,0.72)';ctx.fill();
-    ctx.fillStyle='#fff';
-    lines.forEach((ln,i)=>ctx.fillText(ln,W/2,by+size*0.35+lh*(i+0.5)));
+    lines.forEach((c,li)=>{
+      ctx.fillStyle=li===active?'#ffffff':'rgba(255,255,255,0.5)';
+      ctx.fillText(c.text,W/2,by+size*0.35+lh*(li+0.5));
+    });
   }else if(sty==='neon'){
-    const text=cue.text.toUpperCase();
-    const size=fitFont(ctx,text,W*0.9,W/14);
+    const size=fitFont(ctx,longestText(lines).toUpperCase(),W*0.9,W/14);
     ctx.font='800 '+size+'px "Nunito Sans",sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor='#ff4fd8';ctx.shadowBlur=size*0.55;
-    ctx.fillStyle='#ffffff';
-    ctx.fillText(text,W/2,H*0.60);
-    ctx.shadowColor='#7b5cff';ctx.shadowBlur=size*1.1;
-    ctx.fillText(text,W/2,H*0.60);
+    const lh=size*1.32,y0=H*0.60-(lines.length-1)*lh/2;
+    lines.forEach((c,li)=>{
+      const y=y0+li*lh;
+      if(li===active){
+        ctx.shadowColor='#ff4fd8';ctx.shadowBlur=size*0.55;
+        ctx.fillStyle='#ffffff';
+        ctx.fillText(c.text.toUpperCase(),W/2,y);
+        ctx.shadowColor='#7b5cff';ctx.shadowBlur=size*1.1;
+        ctx.fillText(c.text.toUpperCase(),W/2,y);
+      }else{
+        ctx.shadowColor='#ff4fd8';ctx.shadowBlur=size*0.25;
+        ctx.fillStyle='rgba(255,255,255,0.4)';
+        ctx.fillText(c.text.toUpperCase(),W/2,y);
+      }
+    });
     ctx.shadowBlur=0;
   }else{
-    const size=Math.max(13,W/30);
+    const size=fitFont(ctx,longestText(lines),W*0.86,Math.max(13,W/30));
     ctx.font='600 '+size+'px "Nunito Sans",sans-serif';
     ctx.textAlign='left';ctx.textBaseline='alphabetic';
     ctx.shadowColor='rgba(0,0,0,0.8)';ctx.shadowBlur=6;
-    ctx.fillStyle='rgba(255,255,255,0.94)';
-    const lines=wrapLines(ctx,cue.text,W*0.6);
-    lines.forEach((ln,i)=>ctx.fillText(ln,W*0.07,H-H*0.09-(lines.length-1-i)*size*1.4));
+    lines.forEach((c,li)=>{
+      ctx.fillStyle=li===active?'rgba(255,255,255,0.94)':'rgba(255,255,255,0.45)';
+      ctx.fillText(c.text,W*0.07,H-H*0.09-(lines.length-1-li)*size*1.4);
+    });
     ctx.shadowBlur=0;
   }
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
