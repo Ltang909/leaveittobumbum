@@ -715,7 +715,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "A background with a calm middle keeps captions readable. Animated captions over a busy photo are hard to follow.",
       "Heard a word wrong? Open Edit lyrics after transcription and fix any line before you render. The highlight timing follows your words.",
       "Drag the seek bar under Play to check any part of the song before you render. It works while paused too.",
-      "A long track renders in real time in your browser, then converts. Keep the tab open while it works, and give a full song a few minutes.",
+      "In Chrome and Edge the frames are encoded directly, so even a full song renders far faster than its playing time. Older browsers record the render as it plays, which takes as long as the song.",
     ],
     faq: [
       ["What happens to my audio?", "It is transcribed for captions, if you want them, and never kept."],
