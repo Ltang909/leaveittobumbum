@@ -260,20 +260,46 @@ function openLyrics(){
   lyricEditor.classList.remove('hidden');
   lyricEditor.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-function retimeWords(text,start,end){
-  // Spread the edited line's words across its original time slot,
-  // weighted by word length, so the karaoke highlight still tracks.
+function retimeWords(text,start,end,orig,prevEnd){
+  // Words that are still there, in order, keep their exact times.
+  // Only new words get fitted in, between their kept neighbours or
+  // just before the first kept word. (Spreading every word across
+  // the line's slot, the old way, shifted words the user never
+  // touched, so one small edit threw the whole line off the singing.)
   const parts=text.split(/\s+/).filter(Boolean);
-  const weights=parts.map(p=>p.length+1),tot=weights.reduce((a,b)=>a+b,0),span=Math.max(0.01,end-start);
-  let t=start;
-  return parts.map((p,i)=>{const d=span*weights[i]/tot;const w={w:p,start:t,end:t+d};t+=d;return w;});
+  const used=new Array(orig.length).fill(false);
+  const kept=parts.map(p=>{
+    const lp=p.toLowerCase();
+    for(let j=0;j<orig.length;j++){if(!used[j]&&orig[j].w.toLowerCase()===lp){used[j]=true;return {w:p,start:orig[j].start,end:orig[j].end};}}
+    return {w:p,start:null,end:null};
+  });
+  if(kept.every(k=>k.start===null)){
+    // The whole line was rewritten: spread across its slot by length.
+    const weights=parts.map(p=>p.length+1),tot=weights.reduce((a,b)=>a+b,0),span=Math.max(0.01,end-start);
+    let t=start;
+    return parts.map((p,i)=>{const d=span*weights[i]/tot;const w={w:p,start:t,end:t+d};t+=d;return w;});
+  }
+  let prevT=prevEnd;
+  for(let i=0;i<kept.length;i++){
+    if(kept[i].start!==null){prevT=kept[i].end;continue;}
+    let j=i;while(j<kept.length&&kept[j].start===null)j++;
+    const nextT=j<kept.length?kept[j].start:end;
+    const room=Math.max(0.05*(j-i),Math.min(nextT-prevT,0.3*(j-i)));
+    const ws2=kept.slice(i,j).map(k=>k.w.length+1),tot=ws2.reduce((x,y)=>x+y,0);
+    let t=nextT-room;
+    for(let k=i;k<j;k++){const d=room*ws2[k-i]/tot;kept[k].start=t;kept[k].end=t+d;t+=d;}
+    prevT=nextT;i=j-1;
+  }
+  return kept;
 }
 function saveLyrics(){
   const out=[];
   lyricFields.querySelectorAll('input[data-cue]').forEach(inp=>{
     const c=cues[Number(inp.dataset.cue)],text=inp.value.trim();
     if(!c||!text)return;
-    out.push({words:retimeWords(text,c.start,c.end),start:c.start,end:c.end,text});
+    const prevEnd=out.length?out[out.length-1].end:0;
+    const words=retimeWords(text,c.start,c.end,c.words,prevEnd);
+    out.push({words,start:words[0].start,end:words[words.length-1].end,text});
   });
   assignSections(out);
   cues=out;capSizeMemo={};
@@ -284,24 +310,45 @@ editLyricsBtn.addEventListener('click',openLyrics);
 lyricSaveBtn.addEventListener('click',saveLyrics);
 lyricCancelBtn.addEventListener('click',()=>lyricEditor.classList.add('hidden'));
 function repairWordTimes(ws){
-  // Whisper sometimes stretches one word across a whole intro or
-  // interlude (Borrowed Hours arrived with an 11-second "There's"
-  // covering the music before the vocal starts), so the highlight sat
-  // on that word long before it was sung. Detect spans over 2 seconds
-  // and re-anchor the word to the end its neighbours agree with, at a
-  // typical word length taken from the words around it.
+  // Whisper sometimes stretches words across a whole intro or
+  // interlude. Borrowed Hours arrived with an 11-second "There's"
+  // covering the music before the vocal starts, and Go Make Something
+  // arrived with "She bought" tiled across the intro as 1.9s + 8.7s,
+  // which left "She" stranded at 0:00 in its own section while the
+  // phrase is really sung at 10 seconds. Detect long words, grow the
+  // run to any neighbours that tile onto it and are themselves long,
+  // then re-anchor the whole run to its end when the singing
+  // continues right after it, at a typical word length taken from
+  // the tight words nearby. A run followed by a real pause keeps the
+  // older per-word treatment.
   const dur=w=>w.end-w.start;
-  for(let i=0;i<ws.length;i++){
-    const w=ws[i];
-    if(dur(w)<=2)continue;
+  const nominalAt=i=>{
     const near=[];
-    for(let j=Math.max(0,i-6);j<Math.min(ws.length,i+7);j++){if(j!==i&&dur(ws[j])<=2)near.push(dur(ws[j]));}
+    for(let j=Math.max(0,i-6);j<Math.min(ws.length,i+7);j++){const d=dur(ws[j]);if(d<=1.2)near.push(d);}
     near.sort((a,b)=>a-b);
-    const nominal=near.length?Math.min(0.8,Math.max(0.25,near[Math.floor(near.length/2)])):0.35;
-    const gapBefore=w.start-(i>0?ws[i-1].end:0);
-    const gapAfter=(i<ws.length-1?ws[i+1].start:Infinity)-w.end;
-    if(gapAfter<=gapBefore)w.start=w.end-nominal;
-    else w.end=w.start+nominal;
+    return near.length?Math.min(0.8,Math.max(0.25,near[Math.floor(near.length/2)])):0.35;
+  };
+  const done=new Array(ws.length).fill(false);
+  for(let i=0;i<ws.length;i++){
+    if(done[i]||dur(ws[i])<=2)continue;
+    let a=i,b=i;
+    while(a>0&&ws[a].start-ws[a-1].end<=0.05&&dur(ws[a-1])>1)a--;
+    while(b<ws.length-1&&ws[b+1].start-ws[b].end<=0.05&&dur(ws[b+1])>1)b++;
+    const after=b<ws.length-1?ws[b+1].start-ws[b].end:0;
+    if(after<=0.3){
+      let t=ws[b].end;
+      for(let k=b;k>=a;k--){const n=nominalAt(k);ws[k].end=t;ws[k].start=t-n;t=ws[k].start;done[k]=true;}
+    }else{
+      for(let k=a;k<=b;k++){
+        if(dur(ws[k])>2){
+          const n=nominalAt(k);
+          const gapBefore=ws[k].start-(k>0?ws[k-1].end:0);
+          const gapAfter=(k<ws.length-1?ws[k+1].start:Infinity)-ws[k].end;
+          if(gapAfter<=gapBefore)ws[k].start=ws[k].end-n;else ws[k].end=ws[k].start+n;
+        }
+        done[k]=true;
+      }
+    }
   }
   return ws;
 }
