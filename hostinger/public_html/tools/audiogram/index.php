@@ -170,7 +170,11 @@ let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false;
 let actx=null,mediaSrc=null,ffmpeg=null,renderKey=null,rendering=false,drawPaused=false;
 function setStatus(m,isErr){statusEl.textContent=m;statusEl.classList.toggle('error',!!isErr);}
 function fmtT(s){s=Math.max(0,s||0);const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+String(sec).padStart(2,'0');}
-function pickRecorderMime(){const c=['video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
+// MP4 first: most current browsers can record MP4 directly, and an MP4
+// recording only needs a quick remux at the end instead of a full
+// WebM-to-MP4 transcode in the wasm converter (the slow path that used
+// to time out on song-length tracks). WebM stays as the fallback.
+function pickRecorderMime(){const c=['video/mp4','video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/audiogram.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data};}
 function loadScript(src,timeoutMs){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;const to=setTimeout(()=>{s.remove();rej(new Error('script-timeout:'+src))},timeoutMs||90000);s.onload=()=>{clearTimeout(to);res()};s.onerror=()=>{clearTimeout(to);rej(new Error('script-load:'+src))};document.head.appendChild(s)})}
 async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
@@ -466,7 +470,9 @@ renderBtn.addEventListener('click',async()=>{
       if(peak<0.003)throw{silent:true};
     }catch(se){if(se&&se.silent)throw se;}
     setProg(0.81,'Preparing '+webmMB+' MB of video for conversion...');
-    await ff.writeFile('input.webm',new Uint8Array(await webm.arrayBuffer()));
+    const isMp4=(webm.type||'').indexOf('mp4')>=0;
+    const inName=isMp4?'input.mp4':'input.webm';
+    await ff.writeFile(inName,new Uint8Array(await webm.arrayBuffer()));
     const totalUs=Math.max(1,Math.round((duration||0)*1e6));
     const convProg=({time})=>{
       const cp=Math.min(0.999,Math.max(0,(Number(time)||0)/totalUs));
@@ -474,17 +480,19 @@ renderBtn.addEventListener('click',async()=>{
     };
     ff.on('progress',convProg);
     // Watchdog: a stuck conversion used to hang the page forever. Bound it and fail loudly.
-    // VP8-first recording (pickRecorderMime) keeps the wasm decode fast enough
-    // that a song-length track converts well inside this bound.
+    // An MP4 recording skips the transcode entirely: the video stream is
+    // copied as-is and only the audio is encoded to AAC, which takes
+    // seconds. If a recorder's MP4 is not directly usable, fall back to
+    // the full transcode on the same file.
     const convTimeoutMs=Math.min(1200000,Math.max(300000,(duration||60)*3000));
     let convTimer=null;
     const convTimeoutP=new Promise((_,rej)=>{convTimer=setTimeout(()=>rej({timeout:true}),convTimeoutMs);});
+    const transcodeArgs=['-i',inName,'-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4'];
+    const remuxArgs=['-i',inName,'-c:v','copy','-c:a','aac','-b:a','128k','-movflags','+faststart','output.mp4'];
     let code=1;
     try{
-      code=await Promise.race([
-        ff.exec(['-i','input.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']),
-        convTimeoutP
-      ]);
+      code=await Promise.race([ff.exec(isMp4?remuxArgs:transcodeArgs),convTimeoutP]);
+      if(code!==0&&isMp4)code=await Promise.race([ff.exec(transcodeArgs),convTimeoutP]);
     }finally{clearTimeout(convTimer);try{ff.off('progress',convProg);}catch(_){}}
     if(code!==0)throw new Error('convert failed');
     const data=await ff.readFile('output.mp4');
