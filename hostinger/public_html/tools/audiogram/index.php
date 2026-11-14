@@ -167,7 +167,7 @@ const progWrap=$('agProgWrap'),progBar=$('agProg'),progText=$('agProgText'),usag
 const FFMPEG_VENDOR='/tools/video-trimmer/vendor/';
 let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[];
 let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false;
-let actx=null,mediaSrc=null,ffmpeg=null,renderKey=null,rendering=false;
+let actx=null,mediaSrc=null,ffmpeg=null,renderKey=null,rendering=false,drawPaused=false;
 function setStatus(m,isErr){statusEl.textContent=m;statusEl.classList.toggle('error',!!isErr);}
 function fmtT(s){s=Math.max(0,s||0);const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+String(sec).padStart(2,'0');}
 function pickRecorderMime(){const c=['video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
@@ -275,7 +275,7 @@ function setupStudio(){
   playBtn.textContent='Play';playing=false;
   dlLink.classList.add('hidden');renderErr.textContent='';progText.textContent='';progWrap.classList.add('hidden');
   cancelAnimationFrame(rafId);
-  const loop=()=>{drawFrame(audioEl?audioEl.currentTime:0);rafId=requestAnimationFrame(loop);};
+  const loop=()=>{if(!drawPaused)drawFrame(audioEl?audioEl.currentTime:0);rafId=requestAnimationFrame(loop);};
   loop();
 }
 playBtn.addEventListener('click',()=>{
@@ -411,7 +411,9 @@ renderBtn.addEventListener('click',async()=>{
     mediaSrc=actx.createMediaElementSource(audioEl);mediaSrc.connect(actx.destination);
     const dest=actx.createMediaStreamDestination();
     mediaSrc.connect(dest);
-    const vstream=canvas.captureStream(30);
+    // 15 fps is plenty for a still image, waveform and captions, and it
+    // halves the frames the converter has to chew through afterwards.
+    const vstream=canvas.captureStream(15);
     const combined=new MediaStream([...vstream.getVideoTracks(),...dest.stream.getAudioTracks()]);
     const mime=pickRecorderMime();
     const rec=new MediaRecorder(combined,mime?{mimeType:mime,videoBitsPerSecond:2000000}:undefined);
@@ -444,6 +446,9 @@ renderBtn.addEventListener('click',async()=>{
     const tickInt=setInterval(tick,400);
     await new Promise(res=>{resolveEnded=res;audioEl.onended=()=>finishRecording('end');});
     rec.stop();await stopped;
+    // Recording is done: freeze the preview painter so the converter gets
+    // the CPU instead of competing with full-canvas redraws.
+    drawPaused=true;
     if(stopReason==='slow')throw{slow:true};
     mediaSrc.disconnect(dest);
     playing=false;playBtn.textContent='Play';
@@ -521,7 +526,7 @@ renderBtn.addEventListener('click',async()=>{
       setStatus('Render hiccup. Your files are safe, try again.',true);
     }
     progWrap.classList.add('hidden');progText.textContent='';
-  }finally{if(window.BBLiveTranscribe)BBLiveTranscribe.stop();rendering=false;renderBtn.disabled=false;}
+  }finally{if(window.BBLiveTranscribe)BBLiveTranscribe.stop();rendering=false;renderBtn.disabled=false;drawPaused=false;}
 });
 againBtn.addEventListener('click',()=>{
   cancelAnimationFrame(rafId);
