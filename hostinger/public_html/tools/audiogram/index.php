@@ -96,6 +96,11 @@ select{width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;f
 #agGen{font-size:18px;padding:14px 26px;margin-top:12px}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
+.ag-lyric-sec{font-weight:800;margin:14px 0 4px}
+.ag-lyric-row{display:flex;gap:8px;align-items:center;margin:6px 0}
+.ag-lyric-time{font-size:12px;color:var(--muted);min-width:36px;font-weight:700}
+.ag-lyric-row input{flex:1}
+#agSeek{margin:10px 0 2px}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Audiogram Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/audiogram.png" alt="Audiogram Maker"><div><h1>Audiogram Maker</h1><p class="lede bb-desc">MP3 in. Video out. Upload an MP3 and a background image, and Bum Bum builds the captioned video.</p></div></div>
 <?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Audiogram Maker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
 <div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/audiogram/') ?>">Create a free account</a></p></div>
@@ -134,10 +139,17 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">3. Preview and render</h2>
 <canvas id="agCanvas" width="720" height="1280"></canvas>
 <div class="ag-step"><button id="agPlay" class="button" type="button">Play</button><span id="agTime" style="font-weight:800">0:00 / 0:00</span></div>
+<input type="range" id="agSeek" min="0" max="0" step="0.1" value="0" aria-label="Seek through the track">
 <p id="agStatus" class="ag-status">Have a look. When it feels right, render it.</p>
 <div class="ag-progress hidden" id="agProgWrap"><i id="agProg"></i></div>
 <p id="agProgText" style="font-weight:700"></p>
 <p id="agLive" class="ag-status hidden" aria-live="polite"></p>
+<div class="ag-step"><button id="agEditLyrics" class="button secondary hidden" type="button">Edit lyrics</button></div>
+<div id="agLyricEditor" class="hidden">
+<p class="ag-fileline">Fix any words the transcription heard wrong. Clear a line to remove it. The highlight timing adjusts to your words.</p>
+<div id="agLyricFields"></div>
+<div class="ag-step"><button id="agLyricSave" class="button" type="button">Save lyrics</button><button id="agLyricCancel" class="linklike" type="button">Cancel</button></div>
+</div>
 <div class="ag-step"><button id="agRender" class="button" type="button">Render video</button><a id="agDl" class="button secondary hidden" download="audiogram.mp4">Download MP4</a><button id="agAgain" class="linklike" type="button">start over</button></div>
 <p id="agRenderErr" class="error"></p>
 </section>
@@ -161,16 +173,21 @@ const $=id=>document.querySelector('#'+id);
 const uploadSec=$('agUpload'),styleSec=$('agStyle'),studioSec=$('agStudio');
 const mp3Input=$('agMp3'),imgInput=$('agImg'),mp3Info=$('agMp3Info'),imgInfo=$('agImgInfo'),uploadErr=$('agUploadErr');
 const toStyleBtn=$('agToStyle'),transcribeBtn=$('agTranscribe'),back1Btn=$('agBack1'),styleErr=$('agStyleErr');
-const canvas=$('agCanvas'),playBtn=$('agPlay'),timeEl=$('agTime'),statusEl=$('agStatus');
+const canvas=$('agCanvas'),playBtn=$('agPlay'),timeEl=$('agTime'),statusEl=$('agStatus'),seekEl=$('agSeek');
 const renderBtn=$('agRender'),dlLink=$('agDl'),againBtn=$('agAgain'),renderErr=$('agRenderErr');
 const progWrap=$('agProgWrap'),progBar=$('agProg'),progText=$('agProgText'),usageEl=$('agUsage'),liveEl=$('agLive');
+const editLyricsBtn=$('agEditLyrics'),lyricEditor=$('agLyricEditor'),lyricFields=$('agLyricFields'),lyricSaveBtn=$('agLyricSave'),lyricCancelBtn=$('agLyricCancel');
 const FFMPEG_VENDOR='/tools/video-trimmer/vendor/';
-let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[];
-let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false;
-let actx=null,mediaSrc=null,ffmpeg=null,renderKey=null,rendering=false;
+let audioFile=null,bgImg=null,audioUrl=null,duration=0,words=[],cues=[],peaks=[],capSizeMemo={},audioBuf=null;
+let style='pop',aspect='9:16',audioEl=null,rafId=0,playing=false,seeking=false;
+let actx=null,mediaSrc=null,ffmpeg=null,renderKey=null,rendering=false,drawPaused=false;
 function setStatus(m,isErr){statusEl.textContent=m;statusEl.classList.toggle('error',!!isErr);}
 function fmtT(s){s=Math.max(0,s||0);const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+String(sec).padStart(2,'0');}
-function pickRecorderMime(){const c=['video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
+// MP4 first: most current browsers can record MP4 directly, and an MP4
+// recording only needs a quick remux at the end instead of a full
+// WebM-to-MP4 transcode in the wasm converter (the slow path that used
+// to time out on song-length tracks). WebM stays as the fallback.
+function pickRecorderMime(){const c=['video/mp4','video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm'];for(const t of c){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t))return t;}return '';}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/audiogram.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data};}
 function loadScript(src,timeoutMs){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;const to=setTimeout(()=>{s.remove();rej(new Error('script-timeout:'+src))},timeoutMs||90000);s.onload=()=>{clearTimeout(to);res()};s.onerror=()=>{clearTimeout(to);rej(new Error('script-load:'+src))};document.head.appendChild(s)})}
 async function getFFmpeg(onStage){if(ffmpeg)return ffmpeg;onStage&&onStage('engine');await loadScript(FFMPEG_VENDOR+'ffmpeg.js');if(!window.FFmpegWASM)throw new Error('no-ffmpeg-global');const{FFmpeg}=window.FFmpegWASM;const ff=new FFmpeg();onStage&&onStage('core');await ff.load({coreURL:FFMPEG_VENDOR+'ffmpeg-core.js'});ffmpeg=ff;return ffmpeg;}
@@ -201,20 +218,144 @@ document.querySelectorAll('#agStyles .style-card').forEach(card=>{
   });
 });
 $('agAspect').addEventListener('change',e=>{aspect=e.target.value;});
+// Caption lines break where the singer pauses: a gap of LINE_GAP or
+// more before the next word always starts a new line, so a line never
+// mixes the end of one sung line with the start of the next. Inside a
+// line the size caps still apply. Lines are then grouped into sections
+// at gaps of SECTION_GAP or more, and the caption styles show one
+// section at a time, so a verse stays on screen as a block and clears
+// before the next section starts.
+const LINE_GAP=0.7,SECTION_GAP=2.0;
 function groupCues(ws){
   const out=[];let cur=null;
   const push=()=>{if(cur&&cur.words.length){cur.text=cur.words.map(w=>w.w).join(' ');out.push(cur);}cur=null;};
   for(const w of ws){
     const wlen=w.w.length;
     if(!cur){cur={words:[w],start:w.start,end:w.end,chars:wlen};}
-    else if(cur.words.length>=6||cur.chars+wlen+1>32){push();cur={words:[w],start:w.start,end:w.end,chars:wlen};}
+    else if(w.start-cur.end>=LINE_GAP||cur.words.length>=6||cur.chars+wlen+1>32){push();cur={words:[w],start:w.start,end:w.end,chars:wlen};}
     else{cur.words.push(w);cur.end=w.end;cur.chars+=wlen+1;}
   }
-  push();return out;
+  push();
+  assignSections(out);
+  return out;
+}
+function assignSections(out){
+  let sec=-1,prev=null;
+  for(const c of out){
+    if(!prev||c.start-prev.end>=SECTION_GAP)sec++;
+    c.sec=sec;prev=c;
+  }
+  for(const c of out)c.secLines=out.filter(o=>o.sec===c.sec);
+}
+function openLyrics(){
+  lyricFields.innerHTML='';
+  let lastSec=-1;
+  cues.forEach((c,i)=>{
+    if(c.sec!==lastSec){lastSec=c.sec;const h=document.createElement('p');h.className='ag-lyric-sec';h.textContent='Section '+(c.sec+1);lyricFields.appendChild(h);}
+    const row=document.createElement('div');row.className='ag-lyric-row';
+    const lab=document.createElement('span');lab.className='ag-lyric-time';lab.textContent=fmtT(c.start);
+    const inp=document.createElement('input');inp.type='text';inp.value=c.text;inp.dataset.cue=i;inp.setAttribute('aria-label','Lyric line at '+fmtT(c.start));
+    row.appendChild(lab);row.appendChild(inp);lyricFields.appendChild(row);
+  });
+  lyricEditor.classList.remove('hidden');
+  lyricEditor.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function retimeWords(text,start,end,orig,prevEnd){
+  // Words that are still there, in order, keep their exact times.
+  // Only new words get fitted in, between their kept neighbours or
+  // just before the first kept word. (Spreading every word across
+  // the line's slot, the old way, shifted words the user never
+  // touched, so one small edit threw the whole line off the singing.)
+  const parts=text.split(/\s+/).filter(Boolean);
+  const used=new Array(orig.length).fill(false);
+  const kept=parts.map(p=>{
+    const lp=p.toLowerCase();
+    for(let j=0;j<orig.length;j++){if(!used[j]&&orig[j].w.toLowerCase()===lp){used[j]=true;return {w:p,start:orig[j].start,end:orig[j].end};}}
+    return {w:p,start:null,end:null};
+  });
+  if(kept.every(k=>k.start===null)){
+    // The whole line was rewritten: spread across its slot by length.
+    const weights=parts.map(p=>p.length+1),tot=weights.reduce((a,b)=>a+b,0),span=Math.max(0.01,end-start);
+    let t=start;
+    return parts.map((p,i)=>{const d=span*weights[i]/tot;const w={w:p,start:t,end:t+d};t+=d;return w;});
+  }
+  let prevT=prevEnd;
+  for(let i=0;i<kept.length;i++){
+    if(kept[i].start!==null){prevT=kept[i].end;continue;}
+    let j=i;while(j<kept.length&&kept[j].start===null)j++;
+    const nextT=j<kept.length?kept[j].start:end;
+    const room=Math.max(0.05*(j-i),Math.min(nextT-prevT,0.3*(j-i)));
+    const ws2=kept.slice(i,j).map(k=>k.w.length+1),tot=ws2.reduce((x,y)=>x+y,0);
+    let t=nextT-room;
+    for(let k=i;k<j;k++){const d=room*ws2[k-i]/tot;kept[k].start=t;kept[k].end=t+d;t+=d;}
+    prevT=nextT;i=j-1;
+  }
+  return kept;
+}
+function saveLyrics(){
+  const out=[];
+  lyricFields.querySelectorAll('input[data-cue]').forEach(inp=>{
+    const c=cues[Number(inp.dataset.cue)],text=inp.value.trim();
+    if(!c||!text)return;
+    const prevEnd=out.length?out[out.length-1].end:0;
+    const words=retimeWords(text,c.start,c.end,c.words,prevEnd);
+    out.push({words,start:words[0].start,end:words[words.length-1].end,text});
+  });
+  assignSections(out);
+  cues=out;capSizeMemo={};
+  lyricEditor.classList.add('hidden');
+  setStatus('Lyrics updated. The preview and your render will use your words.');
+}
+editLyricsBtn.addEventListener('click',openLyrics);
+lyricSaveBtn.addEventListener('click',saveLyrics);
+lyricCancelBtn.addEventListener('click',()=>lyricEditor.classList.add('hidden'));
+function repairWordTimes(ws){
+  // Whisper sometimes stretches words across a whole intro or
+  // interlude. Borrowed Hours arrived with an 11-second "There's"
+  // covering the music before the vocal starts, and Go Make Something
+  // arrived with "She bought" tiled across the intro as 1.9s + 8.7s,
+  // which left "She" stranded at 0:00 in its own section while the
+  // phrase is really sung at 10 seconds. Detect long words, grow the
+  // run to any neighbours that tile onto it and are themselves long,
+  // then re-anchor the whole run to its end when the singing
+  // continues right after it, at a typical word length taken from
+  // the tight words nearby. A run followed by a real pause keeps the
+  // older per-word treatment.
+  const dur=w=>w.end-w.start;
+  const nominalAt=i=>{
+    const near=[];
+    for(let j=Math.max(0,i-6);j<Math.min(ws.length,i+7);j++){const d=dur(ws[j]);if(d<=1.2)near.push(d);}
+    near.sort((a,b)=>a-b);
+    return near.length?Math.min(0.8,Math.max(0.25,near[Math.floor(near.length/2)])):0.35;
+  };
+  const done=new Array(ws.length).fill(false);
+  for(let i=0;i<ws.length;i++){
+    if(done[i]||dur(ws[i])<=2)continue;
+    let a=i,b=i;
+    while(a>0&&ws[a].start-ws[a-1].end<=0.05&&dur(ws[a-1])>1)a--;
+    while(b<ws.length-1&&ws[b+1].start-ws[b].end<=0.05&&dur(ws[b+1])>1)b++;
+    const after=b<ws.length-1?ws[b+1].start-ws[b].end:0;
+    if(after<=0.3){
+      let t=ws[b].end;
+      for(let k=b;k>=a;k--){const n=nominalAt(k);ws[k].end=t;ws[k].start=t-n;t=ws[k].start;done[k]=true;}
+    }else{
+      for(let k=a;k<=b;k++){
+        if(dur(ws[k])>2){
+          const n=nominalAt(k);
+          const gapBefore=ws[k].start-(k>0?ws[k-1].end:0);
+          const gapAfter=(k<ws.length-1?ws[k+1].start:Infinity)-ws[k].end;
+          if(gapAfter<=gapBefore)ws[k].start=ws[k].end-n;else ws[k].end=ws[k].start+n;
+        }
+        done[k]=true;
+      }
+    }
+  }
+  return ws;
 }
 async function decodePeaks(file){
   actx=actx||new (window.AudioContext||window.webkitAudioContext)();
   const buf=await actx.decodeAudioData(await file.arrayBuffer());
+  audioBuf=buf;
   const ch0=buf.getChannelData(0),ch1=buf.numberOfChannels>1?buf.getChannelData(1):null;
   const N=240,peaks=new Array(N).fill(0),step=Math.floor(ch0.length/N);
   for(let i=0;i<N;i++){
@@ -245,9 +386,9 @@ transcribeBtn.addEventListener('click',async()=>{
         decodePeaks(audioFile)
       ]);
       if(!resp.ok)throw new Error(resp.data.error||('transcription failed ('+resp.status+')'));
-      words=resp.data.words||[];duration=dec.duration||resp.data.duration||0;peaks=dec.peaks;
+      words=repairWordTimes(resp.data.words||[]);duration=dec.duration||resp.data.duration||0;peaks=dec.peaks;
       if(!words.length||!duration)throw new Error('no words heard');
-      cues=groupCues(words);
+      cues=groupCues(words);capSizeMemo={};
       bbTrack('transcription_completed',{tool:TOOL_KEY,words:words.length,seconds:Math.round(duration)});
     }
     setupStudio();
@@ -266,16 +407,18 @@ function setupStudio(){
   canvas.style.maxWidth=aspect==='16:9'?'100%':'420px';
   if(audioUrl)URL.revokeObjectURL(audioUrl);
   audioUrl=URL.createObjectURL(audioFile);audioEl=new Audio(audioUrl);audioEl.preload='auto';
-  audioEl.addEventListener('timeupdate',()=>{timeEl.textContent=fmtT(audioEl.currentTime)+' / '+fmtT(duration)});
+  audioEl.addEventListener('timeupdate',()=>{timeEl.textContent=fmtT(audioEl.currentTime)+' / '+fmtT(duration);if(!seeking)seekEl.value=audioEl.currentTime;});
   audioEl.addEventListener('ended',()=>{playing=false;playBtn.textContent='Play';audioEl.currentTime=0;});
   // Drop the old WebAudio tap: it belongs to the previous audio element,
   // and render() rebuilds it for the current one. Keeping it would record silence.
   if(mediaSrc){try{mediaSrc.disconnect();}catch(e){}mediaSrc=null;}
   timeEl.textContent='0:00 / '+fmtT(duration);
+  seekEl.max=duration;seekEl.value=0;
   playBtn.textContent='Play';playing=false;
   dlLink.classList.add('hidden');renderErr.textContent='';progText.textContent='';progWrap.classList.add('hidden');
+  editLyricsBtn.classList.toggle('hidden',!cues.length);lyricEditor.classList.add('hidden');
   cancelAnimationFrame(rafId);
-  const loop=()=>{drawFrame(audioEl?audioEl.currentTime:0);rafId=requestAnimationFrame(loop);};
+  const loop=()=>{if(!drawPaused)drawFrame(audioEl?audioEl.currentTime:0);rafId=requestAnimationFrame(loop);};
   loop();
 }
 playBtn.addEventListener('click',()=>{
@@ -305,69 +448,120 @@ function drawFrame(t){
   const g=ctx.createLinearGradient(0,H*0.45,0,H);
   g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,0.55)');
   ctx.fillStyle=g;ctx.fillRect(0,H*0.45,W,H*0.55);
-  drawWave(ctx,W,H,t);
   const cue=cueAt(t);
   if(cue)drawCaption(ctx,W,H,cue,t,style);
+  else drawCountdown(ctx,W,H,t);
 }
-function drawWave(ctx,W,H,t){
-  const n=peaks.length;if(!n)return;
-  const bw=W/n,bh=H*0.055,y0=H-bh-14;
-  const played=duration>0?t/duration:0;
-  for(let i=0;i<n;i++){
-    const h=Math.max(2,peaks[i]*bh);
-    ctx.fillStyle=(i/n)<=played?'#ff7448':'rgba(255,255,255,0.35)';
-    ctx.fillRect(i*bw+bw*0.2,y0+(bh-h)/2,Math.max(1,bw*0.6),h);
-  }
-  ctx.fillStyle='rgba(255,255,255,0.25)';ctx.fillRect(0,H-6,W,6);
-  ctx.fillStyle='#ff7448';ctx.fillRect(0,H-6,W*played,6);
+function drawCountdown(ctx,W,H,t){
+  // Karaoke lead-in: when a line follows a break of 4+ seconds with no
+  // singing, count 3, 2, 1 into it so the first highlighted word never
+  // lands cold. Applies at the start of the song and after interludes.
+  if(!cues.length||style==='none')return;
+  let prevEnd=0,next=null;
+  for(const c of cues){if(c.start>t){next=c;break;}prevEnd=c.end;}
+  if(!next)return;
+  const remain=next.start-t;
+  if(remain>3||remain<=0||next.start-prevEnd<4)return;
+  const n=Math.ceil(remain),frac=remain-Math.floor(remain);
+  const size=W/4*(0.82+0.18*frac);
+  ctx.font='900 '+size+'px "Nunito Sans",sans-serif';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.lineWidth=Math.max(3,size/11);ctx.strokeStyle='rgba(0,0,0,0.85)';
+  ctx.fillStyle='rgba(255,255,255,0.95)';
+  ctx.strokeText(n,W/2,H*0.60);ctx.fillText(n,W/2,H*0.60);
+  ctx.textAlign='left';ctx.textBaseline='alphabetic';
+}
+function secWindow(lines,active){
+  if(lines.length<=5)return{lines,active};
+  const start=Math.min(Math.max(0,active-2),lines.length-5);
+  return{lines:lines.slice(start,start+5),active:active-start};
+}
+function longestCueText(){return cues.reduce((a,c)=>c.text.length>a.text.length?c:a).text;}
+function songSize(sty,W){
+  // One font size per style for the whole song, fitted to the longest
+  // caption line anywhere in it, so the text never grows or shrinks
+  // from section to section. Memoized once the webfont has loaded;
+  // before that the measurement would use a fallback font.
+  const key=sty+':'+W;
+  if(capSizeMemo[key])return capSizeMemo[key];
+  const conf={pop:[0.92,W/13],clean:[0.86,W/17],neon:[0.9,W/14],minimal:[0.86,Math.max(13,W/30)]}[sty]||[0.9,W/14];
+  const raw=longestCueText();
+  const txt=(sty==='pop'||sty==='neon')?raw.toUpperCase():raw;
+  const s=fitFont(canvas.getContext('2d'),txt,W*conf[0],conf[1]);
+  if(document.fonts&&document.fonts.status==='loaded')capSizeMemo[key]=s;
+  return s;
 }
 function drawCaption(ctx,W,H,cue,t,sty){
-  const words=cue.words;
+  // Show the whole section the current line belongs to. The line being
+  // sung gets the style's full treatment; the section's other lines sit
+  // dimmed behind it, and the block clears when the section ends.
+  const allLines=cue.secLines||[cue];
+  const win=secWindow(allLines,allLines.indexOf(cue));
+  const lines=win.lines,active=win.active;
   if(sty==='pop'){
-    const text=cue.text.toUpperCase();
-    const size=fitFont(ctx,text,W*0.92,W/13);
+    const size=songSize('pop',W);
     ctx.font='900 '+size+'px "Nunito Sans",sans-serif';
-    ctx.textAlign='left';ctx.textBaseline='middle';
-    const widths=words.map(w=>ctx.measureText(w.w.toUpperCase()).width);
+    ctx.textBaseline='middle';
     const gap=ctx.measureText(' ').width;
-    const total=widths.reduce((a,b)=>a+b,0)+gap*(words.length-1);
-    let x=(W-total)/2;const y=H*0.60;
+    const lh=size*1.32,y0=H*0.60-(lines.length-1)*lh/2;
     ctx.lineWidth=Math.max(2,size/9);ctx.strokeStyle='rgba(0,0,0,0.85)';
-    words.forEach((w,i)=>{
-      const ww=w.w.toUpperCase();
-      ctx.fillStyle=(w.end<=t||(t>=w.start&&t<=w.end))?'#ffd93d':'#ffffff';
-      ctx.strokeText(ww,x,y);ctx.fillText(ww,x,y);
-      x+=widths[i]+gap;
+    lines.forEach((c,li)=>{
+      const y=y0+li*lh;
+      if(li===active){
+        const widths=c.words.map(w=>ctx.measureText(w.w.toUpperCase()).width);
+        const total=widths.reduce((a,b)=>a+b,0)+gap*(c.words.length-1);
+        let x=(W-total)/2;ctx.textAlign='left';
+        c.words.forEach((w,i)=>{
+          const ww=w.w.toUpperCase();
+          ctx.fillStyle=(w.end<=t||(t>=w.start&&t<=w.end))?'#ffd93d':'#ffffff';
+          ctx.strokeText(ww,x,y);ctx.fillText(ww,x,y);
+          x+=widths[i]+gap;
+        });
+      }else{
+        ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,0.45)';
+        ctx.strokeText(c.text.toUpperCase(),W/2,y);ctx.fillText(c.text.toUpperCase(),W/2,y);
+      }
     });
   }else if(sty==='clean'){
-    const size=fitFont(ctx,cue.text,W*0.86,W/17);
+    const size=songSize('clean',W);
     ctx.font='700 '+size+'px "Nunito Sans",sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
-    const lines=wrapLines(ctx,cue.text,W*0.82);
     const lh=size*1.35,bh=lines.length*lh+size*0.7;
     const by=H-bh-H*0.10;
     roundRect(ctx,W*0.05,by,W*0.9,bh,14);ctx.fillStyle='rgba(0,0,0,0.72)';ctx.fill();
-    ctx.fillStyle='#fff';
-    lines.forEach((ln,i)=>ctx.fillText(ln,W/2,by+size*0.35+lh*(i+0.5)));
+    lines.forEach((c,li)=>{
+      ctx.fillStyle=li===active?'#ffffff':'rgba(255,255,255,0.5)';
+      ctx.fillText(c.text,W/2,by+size*0.35+lh*(li+0.5));
+    });
   }else if(sty==='neon'){
-    const text=cue.text.toUpperCase();
-    const size=fitFont(ctx,text,W*0.9,W/14);
+    const size=songSize('neon',W);
     ctx.font='800 '+size+'px "Nunito Sans",sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor='#ff4fd8';ctx.shadowBlur=size*0.55;
-    ctx.fillStyle='#ffffff';
-    ctx.fillText(text,W/2,H*0.60);
-    ctx.shadowColor='#7b5cff';ctx.shadowBlur=size*1.1;
-    ctx.fillText(text,W/2,H*0.60);
+    const lh=size*1.32,y0=H*0.60-(lines.length-1)*lh/2;
+    lines.forEach((c,li)=>{
+      const y=y0+li*lh;
+      if(li===active){
+        ctx.shadowColor='#ff4fd8';ctx.shadowBlur=size*0.55;
+        ctx.fillStyle='#ffffff';
+        ctx.fillText(c.text.toUpperCase(),W/2,y);
+        ctx.shadowColor='#7b5cff';ctx.shadowBlur=size*1.1;
+        ctx.fillText(c.text.toUpperCase(),W/2,y);
+      }else{
+        ctx.shadowColor='#ff4fd8';ctx.shadowBlur=size*0.25;
+        ctx.fillStyle='rgba(255,255,255,0.4)';
+        ctx.fillText(c.text.toUpperCase(),W/2,y);
+      }
+    });
     ctx.shadowBlur=0;
   }else{
-    const size=Math.max(13,W/30);
+    const size=songSize('minimal',W);
     ctx.font='600 '+size+'px "Nunito Sans",sans-serif';
     ctx.textAlign='left';ctx.textBaseline='alphabetic';
     ctx.shadowColor='rgba(0,0,0,0.8)';ctx.shadowBlur=6;
-    ctx.fillStyle='rgba(255,255,255,0.94)';
-    const lines=wrapLines(ctx,cue.text,W*0.6);
-    lines.forEach((ln,i)=>ctx.fillText(ln,W*0.07,H-H*0.09-(lines.length-1-i)*size*1.4));
+    lines.forEach((c,li)=>{
+      ctx.fillStyle=li===active?'rgba(255,255,255,0.94)':'rgba(255,255,255,0.45)';
+      ctx.fillText(c.text,W*0.07,H-H*0.09-(lines.length-1-li)*size*1.4);
+    });
     ctx.shadowBlur=0;
   }
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
@@ -387,6 +581,62 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
   ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
 }
+async function renderFast(setProg){
+  // Fast render: encode the frames directly with the browser's own
+  // H.264 encoder (WebCodecs), then mux the song in with ffmpeg. No
+  // real-time recording and no playback capture, so the silence and
+  // slow-playback failure modes of the recorder path cannot happen,
+  // and the audio comes straight from the file. Returns an MP4 Blob,
+  // or null when this browser cannot do it (the caller then uses the
+  // recorder path).
+  if(!window.VideoEncoder||!window.VideoFrame||!audioFile)return null;
+  const[W,H]=ASPECTS[aspect]||ASPECTS['9:16'];
+  const fps=30,totalFrames=Math.max(1,Math.round(duration*fps));
+  const bitrate=W*H>1000000?5000000:3500000;
+  let vcfg=null;
+  for(const codec of['avc1.640028','avc1.4d0028','avc1.42001f']){
+    const cfg={codec,width:W,height:H,bitrate,framerate:fps};
+    try{const s=await VideoEncoder.isConfigSupported(cfg);if(s&&s.supported){vcfg=cfg;break;}}catch(_){}
+  }
+  if(!vcfg)return null;
+  let Muxer,ArrayBufferTarget;
+  try{({Muxer,ArrayBufferTarget}=await import('/tools/audiogram/vendor/mp4-muxer.js'));}catch(_){return null;}
+  const muxer=new Muxer({target:new ArrayBufferTarget(),video:{codec:'avc',width:W,height:H},fastStart:'in-memory'});
+  let encErr=null;
+  const venc=new VideoEncoder({output:(chunk,meta)=>{try{muxer.addVideoChunk(chunk,meta);}catch(e){encErr=encErr||e;}},error:e=>{encErr=encErr||e;}});
+  drawPaused=true;
+  try{
+    venc.configure(vcfg);
+    setProg(0.08,'Rendering your video... 0:00 / '+fmtT(duration));
+    for(let i=0;i<totalFrames;i++){
+      if(encErr)throw encErr;
+      drawFrame(i/fps);
+      const frame=new VideoFrame(canvas,{timestamp:Math.round(i*1000000/fps),duration:Math.round(1000000/fps)});
+      venc.encode(frame,{keyFrame:i%150===0});
+      frame.close();
+      while(venc.encodeQueueSize>10)await new Promise(r=>setTimeout(r,5));
+      if(i%30===0)setProg(0.08+0.74*(i/totalFrames),'Rendering your video... '+fmtT(i/fps)+' / '+fmtT(duration));
+    }
+    await venc.flush();
+    if(encErr)throw encErr;
+    muxer.finalize();
+    setProg(0.86,'Adding your audio...');
+    const ff=await getFFmpeg(()=>{});
+    await ff.writeFile('v.mp4',new Uint8Array(muxer.target.buffer));
+    const ext=((audioFile.name.split('.').pop()||'mp3').toLowerCase().replace(/[^a-z0-9]/g,''))||'mp3';
+    await ff.writeFile('a.'+ext,new Uint8Array(await audioFile.arrayBuffer()));
+    const code=await ff.exec(['-i','v.mp4','-i','a.'+ext,'-map','0:v:0','-map','1:a:0','-c:v','copy','-c:a','aac','-b:a','128k','-movflags','+faststart','output.mp4']);
+    if(code!==0)throw new Error('mux failed');
+    const data=await ff.readFile('output.mp4');
+    setProg(0.97,'Finishing up...');
+    return new Blob([data],{type:'video/mp4'});
+  }catch(e){
+    return null;
+  }finally{
+    drawPaused=false;
+    try{if(venc.state!=='closed')venc.close();}catch(_){}
+  }
+}
 renderBtn.addEventListener('click',async()=>{
   if(rendering||!audioEl)return;
   renderErr.textContent='';dlLink.classList.add('hidden');
@@ -400,6 +650,8 @@ renderBtn.addEventListener('click',async()=>{
       throw{limit:true};
     }
     renderKey=crypto.randomUUID();
+    let mp4=await renderFast(setProg);
+    if(!mp4){
     setProg(0.06,'Loading the video engine (first render downloads it, about 30 MB)...');
     const ff=await getFFmpeg(s=>setProg(s==='engine'?0.08:0.14,'Loading the video engine...'));
     actx=actx||new (window.AudioContext||window.webkitAudioContext)();
@@ -411,7 +663,9 @@ renderBtn.addEventListener('click',async()=>{
     mediaSrc=actx.createMediaElementSource(audioEl);mediaSrc.connect(actx.destination);
     const dest=actx.createMediaStreamDestination();
     mediaSrc.connect(dest);
-    const vstream=canvas.captureStream(30);
+    // 15 fps is plenty for a still image, waveform and captions, and it
+    // halves the frames the converter has to chew through afterwards.
+    const vstream=canvas.captureStream(15);
     const combined=new MediaStream([...vstream.getVideoTracks(),...dest.stream.getAudioTracks()]);
     const mime=pickRecorderMime();
     const rec=new MediaRecorder(combined,mime?{mimeType:mime,videoBitsPerSecond:2000000}:undefined);
@@ -444,6 +698,9 @@ renderBtn.addEventListener('click',async()=>{
     const tickInt=setInterval(tick,400);
     await new Promise(res=>{resolveEnded=res;audioEl.onended=()=>finishRecording('end');});
     rec.stop();await stopped;
+    // Recording is done: freeze the preview painter so the converter gets
+    // the CPU instead of competing with full-canvas redraws.
+    drawPaused=true;
     if(stopReason==='slow')throw{slow:true};
     mediaSrc.disconnect(dest);
     playing=false;playBtn.textContent='Play';
@@ -461,7 +718,9 @@ renderBtn.addEventListener('click',async()=>{
       if(peak<0.003)throw{silent:true};
     }catch(se){if(se&&se.silent)throw se;}
     setProg(0.81,'Preparing '+webmMB+' MB of video for conversion...');
-    await ff.writeFile('input.webm',new Uint8Array(await webm.arrayBuffer()));
+    const isMp4=(webm.type||'').indexOf('mp4')>=0;
+    const inName=isMp4?'input.mp4':'input.webm';
+    await ff.writeFile(inName,new Uint8Array(await webm.arrayBuffer()));
     const totalUs=Math.max(1,Math.round((duration||0)*1e6));
     const convProg=({time})=>{
       const cp=Math.min(0.999,Math.max(0,(Number(time)||0)/totalUs));
@@ -469,21 +728,24 @@ renderBtn.addEventListener('click',async()=>{
     };
     ff.on('progress',convProg);
     // Watchdog: a stuck conversion used to hang the page forever. Bound it and fail loudly.
-    // VP8-first recording (pickRecorderMime) keeps the wasm decode fast enough
-    // that a song-length track converts well inside this bound.
+    // An MP4 recording skips the transcode entirely: the video stream is
+    // copied as-is and only the audio is encoded to AAC, which takes
+    // seconds. If a recorder's MP4 is not directly usable, fall back to
+    // the full transcode on the same file.
     const convTimeoutMs=Math.min(1200000,Math.max(300000,(duration||60)*3000));
     let convTimer=null;
     const convTimeoutP=new Promise((_,rej)=>{convTimer=setTimeout(()=>rej({timeout:true}),convTimeoutMs);});
+    const transcodeArgs=['-i',inName,'-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4'];
+    const remuxArgs=['-i',inName,'-c:v','copy','-c:a','aac','-b:a','128k','-movflags','+faststart','output.mp4'];
     let code=1;
     try{
-      code=await Promise.race([
-        ff.exec(['-i','input.webm','-c:v','libx264','-preset','ultrafast','-crf','23','-c:a','aac','-b:a','128k','-movflags','faststart','output.mp4']),
-        convTimeoutP
-      ]);
+      code=await Promise.race([ff.exec(isMp4?remuxArgs:transcodeArgs),convTimeoutP]);
+      if(code!==0&&isMp4)code=await Promise.race([ff.exec(transcodeArgs),convTimeoutP]);
     }finally{clearTimeout(convTimer);try{ff.off('progress',convProg);}catch(_){}}
     if(code!==0)throw new Error('convert failed');
     const data=await ff.readFile('output.mp4');
-    const mp4=new Blob([data],{type:'video/mp4'});
+    mp4=new Blob([data],{type:'video/mp4'});
+    }
     if(dlLink.href)URL.revokeObjectURL(dlLink.href);
     dlLink.href=URL.createObjectURL(mp4);dlLink.classList.remove('hidden');
     setProg(1,'Done.');
@@ -521,15 +783,18 @@ renderBtn.addEventListener('click',async()=>{
       setStatus('Render hiccup. Your files are safe, try again.',true);
     }
     progWrap.classList.add('hidden');progText.textContent='';
-  }finally{if(window.BBLiveTranscribe)BBLiveTranscribe.stop();rendering=false;renderBtn.disabled=false;}
+  }finally{if(window.BBLiveTranscribe)BBLiveTranscribe.stop();rendering=false;renderBtn.disabled=false;drawPaused=false;}
 });
+seekEl.addEventListener('input',()=>{if(!audioEl)return;seeking=true;audioEl.currentTime=Number(seekEl.value);timeEl.textContent=fmtT(audioEl.currentTime)+' / '+fmtT(duration);});
+seekEl.addEventListener('change',()=>{seeking=false;});
 againBtn.addEventListener('click',()=>{
   cancelAnimationFrame(rafId);
   if(audioEl){audioEl.pause();audioEl=null;}
   if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null;}
-  audioFile=null;bgImg=null;words=[];cues=[];peaks=[];duration=0;rendering=false;
+  audioFile=null;bgImg=null;words=[];cues=[];peaks=[];duration=0;rendering=false;capSizeMemo={};audioBuf=null;
   mp3Info.textContent='';imgInfo.textContent='';uploadErr.textContent='';renderErr.textContent='';
   usageEl.textContent='';dlLink.classList.add('hidden');liveEl.classList.add('hidden');liveEl.textContent='';
+  editLyricsBtn.classList.add('hidden');lyricEditor.classList.add('hidden');
   studioSec.classList.add('hidden');styleSec.classList.add('hidden');uploadSec.classList.remove('hidden');
   toStyleBtn.disabled=true;setStatus('Have a look. When it feels right, render it.');
   uploadSec.scrollIntoView({behavior:'smooth'});
