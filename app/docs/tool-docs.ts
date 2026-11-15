@@ -709,6 +709,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Caption styles and sizes cover the usual feed formats, square and vertical included.",
       "The transcription is automatic when you want captions, and your audio is never kept after.",
       "If the transcription stretches a word across a quiet intro, the timing is repaired before the captions are built, so the first line lands where the singing actually starts.",
+      "If an upload gets refused before it reaches the tool, the tool retries once on its own before asking you to refresh.",
     ],
     data: "Your audio is transcribed to make the captions and nothing more. It is never stored, and the finished video is yours to download.",
     tips: [
@@ -722,7 +723,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["What happens to my audio?", "It is transcribed for captions, if you want them, and never kept."],
       ["What video sizes can I make?", "The standard feed shapes, including square and vertical. Pick the one your platform rewards."],
     ],
-    updated: "November 14, 2026",
+    updated: "November 15, 2026",
   },
   {
     key: "purr-code",
