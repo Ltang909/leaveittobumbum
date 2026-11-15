@@ -379,13 +379,18 @@ transcribeBtn.addEventListener('click',async()=>{
       if(!duration)throw new Error('could not read that MP3');
       bbTrack('captions_skipped',{tool:TOOL_KEY,seconds:Math.round(duration)});
     }else{
-      const session=await fetch('/api/session.php').then(r=>r.json());
-      const fd=new FormData();fd.append('action','transcribe');fd.append('audio',audioFile,audioFile.name);fd.append('csrf',session.csrf||'');
-      const[resp,dec]=await Promise.all([
-        fetch('/api/tools/audiogram.php',{method:'POST',body:fd}).then(async r=>({ok:r.ok,status:r.status,data:await r.json().catch(()=>({}))})),
-        decodePeaks(audioFile)
-      ]);
-      if(!resp.ok)throw new Error(resp.data.error||('transcription failed ('+resp.status+')'));
+      const postTranscribe=async()=>{
+        const session=await fetch('/api/session.php').then(r=>r.json());
+        const fd=new FormData();fd.append('action','transcribe');fd.append('audio',audioFile,audioFile.name);fd.append('csrf',session.csrf||'');
+        return fetch('/api/tools/audiogram.php',{method:'POST',body:fd}).then(async r=>({ok:r.ok,status:r.status,data:await r.json().catch(()=>({}))}));
+      };
+      const[respFirst,dec]=await Promise.all([postTranscribe(),decodePeaks(audioFile)]);
+      let resp=respFirst;
+      // A refusal with no server message means a layer in front of the tool
+      // (the host's browser check) bounced the upload, not the tool itself.
+      // One retry with a fresh session clears it in practice.
+      if(!resp.ok&&resp.status===403&&!resp.data.error)resp=await postTranscribe();
+      if(!resp.ok)throw new Error(resp.data.error||('transcription failed ('+resp.status+'). Refresh the page and try again.'));
       words=repairWordTimes(resp.data.words||[]);duration=dec.duration||resp.data.duration||0;peaks=dec.peaks;
       if(!words.length||!duration)throw new Error('no words heard');
       cues=groupCues(words);capSizeMemo={};
