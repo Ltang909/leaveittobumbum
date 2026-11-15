@@ -1,4 +1,18 @@
 import { defineConfig, devices } from '@playwright/test';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+// Load the local, gitignored tests-e2e/.env (dedicated test-account
+// credentials such as E2E_TEST_EMAIL / E2E_TEST_PASSWORD) so the daily
+// run picks them up without anyone exporting them by hand. Values in
+// the real environment always win; the file is never committed.
+const envFile = join(__dirname, '.env');
+if (existsSync(envFile)) {
+  for (const line of readFileSync(envFile, 'utf8').split(/\r?\n/)) {
+    const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/);
+    if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+  }
+}
 
 /**
  * Playwright config for leaveittobumbum.com.

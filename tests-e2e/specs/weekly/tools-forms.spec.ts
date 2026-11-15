@@ -113,6 +113,10 @@ test.describe('day-log: accounts-only gate', () => {
     );
     await login(page);
     await page.goto('/tools/day-log/');
+    // The filing panel is voice-first: the textarea stays hidden until
+    // the user picks "Type instead".
+    await expect(page.getByRole('button', { name: 'File my day' })).toBeVisible({ timeout: 20_000 });
+    await page.getByRole('button', { name: 'Type instead' }).click();
     await expect(page.locator('#logText')).toBeVisible({ timeout: 20_000 });
   });
 });
