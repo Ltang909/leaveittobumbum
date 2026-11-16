@@ -816,6 +816,10 @@ againBtn.addEventListener('click',()=>{
 <p>With captions, it is only transcribed to make them, and never kept. Pick No captions and your audio never leaves your browser at all.</p>
 </details>
 <details>
+<summary>Why did my transcription fail?</summary>
+<p>Making captions sends your audio up to be transcribed, and that upload needs a steady connection. On weak Wi-Fi it can stall or get refused partway through, and the transcription fails with it. Move closer to the router or switch to a stronger connection, then try again. The tool already retries once on its own. If home Wi-Fi keeps refusing it, run the upload over your phone's hotspot instead. A failed attempt never keeps your audio.</p>
+</details>
+<details>
 <summary>What caption styles are there?</summary>
 <p>Four caption styles, or No captions: just your image and your sound, with no transcription at all.</p>
 </details>

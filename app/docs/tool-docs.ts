@@ -721,9 +721,10 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     faq: [
       ["What happens to my audio?", "It is transcribed for captions, if you want them, and never kept."],
+      ["Why did my transcription fail?", "The caption upload needs a steady connection. Weak Wi-Fi can stall it or get it refused partway through. Move closer to the router, switch to a stronger connection, or run the upload over your phone's hotspot, then try again."],
       ["What video sizes can I make?", "The standard feed shapes, including square and vertical. Pick the one your platform rewards."],
     ],
-    updated: "November 15, 2026",
+    updated: "November 16, 2026",
   },
   {
     key: "purr-code",
