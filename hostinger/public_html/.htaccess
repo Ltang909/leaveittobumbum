@@ -5,5 +5,10 @@ RewriteEngine On
 RewriteCond %{HTTP_HOST} ^www\.leaveittobumbum\.com$ [NC]
 RewriteRule ^(.*)$ https://leaveittobumbum.com/$1 [R=301,L]
 
+# The Rocket Money alternatives guide lives at the -2026 URL. Send the
+# un-suffixed URL there permanently. The target is host-relative on purpose,
+# so the same rule works on staging.
+RewriteRule ^blog/rocket-money-alternatives/?$ /blog/rocket-money-alternatives-2026/ [R=301,L]
+
 # Serve the app's 404 page for missing URLs instead of the host default.
 ErrorDocument 404 /404.html
