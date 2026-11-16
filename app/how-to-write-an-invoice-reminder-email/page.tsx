@@ -18,7 +18,7 @@ export default function InvoiceReminderEmailGuide() {
         <p className="lede">Chasing late payments is nobody's favorite job. A steady ladder of short, polite reminders gets most invoices paid without a single awkward phone call.</p>
       </section>
       <section className="shell">
-        <div className="prose">
+        <div className="prose blog-wide">
           <h2>How to write an invoice reminder email (with templates)</h2>
           <p>You did the work. You sent the invoice. Now the due date drifts past and you get to play debt collector in your own inbox. Chasing late payment is nobody's favourite job, but a short, polite, well timed email gets most invoices paid without any drama. This guide gives you four copy-paste templates and a schedule for sending them, so you never have to stare at a blank email wondering how firm to sound.</p>
           <h2>When to send each reminder</h2>

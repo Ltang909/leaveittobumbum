@@ -18,7 +18,7 @@ export default function VoiceNotesToTextGuide() {
         <p className="lede">The idea shows up while you are walking, not while you are sitting at a keyboard. Voice notes catch it. Transcription makes it usable.</p>
       </section>
       <section className="shell">
-        <div className="prose">
+        <div className="prose blog-wide">
           <h2>How to turn voice notes into text</h2>
           <p>Your clearest thinking rarely happens at a keyboard. It shows up on a walk, in the car, or halfway through making coffee, and it evaporates if you wait until you are back at your desk. Talking captures it in the moment. Text is what makes it usable later. Here is how to get from one to the other without a pile of unplayed audio files.</p>
 

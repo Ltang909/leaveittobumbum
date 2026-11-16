@@ -18,7 +18,7 @@ export default function TailorResumeGuide() {
         <p className="lede">If your resume is not landing, the usual problem is fit: it was written for a different job posting. Tailoring means answering the one in front of you, with experience you actually have.</p>
       </section>
       <section className="shell">
-        <div className="prose">
+        <div className="prose blog-wide">
           <p>Your resume is good, but it is generic, because you wrote it to cover every job at once. A resume written for everyone rarely matches one specific posting closely. Tailoring fixes that. It takes about twenty minutes per application once you have a method, and the method is mostly reading the posting more carefully than the last fifty applicants did.</p>
 
           <h2>How recruiters and screening software actually scan a resume</h2>

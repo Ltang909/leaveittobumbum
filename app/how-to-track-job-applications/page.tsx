@@ -18,7 +18,7 @@ export default function TrackJobApplicationsGuide() {
         <p className="lede">Ten applications fit in your head. Thirty live in a spreadsheet. Fifty need a system, one that tells you who to follow up with before the trail goes cold.</p>
       </section>
       <section className="shell">
-        <div className="prose">
+        <div className="prose blog-wide">
           <p>You applied on a Tuesday. Or was it a Thursday? The recruiter's name was Sarah, or possibly Sara, and you were definitely going to follow up last week. Multiply that fog by forty applications and you have the standard job search: a spreadsheet you stopped trusting around week two.</p>
           <p>A tracker only helps if it stays current. Here is a system simple enough that you will actually keep it up, even when the applications pile past fifty.</p>
 
