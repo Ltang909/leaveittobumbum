@@ -212,6 +212,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Adding an invoice or sending a chase uses one action each. Everything else is free.",
       "The chaser learns each client's usual payment timing, so a client who always pays on day 20 does not get nudged on day 2.",
       "You always see and approve the email before anything sends.",
+      "The tool page itself carries the copy-paste templates (first send, polite reminder, firm reminder, final notice) plus a filled example, for invoices you would rather send by hand.",
     ],
     data: "Your invoice list lives in your account. Chase emails are sent from Bum Bum's mail as your billing assistant, with your details in the signature you set.",
     tips: [
@@ -222,7 +223,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Does it actually send the emails?", "Yes, with your approval each time. Nothing sends itself; you read the draft and tap send."],
       ["Will it annoy my clients?", "The drafts start friendly and firm up gradually, and the timing adapts to when each client usually pays. You can edit every word before sending."],
     ],
-    updated: "November 12, 2026",
+    updated: "November 16, 2026",
   },
   {
     key: "receipt-reader",

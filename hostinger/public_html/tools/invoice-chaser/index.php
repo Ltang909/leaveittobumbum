@@ -69,7 +69,7 @@
       "name": "Where can I get invoice reminder email templates?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "On our blog: the invoice reminder templates at https://leaveittobumbum.com/blog/invoice-reminder-templates/ cover every stage of late, from the friendly heads-up before the due date to the final notice, ready to copy and adjust."
+        "text": "Right on this page: the templates section at https://leaveittobumbum.com/tools/invoice-chaser/#templates has the first send, the polite reminder, the firm reminder, and the final notice, ready to copy and adjust. The blog's invoice reminder templates post walks through the same stages with more explanation."
       }
     }
   ]
@@ -128,6 +128,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .chaching img{width:110px;height:auto}
 .chaching-amount{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:clamp(2.5rem,9vw,4rem);margin:6px 0;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+table.ex-table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px}
+table.ex-table th,table.ex-table td{border:1px solid #e2d7bf;padding:8px 10px;text-align:left;background:#fff}
+table.ex-table th{background:#fffdf8}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Invoice Reminder"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/invoice-chaser.png" alt="Invoice Reminder"><div><h1>Invoice Reminder</h1><p class="lede bb-desc">Get paid without the awkward. Log who owes you what and Bum Bum writes the chase email.</p></div></div>
@@ -369,7 +372,43 @@ refresh().then(function(){
   card.classList.add('flash');
   setTimeout(function(){ card.classList.remove('flash'); }, 2800);
 }).catch(function(){});
-</script><?php endif; ?><section class="panel" id="faq" aria-label="Frequently asked questions">
+</script><?php endif; ?><section class="panel" id="templates" aria-label="Invoice email templates">
+<h2 style="margin-top:0">Sending the invoice email, and chasing it</h2>
+<p>Most invoice email trouble is two jobs, not one: sending the invoice well the first time, and chasing it when it goes quiet. The tool above handles the chasing for you, tracks who owes what, writes the email in the right tone, and sends it as your billing assistant in one tap. This section is the by-hand version of the same work, for the invoices you send yourself.</p>
+<h3>How to send an invoice by email</h3>
+<p>1. <strong>Use a subject line that says what it is:</strong> Invoice [number] — [your business] — due [date]. Your client should be able to spot it in a crowded inbox and search for it later.</p>
+<p>2. <strong>Attach the invoice as a PDF.</strong> Never send the invoice only as email text; accounts departments file PDFs, and a fresh copy attached to every email means nobody has to dig for the original.</p>
+<p>3. <strong>Put the essentials in the email itself:</strong> the amount, the due date, what the work was, and how to pay (a payment link or your bank details).</p>
+<p>4. <strong>Send it the day the work is done</strong>, from an address the client recognizes. An invoice that arrives with the delivery starts the payment clock at the right time.</p>
+<p>5. <strong>Keep the tone boring.</strong> The first invoice email is admin, not a sales pitch.</p>
+<h3>A real example: the same invoice, two tones</h3>
+<p>Invoice INV-2026-014, Acme Inc, $1,200.00, due November 1. Three days overdue, the polite version:</p>
+<div class="draft-box"><div class="draft-subject">Subject: Quick check on invoice INV-2026-014</div>Hi Sarah, just checking in on invoice INV-2026-014 for $1,200.00, which was due on November 1. It may already be on its way, in which case ignore this. If it is stuck somewhere, tell me what you need and I will send it over. Thanks, Leon</div>
+<p>Sixteen days overdue, the same invoice gets the firm version:</p>
+<div class="draft-box"><div class="draft-subject">Subject: Invoice INV-2026-014 is now 16 days overdue</div>Hi Sarah, invoice INV-2026-014 for $1,200.00 was due on November 1 and is now 16 days overdue. Please arrange payment this week, or let me know today if there is a problem I am not aware of. The invoice is attached again for convenience. Regards, Leon</div>
+<p>The difference is a specific timeframe and a named next step, not raised voices. The tool writes this draft for you at whichever stage the invoice has reached; the templates below are the copy-paste version.</p>
+<h3>Copy-paste templates</h3>
+<p><strong>The first send</strong> (the day the work is done):</p>
+<div class="draft-box"><div class="draft-subject">Subject: Invoice [number] — [your business] — due [date]</div>Hi [name], attached is invoice [number] for [amount] for [work done]. It is due on [date]. You can pay here: [payment link or details]. Any questions, just reply to this email. Thanks, [your name]</div>
+<p><strong>The polite reminder</strong> (1 to 7 days overdue):</p>
+<div class="draft-box"><div class="draft-subject">Subject: Quick check on invoice [number]</div>Hi [name], just checking in on invoice [number] for [amount], which was due on [date]. It may already be on its way, in which case ignore this. If it is stuck somewhere, tell me what you need and I will send it over. Thanks, [your name]</div>
+<p><strong>The firm reminder</strong> (around 14 days overdue):</p>
+<div class="draft-box"><div class="draft-subject">Subject: Invoice [number] is now 14 days overdue</div>Hi [name], invoice [number] for [amount] was due on [date] and is now two weeks overdue. Please arrange payment this week, or let me know today if there is a problem I am not aware of. I have attached the invoice again for convenience. Regards, [your name]</div>
+<p><strong>The final notice</strong> (30 days and beyond):</p>
+<div class="draft-box"><div class="draft-subject">Subject: Final notice: invoice [number]</div>Hi [name], this is a final notice for invoice [number] for [amount], due on [date]. If payment is not received by [specific date], I will need to pause work on [project or account] and pass this to collections. If something has gone wrong, call me at [number] and we will sort it out directly. Regards, [your name]</div>
+<p>Only send consequences you will actually carry out. A pause on work is usually consequence enough, and it is honest. Mention late fees only if your invoice terms stated them up front; introducing a fee mid-chase damages trust and may not be enforceable.</p>
+<h3>When to send each one</h3>
+<table class="ex-table">
+<tr><th>When</th><th>Send</th></tr>
+<tr><td>The day the work is done</td><td>The invoice itself, with the first-send email above</td></tr>
+<tr><td>A few days before the due date</td><td>A friendly heads-up with the invoice attached; it reads as good admin and prevents a large share of late payments</td></tr>
+<tr><td>1 to 7 days overdue</td><td>The polite reminder</td></tr>
+<tr><td>Around 14 days overdue</td><td>The firm reminder</td></tr>
+<tr><td>30 days and beyond</td><td>The final notice, with a named consequence</td></tr>
+</table>
+<p>The full walkthrough of the four chase stages, with the heads-up template included, is on the blog: <a href="/blog/invoice-reminder-templates/">invoice reminder templates for every stage of late</a>.</p>
+</section>
+<section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
@@ -389,7 +428,7 @@ refresh().then(function(){
 </details>
 <details>
 <summary>Where can I get invoice reminder email templates?</summary>
-<p>On our blog: the <a href="/blog/invoice-reminder-templates/">invoice reminder templates</a> cover every stage of late, from the friendly heads-up before the due date to the final notice, ready to copy and adjust.</p>
+<p>Right on this page: the <a href="#templates">templates section</a> above has the first send, the polite reminder, the firm reminder, and the final notice, ready to copy and adjust. The blog's <a href="/blog/invoice-reminder-templates/">invoice reminder templates</a> post walks through the same stages with more explanation.</p>
 </details>
 </section>
 <?php $bbTool = 'invoice-chaser'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
