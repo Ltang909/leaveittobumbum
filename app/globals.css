@@ -37,7 +37,7 @@ h1,h2 { font-family:var(--font-display),serif; line-height:.98; letter-spacing:-
 h1 { margin:0; font-size:clamp(2rem,5.2vw,4.5rem); font-weight:650; }
 .h1-line { white-space:nowrap; }
 h1 em { color:var(--blue); font-style:italic; font-weight:800; }
-.lede { max-width:610px; font-size:1.25rem; line-height:1.55; margin:30px 0; }
+.lede { font-size:1.25rem; line-height:1.55; margin:30px 0; }
 .hero-actions { display:flex; align-items:center; gap:28px; }
 .text-button { border:0; border-bottom:2px solid var(--ink); padding:7px 1px; background:transparent; font-weight:900; cursor:pointer; color:var(--ink); }
 .fine { font-size:.8rem; font-weight:700; opacity:.68; margin-top:18px; }

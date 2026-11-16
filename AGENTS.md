@@ -24,4 +24,4 @@ Container width: article/guide pages use the full shell width like the blog (pro
 
 Headline rule: the page head carries the title as the H1. The article body opens with body text, never with the same title repeated as an H2.
 
-Page head rule: guide pages use the blog page head (page-head shell blog-head) so the lede runs the full width. The plain .lede style caps at 610px; never ship a guide head with that cap.
+Page head rule: the .lede style carries no max-width (the old 610px cap was removed 2026-11-16). Do not re-add a width cap to .lede or to article body text.
