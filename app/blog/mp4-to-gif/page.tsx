@@ -69,7 +69,7 @@ export default function Mp4ToGif() {
           <p>Here is how to turn an MP4 into a GIF in your browser, and the limits that make a good GIF instead of a heavy one.</p>
           <h2>Know the format's rules before you start</h2>
           <p>A GIF is a slideshow of frames with no sound and very little compression talent. Three consequences follow. First, short wins: a few seconds loop beautifully, a minute becomes a file the size of a small car. Second, there is no audio, ever. Third, the clip has to carry its meaning visually, in motion, fast.</p>
-          <p>Bum Bum's <a href="/tools/video-converter/">Video Converter</a> builds the GIF from the first 15 seconds of your video, right in your browser, so the clip never gets uploaded. If the moment you need sits later in the video, <a href="/tools/video-trimmer/">trim the video</a> first so the good part is at the front, then convert the trimmed file.</p>
+          <p>Bum Bum's <a href="/tools/mp4-to-gif/">MP4 to GIF Converter</a> builds the GIF from the first 15 seconds of your video, right in your browser, so the clip never gets uploaded. If the moment you need sits later in the video, <a href="/tools/video-trimmer/">trim the video</a> first so the good part is at the front, then convert the trimmed file.</p>
           <h2>Step 1: Drop the MP4 in</h2>
           <p>Open the converter and drop in your MP4. Videos up to 100 MB are welcome; the converter also takes WebM, MOV, MKV, and AVI if your clip arrived in one of those.</p>
           <h2>Step 2: Pick GIF as the format</h2>
@@ -79,7 +79,7 @@ export default function Mp4ToGif() {
           <h2>Keeping the file lean</h2>
           <p>GIF weight grows with length, size, and motion. Short clips, steady shots, and simple scenes stay small; long clips full of camera movement balloon. If your GIF comes out heavy, the fix is almost always a shorter clip, not a settings hunt.</p>
           <h2>Make a GIF now</h2>
-          <p>The <a href="/tools/video-converter/">Video Converter</a> runs in your browser, so your video stays on your device the whole time. Drop the MP4 in, pick GIF, and let it loop.</p>
+          <p>The <a href="/tools/mp4-to-gif/">MP4 to GIF Converter</a> runs in your browser, so your video stays on your device the whole time. Drop the MP4 in, convert, and let it loop.</p>
           <h2>Frequently asked questions</h2>
           <h3>How much of my video becomes the GIF?</h3>
           <p>The first 15 seconds. GIFs are meant to be moments, not movies, and longer than that the file size gets unreasonable. If the good part is later in the video, trim the video first so it starts where you want the GIF to start.</p>
