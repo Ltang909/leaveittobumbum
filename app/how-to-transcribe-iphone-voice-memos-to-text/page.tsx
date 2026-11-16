@@ -19,7 +19,7 @@ export default function TranscribeIphoneVoiceMemosGuide() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <h2>How to Transcribe iPhone Voice Memos to Text</h2>
+          
           <p>Open the voice memo on your iPhone, play it out loud, and record it in a browser transcription tool at the same time. Your words come back as a transcript you can copy or download. If the memo is still an idea forming in your head, skip the memo app entirely and record straight into the tool instead, so the transcript exists from the start. <a href="/tools/notes/">Bum Bum's Voice Notes to Text</a> handles both routes: play an existing memo and record it as it plays, or record a fresh note in the browser and get the transcript right away.</p>
 
           <h2>Why voice memos pile up untranscribed</h2>

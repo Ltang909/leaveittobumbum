@@ -19,7 +19,7 @@ export default function FindSubscriptionsGuide() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <h2>How to find subscriptions you forgot about (and cancel them)</h2>
+          
           <p>Somewhere in your accounts there is a meditation app from 2023 quietly taking $13.99 a month. You are not careless. Sign-ups take ten seconds and life moves fast, so charges pile up in the background and blend into your statements. The good news: a focused twenty minute audit finds nearly all of them, and most people free up real money in the first pass. Here is where to look and what to do with what you find.</p>
           <h2>Where forgotten subscriptions hide</h2>
           <ul>
