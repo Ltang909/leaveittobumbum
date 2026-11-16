@@ -12,7 +12,7 @@ export default function TranscribeIphoneVoiceMemosGuide() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Guide</p>
         <h1>How to Transcribe iPhone Voice Memos to Text</h1>
         <p className="lede">Voice Memos catches every idea you have on the move. Transcription turns those recordings into text you can search, copy, and send.</p>

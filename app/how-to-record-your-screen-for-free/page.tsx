@@ -12,7 +12,7 @@ export default function RecordScreenGuide() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Guide</p>
         <h1>How to record your screen for free (no software to install)</h1>
         <p className="lede">A short screen recording can explain a process faster than writing it out. A two-minute screen recording replaces the meeting, the screenshot chain, and the long thread of confused replies.</p>

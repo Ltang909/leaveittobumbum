@@ -23,3 +23,5 @@ Every new tool or user-facing feature ships with documentation in the same chang
 Container width: article/guide pages use the full shell width like the blog (prose blog-wide, max-width none inside the 1180px shell). Never ship a content page with the narrow 780px prose container.
 
 Headline rule: the page head carries the title as the H1. The article body opens with body text, never with the same title repeated as an H2.
+
+Page head rule: guide pages use the blog page head (page-head shell blog-head) so the lede runs the full width. The plain .lede style caps at 610px; never ship a guide head with that cap.

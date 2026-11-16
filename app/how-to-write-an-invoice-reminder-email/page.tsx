@@ -12,7 +12,7 @@ export default function InvoiceReminderEmailGuide() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Guide</p>
         <h1>How to write an invoice reminder email (with templates)</h1>
         <p className="lede">Chasing late payments is nobody's favorite job. A steady ladder of short, polite reminders gets most invoices paid without a single awkward phone call.</p>

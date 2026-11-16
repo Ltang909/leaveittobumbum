@@ -12,7 +12,7 @@ export default function TrackJobApplicationsGuide() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Guide</p>
         <h1>How to track job applications (a system that survives 50 applications)</h1>
         <p className="lede">Ten applications fit in your head. Thirty live in a spreadsheet. Fifty need a system, one that tells you who to follow up with before the trail goes cold.</p>
