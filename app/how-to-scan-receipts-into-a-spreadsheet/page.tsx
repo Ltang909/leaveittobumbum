@@ -12,7 +12,7 @@ export default function ScanReceiptsGuide() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Guide</p>
         <h1>How to scan receipts into a spreadsheet</h1>
         <p className="lede">Receipts fade, get lost, and pile up in shoeboxes. Scanned into a spreadsheet, they turn into records your accountant will actually thank you for.</p>

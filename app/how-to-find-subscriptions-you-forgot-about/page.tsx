@@ -12,7 +12,7 @@ export default function FindSubscriptionsGuide() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Guide</p>
         <h1>How to find subscriptions you forgot about (and cancel them)</h1>
         <p className="lede">Forgotten subscriptions are usually small individually, but they add up. Twenty minutes of digging finds every recurring charge you are paying for and getting nothing from.</p>

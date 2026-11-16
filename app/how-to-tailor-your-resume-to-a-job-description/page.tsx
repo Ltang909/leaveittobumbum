@@ -12,7 +12,7 @@ export default function TailorResumeGuide() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Guide</p>
         <h1>How to tailor your resume to a job description</h1>
         <p className="lede">If your resume is not landing, the usual problem is fit: it was written for a different job posting. Tailoring means answering the one in front of you, with experience you actually have.</p>

@@ -12,7 +12,7 @@ export default function VoiceNotesToTextGuide() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Guide</p>
         <h1>How to turn voice notes into text</h1>
         <p className="lede">The idea shows up while you are walking, not while you are sitting at a keyboard. Voice notes catch it. Transcription makes it usable.</p>

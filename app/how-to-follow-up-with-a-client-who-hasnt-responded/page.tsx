@@ -12,7 +12,7 @@ export default function FollowUpWithClientGuide() {
   return (
     <main>
       <SiteHeader />
-      <section className="page-head shell">
+      <section className="page-head shell blog-head">
         <p className="kicker">Guide</p>
         <h1>How to Follow Up With a Client Who Hasn't Responded</h1>
         <p className="lede">Silence usually means busy. A short message, sent on the right day, with one easy question, gets the reply.</p>
