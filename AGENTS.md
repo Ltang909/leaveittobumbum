@@ -17,3 +17,7 @@ Every new tool or user-facing feature ships with documentation in the same chang
 - New feature: add or update a guide in `app/docs/guides.ts` (same deal: sidebar/home/sitemap flow from the manifest, plus a sitemap line for a new slug).
 - Changed behavior: update the affected tool/guide entry and its "Last updated" date in the same commit.
 - Copy rules for docs: no em dashes, no tool counts in prose, display names from the tool registry, never invent limits or numbers (take them from the tool's own page or code).
+
+# Container width (standing rule, set 2026-11-16)
+
+Container width: article/guide pages use the full shell width like the blog (prose blog-wide, max-width none inside the 1180px shell). Never ship a content page with the narrow 780px prose container.

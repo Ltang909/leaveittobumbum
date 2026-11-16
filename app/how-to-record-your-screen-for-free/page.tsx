@@ -18,7 +18,7 @@ export default function RecordScreenGuide() {
         <p className="lede">A short screen recording can explain a process faster than writing it out. A two-minute screen recording replaces the meeting, the screenshot chain, and the long thread of confused replies.</p>
       </section>
       <section className="shell">
-        <div className="prose">
+        <div className="prose blog-wide">
           <h2>How to record your screen for free (no software to install)</h2>
           <p>Someone asks how the report works. You could book a call, share your screen, and walk them through it live. Or you could record it once, send the clip, and get that half hour back. A screen recording answers the same question for the next ten people who ask, too. Here is how to make one that people actually finish watching.</p>
 
