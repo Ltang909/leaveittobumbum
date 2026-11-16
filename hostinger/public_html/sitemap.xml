@@ -59,6 +59,8 @@
   <url><loc>https://leaveittobumbum.com/tools/purr-code/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://leaveittobumbum.com/tools/sop-ify/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://leaveittobumbum.com/tools/video-converter/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://leaveittobumbum.com/tools/mp4-to-webm/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://leaveittobumbum.com/tools/mp4-to-gif/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://leaveittobumbum.com/tools/video-mp3-overlay/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://leaveittobumbum.com/tools/hearsay/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://leaveittobumbum.com/how-to-write-an-invoice-reminder-email/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -146,6 +148,8 @@
   <url><loc>https://leaveittobumbum.com/docs/tools/purr-code/</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://leaveittobumbum.com/docs/tools/sop-ify/</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://leaveittobumbum.com/docs/tools/hearsay/</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://leaveittobumbum.com/docs/tools/video-converter/</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://leaveittobumbum.com/docs/tools/video-converter/</loc><lastmod>2026-11-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://leaveittobumbum.com/docs/tools/mp4-to-webm/</loc><lastmod>2026-11-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://leaveittobumbum.com/docs/tools/mp4-to-gif/</loc><lastmod>2026-11-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://leaveittobumbum.com/docs/tools/video-mp3-overlay/</loc><lastmod>2026-10-27</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

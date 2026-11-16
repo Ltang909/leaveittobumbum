@@ -39,6 +39,8 @@ CARDS = {
     'sop-ify': ("SOP Generator", "Turn your messy process into a clean playbook."),
     'hearsay': ("AI Mention Tracker", "See what AI models say about your brand."),
     'video-converter': ("Video Converter", "Convert video to MP4, WebM, or GIF in your browser."),
+    'mp4-to-webm': ("MP4 to WebM Converter", "Turn MP4 video into WebM for your website in seconds."),
+    'mp4-to-gif': ("MP4 to GIF Converter", "Turn MP4 clips into animated GIFs in seconds."),
     'video-mp3-overlay': ("Video MP3 Overlay", "Pin your soundtrack onto your video."),
     'day-log': ("Day Log", "Five minutes a night to log your day and lessons."),
     'email-signature-generator': ("Email Signature Generator", "A clean, professional signature in minutes."),

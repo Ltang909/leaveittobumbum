@@ -351,6 +351,8 @@ againBtn.addEventListener('click',()=>{
 <p>If your video is already in the format you pick, the converter repacks it without re-encoding, which is much faster. Videos taller than 720 pixels are converted at 720 tall; big recordings are where browser conversion goes to die, and 720 is plenty for posting and sharing. Long videos convert at the speed of your computer, because your computer is doing the work.</p>
 <h3>GIFs have rules</h3>
 <p>Animated GIFs are capped at 15 seconds, because a GIF longer than that is a video wearing a costume. Trim the moment first with the Video Trimmer, then convert; a tight four-second GIF beats a wandering fifteen-second one. When the destination is unknown, pick MP4. Everything plays MP4.</p>
+<h3>Making the same trip every time?</h3>
+<p>Two trips have their own pages with the output already set, so there is nothing to pick: the <a href="/tools/mp4-to-webm/">MP4 to WebM Converter</a> for video headed to a website, and the <a href="/tools/mp4-to-gif/">MP4 to GIF Converter</a> for animated GIFs. Same engine, same in-browser conversion, one less decision.</p>
 </section>
 <?php $bbTool = 'video-converter'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2)."/includes/site-footer.php"; ?><script src="/tools/capture-handoff.js?v=20261026r5"></script><script src="/tools/drop-strip.js?v=20261111r1"></script></body></html>
