@@ -371,6 +371,30 @@
       "cardTitle": ["Split", "PDF"],
       "cta": "Split a PDF",
       "mascot": "/bum/cat-curious.png"
+    },
+    {
+      "key": "mp4-to-webm",
+      "name": "MP4 to WebM Converter",
+      "tag": "Video",
+      "icon": "🎬",
+      "iconImg": "/bum/icons/video-converter.png",
+      "description": "Turn an MP4 into a WebM for your website, right in your browser. The format is already set.",
+      "url": "/tools/mp4-to-webm/",
+      "cardTitle": ["MP4 to", "WebM"],
+      "cta": "Convert to WebM",
+      "mascot": "/bum/cat-laptop.png"
+    },
+    {
+      "key": "mp4-to-gif",
+      "name": "MP4 to GIF Converter",
+      "tag": "Video",
+      "icon": "🎬",
+      "iconImg": "/bum/icons/video-converter.png",
+      "description": "Turn an MP4 clip into an animated GIF, right in your browser. The format is already set.",
+      "url": "/tools/mp4-to-gif/",
+      "cardTitle": ["MP4 to", "GIF"],
+      "cta": "Make a GIF",
+      "mascot": "/bum/cat-laptop.png"
     }
   ]
 }

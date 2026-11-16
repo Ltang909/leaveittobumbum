@@ -833,6 +833,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "If your video is already in the format you pick, the converter repacks it without re-encoding, which is much faster.",
       "Videos taller than 720 pixels are converted at 720 tall. Big recordings are where browser conversion goes to die, and 720 is plenty for posting and sharing.",
       "Changed your mind mid-conversion? Cancel it. A cancelled conversion uses no action.",
+      "Two trips have their own preset pages: MP4 to WebM for web embeds, and MP4 to GIF for animated GIFs. Same engine, output already set.",
     ],
     data: "Your video never leaves your device. Conversion happens entirely in your browser.",
     tips: [
@@ -843,7 +844,67 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Does my video get uploaded anywhere?", "No. The whole conversion happens in your browser."],
       ["Why is my GIF only 15 seconds?", "GIFs balloon in size fast. Fifteen seconds keeps the file shareable; for anything longer, convert to MP4 instead."],
     ],
-    updated: "November 1, 2026",
+    updated: "November 16, 2026",
+  },
+  {
+    key: "mp4-to-webm",
+    name: "MP4 to WebM Converter",
+    href: "/tools/mp4-to-webm/",
+    icon: "/bum/icons/video-converter.png",
+    summary:
+      "MP4 to WebM Converter turns an MP4 into a WebM for your website, right in your browser. The output is already set to WebM; your video never leaves your device.",
+    steps: [
+      "Open MP4 to WebM Converter and drop in your MP4.",
+      "Convert; the output is WebM, with nothing to pick.",
+      "Preview and download your WebM.",
+    ],
+    goodToKnow: [
+      "One finished conversion uses one action. A cancelled conversion uses no action.",
+      "The encoder writes VP9, the current WebM standard. If your video is already VP9 or VP8 with Opus or Vorbis sound, the converter repacks it without re-encoding, which is much faster and loses nothing.",
+      "Videos taller than 720 pixels are converted at 720 tall, which is plenty for web embeds.",
+      "WebM is not a guaranteed diet: a tightly compressed MP4 can come out about the same size or larger. The tool page publishes measured examples.",
+    ],
+    data: "Your video never leaves your device. Conversion happens entirely in your browser.",
+    tips: [
+      "Embed with the WebM listed first in your video element and the MP4 second; browsers play the first source they understand, so older Safari falls back to the MP4.",
+      "Convert one representative clip and compare the two file sizes before converting a whole library.",
+    ],
+    faq: [
+      ["Does my video get uploaded anywhere?", "No. The whole conversion happens in your browser."],
+      ["Does WebM play in Safari?", "Safari on the Mac has played WebM since 14.1, and recent iPhones handle it too. Keep the MP4 as a fallback source for older holdouts."],
+      ["Can I turn a WebM back into an MP4?", "Yes, in the Video Converter: drop the WebM in and pick MP4."],
+    ],
+    updated: "November 16, 2026",
+  },
+  {
+    key: "mp4-to-gif",
+    name: "MP4 to GIF Converter",
+    href: "/tools/mp4-to-gif/",
+    icon: "/bum/icons/video-converter.png",
+    summary:
+      "MP4 to GIF Converter turns an MP4 clip into an animated GIF, right in your browser: the first 15 seconds at 480 pixels wide. Your video never leaves your device.",
+    steps: [
+      "Open MP4 to GIF Converter and drop in your MP4. Trim the moment first with Video Trimmer if it is not at the start.",
+      "Convert; the output is an animated GIF, with nothing to pick.",
+      "Preview and download your GIF.",
+    ],
+    goodToKnow: [
+      "One finished conversion uses one action. A cancelled conversion uses no action.",
+      "GIFs are capped at the first 15 seconds, at 480 pixels wide and 12 frames per second, because GIF files get heavy fast.",
+      "The converter builds a colour palette from your footage in two passes, which keeps gradients from banding. A GIF frame still holds at most 256 colours.",
+      "Detail and motion cost more than duration: a calm clip runs about 1 MB per 5 seconds, detailed footage about 5 MB per 5 seconds.",
+    ],
+    data: "Your video never leaves your device. Conversion happens entirely in your browser.",
+    tips: [
+      "A tight 4-second GIF beats a wandering 15-second one. Trim first, then convert.",
+      "If the sound matters, keep the clip as an MP4 or WebM. GIF has no sound.",
+    ],
+    faq: [
+      ["Does my video get uploaded anywhere?", "No. The whole conversion happens in your browser."],
+      ["Why is my GIF only 15 seconds?", "GIFs balloon in size fast. Fifteen seconds keeps the file shareable; for anything longer, convert to MP4 instead."],
+      ["Will my GIF have sound?", "No. GIF is a picture format that happens to move."],
+    ],
+    updated: "November 16, 2026",
   },
   {
     key: "video-mp3-overlay",
