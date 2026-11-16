@@ -21,3 +21,5 @@ Every new tool or user-facing feature ships with documentation in the same chang
 # Container width (standing rule, set 2026-11-16)
 
 Container width: article/guide pages use the full shell width like the blog (prose blog-wide, max-width none inside the 1180px shell). Never ship a content page with the narrow 780px prose container.
+
+Headline rule: the page head carries the title as the H1. The article body opens with body text, never with the same title repeated as an H2.

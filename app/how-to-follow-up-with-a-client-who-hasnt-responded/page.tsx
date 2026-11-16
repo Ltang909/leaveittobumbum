@@ -19,7 +19,7 @@ export default function FollowUpWithClientGuide() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <h2>How to Follow Up With a Client Who Hasn't Responded</h2>
+          
           <p>Send a short message that names the thing you sent, gives the client one easy reply, and offers a graceful way to say the timing changed. Wait about three business days before the first nudge, about a week before the second, then send one short closing message and stop. Templates for the three silences that happen most often are below: a proposal with no reply, a meeting that never got booked, and a quote waiting on a yes or no. A tracker like <a href="/tools/purrsuit/">Leave It To Bum Bum's Client Follow-Up Tracker</a> keeps the dates straight and drafts the wording, so the message goes out on the day it is due.</p>
 
           <h2>First, read the silence correctly</h2>
