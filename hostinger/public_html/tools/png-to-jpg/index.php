@@ -71,6 +71,30 @@
         "@type": "Answer",
         "text": "Yes, up to 20 images at a time. Each converted image uses one action."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the text in my screenshot look smudged after converting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JPG compression blurs sharp, high-contrast edges, and small text is nothing but sharp edges. For screenshots where the words matter, keep the PNG, or convert at 100% quality and accept the bigger file."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does converting back and forth lose quality?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every JPG save re-encodes the image and throws a little more away, and a JPG converted to PNG does not get the lost detail back. Keep the PNG as your master copy and convert fresh copies from it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I not convert to JPG?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When you need transparency, when the image is headed for more editing, or when it is mostly text or line art that has to stay crisp. PNG is the better format for all three; JPG wins when the job is sending, uploading, or posting a photo or screenshot."
+      }
     }
   ]
 }
@@ -106,6 +130,14 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 .shell .button:active{box-shadow:none;transform:translateY(2px)}
 .shell .button.secondary{box-shadow:none;border:1px solid #ddd1b8}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
+.ex-grid{display:grid;gap:14px;margin:14px 0}
+@media(min-width:760px){.ex-grid{grid-template-columns:1fr 1fr}}
+.ex-grid figure{margin:0}
+.ex-grid img{width:100%;height:auto;border:1px solid #e2d7bf;border-radius:12px;background:#f7f2e7;display:block}
+.ex-grid figcaption{font-size:13px;font-weight:700;opacity:.8;margin-top:6px}
+table.ex-table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px}
+table.ex-table th,table.ex-table td{border:1px solid #e2d7bf;padding:8px 10px;text-align:left;background:#fff}
+table.ex-table th{background:#fffdf8}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"PNG to JPG Converter"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/image-converter.png" alt="PNG to JPG Converter"><div><h1>PNG to JPG Converter</h1><p class="lede bb-desc">Smaller files that open anywhere. Turn PNGs into JPGs right in your browser, at the quality you pick.</p></div></div>
@@ -157,13 +189,53 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <summary>Can I convert a batch?</summary>
 <p>Yes, up to 20 images at a time. Each converted image uses one action.</p>
 </details>
+<details>
+<summary>Why does the text in my screenshot look smudged after converting?</summary>
+<p>JPG compression blurs sharp, high-contrast edges, and small text is nothing but sharp edges. For screenshots where the words matter, keep the PNG, or convert at 100% quality and accept the bigger file.</p>
+</details>
+<details>
+<summary>Does converting back and forth lose quality?</summary>
+<p>Yes. Every JPG save re-encodes the image and throws a little more away, and a JPG converted to PNG does not get the lost detail back. Keep the PNG as your master copy and convert fresh copies from it.</p>
+</details>
+<details>
+<summary>When should I not convert to JPG?</summary>
+<p>When you need transparency, when the image is headed for more editing, or when it is mostly text or line art that has to stay crisp. PNG is the better format for all three; JPG wins when the job is sending, uploading, or posting a photo or screenshot.</p>
+</details>
 </section>
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">PNG to JPG, the short guide</h2>
 <h3>Why make the switch</h3>
 <p>PNG keeps every pixel, which makes it the right format for editing and the wrong size for sending. A screenshot that weighs 4 MB as a PNG often lands under 400 KB as a JPG, small enough for email, upload forms with size caps, and marketplace listings that reject big files. JPG also opens in every app and form on the internet, including the older ones that still refuse newer formats.</p>
+<h3>A real conversion, with real numbers</h3>
+<p>Here is an actual photo run through this exact converter: Bum Bum himself, a 1081 × 1455 photo saved as a PNG. Same picture three ways:</p>
+<div class="ex-grid">
+<figure><img src="/bum/examples/png-to-jpg-before.png" alt="The original photo of Bum Bum saved as a PNG" loading="lazy" width="1081" height="1455"><figcaption>Original PNG: 1.7 MB</figcaption></figure>
+<figure><img src="/bum/examples/png-to-jpg-after.jpg" alt="The same photo of Bum Bum converted to JPG at 90% quality" loading="lazy" width="1081" height="1455"><figcaption>JPG at 90% (the default): 207 KB</figcaption></figure>
+</div>
+<table class="ex-table">
+<tr><th>Version</th><th>File size</th><th>Smaller by</th></tr>
+<tr><td>PNG original</td><td>1.7 MB</td><td>—</td></tr>
+<tr><td>JPG at 90% quality</td><td>207 KB</td><td>88%</td></tr>
+<tr><td>JPG at 70% quality</td><td>112 KB</td><td>93%</td></tr>
+</table>
+<p>Two things worth noticing. The see-through background of the PNG comes out white in the JPG, because JPG has no transparency; that is covered below. And the JPG at 90% is hard to tell from the original at normal viewing size, which is why 90% is the default here.</p>
+<h3>PNG vs JPG, side by side</h3>
+<table class="ex-table">
+<tr><th></th><th>PNG</th><th>JPG</th></tr>
+<tr><td>File size</td><td>Large; every pixel kept</td><td>Small; detail thrown away cleverly</td></tr>
+<tr><td>Transparency</td><td>Yes</td><td>No; see-through areas turn white</td></tr>
+<tr><td>Quality loss</td><td>None, ever</td><td>A little on every save</td></tr>
+<tr><td>Best for</td><td>Editing, screenshots with small text, logos, line art</td><td>Photos, sending, uploading, posting</td></tr>
+<tr><td>Opens in</td><td>Almost everything</td><td>Everything, including old forms and apps</td></tr>
+</table>
 <h3>Picking a quality</h3>
 <p>The default 90% suits photos and screenshots: visibly the same picture, a fraction of the size. Drop toward 70% when the file only needs to be looked at once, like a quick proof for a client. Push toward 100% for images headed to print or further editing, and accept the bigger file.</p>
+<h3>How to convert PNG to JPG on Windows, Mac, and iPhone</h3>
+<p>The converter above is the fast route, but every computer and phone can also do this with the apps already on it:</p>
+<p><strong>Windows (Paint):</strong> right-click the PNG and choose Open with, then Paint. Go to File, then Save as, then JPEG picture. Pick a folder and save; Paint writes a JPG copy and leaves your PNG alone.</p>
+<p><strong>Mac (Preview):</strong> open the PNG in Preview. Go to File, then Export. Set the format to JPEG, move the quality slider toward Best for photos, and save.</p>
+<p><strong>iPhone (Files):</strong> save the PNG to the Files app, touch and hold it, tap Quick Actions, then Convert Image. Choose JPEG and the image size, and the converted copy lands in the same folder.</p>
+<p>One warning that saves real grief: renaming a file from photo.png to photo.jpg does not convert anything. The picture inside is still PNG data wearing a JPG name tag, and some apps will refuse to open it. A real conversion re-encodes the image, which is what the apps above and the converter on this page do.</p>
 <h3>One thing to know before you convert</h3>
 <p>Transparency does not survive the trip. A logo or sticker with see-through areas gets a white background in JPG, which is usually what an upload form wants anyway. Keep the PNG around if you still need the transparent version for design work.</p>
 </section>
