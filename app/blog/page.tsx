@@ -221,14 +221,14 @@ const posts = [
   },
   {
     href: "/blog/best-free-crm-small-business/",
-    title: "12 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans)",
-    description: "Compare 12 free CRM tools for small businesses by user limits, contact caps, features and upgrade traps. Includes HubSpot, Zoho, Attio and LeaveItToBumBum.",
+    title: "14 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans)",
+    description: "Compare 14 free CRM tools for small businesses by user limits, contact caps, features and upgrade traps. Includes HubSpot, Zoho, Attio and LeaveItToBumBum.",
     date: "October 26, 2026",
   },
   {
     href: "/blog/best-small-business-software/",
-    title: "12 Best Small Business Software Tools in 2026 (Free and Paid)",
-    description: "The 12 best small business software tools for everyday work: invoicing, CRM, email, projects, design, automation and selling. Find the right tool without subscription bloat.",
+    title: "13 Best Small Business Software Tools in 2026 (Free and Paid)",
+    description: "The 13 best small business software tools for everyday work: invoicing, CRM, email, projects, design, automation, payroll and selling. Find the right tool without subscription bloat.",
     date: "October 26, 2026",
   },
   {

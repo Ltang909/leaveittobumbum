@@ -4,17 +4,17 @@ import { SiteHeader, SiteFooter } from "../../components/chrome";
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/best-small-business-software/" },
   openGraph: { url: "/blog/best-small-business-software/" },
-  title: "12 Best Small Business Software Tools in 2026 (Free and Paid) | Leave It to Bum Bum",
-  description: "The 12 best small business software tools for everyday work: invoicing, CRM, email, projects, design, automation and selling. Find the right tool without subscription bloat.",
+  title: "13 Best Small Business Software Tools in 2026 (Free and Paid) | Leave It to Bum Bum",
+  description: "The 13 best small business software tools for everyday work: invoicing, CRM, email, projects, design, automation, payroll and selling. Find the right tool without subscription bloat.",
 };
 
 const postingLd = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "12 Best Small Business Software Tools in 2026 (Free and Paid)",
-  "description": "The 12 best small business software tools for everyday work: invoicing, CRM, email, projects, design, automation and selling. Find the right tool without subscription bloat.",
+  "headline": "13 Best Small Business Software Tools in 2026 (Free and Paid)",
+  "description": "The 13 best small business software tools for everyday work: invoicing, CRM, email, projects, design, automation, payroll and selling. Find the right tool without subscription bloat.",
   "datePublished": "2026-10-26",
-  "dateModified": "2026-11-12",
+  "dateModified": "2026-11-16",
   "author": {
     "@type": "Organization",
     "name": "LeaveItToBumBum",
@@ -54,7 +54,7 @@ const breadcrumbLd = {
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "12 Best Small Business Software Tools in 2026 (Free and Paid)",
+      "name": "13 Best Small Business Software Tools in 2026 (Free and Paid)",
       "item": "https://leaveittobumbum.com/blog/best-small-business-software/"
     }
   ]
@@ -135,6 +135,12 @@ const itemListLd = {
       "position": 12,
       "name": "Mailchimp",
       "url": "https://mailchimp.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "Gusto",
+      "url": "https://gusto.com/"
     }
   ]
 };
@@ -148,16 +154,16 @@ export default function BestSmallBusinessSoftware() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <section className="page-head shell blog-head">
         <p className="kicker">Blog</p>
-        <h1>12 Best Small Business Software Tools in 2026 (Free and Paid)</h1>
-        <p className="lede">Updated November 12, 2026 · 12 products compared · By the LeaveItToBumBum team</p>
+        <h1>13 Best Small Business Software Tools in 2026 (Free and Paid)</h1>
+        <p className="lede">Updated November 16, 2026 · 13 products compared · By the LeaveItToBumBum team</p>
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p><strong>Quick answer:</strong> For small, repetitive jobs-recording your screen, following up with a client, tracking subscriptions, reading receipts or turning rough thoughts into content-<strong><a href="/tools/">LeaveItToBumBum</a></strong> is our first pick. It's a collection of microtools, not another giant dashboard. For your core business systems, <strong><a href="https://workspace.google.com/" rel="noopener">Google Workspace</a></strong> is strong for business email and collaboration, <strong><a href="https://quickbooks.intuit.com/" rel="noopener">QuickBooks</a></strong> for accounting, <strong><a href="https://www.hubspot.com/" rel="noopener">HubSpot</a></strong> for CRM, and <strong><a href="https://www.shopify.com/" rel="noopener">Shopify</a></strong> for ecommerce. Most businesses will need a combination rather than one app that tries to do everything.</p>
+          <p><strong>Quick answer:</strong> For small, repetitive jobs-recording your screen, following up with a client, tracking subscriptions, reading receipts or turning rough thoughts into content-<strong><a href="/tools/">LeaveItToBumBum</a></strong> is our first pick. It's a collection of microtools, not another giant dashboard. For your core business systems, <strong><a href="https://workspace.google.com/" rel="noopener">Google Workspace</a></strong> is strong for business email and collaboration, <strong><a href="https://quickbooks.intuit.com/" rel="noopener">QuickBooks</a></strong> for accounting, <strong><a href="https://www.hubspot.com/" rel="noopener">HubSpot</a></strong> for CRM, and <strong><a href="https://www.shopify.com/" rel="noopener">Shopify</a></strong> for ecommerce, and <strong><a href="https://gusto.com/" rel="noopener">Gusto</a></strong> for payroll once anyone is on the team. Most businesses will need a combination rather than one app that tries to do everything.</p>
           <p>You wouldn't buy a tractor to mow your backyard. So why buy enterprise software to use one feature?</p>
           <p>It's easy to build a software stack that looks impressive and costs hundreds every month. But a small business usually needs a handful of reliable foundations, plus quick tools for whatever comes up on a Tuesday afternoon. This guide separates the two.</p>
           <p><strong>Disclosure:</strong> This article is published by LeaveItToBumBum and includes our own product in the top position. That reflects our editorial preference for <strong>small, task-focused software when the job is small</strong>-not a claim that microtools can replace business email, accounting, ecommerce, payroll or full-featured CRM software. We researched vendor documentation and pricing as of October 26, 2026, without claiming comprehensive hands-on testing of every platform. US list prices are used where specified; promotions, taxes, country-specific plans and usage fees may differ.</p>
-          <h2>The 12 best small business software tools at a glance</h2>
+          <h2>The 13 best small business software tools at a glance</h2>
           <div className="table-wrap">
             <table>
               <thead>
@@ -170,12 +176,13 @@ export default function BestSmallBusinessSoftware() {
                 <tr><td><strong>4. <a href="https://www.hubspot.com/" rel="noopener">HubSpot CRM</a></strong></td><td>Contacts, leads and sales follow-ups</td><td>Free tier for up to 2 users</td></tr>
                 <tr><td><strong>5. <a href="https://www.notion.com/" rel="noopener">Notion</a></strong></td><td>Internal knowledge, documents and workflows</td><td>Free for individuals; Plus from $10/seat/month</td></tr>
                 <tr><td><strong>6. <a href="https://trello.com/" rel="noopener">Trello</a></strong></td><td>Simple project and task boards</td><td>Free up to 10 collaborators; Standard $5/user/month annually</td></tr>
-                <tr><td><strong>7. <a href="https://www.canva.com/" rel="noopener">Canva</a></strong></td><td>Social posts, presentations and marketing design</td><td>Free tier; Pro and Business paid</td></tr>
+                <tr><td><strong>7. <a href="https://www.canva.com/" rel="noopener">Canva</a></strong></td><td>Social posts, presentations and marketing design</td><td>Free tier; Pro US$144/year for one person</td></tr>
                 <tr><td><strong>8. <a href="https://zapier.com/" rel="noopener">Zapier</a></strong></td><td>Automating handoffs across apps</td><td>Free 100 tasks/month; paid upgrades</td></tr>
                 <tr><td><strong>9. <a href="https://slack.com/" rel="noopener">Slack</a></strong></td><td>Team communication</td><td>Free tier with 90-day searchable history</td></tr>
                 <tr><td><strong>10. <a href="https://www.shopify.com/" rel="noopener">Shopify</a></strong></td><td>Running an online store</td><td>US Basic $29/month billed annually</td></tr>
                 <tr><td><strong>11. <a href="https://squareup.com/" rel="noopener">Square</a></strong></td><td>In-person payments and point of sale</td><td>Free POS software; processing fees apply</td></tr>
                 <tr><td><strong>12. <a href="https://mailchimp.com/" rel="noopener">Mailchimp</a></strong></td><td>Email campaigns and newsletters</td><td>Free up to 250 contacts and 500 monthly sends</td></tr>
+                <tr><td><strong>13. <a href="https://gusto.com/" rel="noopener">Gusto</a></strong></td><td>Payroll runs, tax filings and paying a small team</td><td>Simple plan US$49/month + $6/person/month</td></tr>
               </tbody>
             </table>
           </div>
@@ -210,7 +217,7 @@ export default function BestSmallBusinessSoftware() {
           <p><strong>What works:</strong> Quick onboarding, visual status tracking and a useful free plan. <strong>What to know:</strong> The Free tier supports <strong>up to 10 collaborators per workspace</strong> and <strong>10 boards</strong>; more advanced workflows and views are paid. Standard lists at <strong>$5/user/month when billed annually</strong>. <strong>Verdict:</strong> An excellent fit for repeatable tasks and short projects; larger organizations may need more structured tools. <a href="https://trello.com/en/pricing" rel="noopener">Source: Trello pricing</a>.</p>
           <h2>7. Canva - best for everyday business design</h2>
           <p><a href="https://www.canva.com/" rel="noopener">Canva</a> makes it easier to produce social graphics, presentations, flyers and marketing materials. Templates and a broad asset library help small businesses publish acceptable creative without opening professional design software for every small job.</p>
-          <p><strong>What works:</strong> Low barrier to entry, repeatable content templates and brand-management options on paid plans. <strong>What to know:</strong> Templates can make brands look interchangeable; advanced brand tools, premium assets and higher AI allowances cost extra. Canva's current lineup is <strong>Free, Pro, Business and Enterprise</strong>, with Business oriented to team needs. <strong>Verdict:</strong> Useful for fast marketing production; still worth investing in original branding when differentiation matters. <a href="https://www.canva.com/pricing/" rel="noopener">Source: Canva pricing</a>.</p>
+          <p><strong>What works:</strong> Low barrier to entry, repeatable content templates and brand-management options on paid plans. <strong>What to know:</strong> Templates can make brands look interchangeable; advanced brand tools, premium assets and higher AI allowances cost extra. Canva's current lineup is <strong>Free, Pro, Business and Enterprise</strong>, with Business oriented to team needs. Pro lists at <strong>US$144/year for one person</strong> (US$18/month billed monthly); Business is US$250/year per person. <strong>Verdict:</strong> Useful for fast marketing production; still worth investing in original branding when differentiation matters. <a href="https://www.canva.com/pricing/" rel="noopener">Source: Canva pricing</a>.</p>
           <h2>8. Zapier - best for connecting apps without custom development</h2>
           <p><a href="https://zapier.com/" rel="noopener">Zapier</a> automates handoffs such as “when a form arrives, add a row and notify the team.” That matters as your small-business stack expands: even great standalone software creates manual copy-and-paste work between systems.</p>
           <p><strong>What works:</strong> Broad integrations, approachable triggers and actions, and the ability to automate recurring processes. <strong>What to know:</strong> The free plan includes <strong>100 tasks/month</strong> and basic two-step Zaps, according to Zapier's August 2026 documentation. More complex flows and higher volume generally require paid plans. An automation is only as reliable as the data and permissions behind it. <strong>Verdict:</strong> Valuable when you have a repeated handoff, but unnecessary for a task you only do twice a year. <a href="https://help.zapier.com/hc/en-us/articles/32337438839565-What-s-included-in-Zapier-s-Free-plan" rel="noopener">Source: Zapier Free plan</a>.</p>
@@ -226,9 +233,12 @@ export default function BestSmallBusinessSoftware() {
           <h2>12. Mailchimp - best for starting an email newsletter</h2>
           <p><a href="https://mailchimp.com/" rel="noopener">Mailchimp</a> is built for email campaigns, audience management and marketing communication. When a small business is starting to nurture subscribers, it can help move that work out of ad hoc BCC email blasts.</p>
           <p><strong>What works:</strong> Email campaign builder, templates and a path to more involved customer marketing. <strong>What to know:</strong> The current free plan is much smaller than some older guides suggest: it allows <strong>up to 250 contacts</strong> and <strong>500 sends per month</strong>, with a <strong>250-send daily limit</strong>. Automated marketing capabilities vary by paid tier. <strong>Verdict:</strong> A reasonable starter for a very small list; compare alternatives once your audience grows. <a href="https://mailchimp.com/pricing/marketing/" rel="noopener">Source: Mailchimp pricing</a>.</p>
+          <h2>13. Gusto - best for payroll and paying a small team</h2>
+          <p><a href="https://gusto.com/" rel="noopener">Gusto</a> runs payroll: pay runs, tax calculations and filings, direct deposit, and the year-end forms, for employees and contractors. Payroll is the one job on this list a small business should not improvise in a spreadsheet, because mistakes come with penalties attached and pay day does not move.</p>
+          <p><strong>What works:</strong> Unlimited payroll runs on every plan, tax filings handled for you, and hiring paperwork in the same place as the pay runs. <strong>What to know:</strong> The Simple plan covers payroll in a single state; multi-state payroll and more HR tooling sit on higher tiers. Simple lists at <strong>US$49/month plus $6/person/month</strong>. <strong>Verdict:</strong> The payroll pick once you have even one employee, or a contractor you pay on a schedule. <a href="https://gusto.com/product/pricing" rel="noopener">Source: Gusto pricing</a>.</p>
           <h2>What software does a small business actually need?</h2>
           <p><strong>Solo consultant:</strong> Start with professional email, a way to invoice and maintain your books, and a <a href="/blog/best-free-crm-small-business/">simple client follow-up system</a>. <a href="https://workspace.google.com/" rel="noopener">Google Workspace</a> + a suitable accounting product + <a href="/tools/purrsuit/">Purrsuit</a> might be enough. Add <a href="/tools/ghostwriter/">Ghostwriter</a> or <a href="/tools/clips/">Clips</a> when a specific job arises.</p>
-          <p><strong>Small services team:</strong> Add shared CRM and project visibility. <a href="https://www.hubspot.com/" rel="noopener">HubSpot</a> + <a href="https://trello.com/" rel="noopener">Trello</a> or <a href="https://www.notion.com/" rel="noopener">Notion</a> can help, with <a href="https://quickbooks.intuit.com/" rel="noopener">QuickBooks</a> or another accounting system for proper financial records. Add <a href="https://slack.com/" rel="noopener">Slack</a> if communication needs justify it.</p>
+          <p><strong>Small services team:</strong> Add shared CRM and project visibility. <a href="https://www.hubspot.com/" rel="noopener">HubSpot</a> + <a href="https://trello.com/" rel="noopener">Trello</a> or <a href="https://www.notion.com/" rel="noopener">Notion</a> can help, with <a href="https://quickbooks.intuit.com/" rel="noopener">QuickBooks</a> or another accounting system for proper financial records. Add <a href="https://slack.com/" rel="noopener">Slack</a> if communication needs justify it, and a payroll service like <a href="https://gusto.com/" rel="noopener">Gusto</a> once anyone is on payroll.</p>
           <p><strong>Retail or ecommerce business:</strong> Prioritize <a href="https://www.shopify.com/" rel="noopener">Shopify</a> for online selling or <a href="https://squareup.com/" rel="noopener">Square</a> for in-person checkout, plus actual bookkeeping. Marketing tools and automations become useful once you have repeatable sales and customer journeys.</p>
           <p>Look at the picks above and a pattern shows up: the business application tools that earn their place each handle one recurring job, like email, books, follow-ups, or payments. That is how software for SMEs tends to work at this size. A small set of apps you open every week beats a long list of subscriptions you touch twice a year.</p>
           <p>The ordering matters. Buy the essentials first. Use small tools for occasional tasks. Upgrade when your workflow-not the software vendor's pricing page-demands it.</p>
@@ -244,7 +254,7 @@ export default function BestSmallBusinessSoftware() {
           <h3>How can I keep software subscription costs low?</h3>
           <p>Review recurring costs, cancel overlapping apps, choose annual billing only when usage is stable, and test a free or small tool before committing to a large suite. <a href="/tools/cutline/">LeaveItToBumBum's Subscription Tracker</a> is designed to help track subscriptions and renewal dates.</p>
           <h2>How we compared these tools</h2>
-          <p>We compared 12 products across <strong>job-to-be-done fit</strong>, <strong>cost to start</strong>, <strong>important free-plan limits</strong>, <strong>ability to grow with a small company</strong>, and <strong>whether the software replaces or merely complements a core business system</strong>. Information comes from vendor pricing and product documentation reviewed October 26, 2026. We did not score these platforms as though they performed identical jobs; they don't. LeaveItToBumBum's first-place position reflects the viewpoint of this publisher and is clearly disclosed.</p>
+          <p>We compared 13 products across <strong>job-to-be-done fit</strong>, <strong>cost to start</strong>, <strong>important free-plan limits</strong>, <strong>ability to grow with a small company</strong>, and <strong>whether the software replaces or merely complements a core business system</strong>. Information comes from vendor pricing and product documentation reviewed October 26, 2026. We did not score these platforms as though they performed identical jobs; they don't. LeaveItToBumBum's first-place position reflects the viewpoint of this publisher and is clearly disclosed.</p>
           <p><strong>Small job? Small tool.</strong> <a href="/tools/">Browse LeaveItToBumBum's toolbox</a>. For core operations, choose the dedicated systems your business genuinely needs.</p>
         </div>
       </section>
