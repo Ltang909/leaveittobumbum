@@ -4,17 +4,17 @@ import { SiteHeader, SiteFooter } from "../../components/chrome";
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/best-free-crm-small-business/" },
   openGraph: { url: "/blog/best-free-crm-small-business/" },
-  title: "12 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans) | Leave It to Bum Bum",
-  description: "Compare 12 free CRM tools for small businesses by user limits, contact caps, features and upgrade traps. Includes HubSpot, Zoho, Attio and LeaveItToBumBum.",
+  title: "14 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans) | Leave It to Bum Bum",
+  description: "Compare 14 free CRM tools for small businesses by user limits, contact caps, features and upgrade traps. Includes HubSpot, Zoho, Salesforce, Attio and LeaveItToBumBum.",
 };
 
 const postingLd = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "12 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans)",
-  "description": "Compare 12 free CRM tools for small businesses by user limits, contact caps, features and upgrade traps. Includes HubSpot, Zoho, Attio and LeaveItToBumBum.",
+  "headline": "14 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans)",
+  "description": "Compare 14 free CRM tools for small businesses by user limits, contact caps, features and upgrade traps. Includes HubSpot, Zoho, Salesforce, Attio and LeaveItToBumBum.",
   "datePublished": "2026-10-26",
-  "dateModified": "2026-11-12",
+  "dateModified": "2026-11-16",
   "author": {
     "@type": "Organization",
     "name": "LeaveItToBumBum",
@@ -54,7 +54,7 @@ const breadcrumbLd = {
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "12 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans)",
+      "name": "14 Best Free CRM Software for Small Businesses in 2026 (Real Free Plans)",
       "item": "https://leaveittobumbum.com/blog/best-free-crm-small-business/"
     }
   ]
@@ -135,6 +135,18 @@ const itemListLd = {
       "position": 12,
       "name": "Odoo CRM",
       "url": "https://www.odoo.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "Salesforce Free Suite",
+      "url": "https://www.salesforce.com/crm/free-crm/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "name": "EspoCRM",
+      "url": "https://www.espocrm.com/"
     }
   ]
 };
@@ -148,8 +160,8 @@ export default function BestFreeCrmSmallBusiness() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       <section className="page-head shell blog-head">
         <p className="kicker">Blog</p>
-        <h1>12 Best Free CRM Software for Small Businesses in 2026</h1>
-        <p className="lede">Updated November 12, 2026 · 12 products compared · By the LeaveItToBumBum team</p>
+        <h1>14 Best Free CRM Software for Small Businesses in 2026</h1>
+        <p className="lede">Updated November 16, 2026 · 14 products compared · By the LeaveItToBumBum team</p>
       </section>
       <section className="shell">
         <div className="prose blog-wide">
@@ -157,7 +169,7 @@ export default function BestFreeCrmSmallBusiness() {
           <p>The best CRM is the one you'll open. That sounds obvious, but plenty of small business owners abandon expensive customer-management systems because their actual workflow is three steps: remember the customer, follow up, and keep the relationship moving.</p>
           <p>Some teams, however, really do need pipelines, permissions, shared calendars and reporting. We've compared both genuinely lightweight client trackers and full CRM software below.</p>
           <p><strong>Disclosure and methodology:</strong> This guide is written by LeaveItToBumBum, so our own tool appears first as an <strong>editorial pick for solo follow-up management</strong>, not as the most feature-rich CRM. We reviewed public vendor plans and documentation as of October 26, 2026. We did not conduct controlled hands-on tests of every vendor. A free trial alone does not qualify as free; where a vendor's pages disagree about a free plan, we flag the uncertainty. Free tiers, user caps and upgrade rules can change.</p>
-          <h2>Quick comparison: 12 free CRM tools</h2>
+          <h2>Quick comparison: 14 free CRM tools</h2>
           <p>Working solo, or selling to individual clients rather than companies? Two picks on this list suit that B2C client work best: the <a href="/tools/purrsuit/">Client Follow-Up Tracker</a> when follow-ups are the whole job, and <a href="https://www.bigin.com/" rel="noopener">Bigin by Zoho</a> when you want a simple deal pipeline.</p>
           <div className="table-wrap">
             <table>
@@ -177,6 +189,8 @@ export default function BestFreeCrmSmallBusiness() {
                 <tr><td><strong>10. <a href="https://www.bitrix24.com/" rel="noopener">Bitrix24</a></strong></td><td>CRM plus tasks and chat</td><td>Free plan / 5 GB</td><td>Published free-user limits conflict across vendor pages</td></tr>
                 <tr><td><strong>11. <a href="https://www.vtiger.com/" rel="noopener">Vtiger One Pilot</a></strong></td><td>Free CRM for up to 10 users</td><td>Free, 10 users / 3,000 records</td><td>Capacity and customisation restrictions</td></tr>
                 <tr><td><strong>12. <a href="https://www.odoo.com/" rel="noopener">Odoo CRM</a></strong></td><td>One business app for many teammates</td><td>One App Free, unlimited users</td><td>Adding additional apps generally makes it paid</td></tr>
+                <tr><td><strong>13. <a href="https://www.salesforce.com/crm/free-crm/" rel="noopener">Salesforce Free Suite</a></strong></td><td>A big-name CRM, free for two people</td><td>Free Suite, free for up to 2 users</td><td>Stays free only while you log in at least once every 60 days; email capped at 100/month</td></tr>
+                <tr><td><strong>14. <a href="https://www.espocrm.com/" rel="noopener">EspoCRM</a></strong></td><td>Full ownership of your CRM data</td><td>Free open-source Community edition; you host it</td><td>Hosting, backups and maintenance are yours; some extras are paid extension packs</td></tr>
               </tbody>
             </table>
           </div>
@@ -218,26 +232,32 @@ export default function BestFreeCrmSmallBusiness() {
           <h2>12. Odoo CRM - best for one free app with lots of users</h2>
           <p><a href="https://www.odoo.com/" rel="noopener">Odoo</a> offers <strong>One App Free</strong>, which allows unlimited users for one selected app, including CRM. It's particularly interesting when you expect to manage a business with Odoo later and want your first CRM process inside that environment.</p>
           <p><strong>What works:</strong> Unlimited users on the free single-app model, optional connection to a wide range of other business software. <strong>What to know:</strong> A single free app is not the same as a free all-in-one ERP. Adding more business apps generally requires a paid plan, and there is a learning curve. <strong>Verdict:</strong> Best for teams comfortable with a modular business platform; unnecessarily elaborate if you only want a follow-up reminder. <a href="https://www.odoo.com/pricing" rel="noopener">Source: Odoo pricing and free-plan rules</a>.</p>
+          <h2>13. Salesforce Free Suite - best free CRM from the biggest name in CRM</h2>
+          <p><a href="https://www.salesforce.com/crm/free-crm/" rel="noopener">Salesforce Free Suite</a> is Salesforce's genuinely free tier: lead, opportunity and case management for <strong>up to two users</strong>, with simple email marketing, connected Slack conversations, and built-in AI that drafts emails and summarises records. No credit card and no contract.</p>
+          <p><strong>What works:</strong> A real Salesforce underneath, so a business that outgrows free can step up to Starter Suite (US$25/user/month) without migrating to a different platform. <strong>What to know:</strong> Two users is the hard ceiling, email marketing is capped at <strong>100 emails a month</strong>, and the free plan stays active only while you log in at least once every 60 days. <strong>Verdict:</strong> The pick when you want the Salesforce name and structure at $0 and your team is one or two people. <a href="https://www.salesforce.com/crm/free-crm/" rel="noopener">Source: Salesforce Free Suite</a>.</p>
+          <h2>14. EspoCRM - best free CRM when you want to own the data</h2>
+          <p><a href="https://www.espocrm.com/" rel="noopener">EspoCRM</a> is open-source CRM you host yourself. The Community edition is free with no per-user fees: contacts, leads, opportunities, cases, email integration and a calendar, on your own server and under your own control.</p>
+          <p><strong>What works:</strong> No seat fees at any team size, and your customer data lives on infrastructure you control. <strong>What to know:</strong> Hosting, updates, backups and security are your job, and some extras (advanced reporting, business process tools, quoting) are paid extension packs sold per instance. EspoCRM's own cloud starts at US$15/user/month if you would rather not host. <strong>Verdict:</strong> The right pick for a technical owner who wants full ownership; the wrong pick if nobody wants to maintain a server. <a href="https://www.espocrm.com/" rel="noopener">Source: EspoCRM</a>.</p>
           <h2>Free CRM plans and email marketing</h2>
           <p>Plenty of people search for a free CRM with email marketing, and the honest answer is that most free plans split the two jobs. HubSpot's free CRM connects to its marketing tools, with email quotas that depend on which feature you use. EngageBay includes email tracking and basic marketing touchpoints in its free sales offering, capped at 250 contacts. Agile CRM includes selected marketing functions on the free plan for up to 10 users. Capsule keeps its more advanced mail features on paid plans, and Odoo's one free app means picking the CRM leaves email marketing as a second, paid app. Before you move your contacts into any of them, check the sending limits on the exact plan you will actually be on.</p>
           <h2>Which free CRM should you actually use?</h2>
           <p><strong>If you're a solo service provider:</strong> Start with <a href="/tools/purrsuit/">Purrsuit</a> if follow-up discipline is the problem. Switch to <a href="https://www.bigin.com/" rel="noopener">Bigin</a> or <a href="https://capsulecrm.com/" rel="noopener">Capsule</a> if you want a structured deal pipeline and a persistent CRM database.</p>
           <p><strong>If you're a two- or three-person team:</strong> Compare <a href="https://www.hubspot.com/" rel="noopener">HubSpot</a>, <a href="https://www.zoho.com/" rel="noopener">Zoho CRM</a> and <a href="https://attio.com/" rel="noopener">Attio</a>. Decide what matters most: marketing/service extensions, classic sales workflow or flexible data.</p>
           <p><strong>If you need 5-10 people without monthly seat fees:</strong> Consider <a href="https://www.agilecrm.com/" rel="noopener">Agile CRM</a> or <a href="https://www.vtiger.com/" rel="noopener">Vtiger</a> within their contact/record limits, and investigate <a href="https://www.odoo.com/" rel="noopener">Odoo</a>'s one-app model.</p>
-          <p><strong>If you need full ownership of CRM data:</strong> <a href="https://www.espocrm.com/" rel="noopener">EspoCRM</a> is a free, open-source self-hosted alternative worth evaluating separately. The software license is free, but hosting, backups and maintenance are your responsibility.</p>
+          <p><strong>If you need full ownership of CRM data:</strong> <a href="https://www.espocrm.com/" rel="noopener">EspoCRM</a> (entry 14 above) is a free, open-source self-hosted option. The software license is free, but hosting, backups and maintenance are your responsibility.</p>
           <h2>Frequently asked questions</h2>
           <h3>What is the best free CRM for small businesses?</h3>
           <p>For a conventional full CRM, <a href="https://www.hubspot.com/" rel="noopener">HubSpot</a> and <a href="https://www.zoho.com/" rel="noopener">Zoho CRM</a> are good starting points, depending on team size. For a solo business primarily trying to remember follow-ups, LeaveItToBumBum's <a href="/tools/purrsuit/">Purrsuit</a> is the simpler fit. For flexible startup records, <a href="https://attio.com/" rel="noopener">Attio</a> is worth comparing.</p>
           <h3>Is there a truly free CRM with no time limit?</h3>
-          <p>Yes. <a href="https://www.hubspot.com/" rel="noopener">HubSpot</a>, <a href="https://www.zoho.com/" rel="noopener">Zoho CRM</a>, <a href="https://www.bigin.com/" rel="noopener">Bigin</a>, <a href="https://capsulecrm.com/" rel="noopener">Capsule</a>, <a href="https://attio.com/" rel="noopener">Attio</a>, <a href="https://www.agilecrm.com/" rel="noopener">Agile CRM</a>, <a href="https://www.vtiger.com/" rel="noopener">Vtiger</a> and <a href="https://www.odoo.com/" rel="noopener">Odoo</a> each publish a free tier or one-app model without a routine trial deadline, subject to their capacity/feature limits. <a href="https://www.freshworks.com/" rel="noopener">Freshsales</a>' current official pages should be cross-checked because the feature-comparison page and main pricing presentation differ. Self-hosted open-source software such as <a href="https://www.espocrm.com/" rel="noopener">EspoCRM</a> also avoids license fees, but not operational costs.</p>
+          <p>Yes. <a href="https://www.hubspot.com/" rel="noopener">HubSpot</a>, <a href="https://www.zoho.com/" rel="noopener">Zoho CRM</a>, <a href="https://www.bigin.com/" rel="noopener">Bigin</a>, <a href="https://capsulecrm.com/" rel="noopener">Capsule</a>, <a href="https://attio.com/" rel="noopener">Attio</a>, <a href="https://www.agilecrm.com/" rel="noopener">Agile CRM</a>, <a href="https://www.vtiger.com/" rel="noopener">Vtiger</a> and <a href="https://www.odoo.com/" rel="noopener">Odoo</a>, and <a href="https://www.salesforce.com/crm/free-crm/" rel="noopener">Salesforce Free Suite</a>, each publish a free tier or one-app model without a routine trial deadline, subject to their capacity/feature limits. <a href="https://www.freshworks.com/" rel="noopener">Freshsales</a>' current official pages should be cross-checked because the feature-comparison page and main pricing presentation differ. Self-hosted open-source software such as <a href="https://www.espocrm.com/" rel="noopener">EspoCRM</a> also avoids license fees, but not operational costs.</p>
           <h3>Does Pipedrive have a free plan?</h3>
-          <p>No permanent free plan is advertised on <a href="https://www.pipedrive.com/en/pricing" rel="noopener">Pipedrive's current pricing page</a>. It offers a <strong>14-day free trial</strong>, then paid subscriptions. We have therefore left it out of the 12 free-plan picks.</p>
+          <p>No permanent free plan is advertised on <a href="https://www.pipedrive.com/en/pricing" rel="noopener">Pipedrive's current pricing page</a>. It offers a <strong>14-day free trial</strong>, then paid subscriptions. We have therefore left it out of the 14 free-plan picks.</p>
           <h3>Is a client tracker the same as a CRM?</h3>
           <p>Not quite. A client tracker can be enough when your main needs are contacts and next actions. A full CRM typically adds deal stages, team access, communication history, automation, reports and integrations. Choose based on the job you need done-not the length of a feature checklist.</p>
           <h3>When should I upgrade from a free CRM?</h3>
           <p>Upgrade when a free limit blocks real work: you hit the contact cap, need a second pipeline, must automate handoffs, require proper role permissions or need accurate multi-person reporting. A dashboard that only looks more impressive is not a reason to pay.</p>
           <h2>How we selected these free CRM tools</h2>
-          <p>We considered <strong>permanent free access</strong>, <strong>seat and record limits</strong>, <strong>contact/deal management</strong>, <strong>daily follow-up usefulness</strong>, <strong>upgrade trade-offs</strong> and <strong>team fit</strong>, based on official vendor pricing and help pages reviewed October 26, 2026. These are researched comparisons, not claims that our team independently tested all 12 products. We explicitly disclose that we operate LeaveItToBumBum and recommend competing full CRMs where they are stronger.</p>
+          <p>We considered <strong>permanent free access</strong>, <strong>seat and record limits</strong>, <strong>contact/deal management</strong>, <strong>daily follow-up usefulness</strong>, <strong>upgrade trade-offs</strong> and <strong>team fit</strong>, based on official vendor pricing and help pages reviewed October 26, 2026. These are researched comparisons, not claims that our team independently tested all 14 products. We explicitly disclose that we operate LeaveItToBumBum and recommend competing full CRMs where they are stronger.</p>
           <p><strong>Want to keep customer follow-ups simple?</strong> <a href="/tools/purrsuit/">Try Purrsuit by LeaveItToBumBum</a>. Need a full sales system? Start by comparing HubSpot, Zoho CRM or Attio.</p>
         </div>
       </section>
