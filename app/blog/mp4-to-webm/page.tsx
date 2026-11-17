@@ -47,7 +47,7 @@ const faqLd = {
     { "@type": "Question", "name": "Does converting MP4 to WebM lose quality?", "acceptedAnswer": { "@type": "Answer", "text": "The converter re-encodes the video, which is a lossy step, and aims to keep the result visually the same. Videos taller than 720 pixels are converted at 720 tall, which is plenty for web embeds and keeps files lean." } },
     { "@type": "Question", "name": "Does WebM play in every browser?", "acceptedAnswer": { "@type": "Answer", "text": "Every current major browser plays WebM in web pages. The weak spots are older software and some older Safari versions, which is why keeping an MP4 fallback for important embeds is a sensible habit." } },
     { "@type": "Question", "name": "How big a video can I convert?", "acceptedAnswer": { "@type": "Answer", "text": "Up to 100 MB, in MP4, WebM, MOV, MKV, or AVI. The work happens on your device, so big files convert at your computer's speed." } },
-    { "@type": "Question", "name": "Do I need an account to convert MP4 to WebM?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month. One finished conversion uses one action." } }
+    { "@type": "Question", "name": "Do I need an account to convert MP4 to WebM?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest. It is free, with no limits." } }
   ]
 };
 
@@ -90,7 +90,7 @@ export default function Mp4ToWebm() {
           <h3>How big a video can I convert?</h3>
           <p>Up to 100 MB, in MP4, WebM, MOV, MKV, or AVI. The work happens on your device, so big files convert at your computer's speed.</p>
           <h3>Do I need an account to convert MP4 to WebM?</h3>
-          <p>No. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month. One finished conversion uses one action.</p>
+          <p>No. You can convert as a guest. It is free, with no limits.</p>
         </div>
       </section>
       <SiteFooter />

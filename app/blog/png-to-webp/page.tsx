@@ -46,7 +46,7 @@ const faqLd = {
     { "@type": "Question", "name": "Does WebP keep my PNG's transparency?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. WebP supports transparency the same way PNG does, so logos and cutouts keep their clear backgrounds after converting. That is the main reason to choose WebP over JPG for graphics." } },
     { "@type": "Question", "name": "How much smaller will the WebP be?", "acceptedAnswer": { "@type": "Answer", "text": "Often dramatically: graphics and screenshots commonly shrink by half or more compared to PNG at high quality settings. Flat-color graphics shrink the most." } },
     { "@type": "Question", "name": "Does converting PNG to WebP lose quality?", "acceptedAnswer": { "@type": "Answer", "text": "WebP conversion is lossy at most settings, but at high quality the difference is not visible in normal web use. Keep your original PNGs archived as the masters." } },
-    { "@type": "Question", "name": "Do I need an account to convert PNG to WebP?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month." } },
+    { "@type": "Question", "name": "Do I need an account to convert PNG to WebP?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits." } },
     { "@type": "Question", "name": "Can I convert several PNGs at once?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drop in a batch and they all convert to WebP with the same settings in one pass." } }
   ]
 };
@@ -88,7 +88,7 @@ export default function PngToWebp() {
           <h3>Does converting PNG to WebP lose quality?</h3>
           <p>WebP conversion is lossy at most settings, but at high quality the difference is not visible in normal web use. Keep your original PNGs archived as the masters.</p>
           <h3>Do I need an account to convert PNG to WebP?</h3>
-          <p>No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month.</p>
+          <p>No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits.</p>
           <h3>Can I convert several PNGs at once?</h3>
           <p>Yes. Drop in a batch and they all convert to WebP with the same settings in one pass.</p>
         </div>

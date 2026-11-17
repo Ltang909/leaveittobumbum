@@ -47,7 +47,7 @@ const faqLd = {
     { "@type": "Question", "name": "How much bigger are PNG pages than JPG?", "acceptedAnswer": { "@type": "Answer", "text": "Often several times bigger, especially at the larger render sizes. That is the standing PNG trade: perfect fidelity, heavier files. Portals with tight size caps are usually happier with JPG." } },
     { "@type": "Question", "name": "Does each page become its own PNG?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every page renders as its own PNG image in page order, downloadable one by one or together in a ZIP bundle." } },
     { "@type": "Question", "name": "Do I pay an action per page?", "acceptedAnswer": { "@type": "Answer", "text": "No. One action covers the whole PDF, however many pages it has." } },
-    { "@type": "Question", "name": "Do I need an account to convert a PDF to PNG?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month." } }
+    { "@type": "Question", "name": "Do I need an account to convert a PDF to PNG?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest. It is free, with no limits." } }
   ]
 };
 
@@ -89,7 +89,7 @@ export default function PdfToPng() {
           <h3>Do I pay an action per page?</h3>
           <p>No. One action covers the whole PDF, however many pages it has.</p>
           <h3>Do I need an account to convert a PDF to PNG?</h3>
-          <p>No. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month.</p>
+          <p>No. You can convert as a guest. It is free, with no limits.</p>
         </div>
       </section>
       <SiteFooter />

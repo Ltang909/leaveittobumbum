@@ -46,7 +46,7 @@ const faqLd = {
     { "@type": "Question", "name": "Does converting PNG to JPG lose quality?", "acceptedAnswer": { "@type": "Answer", "text": "A little, by design: JPG is a lossy format. At high quality settings the difference is invisible in photos. Crisp text and hard edges in screenshots soften the most, so for images you need to read, keep the quality slider at the top." } },
     { "@type": "Question", "name": "What happens to transparent parts of my PNG?", "acceptedAnswer": { "@type": "Answer", "text": "JPG does not support transparency, so transparent areas are flattened onto a solid background. If the transparency matters, convert the PNG to WebP instead, which keeps it." } },
     { "@type": "Question", "name": "How much smaller will the JPG be?", "acceptedAnswer": { "@type": "Answer", "text": "For photos, often a fifth to a tenth of the PNG's size at high quality. Screenshots with lots of flat color shrink less dramatically, but still noticeably." } },
-    { "@type": "Question", "name": "Do I need an account to convert PNG to JPG?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month." } },
+    { "@type": "Question", "name": "Do I need an account to convert PNG to JPG?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits." } },
     { "@type": "Question", "name": "Can I convert a batch of PNGs at once?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drop in several PNGs and they all convert to JPG with the same settings in one pass." } }
   ]
 };
@@ -88,7 +88,7 @@ export default function PngToJpg() {
           <h3>How much smaller will the JPG be?</h3>
           <p>For photos, often a fifth to a tenth of the PNG's size at high quality. Screenshots with lots of flat color shrink less dramatically, but still noticeably.</p>
           <h3>Do I need an account to convert PNG to JPG?</h3>
-          <p>No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month.</p>
+          <p>No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits.</p>
           <h3>Can I convert a batch of PNGs at once?</h3>
           <p>Yes. Drop in several PNGs and they all convert to JPG with the same settings in one pass.</p>
         </div>

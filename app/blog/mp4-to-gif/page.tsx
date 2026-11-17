@@ -47,7 +47,7 @@ const faqLd = {
     { "@type": "Question", "name": "Does the GIF keep the sound?", "acceptedAnswer": { "@type": "Answer", "text": "No. GIF is a silent format with no audio track at all. If the sound matters, share the video itself, or add an MP3 track to a video with the Video MP3 Overlay tool instead." } },
     { "@type": "Question", "name": "How big a video can I convert?", "acceptedAnswer": { "@type": "Answer", "text": "The Video Converter accepts videos up to 100 MB, in MP4, WebM, MOV, MKV, or AVI. Conversion happens on your device, so very large or long videos convert at the speed of your computer." } },
     { "@type": "Question", "name": "Why is my GIF file so big?", "acceptedAnswer": { "@type": "Answer", "text": "GIF barely compresses. Length, resolution, and constant motion all inflate it. A shorter clip is the reliable fix; videos are also converted at no more than 720 pixels tall, which keeps GIFs sane." } },
-    { "@type": "Question", "name": "Do I need an account to make a GIF?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month. One finished conversion uses one action." } }
+    { "@type": "Question", "name": "Do I need an account to make a GIF?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest. It is free, with no limits." } }
   ]
 };
 
@@ -90,7 +90,7 @@ export default function Mp4ToGif() {
           <h3>Why is my GIF file so big?</h3>
           <p>GIF barely compresses. Length, resolution, and constant motion all inflate it. A shorter clip is the reliable fix; videos are also converted at no more than 720 pixels tall, which keeps GIFs sane.</p>
           <h3>Do I need an account to make a GIF?</h3>
-          <p>No. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month. One finished conversion uses one action.</p>
+          <p>No. You can convert as a guest. It is free, with no limits.</p>
         </div>
       </section>
       <SiteFooter />
