@@ -21,11 +21,12 @@ export default function TranscribeIphoneVoiceMemosGuide() {
       <section className="shell">
         <div className="prose blog-wide">
           <ToolCallout
+            variant="band"
             name="Voice Notes to Text"
             href="/tools/notes/"
-            icon="/bum/icons/notes.png"
-            blurb="Play a voice memo out loud, record it as it plays, and get a transcript you can copy, search, and send. Free, with no limits."
-            cta="Transcribe a voice memo free"
+            heading="Just want your voice memo as text?"
+            blurb="Voice Notes to Text does the transcribing for you. Free, with no limits."
+            cta="Open Voice Notes to Text"
           />
           <p>Open the voice memo on your iPhone, play it out loud, and record it in a browser transcription tool at the same time. Your words come back as a transcript you can copy or download. If the memo is still an idea forming in your head, skip the memo app entirely and record straight into the tool instead, so the transcript exists from the start. <a href="/tools/notes/">Bum Bum's Voice Notes to Text</a> handles both routes: play an existing memo and record it as it plays, or record a fresh note in the browser and get the transcript right away.</p>
 
