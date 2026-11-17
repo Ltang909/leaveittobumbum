@@ -45,7 +45,6 @@ const faqLd = {
   "mainEntity": [
     { "@type": "Question", "name": "Does each page become its own JPG?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every page of the PDF is rendered as a separate JPG image, in page order. Download them one at a time or all together in a ZIP bundle." } },
     { "@type": "Question", "name": "Will the text stay sharp?", "acceptedAnswer": { "@type": "Answer", "text": "At the standard size it is sharp enough for screens and uploads. If the JPGs will be printed or zoomed into, pick one of the larger render sizes, which render pages at two or three times the resolution." } },
-    { "@type": "Question", "name": "Do I pay an action per page?", "acceptedAnswer": { "@type": "Answer", "text": "No. One action covers the whole PDF, whether it has two pages or sixty-two." } },
     { "@type": "Question", "name": "Can I convert a password-protected PDF?", "acceptedAnswer": { "@type": "Answer", "text": "Not directly. Unlock it with its password in your usual PDF app, save an unprotected copy, and convert that copy." } },
     { "@type": "Question", "name": "Do I need an account to convert a PDF to JPG?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest. It is free, with no limits." } }
   ]
@@ -78,14 +77,12 @@ export default function PdfToJpg() {
           <h2>JPG or PNG for PDF pages?</h2>
           <p>JPG is the accepted-everywhere default and makes the smallest files, which is what upload portals want. Pages that are mostly text and line art stay crisper as PNG, at a bigger file size. If the destination is fussy about readability, <a href="/blog/pdf-to-png/">PDF to PNG</a> is the sharper trip; if it is fussy about file size, JPG wins.</p>
           <h2>Convert a PDF now</h2>
-          <p><a href="/tools/pdf-to-image/">PDF to Image</a> runs in your browser: drop the PDF in, pick JPG, and take the pages home as pictures. One action covers the whole PDF, not one per page.</p>
+          <p><a href="/tools/pdf-to-image/">PDF to Image</a> runs in your browser: drop the PDF in, pick JPG, and take the pages home as pictures. The whole PDF converts in one go, whether it has two pages or sixty-two.</p>
           <h2>Frequently asked questions</h2>
           <h3>Does each page become its own JPG?</h3>
           <p>Yes. Every page of the PDF is rendered as a separate JPG image, in page order. Download them one at a time or all together in a ZIP bundle.</p>
           <h3>Will the text stay sharp?</h3>
           <p>At the standard size it is sharp enough for screens and uploads. If the JPGs will be printed or zoomed into, pick one of the larger render sizes, which render pages at two or three times the resolution.</p>
-          <h3>Do I pay an action per page?</h3>
-          <p>No. One action covers the whole PDF, whether it has two pages or sixty-two.</p>
           <h3>Can I convert a password-protected PDF?</h3>
           <p>Not directly. Unlock it with its password in your usual PDF app, save an unprotected copy, and convert that copy.</p>
           <h3>Do I need an account to convert a PDF to JPG?</h3>
