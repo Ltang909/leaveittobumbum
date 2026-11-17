@@ -273,14 +273,13 @@ function renderQueue(){
   queueList.innerHTML='';
   queue.forEach(q=>{
     const div=document.createElement('div');div.className='queue-item';
-    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?(q.noEvents?'No events found':'Could not read it'):q.status==='blocked'?'Waiting on actions':'Queued';
+    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?(q.noEvents?'No events found':'Could not read it'):q.status==='blocked'?'Waiting':'Queued';
     div.innerHTML='<img src="'+q.dataUrl+'" alt=""><div><b>'+esc(q.name)+'</b><div class="meta">'+label+'</div></div>';
     queueList.appendChild(div);
   });
   const pending=queue.filter(q=>q.status==='queued');
   processBtn.classList.toggle('hidden',!pending.length||batchRunning);
-  const paidPending=pending.filter(q=>!q.sample).length;
-  processBtn.textContent=pending.length>1?'Read '+pending.length+' posters ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')':(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this poster');
+  processBtn.textContent=pending.length>1?'Read '+pending.length+' posters (free)':(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this poster');
 }
 
 function downscale(dataUrl){

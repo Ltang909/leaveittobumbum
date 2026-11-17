@@ -260,15 +260,14 @@ function renderQueue(){
   queueList.innerHTML='';
   queue.forEach(q=>{
     const div=document.createElement('div');div.className='queue-item';
-    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?(q.notReceipt?'No receipt found':'Could not read it'):q.status==='blocked'?'Waiting on actions':'Queued';
+    const label=q.status==='done'?'Read':q.status==='reading'?'Reading...':q.status==='error'?(q.notReceipt?'No receipt found':'Could not read it'):q.status==='blocked'?'Waiting':'Queued';
     div.innerHTML='<img src="'+q.dataUrl+'" alt=""><div><b>'+esc(q.name)+'</b><div class="meta">'+label+'</div></div>';
     queueList.appendChild(div);
   });
   const pending=queue.filter(q=>q.status==='queued');
   processBtn.classList.toggle('hidden',!pending.length||batchRunning);
-  const paidPending=pending.filter(q=>!q.sample).length;
   processBtn.textContent=pending.length>1
-    ?'Read '+pending.length+' receipts ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')'
+    ?'Read '+pending.length+' receipts (free)'
     :(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this receipt');
 }
 
@@ -318,7 +317,7 @@ processBtn.addEventListener('click',async()=>{
       renderQueue();
     }
     if(sawNotReceipt&&!blocked){
-      batchError.textContent='A photo in that batch does not look like a receipt, so Bum Bum skipped it and charged no action. This tool reads receipts and invoices. If yours is in the photo, lay it flat, straight on, whole receipt in frame.';
+      batchError.textContent='A photo in that batch does not look like a receipt, so Bum Bum skipped it. This tool reads receipts and invoices. If yours is in the photo, lay it flat, straight on, whole receipt in frame.';
     }
     barFill.style.width='100%';
     progText.textContent='Done.';

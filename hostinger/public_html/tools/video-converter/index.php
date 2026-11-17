@@ -212,7 +212,7 @@ convertBtn.addEventListener('click',async()=>{
   convertBtn.disabled=true;converting=true;cancelled=false;
   let step='starting';
   try{
-    step='quota';setProg(0.02,'Checking your actions...');
+    step='quota';setProg(0.02,'Checking in with Bum Bum...');
     const st=await apiCall({action:'status'});
     if(st.response.ok&&st.data.usage&&!st.data.usage.unlimited&&Number(st.data.usage.remaining)<=0)throw{limit:true};
     step='engine';setProg(0.06,'Loading the converter (first run downloads it, about 30 MB)...');

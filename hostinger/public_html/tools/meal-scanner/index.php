@@ -288,14 +288,13 @@ function renderQueue(){
   queueList.innerHTML='';
   queue.forEach(q=>{
     const div=document.createElement('div');div.className='queue-item';
-    const label=q.status==='done'?'Scanned':q.status==='reading'?'Scanning...':q.status==='error'?(q.noFood?'No food found':'Could not scan it'):q.status==='blocked'?'Waiting on actions':'Queued';
+    const label=q.status==='done'?'Scanned':q.status==='reading'?'Scanning...':q.status==='error'?(q.noFood?'No food found':'Could not scan it'):q.status==='blocked'?'Waiting':'Queued';
     div.innerHTML='<img src="'+q.dataUrl+'" alt=""><div><b>'+esc(q.name)+'</b><div class="meta">'+label+'</div></div>';
     queueList.appendChild(div);
   });
   const pending=queue.filter(q=>q.status==='queued');
   processBtn.classList.toggle('hidden',!pending.length||batchRunning);
-  const paidPending=pending.filter(q=>!q.sample).length;
-  processBtn.textContent=pending.length>1?'Scan '+pending.length+' meals ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')':(pending[0]&&pending[0].sample?'Scan this sample (free)':'Scan this meal');
+  processBtn.textContent=pending.length>1?'Scan '+pending.length+' meals (free)':(pending[0]&&pending[0].sample?'Scan this sample (free)':'Scan this meal');
 }
 
 function downscale(dataUrl){
