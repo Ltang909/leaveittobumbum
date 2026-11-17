@@ -28,7 +28,7 @@ export const GUIDES: GuideDoc[] = [
     title: "How Bum Bum works",
     summary:
       "Leave It to Bum Bum is a toolbox of tiny tools that each do one annoying business task well. Tell the front desk what you need, or pick a tool yourself, hand over the messy input, and get back a finished result.",
-    updated: U,
+    updated: "November 17, 2026",
     blocks: [
       { h: "Two ways in" },
       { p: "The front door is **the desk** on the [homepage](/). Describe the task in your own words, drop in a file or a photo, and Bum Bum routes it to the right tool. If you already know the tool, pin it with an @-mention and your words go straight there, no routing involved." },
@@ -36,7 +36,7 @@ export const GUIDES: GuideDoc[] = [
       { h: "What happens to your input" },
       { p: "Most tools run **right in your browser**: your video, images, and receipts never leave your device. Tools that think with AI (a poster read, a content pack) send just that input to be processed and discard it after. Every tool's docs page says plainly which kind it is, under Your data." },
       { h: "Guests and accounts" },
-      { p: "You can poke around as a guest, no signup, and finished results spend from a small lifetime guest allowance. A free account raises that to a monthly bucket of actions and, more importantly, keeps your stuff: trackers, logs, and packs live in your account and follow you between devices. See [What is an action?](/docs/actions/) and [Plans and pricing](/docs/plans/)." },
+      { p: "You can poke around as a guest, no signup, and every tool is free with no limits either way. A free account matters for a different reason: it keeps your stuff. Trackers, logs, and packs live in your account and follow you between devices. See [Free, with no meter](/docs/actions/) and [Pricing](/docs/plans/)." },
       { note: "The one-sentence version: mess in, magic out. You hand over the fiddly task; Bum Bum hands back the finished thing." },
     ],
   },
@@ -46,53 +46,49 @@ export const GUIDES: GuideDoc[] = [
     title: "Chaining tools together",
     summary:
       "Most jobs are really two or three tiny tasks in a trench coat. Every tool page ends with the natural next steps, so a merged PDF becomes page images, a receipt becomes a tracked subscription, and a voice note becomes a content pack without a trip back to the toolbox.",
-    updated: "November 3, 2026",
+    updated: "November 17, 2026",
     blocks: [
       { h: "Why tools suggest a next step" },
       { p: "Real tasks rarely end where they start. You merge a contract packet, then someone asks for the pages as images. You scan a receipt, then the subscription hiding on it needs tracking. Rather than send you back to the [toolbox](/tools/) to hunt, every tool page finishes with a **next task** strip: three follow-on tools picked for the job you just did, in the order people usually need them." },
       { h: "How the suggestions are picked" },
       { p: "They are chosen by hand: the follow-ons are the tools that take the output of the one you are using as their input, or that finish the job it started. [PDF Merger](/tools/pdf-merger/) points at [PDF to Image](/tools/pdf-to-image/), the [PDF Compressor](/tools/pdf-compressor/) and the [Receipt Scanner](/tools/receipt-reader/); the [Receipt Scanner](/tools/receipt-reader/) points at the [Subscription Tracker](/tools/cutline/) and the [Invoice Reminder](/tools/invoice-chaser/). If none of them fit, the whole toolbox is one click away in the header." },
       { h: "It costs nothing to look" },
-      { p: "Opening a suggested tool is free; [actions](/docs/actions/) only spend when a tool finishes a job for you. Following a chain just to see where it leads costs nothing but the clicks." },
+      { p: "Opening a suggested tool is free, and so is finishing the job in it: every tool is [free with no limits](/docs/actions/). Following a chain just to see where it leads costs nothing but the clicks." },
       { note: "The strip only suggests. Your work stays in the tool you put it in until you hand it to the next one yourself." },
     ],
   },
   {
     slug: "actions",
     section: "Getting started",
-    title: "What is an action?",
+    title: "Free, with no meter",
     summary:
-      "An action is one completed result: a trimmed video, a read receipt, a chased invoice. Clicking around, previewing, and setting things up are free. You only spend an action when Bum Bum finishes something useful, and if a job fails, it costs nothing.",
-    updated: "October 30, 2026",
+      "There is no meter. Every tool is free, for guests and accounts alike, with no usage counts, no monthly bucket, and no limits. This page keeps the old address because the old model had a name you might still see in older posts: actions.",
+    updated: "November 17, 2026",
     blocks: [
-      { h: "The rules of the meter" },
-      { ul: [
-        "**One bucket for everything.** Your whole team and every tool share the same monthly actions, with no per-tool limits or per-seat math.",
-        "**Finished work only.** A job that fails or that you abandon costs nothing. The meter moves when a result lands.",
-        "**Monthly reset.** Actions reset on your billing date and do not roll over.",
-        "**Fair warning.** You get a nudge at 80% and again at 100%, so the meter never surprises you mid-task.",
-      ] },
-      { h: "Guests" },
-      { p: "Guests get a small lifetime allowance of actions to feel the tools out, no card and no signup. When it runs out, a free account refills you monthly. Creating the account is the whole pitch: your trackers and logs need somewhere to live." },
-      { h: "Running out mid-month" },
-      { p: "Tools pause politely and tell you. On Poke around you can wait for the reset, or move to Operator, which never runs out. Your data and settings stay put either way. Plan allowances are on the [plans page](/docs/plans/)." },
+      { h: "The short version" },
+      { p: "Use any tool as many times as you like. Nothing runs out, nothing resets, and nothing warns you at 80%. Guests and account holders get the same tools at the same price: free." },
+      { h: "What changed" },
+      { p: "Until November 17, 2026, finished jobs spent units called actions: guests had a small lifetime allowance, free accounts had a monthly bucket, and a paid plan removed the cap. That model is retired. If an older post or page still talks about action limits, it is out of date; the [pricing page](/pricing/) is the current word." },
+      { h: "So what is an account for?" },
+      { p: "A home for your stuff. Trackers, logs, packs, and saved work live in your account and follow you between devices. Guests' work lives in their browser session instead. The tools themselves work the same either way." },
+      { h: "The one paid thing" },
+      { p: "Asking Bum Bum to build a tool that does not exist yet. That is the [36-hour Promise](/docs/the-36-hour-promise/): one scoped request, $49 one-time, or the free [community queue](/requests/) if you are not in a hurry." },
     ],
   },
   {
     slug: "plans",
     section: "Getting started",
-    title: "Plans and pricing",
+    title: "Pricing",
     summary:
-      "Two plans, one shared meter. Poke around is free with 75 actions a month. Operator is $49 a month with unlimited actions, unlimited team members, and the 36-hour custom tool promise.",
-    updated: "October 30, 2026",
+      "There are no plans. Every tool is free with no limits, for guests and accounts alike. The only paid offer is the 36-hour Promise: one scoped custom tool built on request, $49 one-time per request.",
+    updated: "November 17, 2026",
     blocks: [
-      { h: "The plans" },
-      { ul: [
-        "**Poke around, $0.** 75 actions a month, all current tools, 1 workspace, and the community request queue, with no card needed.",
-                "**Operator, $49/mo.** Unlimited actions, everything in Poke around, unlimited team members, and one scoped tool request each month with the [36-hour guarantee](/docs/the-36-hour-promise/).",
-      ] },
-      { h: "Switching, pausing, cancelling" },
-      { p: "Upgrades apply immediately; downgrades take effect at the next billing date. Pause or cancel anytime from your account page, through the billing portal, in about two clicks, with no contracts or cancellation maze, and you keep what you paid for until the end of the billing period. The full pricing page, with the meter explained, is [here](/pricing/)." },
+      { h: "Tool use: free" },
+      { p: "Every tool, unlimited use, no card, no trial clock, no subscription. An account is optional and also free; it exists to hold your trackers, logs, and saved work. The full pricing page is [here](/pricing/)." },
+      { h: "The 36-hour Promise" },
+      { p: "When the tool you need does not exist yet, one scoped request down the [Promise lane](/docs/the-36-hour-promise/) gets it built within 36 hours of agreed scope, for a one-time $49. Or use the free [community queue](/requests/) and let the votes pile up." },
+      { h: "Existing subscriptions" },
+      { p: "Paid plans (Helper, Operator) were retired on November 17, 2026 and are no longer sold. If you still hold one, your tools are free either way; manage or cancel the subscription from your account page, through the billing portal, and it runs until the end of its billing period." },
     ],
   },
   {
@@ -100,17 +96,17 @@ export const GUIDES: GuideDoc[] = [
     section: "Getting started",
     title: "Teams and seats",
     summary:
-      "Operator workspaces fit unlimited team members, and Operator actions are unlimited too. The plan is billed to the team owner.",
-    updated: "October 30, 2026",
+      "Team members share one workspace: the same trackers and logs, every tool free for everyone, and no seat caps.",
+    updated: "November 17, 2026",
     blocks: [
       { h: "How teams work" },
       { ul: [
-        "**Shared meter.** Every member's finished work draws from the owner's plan: one monthly allowance on Poke around, unlimited on Operator. There is no per-seat action math.",
+        "**No meter to share.** Every tool is free with no limits, for the owner and every member alike. There is no per-seat math of any kind.",
         "**Invite by link.** Invite people from your account page with a shareable link. No email back-and-forth required.",
-        "**One bill.** The plan is billed to the team owner. Members never see a payment screen.",
+        "**No bill.** Tool use costs nothing, so there is nothing to bill to the owner, and members never see a payment screen.",
         "**Shared work.** Trackers and logs belong to the workspace, so the team sees the same subscription list, the same follow-ups, the same receipt log.",
       ] },
-      { p: "Free (Poke around) workspaces are solo: 1 workspace, just you. Upgrading to Operator is what opens the seats up." },
+      { p: "Under the old plans, free workspaces were solo and seats were a paid feature. Seats are open now: invite your team from your account page whenever you like." },
     ],
   },
   {
@@ -119,7 +115,7 @@ export const GUIDES: GuideDoc[] = [
     title: "The four trackers",
     summary:
       "Four of the tools are trackers that remember things so you do not have to: subscriptions, client follow-ups, job applications, and invoices. Together they feed the Monday note, your weekly roundup email.",
-    updated: U,
+    updated: "November 17, 2026",
     blocks: [
       { h: "Meet the trackers" },
       { ul: [
@@ -129,7 +125,7 @@ export const GUIDES: GuideDoc[] = [
         "**[Invoice Reminder](/docs/tools/invoice-chaser/)** tracks who owes you what, drafts the chase email, and learns when each client usually pays.",
       ] },
       { h: "What they share" },
-      { p: "Adding an entry to any tracker uses one action; everything after that, editing, moving, checking, is free. And whatever comes due in a tracker shows up in [the Monday note](/docs/the-monday-note/) for that week, so one email covers all four." },
+      { p: "Adding an entry to any tracker is free, and so is everything after that: editing, moving, checking. And whatever comes due in a tracker shows up in [the Monday note](/docs/the-monday-note/) for that week, so one email covers all four." },
     ],
   },
   {
@@ -183,13 +179,13 @@ export const GUIDES: GuideDoc[] = [
     section: "Getting a tool built",
     title: "Requesting a tool",
     summary:
-      "Missing a tool? There are two lanes. The community queue is free: your request joins a public list where everyone can upvote it, and the most-wanted tools get built. Operator members get a private lane: one scoped request a month, built within 36 hours.",
-    updated: U,
+      "Missing a tool? There are two lanes. The community queue is free: your request joins a public list where everyone can upvote it, and the most-wanted tools get built. The fast lane is the 36-hour Promise: one scoped request, $49 one-time, built within 36 hours.",
+    updated: "November 17, 2026",
     blocks: [
       { h: "The community queue" },
       { p: "Hit **Request a tool** anywhere on the site, or browse the [public queue](/requests/). Requests are visible to everyone, anyone can upvote, and we build the most-wanted tools as fast as we can. There is no timeline promise on this lane and no cost. If you are not signed in, we will nudge you to peek at the toolbox first (your task might already be solved) and make a free account so your request has a home." },
-      { h: "The Operator lane" },
-      { p: "Operator members can send one scoped request a month down the fast lane: agreed scope, built within 36 hours, or the next month is free. Operator requests also appear in the public queue with an operator badge, so everyone can follow along. The promise, its clock rules, and what fits in it are spelled out on [the 36-hour promise page](/docs/the-36-hour-promise/)." },
+      { h: "The Promise lane" },
+      { p: "For a one-time $49, one scoped request goes down the fast lane: agreed scope, built within 36 hours, or the request is on us. Say in your request that it is a Promise request; we agree the scope with you, payment is arranged, and the clock starts when scope and access are confirmed. Promise requests also appear in the public queue with a promise badge, so everyone can follow along. The promise, its clock rules, and what fits in it are spelled out on [the 36-hour promise page](/docs/the-36-hour-promise/)." },
       { h: "What makes a good request" },
       { ul: [
         "Describe the annoying task in plain words. 'Turn my supplier PDF invoices into a spreadsheet' tells us what to build far better than 'build an invoice app'.",
@@ -203,8 +199,8 @@ export const GUIDES: GuideDoc[] = [
     section: "Getting a tool built",
     title: "The 36-hour promise",
     summary:
-      "Operator members get one scoped tool request each month. Once the tiny, useful version is agreed, Bum Bum ships it within 36 hours, or the next month is on us, credited automatically.",
-    updated: U,
+      "One scoped tool request, $49 one-time. Once the tiny, useful version is agreed, Bum Bum ships it within 36 hours, or the request is on us.",
+    updated: "November 17, 2026",
     blocks: [
       { h: "How it runs" },
       { ul: [
@@ -217,7 +213,7 @@ export const GUIDES: GuideDoc[] = [
       { ul: [
         "Weekends and US federal holidays do not count.",
         "The clock pauses while we are waiting on you, for an answer, a login, or an example file.",
-        "Miss the window and your next month is free, credited automatically. The credit shows up on your account page, with no forms to file.",
+        "Miss the window and the request is on us: you do not pay for that request, with no forms to file.",
       ] },
       { h: "What fits in 36 hours" },
       { p: "One focused workflow that can be built in about four working hours, using approved existing services where it makes sense. It cannot include regulated data (health records, finance credentials, that neighborhood), complex data migrations, mobile app store review timelines, or work stuck waiting on a third party." },
@@ -229,18 +225,18 @@ export const GUIDES: GuideDoc[] = [
     section: "Account and help",
     title: "Your account and billing",
     summary:
-      "Your account page is mission control: your action meter, your plan, your team, your trackers' attention list, and billing, all in one place.",
-    updated: U,
+      "Your account page is mission control: your saved work, your team, your trackers' attention list, and any billing left over from the old plans, all in one place.",
+    updated: "November 17, 2026",
     blocks: [
       { h: "What lives on the account page" },
       { ul: [
-        "**Your meter:** actions used and remaining this month, across the whole toolbox.",
+        "**Your tally:** jobs finished this period, kept as an activity history. There is no limit attached to it; every tool is free.",
         "**Needs your attention:** the tracker items asking for you soonest, pulled from all four trackers.",
         "**The Monday note panel:** see whether the weekly email is on for you, and turn it off or back on. More on [the Monday note](/docs/the-monday-note/).",
-        "**Plan and billing:** change plans, manage payment, or cancel, through the billing portal.",
+        "**Billing:** only relevant if you hold a subscription from before November 17, 2026: manage payment or cancel through the billing portal.",
       ] },
       { h: "Billing changes" },
-      { p: "Upgrades apply immediately. Downgrades take effect at the next billing date. Cancelling takes about two clicks through the billing portal, and you keep what you paid for until the end of the billing period. Action pack top-ups ($6 per 1,000) apply right away and draw down after your monthly bucket." },
+      { p: "There is nothing to upgrade to: tool use has no tiers and no fees. A subscription from the old plans can be cancelled in about two clicks through the billing portal, and it runs until the end of its billing period." },
       { h: "Signing in" },
       { p: "Your account is your email. Keep the email current, because the Monday note and billing receipts go there, and because your trackers, logs, and packs are all attached to it." },
     ],
@@ -276,17 +272,17 @@ export const GUIDES: GuideDoc[] = [
     title: "Questions, probably answered",
     summary:
       "The questions everybody asks, answered the way we would want them answered: shortly, and with the actual number in it.",
-    updated: "October 30, 2026",
+    updated: "November 17, 2026",
     blocks: [
       { faq: [
-        ["Do I need an account?", "No. Guests can use the tools right away with a small lifetime allowance of actions. A free account gives you 75 actions a month and somewhere for your trackers, logs, and packs to live."],
-        ["Do unused actions roll over?", "No. The bucket refills fresh each month, which is how we keep the prices this low."],
-        ["What happens if I hit 100% mid-month?", "Tools pause politely and tell you. Wait for the reset, or move to Operator, which never runs out. Your data and settings stay put either way."],
-        ["Can I switch plans later?", "Yes. Upgrades apply immediately, downgrades at the next billing date. Either way takes about ten seconds."],
+        ["Do I need an account?", "No. Guests can use every tool right away, free with no limits. A free account gives your trackers, logs, and packs somewhere to live, and they follow you across devices."],
+        ["Is it really free?", "Yes. Every tool, unlimited use, no card and no trial clock. The only paid offer is the 36-hour Promise: a custom tool built on request for a one-time $49."],
+        ["Are there any limits at all?", "No usage limits. Individual tools have practical caps that come from the job itself, like batch sizes or file sizes, and each tool's page states them plainly."],
+        ["I had a paid plan. What happens to it?", "It is retired, and your tools are free now either way. Manage or cancel the subscription from your account page, through the billing portal, whenever you like; it runs until the end of its billing period."],
         ["Is my data used to train AI models?", "No. Your workspace contents are yours. Most files never even leave your device."],
-        ["How do I cancel?", "From your account page, through the billing portal: two clicks. You keep what you paid for until the end of the billing period."],
+        ["How do I cancel?", "There is no subscription to cancel for tool use. If you hold one from the old plans, cancel from your account page through the billing portal: two clicks."],
         ["Can Bum Bum cancel my subscriptions for me?", "No tool cancels things with outside services. The Subscription Tracker makes sure you remember in time; the cancelling click is yours."],
-        ["What if the tool I need does not exist?", "Request it. The community queue is free and public, and Operator members get one scoped build a month inside the 36-hour promise."],
+        ["What if the tool I need does not exist?", "Request it. The community queue is free and public, and the 36-hour Promise builds one scoped tool on request for a one-time $49."],
       ] },
     ],
   },
@@ -296,10 +292,10 @@ export const GUIDES: GuideDoc[] = [
     title: "When something goes sideways",
     summary:
       "Most Bum Bum problems have boring causes and quick fixes. Here are the ones we actually see, in the order we see them.",
-    updated: "October 30, 2026",
+    updated: "November 17, 2026",
     blocks: [
-      { h: "“Out of actions”" },
-      { p: "As a guest, you have used up the lifetime guest allowance; a free account refills you with 75 actions a month. On an account, your monthly bucket is spent: wait for your billing-date reset, or move to Operator and stop counting. Your data is never locked or deleted for this. See [What is an action?](/docs/actions/)." },
+      { h: "A tool stopped mid-job" },
+      { p: "There is no usage limit anymore, so a stopped job is never about a quota. The usual causes are a dropped connection or a file your browser could not read. Try again; if it keeps happening on the same file, the file is the place to look. Background on the old limits lives at [Free, with no meter](/docs/actions/)." },
       { h: "A photo will not read (receipts, posters, meals)" },
       { ul: [
         "Flat surface, good light, and the subject filling the frame fixes most failed reads.",
