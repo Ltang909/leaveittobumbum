@@ -193,6 +193,13 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .prose th, .prose td { padding:.6em .75em; text-align:left; vertical-align:top; border-bottom:1px solid #e3dcc8; }
 .prose thead th { background:var(--paper); border-bottom:var(--line); font-weight:900; }
 .prose tbody tr:last-child td { border-bottom:0; }
+/* Guide tool callout: the high-on-the-page tool card at the top of how-to articles (pilot 2026-11-17) */
+.guide-tool-callout { display:flex; align-items:center; gap:22px; background:#fff; border:var(--line); border-radius:16px; box-shadow:5px 5px 0 var(--ink); padding:20px 24px; margin:0 0 1.9em; }
+.guide-tool-callout .sticker { flex:none; width:104px; height:104px; object-fit:contain; }
+.guide-tool-callout-name { font-family:var(--font-display),serif; font-size:1.45rem; line-height:1.15; margin:0 0 4px; }
+.guide-tool-callout-blurb { margin:0 0 14px; }
+.guide-tool-callout .button { text-decoration:none; }
+@media (max-width:640px){ .guide-tool-callout{ flex-direction:column; align-items:flex-start; gap:14px; padding:18px; } .guide-tool-callout .sticker{ width:84px; height:84px; } }
 @media (max-width:600px){ .nap-bubble{white-space:normal; width:max-content; max-width:88vw} }
 @media (prefers-reduced-motion:reduce){ .boing,.dance{animation:none} .confetti{display:none} .ticker.zoomies .ticker-track{animation-duration:28s} }
 
