@@ -10,7 +10,7 @@
 <meta name="twitter:title" content="Split PDF | Pull Pages out of a PDF in Your Browser | Leave It to Bum Bum">
 <meta name="twitter:description" content="Free PDF splitter that runs in your browser. Pull pages out in groups, each group as its own PDF, or split every page into its own file. No sign-up, and your PDF never leaves your device.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/split-pdf.jpg">
-<link rel="canonical" href="https://leaveittobumbum.com/tools/split-pdf/">
+<link rel="canonical" href="https://leaveittobumbum.com/tools/split-pdf/"><link rel="alternate" hreflang="es" href="https://leaveittobumbum.com/es/tools/split-pdf/"><link rel="alternate" hreflang="en" href="https://leaveittobumbum.com/tools/split-pdf/"><link rel="alternate" hreflang="x-default" href="https://leaveittobumbum.com/tools/split-pdf/">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -69,7 +69,7 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 </style></head>
-<body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Split PDF"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/split-pdf.png" alt="Split PDF"><div><h1>Free PDF Splitter</h1><p class="lede bb-desc">Keep the pages you need. Pull a range out of a PDF, or split it page by page, right in your browser.</p></div></div>
+<body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Split PDF"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p style="font-size:13px;opacity:.75;margin:4px 0 0"><a href="/es/tools/split-pdf/">Ver en español</a></p><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/split-pdf.png" alt="Split PDF"><div><h1>Free PDF Splitter</h1><p class="lede bb-desc">Keep the pages you need. Pull a range out of a PDF, or split it page by page, right in your browser.</p></div></div>
 <section class="panel" id="uploadPanel">
 <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Add a PDF">
 <p style="font-size:2rem;margin:0">📄</p>
