@@ -7,12 +7,12 @@ $shUser = isset($user) ? $user : (function_exists('currentUser') ? currentUser()
 $shMeter = !empty($showMeter);
 $shEs = isset($bbLang) && $bbLang === 'es';
 $shL = $shEs
-  ? ['tools' => 'Herramientas', 'pricing' => 'Precios', 'account' => 'Cuenta', 'signin' => 'Iniciar sesión', 'signout' => 'Cerrar sesión', 'nav' => 'Navegación principal', 'open' => 'Abrir menú', 'close' => 'Cerrar menú', 'guide_show' => 'Leer la guía', 'guide_hide' => 'Ocultar la guía']
-  : ['tools' => 'Tools', 'pricing' => 'Pricing', 'account' => 'Account', 'signin' => 'Sign in', 'signout' => 'Sign out', 'nav' => 'Main navigation', 'open' => 'Open menu', 'close' => 'Close menu', 'guide_show' => 'Read the guide', 'guide_hide' => 'Hide the guide'];
+  ? ['tools' => 'Herramientas', 'about' => 'Acerca de', 'account' => 'Cuenta', 'signin' => 'Iniciar sesión', 'signout' => 'Cerrar sesión', 'nav' => 'Navegación principal', 'open' => 'Abrir menú', 'close' => 'Cerrar menú', 'guide_show' => 'Leer la guía', 'guide_hide' => 'Ocultar la guía']
+  : ['tools' => 'Tools', 'about' => 'About', 'account' => 'Account', 'signin' => 'Sign in', 'signout' => 'Sign out', 'nav' => 'Main navigation', 'open' => 'Open menu', 'close' => 'Close menu', 'guide_show' => 'Read the guide', 'guide_hide' => 'Hide the guide'];
 ?>
 <header class="nav <?php echo !empty($navShellWide) ? 'shell shell-wide' : 'shell'; ?>">
   <a class="brand" href="/" aria-label="Leave It to Bum Bum home" title="psst… boop the cat on the homepage"><img class="brand-cat" src="/bum/favicon-cat.png" alt="Bum Bum the cat"><span>Leave It to<br><b>Bum Bum</b></span></a>
-  <nav aria-label="<?= $shL['nav'] ?>" id="bbPhpNav"><a href="/tools/"><?= $shL['tools'] ?></a><a href="/pricing/"><?= $shL['pricing'] ?></a><a href="/36-hours/">36 hours</a><a href="/account/"><?= $shL['account'] ?></a></nav>
+  <nav aria-label="<?= $shL['nav'] ?>" id="bbPhpNav"><a href="/tools/"><?= $shL['tools'] ?></a><a href="/about/"><?= $shL['about'] ?></a><a href="/36-hours/">36 hours</a><a href="/account/"><?= $shL['account'] ?></a></nav>
   <span class="nav-right"><?php if ($shMeter) require __DIR__ . '/meter.php'; ?><?php if ($shUser): ?><button type="button" class="button button-small secondary" id="bbSignOut"><?= $shL['signout'] ?></button><?php else: ?><a class="button button-small" href="/account/"><?= $shL['signin'] ?></a><?php endif; ?></span>
   <button type="button" class="menu-toggle" id="bbMenuToggle" aria-expanded="false" aria-controls="bbPhpNav" aria-label="<?= $shL['open'] ?>"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
 </header>
