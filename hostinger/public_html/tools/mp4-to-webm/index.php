@@ -93,7 +93,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"MP4 to WebM Converter | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"MP4 to WebM Converter","item":"https://leaveittobumbum.com/tools/mp4-to-webm/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to convert MP4 to WebM","description":"Turn an MP4 video into a WebM in your browser.","step":[{"@type":"HowToStep","position":1,"name":"Drop in an MP4 (or MOV, MKV, or AVI, up to 100 MB)."},{"@type":"HowToStep","position":2,"name":"The output is already set to WebM; there is nothing to pick."},{"@type":"HowToStep","position":3,"name":"Bum Bum converts it right in your browser."},{"@type":"HowToStep","position":4,"name":"Download your WebM. One action is used."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to convert MP4 to WebM","description":"Turn an MP4 video into a WebM in your browser.","step":[{"@type":"HowToStep","position":1,"name":"Drop in an MP4 (or MOV, MKV, or AVI, up to 100 MB)."},{"@type":"HowToStep","position":2,"name":"The output is already set to WebM; there is nothing to pick."},{"@type":"HowToStep","position":3,"name":"Bum Bum converts it right in your browser."},{"@type":"HowToStep","position":4,"name":"Download your WebM."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .vc-drop{border:2px dashed var(--line);border-radius:12px;padding:26px 18px;text-align:center;cursor:pointer;background:#fff;margin:0 0 12px}
 .vc-drop.over{border-color:var(--accent,#b3541e);background:#fff8f2}
@@ -289,7 +289,7 @@ convertBtn.addEventListener('click',async()=>{
     dlLink.textContent='Download '+outFmt.toUpperCase();
     dlLink.classList.remove('hidden');
     setProg(1,'Done.');
-    progText.textContent='Your '+outFmt.toUpperCase()+' is ready. One action was used.';
+    progText.textContent='Your '+outFmt.toUpperCase()+' is ready.';
     if(done.data.usage){
       const u=done.data.usage;
       usageEl.textContent='Free, no limits.';
@@ -313,7 +313,7 @@ convertBtn.addEventListener('click',async()=>{
     }else{
       convertErr.textContent='Something went wrong finishing the conversion. Try again?';
     }
-    progWrap.classList.add('hidden');progText.textContent=cancelled?'Conversion cancelled. No action was used.':'';
+    progWrap.classList.add('hidden');progText.textContent=cancelled?'Conversion cancelled.':'';
   }finally{converting=false;convertBtn.disabled=false;cancelBtn.classList.add('hidden');}
 });
 cancelBtn.addEventListener('click',()=>{if(!converting)return;cancelled=true;try{if(ffmpeg)ffmpeg.terminate();}catch(e){}ffmpeg=null;});

@@ -765,7 +765,7 @@ renderBtn.addEventListener('click',async()=>{
     if(dlLink.href)URL.revokeObjectURL(dlLink.href);
     dlLink.href=URL.createObjectURL(mp4);dlLink.classList.remove('hidden');
     setProg(1,'Done.');
-    progText.textContent='Your video is ready. One action was used.';
+    progText.textContent='Your video is ready.';
     dlLink.scrollIntoView({behavior:'smooth',block:'nearest'});
     try{
       const done=await apiCall({action:'complete',idempotencyKey:renderKey});
