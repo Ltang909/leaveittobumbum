@@ -383,10 +383,25 @@ transcribeBtn.addEventListener('click',async()=>{
       const[respFirst,dec]=await Promise.all([postTranscribe(),decodePeaks(audioFile)]);
       let resp=respFirst;
       // A refusal with no server message means a layer in front of the tool
-      // (the host's browser check) bounced the upload, not the tool itself.
-      // One retry with a fresh session clears it in practice.
-      if(!resp.ok&&resp.status===403&&!resp.data.error)resp=await postTranscribe();
-      if(!resp.ok)throw new Error(resp.data.error||('transcription failed ('+resp.status+'). Refresh the page and try again.'));
+      // (the host CDN's security check) bounced the upload before it reached
+      // the tool; the tool's own errors always carry a message. A bounced
+      // upload often passes on a later attempt once the check has seen fresh
+      // requests from this browser, so retry a few times: fresh session each
+      // time, a pause between attempts, and a fresh fetch of this page
+      // before the last attempt to renew the check's cookie.
+      const bounced=r=>!r.ok&&r.status===403&&!r.data.error;
+      if(bounced(resp)){
+        const wait=ms=>new Promise(res=>setTimeout(res,ms));
+        setStatus('That upload got bounced by a security check. Trying again...');
+        await wait(800);
+        resp=await postTranscribe();
+        if(bounced(resp)){
+          try{await fetch(location.href,{credentials:'same-origin',cache:'no-store'});}catch(e){}
+          await wait(2000);
+          resp=await postTranscribe();
+        }
+      }
+      if(!resp.ok)throw new Error(resp.data.error||('transcription failed ('+resp.status+'). The host security check refused the upload. Try again, or switch networks (a phone hotspot works) and retry.'));
       words=repairWordTimes(resp.data.words||[]);duration=dec.duration||resp.data.duration||0;peaks=dec.peaks;
       if(!words.length||!duration)throw new Error('no words heard');
       cues=groupCues(words);capSizeMemo={};
@@ -813,7 +828,7 @@ againBtn.addEventListener('click',()=>{
 </details>
 <details>
 <summary>Why did my transcription fail?</summary>
-<p>Making captions sends your audio up to be transcribed, and that upload needs a steady connection. On weak Wi-Fi it can stall or get refused partway through, and the transcription fails with it. Move closer to the router or switch to a stronger connection, then try again. The tool already retries once on its own. If home Wi-Fi keeps refusing it, run the upload over your phone's hotspot instead. A failed attempt never keeps your audio.</p>
+<p>Making captions sends your audio up to be transcribed. Sometimes the host's security check refuses the upload before it reaches the tool, and the transcription fails with it. The tool retries a few times on its own. If it keeps refusing, switch networks and try again: running the upload over your phone's hotspot changes the connection the check sees, and that usually clears it. A failed attempt never keeps your audio.</p>
 </details>
 <details>
 <summary>What caption styles are there?</summary>

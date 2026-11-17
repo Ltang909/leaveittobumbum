@@ -710,7 +710,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Caption styles and sizes cover the usual feed formats, square and vertical included.",
       "The transcription is automatic when you want captions, and your audio is never kept after.",
       "If the transcription stretches a word across a quiet intro, the timing is repaired before the captions are built, so the first line lands where the singing actually starts.",
-      "If an upload gets refused before it reaches the tool, the tool retries once on its own before asking you to refresh.",
+      "If an upload gets refused before it reaches the tool, the tool retries a few times on its own before asking you to try again.",
     ],
     data: "Your audio is transcribed to make the captions and nothing more. It is never stored, and the finished video is yours to download.",
     tips: [
@@ -722,7 +722,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     faq: [
       ["What happens to my audio?", "It is transcribed for captions, if you want them, and never kept."],
-      ["Why did my transcription fail?", "The caption upload needs a steady connection. Weak Wi-Fi can stall it or get it refused partway through. Move closer to the router, switch to a stronger connection, or run the upload over your phone's hotspot, then try again."],
+      ["Why did my transcription fail?", "Sometimes the host's security check refuses the caption upload before it reaches the tool. The tool retries a few times on its own. If it keeps refusing, switch networks and try again: a phone hotspot changes the connection the check sees, and that usually clears it."],
       ["What video sizes can I make?", "The standard feed shapes, including square and vertical. Pick the one your platform rewards."],
     ],
     updated: "November 17, 2026",
