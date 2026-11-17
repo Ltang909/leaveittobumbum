@@ -94,7 +94,7 @@ export default function RequestsView() {
     <section className="shell queue-wrap">
       <div className="queue-actions">
         <button className="button" onClick={() => openRequest()}>Request a tool <span aria-hidden="true">↗</span></button>
-        <p className="queue-note">Free forever. In a hurry? <a href="/36-hours/">Operator builds yours in 36 hours</a>.</p>
+        <p className="queue-note">Free forever. In a hurry? <a href="/36-hours/">The 36-hour Promise builds yours in 36 hours, $49 one-time</a>.</p>
       </div>
       {requests === null ? (
         <p className="lede">Waking up the queue…</p>
@@ -124,7 +124,7 @@ export default function RequestsView() {
               <p className="queue-outcome"><strong>Done looks like:</strong> {r.outcome}</p>
               {r.is_operator ? (
                 <p className="queue-operator">
-                  <span className="operator-badge">Operator request · 36-hour build</span>
+                  <span className="operator-badge">Promise request · 36-hour build</span>
                   <span className="queue-opened">Opened {new Date(r.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                 </p>
               ) : null}

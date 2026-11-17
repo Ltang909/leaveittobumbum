@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/36-hours/" },
   openGraph: { url: "/36-hours/" },
   title: "The 36-Hour Promise | Leave It to Bum Bum",
-  description: "Operator members get one scoped tool request each month. Bum Bum ships it within 36 hours, or the next month is on us.",
+  description: "Send one scoped tool request for a one-time $49. Bum Bum ships it within 36 hours of agreed scope, or the request is on us.",
 };
 
 export default function ThirtySixHours() {
@@ -14,8 +14,8 @@ export default function ThirtySixHours() {
       <SiteHeader />
       <section className="page-head shell">
         <p className="kicker">The Bum Bum Promise</p>
-        <h1>36 hours,<br />or next month is on us.</h1>
-        <p className="lede">Operator members get one scoped tool request each month. Once we agree on the tiny, useful version, Bum Bum ships it within 36 hours.</p>
+        <h1>36 hours,<br />or the request is on us.</h1>
+        <p className="lede">One scoped tool request, $49 one-time. Once we agree on the tiny, useful version, Bum Bum ships it within 36 hours.</p>
       </section>
       <section className="shell">
         <div className="promise-steps">
@@ -36,15 +36,15 @@ export default function ThirtySixHours() {
           <p>If your idea is bigger than that, we&rsquo;ll carve out the most useful slice and tell you honestly what the rest would take.</p>
           <h2>The fine print (short, we promise)</h2>
           <ul>
-            <li><strong>One per month</strong> on the Operator plan. Unused requests don&rsquo;t roll over.</li>
+            <li><strong>One scoped request per Promise.</strong> Each request is its own $49, and its own 36-hour clock.</li>
             <li><strong>Weekends and US federal holidays</strong> don&rsquo;t count against the clock. Bum Bum naps.</li>
             <li><strong>The clock pauses</strong> if we&rsquo;re waiting on you for access, answers, or approvals.</li>
           </ul>
         </div>
         <div className="promise-callout">
-          <h2>If we miss, next month is on us.</h2>
-          <p>The credit is applied automatically, with no forms to file. The credit applies to your Operator subscription and shows up on your account page.</p>
-          <p><a href="/checkout/?plan=operator">Get the promise <span aria-hidden="true">↗</span></a></p>
+          <h2>If we miss, the request is on us.</h2>
+          <p>No forms to file and nothing to chase. The tool still gets built, and the $49 for that request comes off, automatically.</p>
+          <p><a href="/requests/">Send a request <span aria-hidden="true">↗</span></a></p>
         </div>
         <div className="prose">
           <h2>Two ways to get a tool built</h2>
@@ -57,9 +57,9 @@ export default function ThirtySixHours() {
             <a className="button outline" href="/requests/">See the queue <span aria-hidden="true">↗</span></a>
           </div>
           <div>
-            <h3>Operator</h3>
-            <p><strong>$49/mo.</strong> One scoped request every month, built within 36 hours of agreed scope, or your next month is free.</p>
-            <a className="button" href="/checkout/?plan=operator">Go Operator <span aria-hidden="true">↗</span></a>
+            <h3>The 36-hour Promise</h3>
+            <p><strong>$49 one-time.</strong> One scoped request, built within 36 hours of agreed scope, or the request is on us. No subscription, no monthly slot.</p>
+            <a className="button" href="/requests/">Request with the Promise <span aria-hidden="true">↗</span></a>
           </div>
         </div>
         <div className="prose">
@@ -69,7 +69,7 @@ export default function ThirtySixHours() {
         <div className="prose" style={{ paddingBottom: 110 }}>
           <h2>Questions, probably answered</h2>
           <details><summary>Does the request have to be my idea? <span>+</span></summary><p>Nope. Describe the pain however you like &mdash; &ldquo;I hate doing X every week&rdquo; is a perfectly good brief. We&rsquo;ll turn it into a scoped request we can build.</p></details>
-          <details><summary>What if my request isn&rsquo;t eligible? <span>+</span></summary><p>We&rsquo;ll tell you within a day, with the reason in plain language and the closest eligible version. An ineligible request never burns your monthly slot.</p></details>
+          <details><summary>What if my request isn&rsquo;t eligible? <span>+</span></summary><p>We&rsquo;ll tell you within a day, with the reason in plain language and the closest eligible version. An ineligible request costs you nothing.</p></details>
           <details><summary>Can I watch it being built? <span>+</span></summary><p>You&rsquo;ll get updates as it ships, and you can reply to the thread any time. Hovering is optional but permitted.</p></details>
         </div>
       </section>
