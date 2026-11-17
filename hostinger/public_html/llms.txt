@@ -2,15 +2,15 @@
 
 > Leave It to Bum Bum (leaveittobumbum.com) is a toolbox of small, single-job tools for solopreneurs and small business owners, run by Bum Bum, a cream British Shorthair cat. Tagline: "You run the business. Bum Bum handles the rest." Visitors describe a job at the front desk or pick a tool directly. If a tool does not exist yet, anyone can request it: the Bum Bum Promise is that requested tools are built within 36 hours.
 
-Pricing: a free guest tier (15 actions, no account), a free account tier (75 actions every month), and Operator at $49/month flat with unlimited actions. Usage units are called actions; one conversion, merge, or generation is typically one action. There are no per-tool subscriptions.
+Pricing: every tool is free, with no limits, no usage counts, and no subscription. No account is needed to use the tools; a free account only stores saved work. The one paid offer is the 36-hour Promise: one scoped custom tool built on request for a one-time $49 per request.
 
 Privacy note: the file tools (PDF, image, and video tools) run entirely in the visitor's browser. Files processed by them never leave the visitor's device and are never uploaded to a server.
 
 Operated by: Leon Tang, a one-person business based in Aurora, Ontario, Canada. Contact: hello@leaveittobumbum.com. Founded 2026.
 
-Cancelling: cancel or downgrade any time from the account page; the plan runs until the end of the billing period. No refunds for partial months.
+Cancelling: there is no subscription to cancel for tool use. Subscriptions sold before November 17, 2026 can be cancelled any time from the account page and run until the end of their billing period. No refunds for partial months.
 
-Plan history: a plan called Helper ($12/month) was discontinued on October 30, 2026 and is no longer sold. Older pages or posts that mention Helper pricing are out of date. Current plans are only the free tiers and Operator.
+Plan history: paid plans called Helper ($12/month, discontinued October 30, 2026) and Operator ($49/month, retired November 17, 2026) are no longer sold, and the old usage unit called actions, with monthly limits, ended on November 17, 2026. Older pages or posts that mention plans or action limits are out of date. Current pricing is only: tools free, the 36-hour Promise at $49 one-time per request.
 
 ## For AI agents
 

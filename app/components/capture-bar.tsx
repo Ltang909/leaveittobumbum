@@ -969,7 +969,7 @@ export default function CaptureBar() {
         setAmbiguous(d);
         setResult({ kind: "idle" });
       } else if (d.limit_reached) {
-        setResult({ kind: "error", text: d.error || "Out of actions for this period.", limit: true });
+        setResult({ kind: "error", text: d.error || "Something went wrong.", limit: true });
       } else {
         setResult({ kind: "error", text: d.error || "Something went wrong." });
       }
@@ -1051,7 +1051,7 @@ export default function CaptureBar() {
         setText("");
         setResult({ kind: "success", summary: d.summary || "Logged it.", url: d.url || "/tools/", toolName: d.tool_name || "the tool" });
       } else if (d.limit_reached) {
-        setResult({ kind: "error", text: d.error || "Out of actions for this period.", limit: true });
+        setResult({ kind: "error", text: d.error || "Something went wrong.", limit: true });
       } else {
         setResult({ kind: "error", text: d.error || "Something went wrong." });
       }
@@ -1573,8 +1573,8 @@ export default function CaptureBar() {
                   <div className="desk-other-path">
                     <p>
                       <b>Does not exist yet?</b> Request it in the community queue. The queue is public and
-                      demand driven, so there is no promised timeline. Want it guaranteed? Operators get one
-                      built within 36 hours.
+                      demand driven, so there is no promised timeline. Want it guaranteed? The 36-hour Promise
+                      builds it within 36 hours for $49 one-time.
                     </p>
                     <button type="button" className="capture-home-chip desk-other-btn" onClick={() => void requestFromDesk()}>
                       Request it

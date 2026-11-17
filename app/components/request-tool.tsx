@@ -117,8 +117,8 @@ function RequestPaths() {
           <p><a href="/requests/">See the queue</a></p>
         </div>
         <div>
-          <strong>Operator</strong>
-          <p>$49/mo. One scoped request every month, built within 36 hours of agreed scope, or your next month is on us.</p>
+          <strong>The 36-hour Promise</strong>
+          <p>$49 one-time. One scoped request, built within 36 hours of agreed scope, or the request is on us. Say it is a Promise request and we will scope it with you.</p>
           <p><a href="/36-hours/">Read the promise</a></p>
         </div>
       </div>

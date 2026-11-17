@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about/" },
   openGraph: { url: "/about/" },
   title: "About | Leave It to Bum Bum",
-  description: "Why tiny tools, who Bum Bum is, and the 36-hour Operator promise.",
+  description: "Why tiny tools, who Bum Bum is, and the 36-hour Promise.",
 };
 
 export default function About() {
@@ -26,8 +26,8 @@ export default function About() {
           <p>Big software makes a big promise and then hands you homework. A tiny tool makes one small promise and keeps it: one click, one useful result. If a missing tool is slowing you down, it shouldn&apos;t become a six-month project &mdash; it should become someone else&apos;s Tuesday afternoon.</p>
           <h2>Who is Bum Bum?</h2>
           <p>Bum Bum is a cat, and the chief tiny-tool operator around here. Every tool we ship has to pass Bum Bum&apos;s one-question review: <em>&ldquo;Would this save a real busy person real time, today?&rdquo;</em> If not, it doesn&apos;t ship.</p>
-          <h2>The Operator promise</h2>
-          <p>Operator members can request one scoped custom tool a month, and Bum Bum ships it within 36 hours of agreed scope &mdash; or the next month is on us. A missing tool should not become a six-month project.</p>
+          <h2>The 36-hour Promise</h2>
+          <p>Anyone can request one scoped custom tool for a one-time $49, and Bum Bum ships it within 36 hours of agreed scope, or the request is on us. A missing tool should not become a six-month project.</p>
           <h2>Say hello</h2>
           <p>Bum Bum reads every email. Probably while sitting on the keyboard.</p>
           <p><a href="mailto:hello@leaveittobumbum.com"><strong>hello@leaveittobumbum.com</strong></a></p>

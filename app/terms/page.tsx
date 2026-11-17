@@ -15,21 +15,20 @@ export default function Terms() {
       <section className="page-head shell">
         <p className="kicker">Terms of Service</p>
         <h1>The short version.</h1>
-        <p className="lede">Last updated: September 2026. Be reasonable, pay for the plan you picked, and don&apos;t use tiny tools for giant crimes.</p>
+        <p className="lede">Last updated: November 2026. Be reasonable, and don&apos;t use tiny tools for giant crimes.</p>
       </section>
       <div className="page-body shell">
         <div className="prose">
           <h2>The service</h2>
-          <p>Leave It to Bum Bum provides small, single-purpose web tools for small businesses, plus optional custom tool builds for Operator members. We aim for &ldquo;just works,&rdquo; but software has moods &mdash; we don&apos;t guarantee uninterrupted or error-free service.</p>
-          <h2>Plans and actions</h2>
+          <p>Leave It to Bum Bum provides small, single-purpose web tools for small businesses, plus optional custom tool builds through the 36-hour Promise. We aim for &ldquo;just works,&rdquo; but software has moods &mdash; we don&apos;t guarantee uninterrupted or error-free service.</p>
+          <h2>Pricing</h2>
           <ul>
-            <li><strong>Poke Around</strong> is free: 75 actions/month.</li>
-            <li><strong>Operator</strong> ($49/month) is billed monthly through Stripe.</li>
-            <li>One action = one useful result (one quote, one cleaned-up note, one follow-up). Actions reset monthly and don&apos;t roll over. We warn you at 80% and 100%.</li>
-            <li>You can cancel anytime; your plan runs until the end of the billing period. No refunds for partial months, but no hard feelings either.</li>
+            <li><strong>Every tool is free</strong>, with no usage limits, no counts, and no subscription. An account is optional and also free.</li>
+            <li>The only paid offer is the <strong>36-hour Promise</strong>: a one-time $49 per request, described below. Payment is arranged when a request is scoped.</li>
+            <li>Paid plans sold before November 17, 2026 (Helper, Operator) are retired. An existing subscription can be cancelled anytime from your account page; it runs until the end of its billing period. No refunds for partial months, but no hard feelings either.</li>
           </ul>
-          <h2>The 36-hour promise (Operator)</h2>
-          <p>One scoped request per month: one focused workflow buildable in about four working hours. It can use approved existing services, but can&apos;t include regulated data, complex migrations, app-store review work, or anything waiting on a third party. The clock starts when scope and access are confirmed; weekends and US federal holidays are excluded. If we miss the window, your next month is on us.</p>
+          <h2>The 36-hour Promise</h2>
+          <p>One scoped request per Promise: one focused workflow buildable in about four working hours. It can use approved existing services, but can&apos;t include regulated data, complex migrations, app-store review work, or anything waiting on a third party. The clock starts when scope and access are confirmed; weekends and US federal holidays are excluded. If we miss the window, the request is on us: you don&apos;t pay for it.</p>
           <h2>Acceptable use</h2>
           <p>Don&apos;t use the tools for anything illegal, abusive, or wildly outside their purpose. Don&apos;t try to break, scrape, or resell the service. We may suspend accounts that do &mdash; after a warning, unless it&apos;s egregious.</p>
           <h2>Your content</h2>

@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import { tools, Tool } from "./lib/tools";
 import { SiteHeader, SiteFooter } from "./components/chrome";
 import { useRequestTool } from "./components/request-tool";
-import { PlanCta } from "./components/plan-ctas";
 import CaptureBar from "./components/capture-bar";
 import { DeskFaceProvider } from "./lib/desk-face";
 
 const plans = [
-  { name: "Poke around", price: "$0", note: "No card needed", credits: "75 actions each month", features: ["All current tools", "1 workspace", "Community request queue"], cta: "Start free", plan: "free" },
-  { name: "Operator", price: "$49", note: "per month", credits: "Unlimited actions", features: ["Everything in Poke around", "Unlimited team members", "1 scoped tool request each month", "36-hour turnaround guarantee"], cta: "Choose Operator", plan: "operator", featured: true },
+  { name: "The toolbox", price: "$0", note: "Free, no card needed", credits: "Every tool, unlimited use", features: ["All current tools", "No action counts, no meter", "Your whole team", "Community request queue"], cta: "Start free", href: "/tools/" },
+  { name: "The 36-hour Promise", price: "$49", note: "one-time, per request", credits: "One scoped custom tool, built in 36 hours", features: ["For the tool that does not exist yet", "Scope agreed with you first", "Built within 36 hours of agreed scope", "Miss the window and the request is on us"], cta: "How it works", href: "/36-hours/", featured: true },
 ];
 
 // Straight answers in question form, written to be quoted as-is by
@@ -24,21 +23,17 @@ const FAQS: { q: string; a: string; href?: string; hrefText?: string }[] = [
   },
   {
     q: "How much does Leave It to Bum Bum cost?",
-    a: "Poke around is free: 75 actions a month, no card needed. Operator is $49 a month with unlimited actions and unlimited team members.",
+    a: "The tools are free, with no limits and no subscription. The only paid offer is the 36-hour Promise: one scoped custom tool built for you for a one-time $49 per request.",
     href: "/pricing/",
     hrefText: "See full pricing",
   },
   {
-    q: "What is an action?",
-    a: "One completed result. A finished clip, a batch of receipts read, an invoice chased, a playbook written: each one uses one action, and every tool shares the same monthly bucket.",
-  },
-  {
     q: "What is the 36-hour promise?",
-    a: "Operator members can request one scoped tool each month. Once the scope is agreed, Bum Bum builds and ships it within 36 hours. Miss the window and your next month is on us.",
+    a: "When the tool you need does not exist yet, you can request it as a 36-hour Promise: one scoped tool, $49 one-time. Once the scope is agreed, Bum Bum builds and ships it within 36 hours. Miss the window and the request is on us.",
   },
   {
     q: "Do I need an account to try the tools?",
-    a: "No. The front desk works for guests. An account keeps everything you file in one place and gives you 75 actions a month free.",
+    a: "No. The front desk works for guests, and every tool is free with no limits. An account keeps everything you file in one place.",
   },
   {
     q: "Where do my files go?",
@@ -58,7 +53,7 @@ const faqLd = {
 
 const QUIPS = [
   "mrrp.",
-  "that click cost 0 actions. you're welcome.",
+  "that click was free. you're welcome.",
   "did you try napping on it?",
   "rude. (affectionate)",
   "one (1) boop received.",
@@ -206,13 +201,13 @@ export default function Home() {
       </section>
 
       <section className="pricing shell" id="pricing">
-        <div className="section-heading"><div><p className="kicker">One shared meter</p><h2>One shared meter<br />for all your tools.</h2></div><p>Every completed result uses one action: a finished clip, a batch of receipts, a chased invoice, a playbook. Your whole team and every tool share the same monthly bucket.</p></div>
-        <div className="plan-grid">{plans.map((plan) => <article className={`plan ${plan.featured ? "featured" : ""}`} key={plan.name}>{plan.featured && <span className="popular">BUM BUM’S PICK</span>}<h3>{plan.name}</h3><div className="price">{plan.price}<small>{plan.note}</small></div><p className="credits">{plan.credits}</p><ul>{plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul><PlanCta plan={plan.plan} label={plan.cta} href={plan.plan === "free" ? "/tools/" : `/checkout/?plan=${plan.plan}`} featured={plan.featured} /></article>)}</div>
-        <p className="pricing-note">Actions on Poke around reset monthly and do not roll over. We warn you at 80% and 100%. Operator never runs out.</p>
+        <div className="section-heading"><div><p className="kicker">Pricing, minus the pricing</p><h2>Every tool is free.<br />No meter attached.</h2></div><p>A finished clip, a batch of receipts, a chased invoice, a playbook: all free, as many as you need. The only thing that costs money is asking Bum Bum to build a tool that does not exist yet.</p></div>
+        <div className="plan-grid">{plans.map((plan) => <article className={`plan ${plan.featured ? "featured" : ""}`} key={plan.name}>{plan.featured && <span className="popular">BUM BUM’S PICK</span>}<h3>{plan.name}</h3><div className="price">{plan.price}<small>{plan.note}</small></div><p className="credits">{plan.credits}</p><ul>{plan.features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul><a className={plan.featured ? "button" : "button outline"} href={plan.href}>{plan.cta} <span aria-hidden="true">↗</span></a></article>)}</div>
+        <p className="pricing-note">No action counts, no monthly buckets, no warning emails at 80%. Use the tools; that is the whole deal.</p>
         <p className="section-more"><a href="/pricing/">How pricing works, in plain English <Arrow /></a></p>
       </section>
 
-      <section className="guarantee" id="guarantee"><div className="shell guarantee-inner"><div className="guarantee-number" title="psst, triple-click me" onClick={(event) => { if (event.detail === 3) { setNapping(true); window.setTimeout(() => setNapping(false), 3200); } }}>36<span>HRS</span>{napping && <div className="nap-bubble">😴 Bum Bum is napping. The 36-hour clock respects nap time.</div>}</div><div><p className="kicker">The Operator promise</p><h2>A missing tool should not become a six-month project.</h2><p>Operator members get one scoped request each month. Once we agree on the tiny, useful version, Bum Bum ships it within 36 hours.</p><details><summary>What counts as a scoped request? <span>+</span></summary><p>One focused workflow that can be built in about four working hours. It can use approved existing services, but it cannot include regulated data, complex migrations, mobile app store review, or work waiting on a third party. The clock begins when scope and access are confirmed. Weekends and US federal holidays are excluded. If we miss the window, your next month is on us.</p></details><p className="section-more section-more-left"><a href="/36-hours/">Read the full 36-hour promise <Arrow /></a></p><p className="section-more section-more-left"><a href="/build-vs-buy/">Could you just build it yourself? We did the math <Arrow /></a></p></div></div></section>
+      <section className="guarantee" id="guarantee"><div className="shell guarantee-inner"><div className="guarantee-number" title="psst, triple-click me" onClick={(event) => { if (event.detail === 3) { setNapping(true); window.setTimeout(() => setNapping(false), 3200); } }}>36<span>HRS</span>{napping && <div className="nap-bubble">😴 Bum Bum is napping. The 36-hour clock respects nap time.</div>}</div><div><p className="kicker">The 36-hour promise</p><h2>A missing tool should not become a six-month project.</h2><p>Send one scoped request, $49 one-time. Once we agree on the tiny, useful version, Bum Bum ships it within 36 hours.</p><details><summary>What counts as a scoped request? <span>+</span></summary><p>One focused workflow that can be built in about four working hours. It can use approved existing services, but it cannot include regulated data, complex migrations, mobile app store review, or work waiting on a third party. The clock begins when scope and access are confirmed. Weekends and US federal holidays are excluded. If we miss the window, the request is on us.</p></details><p className="section-more section-more-left"><a href="/36-hours/">Read the full 36-hour promise <Arrow /></a></p><p className="section-more section-more-left"><a href="/build-vs-buy/">Could you just build it yourself? We did the math <Arrow /></a></p></div></div></section>
 
       <section className="faq-home shell" id="faq">
         <p className="kicker">Straight answers</p>

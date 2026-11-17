@@ -45,7 +45,7 @@ export default function BuildVsBuy() {
         <DiyCalculator />
         <div className="promise-callout">
           <h2>Or skip the project entirely.</h2>
-          <p>Describe the annoying task once. We agree on the tiny, useful version together. It lands in your toolbox within 36 hours, tested and working, and we keep it working. You never open a repo, never QA on a phone you do not own, and never get the 11pm bug report. If we miss the window, your next month is on us.</p>
+          <p>Describe the annoying task once. We agree on the tiny, useful version together. It lands in your toolbox within 36 hours, tested and working, and we keep it working. You never open a repo, never QA on a phone you do not own, and never get the 11pm bug report. If we miss the window, the request is on us.</p>
           <p><a href="/checkout/?plan=operator">Get the promise <span aria-hidden="true">↗</span></a></p>
         </div>
         <div className="prose">
@@ -58,8 +58,8 @@ export default function BuildVsBuy() {
           </div>
           <div>
             <h3>Request it</h3>
-            <p><strong>$49/mo.</strong> One scoped request every month, in your toolbox within 36 hours of agreed scope. Tested, hosted, and maintained by us. If we miss, next month is free.</p>
-            <a className="button" href="/checkout/?plan=operator">Go Operator <span aria-hidden="true">↗</span></a>
+            <p><strong>$49 one-time.</strong> One scoped request, in your toolbox within 36 hours of agreed scope. Tested, hosted, and maintained by us. If we miss, the request is on us.</p>
+            <a className="button" href="/36-hours/">Get the Promise <span aria-hidden="true">↗</span></a>
           </div>
         </div>
         <div className="prose" style={{ paddingBottom: 40 }}>
@@ -69,7 +69,7 @@ export default function BuildVsBuy() {
         <div className="prose" style={{ paddingBottom: 110 }}>
           <h2>Questions, probably answered</h2>
           <details><summary>But I genuinely enjoy building things? <span>+</span></summary><p>Then build! Seriously, the weekend project is a joy and we are not here to take that from you. And if you get stuck halfway, or the QA grind eats your third weekend, the request form will be right here. That is a normal place to end up, and we are happy to take it from there.</p></details>
-          <details><summary>What does the $49 actually cover? <span>+</span></summary><p>One scoped tool request every month, plus unlimited actions across every tool in the box, unlimited team seats, and all the hosting, fixes, and maintenance. The maintenance is the part of DIY nobody budgets for.</p></details>
+          <details><summary>What does the $49 actually cover? <span>+</span></summary><p>One scoped tool request, built within 36 hours of agreed scope, plus the hosting, fixes, and maintenance after it lands. Every other tool in the box is free anyway. The maintenance is the part of DIY nobody budgets for.</p></details>
           <details><summary>What if my idea is too big for 36 hours? <span>+</span></summary><p>We carve out the most useful slice and tell you honestly what the rest would take. A smaller tool that ships this month will help you sooner than a larger system that is still being built.</p></details>
           <details><summary>Do I own the tool? <span>+</span></summary><p>It lives in your Bum Bum toolbox as long as your subscription does, maintained and working. Cancel anytime and your data comes with you. The 11pm bug reports stay with us either way.</p></details>
         </div>
