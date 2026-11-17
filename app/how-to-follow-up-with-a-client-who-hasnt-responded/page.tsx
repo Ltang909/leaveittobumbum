@@ -63,7 +63,7 @@ export default function FollowUpWithClientGuide() {
           <p>Send it once, mean it, and stop. If they reply, you have a live conversation again. If they do not, you have a clean list and a door left open.</p>
 
           <h2>Keep the dates from slipping</h2>
-          <p>Templates are the easy half. The half that fails is sending them on time. In the <a href="/tools/purrsuit/">Client Follow-Up Tracker</a>, each client carries a follow-up date and a stage (new, talking, quoted, won, lost), and the morning view shows who is due and who has gone quiet, with a draft of what to say. Adding a contact uses one action, and everything else is free. Guests start with 15 free actions, and a free account gets 75 actions every month. Existing lists import by CSV, up to 200 rows at a time.</p>
+          <p>Templates are the easy half. The half that fails is sending them on time. In the <a href="/tools/purrsuit/">Client Follow-Up Tracker</a>, each client carries a follow-up date and a stage (new, talking, quoted, won, lost), and the morning view shows who is due and who has gone quiet, with a draft of what to say. Adding a contact is free, and so is everything else. Guests and free accounts alike get every tool with no limits. Existing lists import by CSV, up to 200 rows at a time.</p>
           <p>Our companion guide, How to remember to follow up with clients, covers the daily system behind this: capture the next step before you close a conversation, give it a real date, and check one list once a day.</p>
 
           <h2>Frequently asked questions</h2>

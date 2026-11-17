@@ -47,7 +47,7 @@ const faqLd = {
     { "@type": "Question", "name": "Will the text stay sharp?", "acceptedAnswer": { "@type": "Answer", "text": "At the standard size it is sharp enough for screens and uploads. If the JPGs will be printed or zoomed into, pick one of the larger render sizes, which render pages at two or three times the resolution." } },
     { "@type": "Question", "name": "Do I pay an action per page?", "acceptedAnswer": { "@type": "Answer", "text": "No. One action covers the whole PDF, whether it has two pages or sixty-two." } },
     { "@type": "Question", "name": "Can I convert a password-protected PDF?", "acceptedAnswer": { "@type": "Answer", "text": "Not directly. Unlock it with its password in your usual PDF app, save an unprotected copy, and convert that copy." } },
-    { "@type": "Question", "name": "Do I need an account to convert a PDF to JPG?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month." } }
+    { "@type": "Question", "name": "Do I need an account to convert a PDF to JPG?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest. It is free, with no limits." } }
   ]
 };
 
@@ -89,7 +89,7 @@ export default function PdfToJpg() {
           <h3>Can I convert a password-protected PDF?</h3>
           <p>Not directly. Unlock it with its password in your usual PDF app, save an unprotected copy, and convert that copy.</p>
           <h3>Do I need an account to convert a PDF to JPG?</h3>
-          <p>No. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month.</p>
+          <p>No. You can convert as a guest. It is free, with no limits.</p>
         </div>
       </section>
       <SiteFooter />

@@ -46,7 +46,7 @@ const faqLd = {
     { "@type": "Question", "name": "Why do some sites and apps refuse WebP?", "acceptedAnswer": { "@type": "Answer", "text": "WebP is newer than JPG and PNG, and older software, office tools, and upload forms were built before it existed or never added support. JPG has been accepted everywhere for decades, which is why it is the safe conversion target." } },
     { "@type": "Question", "name": "Does converting WebP to JPG lose quality?", "acceptedAnswer": { "@type": "Answer", "text": "JPG is lossy, so at the same settings a small amount of detail goes. At high quality settings the converted photo looks the same in practice. Keep quality high for anything headed to print." } },
     { "@type": "Question", "name": "What happens to transparent areas in the WebP?", "acceptedAnswer": { "@type": "Answer", "text": "They are flattened onto a solid background, because JPG has no transparency. If the image needs to stay transparent, convert it to PNG instead." } },
-    { "@type": "Question", "name": "Do I need an account to convert WebP to JPG?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month." } },
+    { "@type": "Question", "name": "Do I need an account to convert WebP to JPG?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits." } },
     { "@type": "Question", "name": "Can I convert several WebP files at once?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drop in a batch and they all convert to JPG with the same settings in one pass." } }
   ]
 };
@@ -88,7 +88,7 @@ export default function WebpToJpg() {
           <h3>What happens to transparent areas in the WebP?</h3>
           <p>They are flattened onto a solid background, because JPG has no transparency. If the image needs to stay transparent, convert it to PNG instead.</p>
           <h3>Do I need an account to convert WebP to JPG?</h3>
-          <p>No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month.</p>
+          <p>No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits.</p>
           <h3>Can I convert several WebP files at once?</h3>
           <p>Yes. Drop in a batch and they all convert to JPG with the same settings in one pass.</p>
         </div>

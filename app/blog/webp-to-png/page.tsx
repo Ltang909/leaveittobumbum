@@ -45,7 +45,7 @@ const faqLd = {
   "mainEntity": [
     { "@type": "Question", "name": "Does converting WebP to PNG lose quality?", "acceptedAnswer": { "@type": "Answer", "text": "No. PNG is a lossless format, and the WebP is decoded at full quality before being saved as PNG, so the converted image keeps everything the original had. The file size usually grows, because WebP compresses harder, but the picture does not change." } },
     { "@type": "Question", "name": "Does the PNG keep transparent areas?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Both WebP and PNG support transparency, so a WebP with a transparent background converts to a PNG with the same transparent background. Nothing gets flattened onto a color." } },
-    { "@type": "Question", "name": "Do I need an account to convert WebP to PNG?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month." } },
+    { "@type": "Question", "name": "Do I need an account to convert WebP to PNG?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits." } },
     { "@type": "Question", "name": "Can I convert several WebP files at once?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drop in as many as you like and convert them all to PNG in one pass, then download them together." } },
     { "@type": "Question", "name": "Why is my PNG so much bigger than the WebP?", "acceptedAnswer": { "@type": "Answer", "text": "That is expected. WebP was designed to beat PNG on file size, especially for photos. You are trading bytes for acceptance: the PNG opens everywhere, including the places that refused the WebP." } }
   ]
@@ -86,7 +86,7 @@ export default function WebpToPng() {
           <h3>Does the PNG keep transparent areas?</h3>
           <p>Yes. Both WebP and PNG support transparency, so a WebP with a transparent background converts to a PNG with the same transparent background. Nothing gets flattened onto a color.</p>
           <h3>Do I need an account to convert WebP to PNG?</h3>
-          <p>No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month.</p>
+          <p>No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits.</p>
           <h3>Can I convert several WebP files at once?</h3>
           <p>Yes. Drop in as many as you like and convert them all to PNG in one pass, then download them together.</p>
           <h3>Why is my PNG so much bigger than the WebP?</h3>

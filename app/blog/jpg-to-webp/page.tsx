@@ -46,7 +46,7 @@ const faqLd = {
     { "@type": "Question", "name": "How much smaller is WebP than JPG?", "acceptedAnswer": { "@type": "Answer", "text": "At the same visual quality, WebP photos typically come out about a quarter to a third smaller than JPG. Exact numbers depend on the image; busy detailed photos save the most." } },
     { "@type": "Question", "name": "Does converting JPG to WebP lose quality?", "acceptedAnswer": { "@type": "Answer", "text": "JPG is already lossy, and converting adds one more lossy step. At a high quality setting the result is visually the same for web use. Keep your original JPGs archived in case you ever need the untouched version." } },
     { "@type": "Question", "name": "Will WebP work in every browser?", "acceptedAnswer": { "@type": "Answer", "text": "Every current major browser displays WebP. The holdouts are older software, some email clients, and desktop apps, which is why WebP is for web pages rather than for files you send around." } },
-    { "@type": "Question", "name": "Do I need an account to convert JPG to WebP?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month." } },
+    { "@type": "Question", "name": "Do I need an account to convert JPG to WebP?", "acceptedAnswer": { "@type": "Answer", "text": "No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits." } },
     { "@type": "Question", "name": "Can I convert a whole folder of JPGs at once?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drop in several JPGs and they convert to WebP with the same settings in one pass, ready to download together." } }
   ]
 };
@@ -88,7 +88,7 @@ export default function JpgToWebp() {
           <h3>Will WebP work in every browser?</h3>
           <p>Every current major browser displays WebP. The holdouts are older software, some email clients, and desktop apps, which is why WebP is for web pages rather than for files you send around.</p>
           <h3>Do I need an account to convert JPG to WebP?</h3>
-          <p>No. Picking and previewing are free, and a finished conversion uses one action. You can convert as a guest with 15 free actions, or create a free account for 75 actions every month.</p>
+          <p>No. Picking and previewing are free, and a finished conversion is free. You can convert as a guest. It is free, with no limits.</p>
           <h3>Can I convert a whole folder of JPGs at once?</h3>
           <p>Yes. Drop in several JPGs and they convert to WebP with the same settings in one pass, ready to download together.</p>
         </div>

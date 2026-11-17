@@ -45,7 +45,7 @@ export default function TranscribeIphoneVoiceMemosGuide() {
           <p>Say the structure out loud as you go ("first point", "second point"). The transcript arrives close to a finished draft, so the cleanup afterward is small.</p>
 
           <h2>What it costs</h2>
-          <p>One finished note uses one action. You can record as a guest with 15 free actions, or create a free account for 75 actions every month. Every transcript in your library is ready to copy or download at no extra cost.</p>
+          <p>Nothing. Finished notes are free, for guests and free accounts alike, with no limits. Every transcript in your library is ready to copy or download at no extra cost.</p>
 
           <h2>What to do with the transcript once you have it</h2>
           <ul>
@@ -57,7 +57,7 @@ export default function TranscribeIphoneVoiceMemosGuide() {
 
           <h2>Frequently asked questions</h2>
           <h3>Can I transcribe iPhone voice memos for free?</h3>
-          <p>Yes, within the free actions. Guests get 15 free actions and a free account gets 75 actions every month, and one finished note uses one action. Recording a memo as it plays, or recording a fresh note, both count the same way.</p>
+          <p>Yes. It is free for guests and free accounts alike, with no limits. Recording a memo as it plays, or recording a fresh note, both work the same way.</p>
           <h3>Does my recording get stored on a server?</h3>
           <p>On iPhone, short pieces of audio are sent to the server to be transcribed and the audio is never stored. On a computer, your recording stays in your browser and recognition happens on your device. Either way, you can listen back in the browser or download the audio to keep.</p>
           <h3>Can I download the transcript?</h3>
