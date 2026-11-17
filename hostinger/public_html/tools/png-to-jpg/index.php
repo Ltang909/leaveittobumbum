@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -69,7 +69,7 @@
       "name": "Can I convert a batch?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, up to 20 images at a time. Each converted image uses one action."
+        "text": "Yes, up to 20 images at a time."
       }
     },
     {
@@ -141,12 +141,8 @@ table.ex-table th{background:#fffdf8}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"PNG to JPG Converter"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/image-converter.png" alt="PNG to JPG Converter"><div><h1>PNG to JPG Converter</h1><p class="lede bb-desc">Smaller files that open anywhere. Turn PNGs into JPGs right in your browser, at the quality you pick.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to convert images</h2><a class="button" href="/account/?next=<?= urlencode('/tools/png-to-jpg/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/png-to-jpg/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/png-to-jpg/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to convert images</h2><a class="button" href="/account/?next=<?= urlencode('/tools/png-to-jpg/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/png-to-jpg/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
 <h2>Pick some PNGs</h2>
@@ -171,7 +167,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Do my images upload anywhere?</summary>
@@ -187,7 +183,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </details>
 <details>
 <summary>Can I convert a batch?</summary>
-<p>Yes, up to 20 images at a time. Each converted image uses one action.</p>
+<p>Yes, up to 20 images at a time.</p>
 </details>
 <details>
 <summary>Why does the text in my screenshot look smudged after converting?</summary>
@@ -252,7 +248,7 @@ const convertBtn=document.querySelector('#convertBtn'),clearBtn=document.querySe
 const convProgress=document.querySelector('#convProgress'),barFill=document.querySelector('#barFill'),progText=document.querySelector('#progText');
 let files=[],convKey=0;
 
-function refreshButtons(){convertBtn.classList.toggle('hidden',!files.length);clearBtn.classList.toggle('hidden',!files.length && !resultList.children.length);convertBtn.textContent=files.length>1?('Convert '+files.length+' images ('+files.length+' actions)'):('Convert this image (1 action)')}
+function refreshButtons(){convertBtn.classList.toggle('hidden',!files.length);clearBtn.classList.toggle('hidden',!files.length && !resultList.children.length);convertBtn.textContent=files.length>1?('Convert '+files.length+' images'):('Convert this image')}
 qualityRange.addEventListener('input',()=>{qualityVal.textContent=qualityRange.value});
 
 if(dropzone){
@@ -295,11 +291,11 @@ convertBtn.addEventListener('click',async()=>{
       bbTrack('convert_done',{from:f.type,to:'image/jpeg'});
       okCount++;
     }catch(e){
-      if(e.message==='actions'){blocked=true;row.innerHTML='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Out of actions for this month.</span></div>';resultList.appendChild(row);break}
+      if(e.message==='actions'){blocked=true;row.innerHTML='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Something stopped that job. Try again?</span></div>';resultList.appendChild(row);break}
       row.innerHTML='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Bum Bum could not read that file. Try a PNG or JPG?</span></div>';resultList.appendChild(row);
     }
   }
-  barFill.style.width='100%';progText.textContent=blocked?'Stopped: out of actions.':'Done.';
+  barFill.style.width='100%';progText.textContent=blocked?'Stopped.':'Done.';
   if(okCount>0&&window.BBDropStrip)window.BBDropStrip.show('image-converter');
   files=[];refreshButtons();convertBtn.disabled=false;
   setTimeout(()=>convProgress.classList.add('hidden'),900);

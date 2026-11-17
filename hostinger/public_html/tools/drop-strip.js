@@ -754,7 +754,7 @@
         '<div class="bb-strip-other" hidden>' +
         '<div class="bb-strip-other-path"><p><b>Already exists?</b> It might be sitting in the toolbox, just not one of the guesses above.</p>' +
         '<a class="bb-strip-btn bb-strip-chip bb-strip-other-btn" href="/tools/">Check the toolbox</a></div>' +
-        '<div class="bb-strip-other-path"><p><b>Does not exist yet?</b> Request it in the community queue. The queue is public and demand driven, so there is no promised timeline. Want it guaranteed? Operators get one built within 36 hours.</p>' +
+        '<div class="bb-strip-other-path"><p><b>Does not exist yet?</b> Request it in the community queue. The queue is public and demand driven, so there is no promised timeline. Want it guaranteed? The 36-hour Promise builds it within 36 hours for $49 one-time.</p>' +
         '<button type="button" class="bb-strip-btn bb-strip-chip bb-strip-other-btn" data-req="1">Request it</button></div>' +
         "</div>");
       result.querySelectorAll(".bb-strip-chip[data-tool]").forEach(function (chip) {
@@ -814,7 +814,7 @@
         renderAmbiguous(d);
         return;
       } else if (d.limit_reached) {
-        show('<p class="bb-strip-error">' + esc(d.error || "Out of actions.") + ' <a href="/account/">See your account</a></p>');
+        show('<p class="bb-strip-error">' + esc(d.error || "Something went wrong.") + ' <a href="/account/">See your account</a></p>');
       } else {
         show('<p class="bb-strip-error">' + esc(d.error || "Something went wrong.") + "</p>");
       }

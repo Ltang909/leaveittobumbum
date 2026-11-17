@@ -28,7 +28,7 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. This splitter is free, uses no actions, and needs no sign-up. Drop your PDF in and download the pieces." } },
+    { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. This splitter is free and needs no sign-up. Drop your PDF in and download the pieces." } },
     { "@type": "Question", "name": "Does my PDF upload anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. Splitting happens right in your browser, on your device. Your PDF is never sent to Bum Bum or anyone else." } },
     { "@type": "Question", "name": "How do page ranges work?", "acceptedAnswer": { "@type": "Answer", "text": "Each group you type becomes its own PDF. Typing 1-2, 3 gives you two files: one with pages 1 and 2, one with page 3. When there is more than one group, the files arrive together in a ZIP. A single group downloads as a plain PDF." } },
     { "@type": "Question", "name": "What does splitting every page give me?", "acceptedAnswer": { "@type": "Answer", "text": "One PDF per page, gathered into a single ZIP download. A 12-page statement becomes 12 small PDFs named by page number." } },
@@ -94,7 +94,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2>Questions, answered</h2>
-<details><summary>Do I need an account?</summary><p>No. This splitter is free, uses no actions, and needs no sign-up. Drop your PDF in and download the pieces.</p></details>
+<details><summary>Do I need an account?</summary><p>No. This splitter is free and needs no sign-up. Drop your PDF in and download the pieces.</p></details>
 <details><summary>Does my PDF upload anywhere?</summary><p>No. Splitting happens right in your browser, on your device. Your PDF is never sent to Bum Bum or anyone else.</p></details>
 <details><summary>How do page ranges work?</summary><p>Each group you type becomes its own PDF. Typing 1-2, 3 gives you two files: one with pages 1 and 2, one with page 3. When there is more than one group, the files arrive together in a ZIP. A single group downloads as a plain PDF.</p></details>
 <details><summary>What does splitting every page give me?</summary><p>One PDF per page, gathered into a single ZIP download. A 12-page statement becomes 12 small PDFs named by page number.</p></details>

@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Compress as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Compress as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -77,7 +77,7 @@
       "name": "What if my PDF does not get smaller?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Some PDFs are already lean. If the rebuilt file is not smaller than your original, Bum Bum says so, there is nothing to download, and no action is charged."
+        "text": "Some PDFs are already lean. If the rebuilt file is not smaller than your original, Bum Bum says so, there is nothing to download."
       }
     }
   ]
@@ -120,12 +120,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"PDF Compressor"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p style="font-size:13px;opacity:.75;margin:4px 0 0"><a href="/es/tools/pdf-compressor/">Ver en español</a></p><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/pdf-compressor.png" alt="PDF Compressor"><div><h1>PDF Compressor</h1><p class="lede bb-desc">Same PDF. Smaller file. Bum Bum rebuilds your PDF leaner right in your browser.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to compress PDFs</h2><a class="button" href="/account/?next=<?= urlencode('/tools/pdf-compressor/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/pdf-compressor/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/pdf-compressor/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to compress PDFs</h2><a class="button" href="/account/?next=<?= urlencode('/tools/pdf-compressor/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/pdf-compressor/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
 <h2>Pick a PDF</h2>
@@ -140,7 +136,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="controls">
 <div><label>Level<select id="levelSel"><option value="smaller">Smaller: tiniest file, softer pages</option><option value="balanced" selected>Balanced: the everyday pick</option><option value="high">High quality: crispest pages, gentler shrink</option></select></label><p class="time-hint">Smaller is for strict size caps, like email attachments and upload forms. Balanced suits most sending. High quality keeps pages their crispest for reading and printing.</p></div>
 </div>
-<div class="btnrow"><button type="button" class="button hidden" id="compressBtn">Compress this PDF (1 action)</button><button type="button" class="button secondary hidden" id="clearBtn">Clear</button></div>
+<div class="btnrow"><button type="button" class="button hidden" id="compressBtn">Compress this PDF</button><button type="button" class="button secondary hidden" id="clearBtn">Clear</button></div>
 <div class="progress-wrap hidden" id="compProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Working...</p></div>
 <p id="compError" class="error"></p>
 <div id="resultList"></div>
@@ -150,7 +146,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Compress as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Compress as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Do my PDFs upload anywhere?</summary>
@@ -170,7 +166,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </details>
 <details>
 <summary>What if my PDF does not get smaller?</summary>
-<p>Some PDFs are already lean. If the rebuilt file is not smaller than your original, Bum Bum says so, there is nothing to download, and no action is charged.</p>
+<p>Some PDFs are already lean. If the rebuilt file is not smaller than your original, Bum Bum says so, there is nothing to download.</p>
 </details>
 <details>
 <summary>Why did my PDF fail?</summary>
@@ -180,7 +176,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Shrinking a PDF, the short guide</h2>
 <h3>How it works here</h3>
-<p>Most online compressors upload your PDF to a server and squeeze it there. This one works in your browser: each page is redrawn as a picture at the level you pick, then the pages are rebuilt into a fresh PDF at the same page sizes. Nothing is uploaded, kept, or seen by anyone else. It is one action per PDF, and the action is only charged when the new file is actually smaller than the one you brought.</p>
+<p>Most online compressors upload your PDF to a server and squeeze it there. This one works in your browser: each page is redrawn as a picture at the level you pick, then the pages are rebuilt into a fresh PDF at the same page sizes. Nothing is uploaded, kept, or seen by anyone else. If the new file is not actually smaller than the one you brought, there is nothing to download.</p>
 <h3>Picking a level</h3>
 <p>Smaller is the one for strict caps: the email attachment that bounces, the application portal with a hard upload limit, the client inbox with no room. Balanced is the everyday pick, small enough for sending and still comfortable to read. High quality shrinks gently and keeps pages crisp for anything read closely or printed. If a level does not get you under your cap, run the compressed copy through again at the next level down.</p>
 <h3>Send the copy, keep the original</h3>
@@ -297,7 +293,7 @@ compressBtn.addEventListener('click',async()=>{
     }else{
       const key='comp-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
       const{response,data}=await apiCall({action:'compress',idempotencyKey:key});
-      if(response.status===402){compError.textContent='Out of actions for this month.';progText.textContent='Stopped.';compressBtn.disabled=false;setTimeout(()=>compProgress.classList.add('hidden'),900);return}
+      if(response.status===402){compError.textContent='Something stopped that job. Try again?';progText.textContent='Stopped.';compressBtn.disabled=false;setTimeout(()=>compProgress.classList.add('hidden'),900);return}
       if(!response.ok)throw new Error(data.error||'metering failed');
       const blob=new Blob([bytes],{type:'application/pdf'});
       const url=URL.createObjectURL(blob);

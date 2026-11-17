@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Start as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -151,12 +151,8 @@ input[type=date]{width:100%;padding:14px;border:2px solid var(--line);border-rad
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Client Follow-Up Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/purrsuit.png" alt="Client Follow-Up Tracker"><div><h1>Client Follow-Up Tracker</h1><p class="lede bb-desc">Never let a lead go cold. A tiny follow-up tracker for people who hate CRMs.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Client Follow-Up Tracker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Client Follow-Up Tracker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/purrsuit/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php require dirname(__DIR__, 2) . '/includes/weekly-note.php'; ?>
 <section class="panel" id="followupPanel"><h2 style="margin-top:0">Follow up today</h2><div id="followupList"><p class="lede">Loading...</p></div></section>
 <div class="stat-row"><div class="stat-card" data-stat="pipeline" role="button" tabindex="0" aria-pressed="false"><b id="statPipeline">$0</b><span>active pipeline</span></div><div class="stat-card" data-stat="won" role="button" tabindex="0" aria-pressed="false"><b id="statWon">$0</b><span>won</span></div><div class="stat-card" data-stat="all" role="button" tabindex="0" aria-pressed="false"><b id="statCount">0</b><span>contacts</span></div></div><p class="stat-hint hidden" id="statHint" role="status"></p>
@@ -176,8 +172,8 @@ let DATA={contacts:[],followUpDue:[],goneQuiet:[]};
 let FILTER='all';
 const PIPELINE_STAGES=['new','talking','quoted'];
 function filterMatch(c){if(FILTER==='all')return true;if(FILTER==='pipeline')return PIPELINE_STAGES.includes(c.stage);return c.stage===FILTER}
-if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+if(false){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
+function upgradeCard(){return ''}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function money(n){return new Intl.NumberFormat(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n||0)}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/purrsuit.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
@@ -352,7 +348,7 @@ addForm.addEventListener('submit',async e=>{
   }
   attempt=crypto.randomUUID();
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+  document.querySelector('#usage').textContent='Free, no limits.';
   addForm.reset();await refresh();
 });
 document.querySelector('#csvDownload').addEventListener('click',async e=>{
@@ -385,8 +381,8 @@ csvForm.addEventListener('submit',async e=>{
   btn.disabled=false;btn.textContent='Import CSV';
   if(response.status===402){
     bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
-    errEl.textContent=data.error||'Out of actions.';
-    document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+    errEl.textContent=data.error||'Something went wrong.';
+    document.querySelector('#usage').textContent='Free, no limits.';
     document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
     document.querySelectorAll('#upgrade-slot [data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:'limit',tool:TOOL_KEY})));
     await refresh();return;
@@ -394,7 +390,7 @@ csvForm.addEventListener('submit',async e=>{
   if(!response.ok){errEl.textContent=data.error||'Import failed.';return}
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
   bbTrack('purrsuit_imported',{tool:TOOL_KEY,imported:data.imported});
-  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+  document.querySelector('#usage').textContent='Free, no limits.';
   let msg=`Added ${data.imported} new, updated ${data.updated}.`;
   if(data.skipped)msg+=` Skipped ${data.skipped}.`;
   if(data.errors&&data.errors.length)msg+='\n'+data.errors.join('\n');
@@ -406,7 +402,7 @@ refresh();
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Start as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>How is Client Follow-Up Tracker different from a big CRM?</summary>
@@ -428,7 +424,7 @@ refresh();
 <?php $bbTool = 'purrsuit'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Following up without a CRM, the short guide</h2>
 <h3>How it works here</h3>
-<p>Add the humans, move them down the pipeline, and every morning the tracker tells you exactly who to follow up with and what to say. Follow-ups that come due also show up in the Monday note for that week. Adding a contact uses one action; everything else is free, and you can import contacts from a CSV instead of typing them one by one.</p>
+<p>Add the humans, move them down the pipeline, and every morning the tracker tells you exactly who to follow up with and what to say. Follow-ups that come due also show up in the Monday note for that week. Adding a contact is free, and so is everything else, and you can import contacts from a CSV instead of typing them one by one.</p>
 <h3>The two-minute habit</h3>
 <p>Set the follow-up date before you close the tab after every call. Two days is a good default for a warm conversation. The tracker does the remembering; your only job is telling it when future-you should care.</p>
 <h3>Keep the pipeline honest</h3>

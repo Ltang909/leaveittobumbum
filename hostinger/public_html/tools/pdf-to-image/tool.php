@@ -14,7 +14,7 @@ $bbModes = [
     'howtoDesc' => 'Turn every page of a PDF into an image.',
     'howtoSteps' => ['Drop a PDF into PDF to Image.', 'Pick a format, resolution, and quality.', 'Bum Bum converts every page right in your browser; your file never leaves your device.', 'Download each page, or grab them all in a zip.'],
     'faq' => [
-      ['Do I need an account?', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.'],
+      ['Do I need an account?', 'No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.'],
       ['Do my PDFs upload anywhere?', 'No. Your files never leave your device. Conversion happens right in your browser.', 'No. Your files never leave your device. Conversion happens right in your browser.'],
       ['What do I get from a multi-page PDF?', 'One image per page, in order, in the format you picked. Download each page on its own, or grab them all together in a zip file.', 'One image per page, in order, in the format you picked. Download each page on its own, or grab them all together in a zip file.'],
       ['Which format should I pick?', 'JPG is the safe default almost everything accepts. PNG keeps text and lines perfectly crisp at a bigger file size. WebP makes the smallest files for websites that accept it.', 'JPG is the safe default almost everything accepts. PNG keeps text and lines perfectly crisp at a bigger file size. WebP makes the smallest files for websites that accept it.'],
@@ -43,7 +43,7 @@ $bbModes = [
     'howtoDesc' => 'Turn every page of a PDF into a JPG image.',
     'howtoSteps' => ['Drop a PDF into the converter.', 'Pick a resolution and quality.', 'Bum Bum converts every page right in your browser; your file never leaves your device.', 'Download each page, or grab them all in a zip.'],
     'faq' => [
-      ['Do I need an account?', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.'],
+      ['Do I need an account?', 'No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.'],
       ['Do my PDFs upload anywhere?', 'No. Your files never leave your device. Conversion happens right in your browser.', 'No. Your files never leave your device. Conversion happens right in your browser.'],
       ['What do I get from a multi-page PDF?', 'One JPG per page, in order. Download each page on its own, or grab them all together in a zip file.', 'One JPG per page, in order. Download each page on its own, or grab them all together in a zip file.'],
       ['Why JPG?', 'JPG is the safe default almost everything accepts: upload forms, email, marketplaces, and application portals all take it, and the files stay small. For PNG or WebP output, use PDF to Image.', 'JPG is the safe default almost everything accepts: upload forms, email, marketplaces, and application portals all take it, and the files stay small. For PNG or WebP output, use <a href="/tools/pdf-to-image/">PDF to Image</a>.'],
@@ -71,7 +71,7 @@ $bbModes = [
     'howtoDesc' => 'Turn every page of a PDF into a PNG image.',
     'howtoSteps' => ['Drop a PDF into the converter.', 'Pick a resolution.', 'Bum Bum converts every page right in your browser; your file never leaves your device.', 'Download each page, or grab them all in a zip.'],
     'faq' => [
-      ['Do I need an account?', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.'],
+      ['Do I need an account?', 'No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.'],
       ['Do my PDFs upload anywhere?', 'No. Your files never leave your device. Conversion happens right in your browser.', 'No. Your files never leave your device. Conversion happens right in your browser.'],
       ['What do I get from a multi-page PDF?', 'One PNG per page, in order. Download each page on its own, or grab them all together in a zip file.', 'One PNG per page, in order. Download each page on its own, or grab them all together in a zip file.'],
       ['Why PNG?', 'PNG keeps text and sharp lines perfectly crisp, which suits pages people will read closely, contracts, diagrams, and screenshots of documents. The files are bigger than JPG. For JPG or WebP output, use PDF to Image.', 'PNG keeps text and sharp lines perfectly crisp, which suits pages people will read closely, contracts, diagrams, and screenshots of documents. The files are bigger than JPG. For JPG or WebP output, use <a href="/tools/pdf-to-image/">PDF to Image</a>.'],
@@ -153,12 +153,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>$bbM['name']]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/pdf-to-image.png" alt="<?= htmlspecialchars($bbM['name']) ?>"><div><h1><?= htmlspecialchars($bbM['h1']) ?></h1><p class="lede bb-desc"><?= htmlspecialchars($bbM['lede']) ?></p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to convert PDFs</h2><a class="button" href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to convert PDFs</h2><a class="button" href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
 <h2>Pick a PDF</h2>
@@ -215,7 +211,7 @@ let files=[],convKey=0;
 const EXT={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'};
 if(BB_LOCKED_MIME==='image/png'&&qualityWrap)qualityWrap.style.opacity='0.45';
 
-function refreshButtons(){convertBtn.classList.toggle('hidden',!files.length);clearBtn.classList.toggle('hidden',!files.length && !resultList.children.length);convertBtn.textContent=files.length>1?('Convert '+files.length+' PDFs ('+files.length+' actions)'):('Convert this PDF (1 action)')}
+function refreshButtons(){convertBtn.classList.toggle('hidden',!files.length);clearBtn.classList.toggle('hidden',!files.length && !resultList.children.length);convertBtn.textContent=files.length>1?('Convert '+files.length+' PDFs'):('Convert this PDF')}
 qualityRange.addEventListener('input',()=>{qualityVal.textContent=qualityRange.value});
 if(formatSel)formatSel.addEventListener('change',()=>{qualityWrap.style.opacity=formatSel.value==='image/png'?'0.45':'1'});
 
@@ -319,11 +315,11 @@ convertBtn.addEventListener('click',async()=>{
       bbTrack('convert_done',{tool:'pdf-to-image',pages:total,format:ext});
       if(window.BBDropStrip)window.BBDropStrip.show('pdf-to-image');
     }catch(e){
-      if(e.message==='actions'){blocked=true;meta.textContent='Out of actions for this month.';break}
+      if(e.message==='actions'){blocked=true;meta.textContent='Something stopped that job. Try again?';break}
       meta.textContent='Something went wrong converting that one. Try a smaller PDF or the Standard resolution.';
     }
   }
-  barFill.style.width='100%';progText.textContent=blocked?'Stopped: out of actions.':'Done.';
+  barFill.style.width='100%';progText.textContent=blocked?'Stopped.':'Done.';
   convertBtn.disabled=false;
   setTimeout(()=>convProgress.classList.add('hidden'),900);
   resultList.scrollIntoView({behavior:'smooth',block:'center'});

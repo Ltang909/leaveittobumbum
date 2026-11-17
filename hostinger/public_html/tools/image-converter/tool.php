@@ -16,7 +16,7 @@ $bbModes = [
     'howtoDesc' => 'WebP to PNG, JPG to WebP, whatever to whatever.',
     'howtoSteps' => ['Drop an image into Image Converter.', 'Pick the format you want: WebP, PNG, or JPG.', 'Bum Bum converts it right in your browser; your file never leaves your device.', 'Download the converted image.'],
     'faq' => [
-      ['Do I need an account?', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.'],
+      ['Do I need an account?', 'No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.'],
       ['Do my images upload anywhere?', 'No. Your files never leave your device. Conversion happens right in your browser.', 'No. Your files never leave your device. Conversion happens right in your browser.'],
       ['Which formats are supported?', 'WebP, PNG, and JPG, in any direction.', 'WebP, PNG, and JPG, in any direction.'],
       ['Is there a size limit?', 'If your browser can open it, Image Converter can convert it.', 'If your browser can open it, Image Converter can convert it.'],
@@ -44,11 +44,11 @@ $bbModes = [
     'howtoDesc' => 'Turn a WebP image into a PNG in your browser.',
     'howtoSteps' => ['Drop a WebP image into the converter.', 'Bum Bum converts it right in your browser; your file never leaves your device.', 'Download the PNG.'],
     'faq' => [
-      ['Do I need an account?', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.'],
+      ['Do I need an account?', 'No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.'],
       ['Do my images upload anywhere?', 'No. Your files never leave your device. Conversion happens right in your browser.', 'No. Your files never leave your device. Conversion happens right in your browser.'],
       ['Why would I turn a WebP into a PNG?', 'Some upload forms, editors, and older apps still refuse WebP files. PNG is accepted everywhere, and it keeps the image exactly as it was, pixel for pixel.', 'Some upload forms, editors, and older apps still refuse WebP files. PNG is accepted everywhere, and it keeps the image exactly as it was, pixel for pixel.'],
       ['Will the file get bigger?', 'Usually, yes. PNG keeps every pixel, so the file grows compared to WebP. That is the trade for a format everything accepts.', 'Usually, yes. PNG keeps every pixel, so the file grows compared to WebP. That is the trade for a format everything accepts.'],
-      ['Can I convert a batch?', 'Yes, up to 20 images at a time. Each converted image uses one action.', 'Yes, up to 20 images at a time. Each converted image uses one action.'],
+      ['Can I convert a batch?', 'Yes, up to 20 images at a time.', 'Yes, up to 20 images at a time.'],
     ],
     'guideTitle' => 'WebP to PNG, the short guide',
     'guide' => [
@@ -72,11 +72,11 @@ $bbModes = [
     'howtoDesc' => 'Turn a WebP image into a JPG in your browser.',
     'howtoSteps' => ['Drop a WebP image into the converter.', 'Set the quality slider. The default suits most photos and screenshots.', 'Bum Bum converts it right in your browser; your file never leaves your device.', 'Download the JPG.'],
     'faq' => [
-      ['Do I need an account?', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.'],
+      ['Do I need an account?', 'No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.'],
       ['Do my images upload anywhere?', 'No. Your files never leave your device. Conversion happens right in your browser.', 'No. Your files never leave your device. Conversion happens right in your browser.'],
       ['What happens to transparent parts of a WebP?', 'JPG has no transparency, so see-through areas come out white. If you need the transparency kept, convert to PNG instead.', 'JPG has no transparency, so see-through areas come out white. If you need the transparency kept, convert to <a href="/tools/webp-to-png/">PNG</a> instead.'],
       ['How much smaller will the JPG be?', 'Photos and screenshots usually shrink compared to the WebP, and the slider trades size for detail: lower for a smaller file, higher to keep every edge crisp.', 'Photos and screenshots usually shrink compared to the WebP, and the slider trades size for detail: lower for a smaller file, higher to keep every edge crisp.'],
-      ['Can I convert a batch?', 'Yes, up to 20 images at a time. Each converted image uses one action.', 'Yes, up to 20 images at a time. Each converted image uses one action.'],
+      ['Can I convert a batch?', 'Yes, up to 20 images at a time.', 'Yes, up to 20 images at a time.'],
     ],
     'guideTitle' => 'WebP to JPG, the short guide',
     'guide' => [
@@ -100,11 +100,11 @@ $bbModes = [
     'howtoDesc' => 'Turn a PNG image into a WebP in your browser.',
     'howtoSteps' => ['Drop a PNG image into the converter.', 'Set the quality slider. The default keeps images looking the same.', 'Bum Bum converts it right in your browser; your file never leaves your device.', 'Download the WebP.'],
     'faq' => [
-      ['Do I need an account?', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.'],
+      ['Do I need an account?', 'No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.'],
       ['Do my images upload anywhere?', 'No. Your files never leave your device. Conversion happens right in your browser.', 'No. Your files never leave your device. Conversion happens right in your browser.'],
       ['Why turn a PNG into a WebP?', 'WebP keeps the picture looking the same at a much smaller file size, which is why websites use it. Smaller images load faster and cost less to store and serve.', 'WebP keeps the picture looking the same at a much smaller file size, which is why websites use it. Smaller images load faster and cost less to store and serve.'],
       ['Does WebP keep transparency?', 'Yes. See-through areas stay see-through in WebP, and the quality slider controls how much detail is kept.', 'Yes. See-through areas stay see-through in WebP, and the quality slider controls how much detail is kept.'],
-      ['Can I convert a batch?', 'Yes, up to 20 images at a time. Each converted image uses one action.', 'Yes, up to 20 images at a time. Each converted image uses one action.'],
+      ['Can I convert a batch?', 'Yes, up to 20 images at a time.', 'Yes, up to 20 images at a time.'],
     ],
     'guideTitle' => 'PNG to WebP, the short guide',
     'guide' => [
@@ -128,11 +128,11 @@ $bbModes = [
     'howtoDesc' => 'Turn a JPG image into a WebP in your browser.',
     'howtoSteps' => ['Drop a JPG image into the converter.', 'Set the quality slider. The default keeps photos looking the same.', 'Bum Bum converts it right in your browser; your file never leaves your device.', 'Download the WebP.'],
     'faq' => [
-      ['Do I need an account?', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.'],
+      ['Do I need an account?', 'No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.'],
       ['Do my images upload anywhere?', 'No. Your files never leave your device. Conversion happens right in your browser.', 'No. Your files never leave your device. Conversion happens right in your browser.'],
       ['Why turn a JPG into a WebP?', 'WebP makes a smaller file than JPG at the same visible quality, which is why websites use it. A page of product photos loads faster and costs less to serve.', 'WebP makes a smaller file than JPG at the same visible quality, which is why websites use it. A page of product photos loads faster and costs less to serve.'],
       ['Will my photo look different?', 'At the default quality, no. The slider trades size for detail: lower for a smaller file, higher to keep faces and fine detail crisp.', 'At the default quality, no. The slider trades size for detail: lower for a smaller file, higher to keep faces and fine detail crisp.'],
-      ['Can I convert a batch?', 'Yes, up to 20 images at a time. Each converted image uses one action.', 'Yes, up to 20 images at a time. Each converted image uses one action.'],
+      ['Can I convert a batch?', 'Yes, up to 20 images at a time.', 'Yes, up to 20 images at a time.'],
     ],
     'guideTitle' => 'JPG to WebP, the short guide',
     'guide' => [
@@ -156,12 +156,12 @@ $bbModes = [
     'howtoDesc' => 'Turn a JPG image into a PNG in your browser.',
     'howtoSteps' => ['Drop a JPG image into the converter.', 'Bum Bum converts it right in your browser; your file never leaves your device.', 'Download the PNG.'],
     'faq' => [
-      ['Do I need an account?', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.'],
+      ['Do I need an account?', 'No. Convert as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/.', 'No. Convert as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.'],
       ['Do my images upload anywhere?', 'No. Your files never leave your device. Conversion happens right in your browser.', 'No. Your files never leave your device. Conversion happens right in your browser.'],
       ['Why turn a JPG into a PNG?', 'PNG is the format editors and design tools prefer for further work, and from here on nothing more is thrown away when you save. It is also the safer pick for graphics with text or sharp lines.', 'PNG is the format editors and design tools prefer for further work, and from here on nothing more is thrown away when you save. It is also the safer pick for graphics with text or sharp lines.'],
       ['Will the picture get sharper?', 'No, and any tool that promises that is stretching the truth. Converting cannot bring back detail the JPG already compressed away. What PNG does is stop further loss from this point on.', 'No, and any tool that promises that is stretching the truth. Converting cannot bring back detail the JPG already compressed away. What PNG does is stop further loss from this point on.'],
       ['Will the file get bigger?', 'Yes, often several times bigger. PNG keeps every pixel instead of compressing like JPG. That trade is worth it for editing, and the wrong one for emailing.', 'Yes, often several times bigger. PNG keeps every pixel instead of compressing like JPG. That trade is worth it for editing, and the wrong one for emailing.'],
-      ['Can I convert a batch?', 'Yes, up to 20 images at a time. Each converted image uses one action.', 'Yes, up to 20 images at a time. Each converted image uses one action.'],
+      ['Can I convert a batch?', 'Yes, up to 20 images at a time.', 'Yes, up to 20 images at a time.'],
     ],
     'guideTitle' => 'JPG to PNG, the short guide',
     'guide' => [
@@ -235,12 +235,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>$bbM['name']]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/image-converter.png" alt="<?= htmlspecialchars($bbM['name']) ?>"><div><h1><?= htmlspecialchars($bbM['h1']) ?></h1><p class="lede bb-desc"><?= htmlspecialchars($bbM['lede']) ?></p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to convert images</h2><a class="button" href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to convert images</h2><a class="button" href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/' . $bbSlug . '/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
 <h2><?= htmlspecialchars($bbM['panel']) ?></h2>
@@ -296,7 +292,7 @@ let files=[],convKey=0;
 const EXT={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'};
 const LOCKED=BB_LOCKED_MIME?{mime:BB_LOCKED_MIME,ext:BB_LOCKED_EXT}:null;
 
-function refreshButtons(){convertBtn.classList.toggle('hidden',!files.length);clearBtn.classList.toggle('hidden',!files.length && !resultList.children.length);convertBtn.textContent=files.length>1?('Convert '+files.length+' images ('+files.length+' actions)'):('Convert this image (1 action)')}
+function refreshButtons(){convertBtn.classList.toggle('hidden',!files.length);clearBtn.classList.toggle('hidden',!files.length && !resultList.children.length);convertBtn.textContent=files.length>1?('Convert '+files.length+' images'):('Convert this image')}
 if(qualityRange)qualityRange.addEventListener('input',()=>{qualityVal.textContent=qualityRange.value});
 function syncQualityDim(){if(!qualityWrap)return;const m=LOCKED?LOCKED.mime:(formatSel?formatSel.value:'');qualityWrap.style.opacity=m==='image/png'?'0.45':'1'}
 if(formatSel)formatSel.addEventListener('change',syncQualityDim);
@@ -342,11 +338,11 @@ convertBtn.addEventListener('click',async()=>{
       bbTrack('convert_done',{from:f.type,to:mime});
       okCount++;
     }catch(e){
-      if(e.message==='actions'){blocked=true;row.innerHTML='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Out of actions for this month.</span></div>';resultList.appendChild(row);break}
+      if(e.message==='actions'){blocked=true;row.innerHTML='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Something stopped that job. Try again?</span></div>';resultList.appendChild(row);break}
       row.innerHTML='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Bum Bum could not read that file. Try a PNG or JPG?</span></div>';resultList.appendChild(row);
     }
   }
-  barFill.style.width='100%';progText.textContent=blocked?'Stopped: out of actions.':'Done.';
+  barFill.style.width='100%';progText.textContent=blocked?'Stopped.':'Done.';
   if(okCount>0&&window.BBDropStrip)window.BBDropStrip.show('image-converter');
   files=[];refreshButtons();convertBtn.disabled=false;
   setTimeout(()=>convProgress.classList.add('hidden'),900);

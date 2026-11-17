@@ -28,7 +28,7 @@ $bbHubs = [
     'faq' => [
       ['Do the converters upload my files?', 'No. Every converter on this page runs in your browser, on your device. Your files are never sent to Bum Bum or anyone else.'],
       ['Which PNG conversion do most people need?', 'PNG to JPG, for sending and uploading: the file shrinks a lot and JPG opens everywhere. PNG to WebP is the pick for images going on your own website.'],
-      ['Does converting cost anything?', 'Conversions use actions: guests get 15 free actions, and a free account gets 75 every month. The HEIC to PNG converter is free and uses no actions.'],
+      ['Does converting cost anything?', 'Nothing. Conversions are free, with no limits and no account needed.'],
     ],
     'guide' => [
       ['How these pages work', 'Each converter above is preset: the page you land on already knows the input and output formats, so the job is drop, convert, download. Nothing to configure, and nothing uploads. If your direction is not listed, the Image Converter at the bottom runs all three formats with a picker.'],
@@ -60,7 +60,7 @@ $bbHubs = [
     'faq' => [
       ['Do the converters upload my files?', 'No. Every converter on this page runs in your browser, on your device. Your files are never sent to Bum Bum or anyone else.'],
       ['Which JPG conversion do most people need?', 'Into JPG, from whatever a phone or a website handed them: HEIC from an iPhone, WebP saved from a page, PNG screenshots that are too big to send. Out of JPG, WebP is the pick for websites and PNG is the pick for editing.'],
-      ['Does converting cost anything?', 'Conversions use actions: guests get 15 free actions, and a free account gets 75 every month. JPG to PDF and the HEIC to JPG converter are free and use no actions.'],
+      ['Does converting cost anything?', 'Nothing. Conversions are free, with no limits and no account needed.'],
     ],
     'guide' => [
       ['How these pages work', 'Each converter above is preset: the page you land on already knows the input and output formats, so the job is drop, convert, download. Nothing to configure, and nothing uploads. If your direction is not listed, the Image Converter at the bottom runs all three formats with a picker.'],
@@ -90,7 +90,7 @@ $bbHubs = [
     'faq' => [
       ['Do the converters upload my files?', 'No. Every converter on this page runs in your browser, on your device. Your files are never sent to Bum Bum or anyone else.'],
       ['Why does WebP cause trouble?', 'WebP is a website format: browsers display it happily, and then upload forms, editors, and older apps refuse it. Converting to PNG or JPG ends the argument. Going the other way, WebP makes image files much smaller for your own website.'],
-      ['Does converting cost anything?', 'Conversions use actions: guests get 15 free actions, and a free account gets 75 every month.'],
+      ['Does converting cost anything?', 'Nothing. Conversions are free, with no limits and no account needed.'],
     ],
     'guide' => [
       ['How these pages work', 'Each converter above is preset: the page you land on already knows the input and output formats, so the job is drop, convert, download. Nothing to configure, and nothing uploads. If your direction is not listed, the Image Converter at the bottom runs all three formats with a picker.'],
@@ -116,7 +116,7 @@ $bbHubs = [
       ]],
     ],
     'faq' => [
-      ['Is the HEIC converter really free?', 'Yes. The HEIC converters use no actions and need no account. Drop your photos in and download the converted files.'],
+      ['Is the HEIC converter really free?', 'Yes. The HEIC converters are free, with no limits and no account needed. Drop your photos in and download the converted files.'],
       ['Do my photos upload anywhere?', 'No. Conversion happens right in your browser, on your device. Your photos are never sent to Bum Bum or anyone else.'],
       ['Why do my iPhone photos end in .heic?', 'HEIC is the photo format iPhones have saved in since iOS 11. It keeps files small on the phone, but many websites, upload forms, and Windows PCs still cannot open it. JPG and PNG open everywhere.'],
     ],
@@ -151,7 +151,7 @@ $bbHubs = [
     'faq' => [
       ['Do the converters upload my files?', 'No. Every tool on this page runs in your browser, on your device. Your files are never sent to Bum Bum or anyone else.'],
       ['Which PDF conversion do most people need?', 'PDF to JPG, when a form or portal wants an image instead of a document. After that, JPG to PDF for gathering scans and photos into one file, and Merge PDF for combining documents.'],
-      ['Does converting cost anything?', 'Most PDF tools use actions: guests get 15 free actions, and a free account gets 75 every month. JPG to PDF, Split PDF, and the HEIC to PDF converter are free and use no actions.'],
+      ['Does converting cost anything?', 'Nothing. Conversions are free, with no limits and no account needed.'],
     ],
     'guide' => [
       ['How these pages work', 'Each tool above is preset for one job: the page you land on already knows what comes in and what goes out, so the work is drop, convert, download. Nothing uploads, and a multi-page PDF keeps its page order everywhere it matters.'],

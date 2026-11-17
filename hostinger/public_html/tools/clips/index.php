@@ -42,7 +42,7 @@
       "name": "Do I need an account to record my screen?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Record as a guest with 15 free actions. Create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Record as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -103,14 +103,6 @@
 <p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/clips.png" alt="Screen Recorder"><div><h1>Screen Recorder</h1><p class="lede bb-desc">Show them instead of telling them. Record your screen right in your browser, mic and camera too.</p></div></div>
 <?php if (!$user && !$isGuest): ?>
 <section class="panel"><h2>Sign in to use Screen Recorder</h2><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Sign in or create an account</a></section>
-<?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/clips/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/clips/') ?>">Create a free account</a></p></div>
-<?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/clips/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
-<?php if ($usage && empty($usage['unlimited']) && $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>
 <?php else: ?>
 <section class="panel hidden" id="no-screen">
 <h2>Clips needs a desktop browser</h2>
@@ -137,7 +129,7 @@
 <p><a id="downloadBtn" class="button" href="#" download>Download clip</a> <button id="againBtn" class="secondary">Record another</button></p>
 <section id="editSection" style="margin-top:24px;border-top:2px solid var(--line);padding-top:20px">
 <h3 style="margin-top:0">Edit this clip</h3>
-<p class="lede" id="editNote">Trim the boring bits and play with the speed. Editing is free and never uses an action.</p>
+<p class="lede" id="editNote">Trim the boring bits and play with the speed. Editing is free.</p>
 <div id="editBody">
 <div><label for="trimStart" style="margin-bottom:2px">Start: <span id="trimStartTime">00:00</span></label><input type="range" id="trimStart" min="0" max="0" step="0.1" value="0" style="width:100%;padding:0;border:none;background:transparent"></div>
 <div><label for="trimEnd" style="margin-bottom:2px">End: <span id="trimEndTime">00:00</span></label><input type="range" id="trimEnd" min="0" max="0" step="0.1" value="0" style="width:100%;padding:0;border:none;background:transparent"></div>
@@ -159,8 +151,8 @@
 const TOOL_KEY='clips';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 const LIMIT=<?= (int) ($usage['limit'] ?? 75) ?>;
-if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:LIMIT})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all ${LIMIT} free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+if(false){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:LIMIT})}}
+function upgradeCard(){return ''}
 function showUpgrade(){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();document.querySelectorAll('#upgrade-slot [data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:'limit',tool:TOOL_KEY})))}
 function fmt(ms){const s=Math.floor(ms/1000);const h=Math.floor(s/3600);const m=Math.floor(s%3600/60);const sec=s%60;const p=n=>String(n).padStart(2,'0');return (h?p(h)+':':'')+p(m)+':'+p(sec)}
 const screenOK=!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia);
@@ -464,7 +456,7 @@ if(!screenOK){
       }
       attempt=crypto.randomUUID();
       bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-      usageLine.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+      usageLine.textContent='Free, no limits.';
     }catch(err){usageLine.textContent='We could not count this one, but your clip is still yours. Download away.'}
   }
   const probeVideo=document.createElement('video');
@@ -590,13 +582,13 @@ if(!screenOK){
   });
 }
 </script>
-<?php endif; ?>
+
 <?php endif; ?>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account to record my screen?</summary>
-<p>No. Record as a guest with 15 free actions. Create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Record as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Where does my video go?</summary>
@@ -622,7 +614,7 @@ if(!screenOK){
 <?php $bbTool = 'clips'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Recording your screen, the short guide</h2>
 <h3>How it works here</h3>
-<p>Pick a tab, a window, or your whole screen, add your microphone and a small camera bubble if you want to be in it, and record. Everything happens in your browser: nothing uploads anywhere, and Bum Bum keeps no copy. When you stop, you can trim the result and tweak the playback speed before you download. One finished recording uses one action; recording and previewing are free.</p>
+<p>Pick a tab, a window, or your whole screen, add your microphone and a small camera bubble if you want to be in it, and record. Everything happens in your browser: nothing uploads anywhere, and Bum Bum keeps no copy. When you stop, you can trim the result and tweak the playback speed before you download. Recording, previewing, and the finished recording are all free.</p>
 <h3>Set up in thirty seconds</h3>
 <p>Close unrelated tabs before you record a single tab, because the picker shows everything you have open. Then make a short test recording first. It saves you from discovering a muted microphone at minute nine of the real take.</p>
 <h3>When a recording beats a meeting</h3>

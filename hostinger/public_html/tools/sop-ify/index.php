@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Start as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -101,13 +101,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"SOP Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/sop-ify.png" alt="SOP Generator"><div><h1>SOP Generator</h1><p class="lede bb-desc">Chaos in. Playbook out. Dump the messy process and get a clean step-by-step playbook.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use SOP Generator</h2><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use SOP Generator</h2><a class="button" href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/sop-ify/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php $out = empty($usage['unlimited']) && ($usage['remaining'] ?? 0) <= 0; ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php if ($out): ?>
 <div id="upgrade-slot"></div>
 <?php else: ?>
@@ -139,8 +135,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <script>
 const TOOL_KEY='sop-ify';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
-if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+if(false){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
+function upgradeCard(){return ''}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 <?php if ($out): ?>
 document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
@@ -222,7 +218,7 @@ const response=await fetch('/api/tools/sop-ify.php',{method:'POST',headers:{'Con
 let data={};try{data=await response.json()}catch(e){}
 clearInterval(msgTimer);
 if(!response.ok){
-if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This playbook was not counted.';}
+if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This playbook did not go through.';}
 else{statusEl.textContent=data.error||'SOP Generator hiccup. Try again.';statusEl.classList.add('error');}
 return;}
 const b=data.playbook;
@@ -240,7 +236,7 @@ document.querySelectorAll('#pbCheck input').forEach(cb=>cb.addEventListener('cha
 resultEl.style.display='block';
 resultEl.scrollIntoView({behavior:'smooth'});
 statusEl.textContent='';
-usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+usageEl.textContent='Free, no limits.';
 bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
 window._sopBook=b;
 }catch(e){clearInterval(msgTimer);statusEl.textContent='SOP Generator hiccup. Try again.';statusEl.classList.add('error');}
@@ -262,7 +258,7 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Start as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>How detailed is the playbook?</summary>
@@ -280,7 +276,7 @@ document.querySelector('#pbAgain').addEventListener('click',()=>{resultEl.style.
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Turning a brain-dump into a playbook, the short guide</h2>
 <h3>How it works here</h3>
-<p>Paste the messy version of how you do a thing, or talk it out loud if the process lives in your head better than on a keyboard, and get a clean step-by-step playbook a brand-new helper could follow with zero prior context. Your playbooks are saved in your account and nothing is shared. One finished playbook uses one action.</p>
+<p>Paste the messy version of how you do a thing, or talk it out loud if the process lives in your head better than on a keyboard, and get a clean step-by-step playbook a brand-new helper could follow with zero prior context. Your playbooks are saved in your account and nothing is shared.</p>
 <h3>Do not pre-organize</h3>
 <p>You do not need to organize your input first. Paste or say it in whatever order it comes out, and let the tool arrange it. Organizing it yourself means doing part of the work you are trying to hand off.</p>
 <h3>Include the annoying parts</h3>

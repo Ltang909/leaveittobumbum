@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Start as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -134,12 +134,8 @@ table.ex-table th{background:#fffdf8}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Invoice Reminder"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/invoice-chaser.png" alt="Invoice Reminder"><div><h1>Invoice Reminder</h1><p class="lede bb-desc">Get paid without the awkward. Log who owes you what and Bum Bum writes the chase email.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to chase invoices</h2><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to chase invoices</h2><a class="button" href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/invoice-chaser/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php require dirname(__DIR__, 2) . '/includes/weekly-note.php'; ?>
 <div class="stat-row">
   <div class="stat-card"><b id="statOutstanding">–</b><span>outstanding</span><small id="statOutstandingBy"></small></div>
@@ -156,8 +152,8 @@ const TOOL_KEY='invoice-chaser';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
 let DATA={invoices:[],stats:{}};
 let FILTER='all';
-if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+if(false){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
+function upgradeCard(){return ''}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function apiCall(payload){const session=await fetch('/api/session.php').then(r=>r.json());const response=await fetch('/api/tools/invoice-chaser.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload,csrf:session.csrf})});let data={};try{data=await response.json()}catch(e){}return{response,data}}
 function badge(inv){
@@ -338,7 +334,7 @@ document.querySelector('#remindBtn').addEventListener('click',async e=>{
     return;
   }
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+  document.querySelector('#usage').textContent='Free, no limits.';
   msg.textContent=`Sent to ${data.sent_to}${data.duplicate?' (already sent today, no extra charge)':''}. Go get that money.`;
   bbTrack('chaser_reminded',{tool:TOOL_KEY,overdue:data.overdue});
 });
@@ -359,7 +355,7 @@ addForm.addEventListener('submit',async e=>{
   }
   attempt=crypto.randomUUID();
   bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-  document.querySelector('#usage').textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+  document.querySelector('#usage').textContent='Free, no limits.';
   addForm.reset();await refresh();
 });
 refresh().then(function(){
@@ -412,7 +408,7 @@ refresh().then(function(){
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Start as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Start as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Does it actually send the emails?</summary>
@@ -434,7 +430,7 @@ refresh().then(function(){
 <?php $bbTool = 'invoice-chaser'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Getting paid without the awkward, the short guide</h2>
 <h3>How it works here</h3>
-<p>Track who owes you what, and when a chase is due, Bum Bum writes the email in the right tone. You always see and approve it before anything sends; then it goes out as your billing assistant in one tap. Adding an invoice or sending a chase uses one action each; everything else is free.</p>
+<p>Track who owes you what, and when a chase is due, Bum Bum writes the email in the right tone. You always see and approve it before anything sends; then it goes out as your billing assistant in one tap. Adding an invoice or sending a chase is free, and so is everything else.</p>
 <h3>Timing is most of the tone</h3>
 <p>Chase the day after the due date, politely. Treat the first nudge as a simple reminder, since most late invoices are sitting unread in a busy inbox rather than being deliberately ignored. The chaser also learns how each client actually pays, so a client who always pays on day 20 does not get nudged on day 2.</p>
 <h3>Add invoices when you send them</h3>

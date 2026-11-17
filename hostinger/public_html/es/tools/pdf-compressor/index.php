@@ -37,7 +37,7 @@
       "name": "¿Necesito una cuenta?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Comprime como invitado con 15 acciones gratuitas, o crea una cuenta gratuita con 75 acciones cada mes. Ver precios: https://leaveittobumbum.com/pricing/."
+        "text": "No. Comprime como invitado. Es gratis, sin límites. Ver precios: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -120,12 +120,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guía"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 3) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Herramientas","url"=>"/tools/"],["label"=>"Comprimir PDF"]]; require dirname(__DIR__,3)."/includes/breadcrumbs.php"; ?><p style="font-size:13px;opacity:.75;margin:4px 0 0"><a href="/tools/pdf-compressor/">View this tool in English</a></p><p class="eyebrow">La caja de herramientas de Bum Bum</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/pdf-compressor.png" alt="PDF Compressor"><div><h1>Comprimir PDF</h1><p class="lede bb-desc">El mismo PDF. Un archivo más pequeño. Bum Bum reconstruye tu PDF más ligero en tu navegador.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Inicia sesión para comprimir PDF</h2><a class="button" href="/account/?next=<?= urlencode('/es/tools/pdf-compressor/') ?>">Iniciar sesión o crear una cuenta</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Sin acciones gratuitas.</h2><p class="lede">Usaste tus <?= (int) $usage['limit'] ?> acciones gratuitas. <a href="/account/?next=<?= urlencode('/es/tools/pdf-compressor/') ?>">Crea una cuenta gratuita</a> para seguir.</p><p><a class="button" href="/account/?next=<?= urlencode('/es/tools/pdf-compressor/') ?>">Crear una cuenta gratuita</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Inicia sesión para comprimir PDF</h2><a class="button" href="/account/?next=<?= urlencode('/es/tools/pdf-compressor/') ?>">Iniciar sesión o crear una cuenta</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No necesitas cuenta. Tienes <strong><?= (int) $usage['remaining'] ?> de <?= (int) $usage['limit'] ?></strong> acciones gratuitas. <a href="/account/?next=<?= urlencode('/es/tools/pdf-compressor/') ?>">Crea una cuenta gratuita</a> para seguir.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Aviso: solo te quedan <?= (int) $usage['remaining'] ?> acciones este mes. <a href="/account/#upgrade">Consigue más acciones</a> antes de que se acaben.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
 <h2>Elige un PDF</h2>
@@ -150,7 +146,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">Preguntas frecuentes</h2>
 <details>
 <summary>¿Necesito una cuenta?</summary>
-<p>No. Comprime como invitado con 15 acciones gratuitas, o crea una cuenta gratuita con 75 acciones cada mes. <a href="/pricing/">Ver precios</a>.</p>
+<p>No. Comprime como invitado. Es gratis, sin límites. <a href="/pricing/">Ver precios</a>.</p>
 </details>
 <details>
 <summary>¿Mis PDF se suben a algún sitio?</summary>
@@ -297,7 +293,7 @@ compressBtn.addEventListener('click',async()=>{
     }else{
       const key='comp-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
       const{response,data}=await apiCall({action:'compress',idempotencyKey:key});
-      if(response.status===402){compError.textContent='Sin acciones por este mes.';progText.textContent='Detenido.';compressBtn.disabled=false;setTimeout(()=>compProgress.classList.add('hidden'),900);return}
+      if(response.status===402){compError.textContent='Algo detuvo ese trabajo. ¿Intentas de nuevo?';progText.textContent='Detenido.';compressBtn.disabled=false;setTimeout(()=>compProgress.classList.add('hidden'),900);return}
       if(!response.ok)throw new Error(data.error||'metering failed');
       const blob=new Blob([bytes],{type:'application/pdf'});
       const url=URL.createObjectURL(blob);

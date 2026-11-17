@@ -122,12 +122,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Resume Gap Checker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/gap-scout.png" alt="Resume Gap Checker"><div><h1>Resume Gap Checker</h1><p class="lede bb-desc">Find the gaps before they do. Match your resume against up to 5 job posts and see missing skills.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to scout gaps</h2><a class="button" href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to scout gaps</h2><a class="button" href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/gap-scout/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="step1">
 <h2><span class="stepnum">1</span>Drop in your resume</h2>
@@ -522,7 +518,7 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 <?php $bbTool = 'gap-scout'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Finding the gaps in your resume, the short guide</h2>
 <h3>How it works here</h3>
-<p>Your resume is compared against up to five job descriptions, and you get the skills they keep asking for that your resume never mentions, with the exact line from each posting as proof. Everything runs in your browser: your resume never leaves your device, and nothing is uploaded or stored. One finished check uses one action.</p>
+<p>Your resume is compared against up to five job descriptions, and you get the skills they keep asking for that your resume never mentions, with the exact line from each posting as proof. Everything runs in your browser: your resume never leaves your device, and nothing is uploaded or stored.</p>
 <h3>Compare like with like</h3>
 <p>Use postings for the same kind of role. Mixing five unrelated jobs produces a gap list for a job that does not exist, and tailoring toward it helps with none of them.</p>
 <h3>Patterns before hobbies</h3>

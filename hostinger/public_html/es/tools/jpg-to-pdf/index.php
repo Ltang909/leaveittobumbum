@@ -28,7 +28,7 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "¿Necesito una cuenta?", "acceptedAnswer": { "@type": "Answer", "text": "No. Este convertidor es gratis, no usa acciones y no pide registro. Suelta tus imágenes y descarga el PDF." } },
+    { "@type": "Question", "name": "¿Necesito una cuenta?", "acceptedAnswer": { "@type": "Answer", "text": "No. Este convertidor es gratis y no pide registro. Suelta tus imágenes y descarga el PDF." } },
     { "@type": "Question", "name": "¿Mis imágenes se suben a algún sitio?", "acceptedAnswer": { "@type": "Answer", "text": "No. El PDF se crea en tu navegador, en tu dispositivo. Tus imágenes nunca se envían a Bum Bum ni a nadie más." } },
     { "@type": "Question", "name": "¿Qué tipos de imagen puedo usar?", "acceptedAnswer": { "@type": "Answer", "text": "JPG y PNG. Funcionan fotos de cámara o de teléfono, escaneos y capturas de pantalla. Las fotos HEIC de iPhone necesitan primero el convertidor de HEIC a JPG, porque los navegadores no pueden abrir HEIC por su cuenta." } },
     { "@type": "Question", "name": "¿Puedo cambiar el orden de las páginas?", "acceptedAnswer": { "@type": "Answer", "text": "Sí. Cada imagen de la lista tiene botones de subir y bajar. El PDF sigue el orden que ves, la primera imagen en la página uno." } },
@@ -93,7 +93,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" id="faq" aria-label="Preguntas frecuentes">
 <h2>Preguntas frecuentes</h2>
-<details><summary>¿Necesito una cuenta?</summary><p>No. Este convertidor es gratis, no usa acciones y no pide registro. Suelta tus imágenes y descarga el PDF.</p></details>
+<details><summary>¿Necesito una cuenta?</summary><p>No. Este convertidor es gratis y no pide registro. Suelta tus imágenes y descarga el PDF.</p></details>
 <details><summary>¿Mis imágenes se suben a algún sitio?</summary><p>No. El PDF se crea en tu navegador, en tu dispositivo. Tus imágenes nunca se envían a Bum Bum ni a nadie más.</p></details>
 <details><summary>¿Qué tipos de imagen puedo usar?</summary><p>JPG y PNG. Funcionan fotos de cámara o de teléfono, escaneos y capturas de pantalla. Las fotos HEIC de iPhone necesitan primero el <a href="/es/tools/heic-to-jpg/">convertidor de HEIC a JPG</a>, porque los navegadores no pueden abrir HEIC por su cuenta.</p></details>
 <details><summary>¿Puedo cambiar el orden de las páginas?</summary><p>Sí. Cada imagen de la lista tiene botones de subir y bajar. El PDF sigue el orden que ves, la primera imagen en la página uno.</p></details>

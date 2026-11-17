@@ -11,7 +11,7 @@ $addons = [
 $defaultOn = ["contrast", "concrete", "filler"];
 ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Sound Human | Prompt Add-Ons for Human-Sounding AI Writing | Leave It to Bum Bum</title>
-<meta name="description" content="Free prompt add-ons to paste into ChatGPT or Claude. Plain instructions that make AI writing sound like a person wrote it. No account, no actions, runs in your browser.">
+<meta name="description" content="Free prompt add-ons to paste into ChatGPT or Claude. Plain instructions that make AI writing sound like a person wrote it. No account, no cost, runs in your browser.">
 <meta property="og:title" content="Sound Human | Prompt Add-Ons for Human-Sounding AI Writing | Leave It to Bum Bum">
 <meta property="og:description" content="Free prompt add-ons to paste into ChatGPT or Claude. Plain instructions that make AI writing sound like a person wrote it.">
 <meta property="og:type" content="website">
@@ -34,7 +34,7 @@ $defaultOn = ["contrast", "concrete", "filler"];
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Free prompt add-ons to paste into ChatGPT or Claude. Plain instructions that make AI writing sound like a person wrote it. No account, no actions, runs in your browser.",
+  "description": "Free prompt add-ons to paste into ChatGPT or Claude. Plain instructions that make AI writing sound like a person wrote it. No account, no cost, runs in your browser.",
   "url": "https://leaveittobumbum.com/tools/sound-human/"
 }
 </script>
@@ -48,7 +48,7 @@ $defaultOn = ["contrast", "concrete", "filler"];
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Sound Human is free, uses no actions, and needs no sign-up. Copy what you need and go."
+        "text": "No. Sound Human is free and needs no sign-up. Copy what you need and go."
       }
     },
     {
@@ -155,7 +155,7 @@ try{bbTrack('tool_opened',{tool:'sound-human'})}catch(e){}
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Sound Human is free, uses no actions, and needs no sign-up. Copy what you need and go.</p>
+<p>No. Sound Human is free and needs no sign-up. Copy what you need and go.</p>
 </details>
 <details>
 <summary>Does my prompt leave my browser?</summary>

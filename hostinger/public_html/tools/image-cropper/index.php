@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Crop as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Crop as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -105,12 +105,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Image Cropper"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/image-cropper.png" alt="Image Cropper"><div><h1>Image Cropper</h1><p class="lede bb-desc">Keep the good part. Drag a box around the bit you want and Bum Bum crops it in your browser.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to crop images</h2><a class="button" href="/account/?next=<?= urlencode('/tools/image-cropper/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/image-cropper/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/image-cropper/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to crop images</h2><a class="button" href="/account/?next=<?= urlencode('/tools/image-cropper/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/image-cropper/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
 <h2>Pick an image</h2>
@@ -136,7 +132,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div><label>Save as<select id="formatSel"><option value="image/png">PNG</option><option value="image/jpeg">JPG</option><option value="image/webp">WebP</option></select></label></div>
 <div id="qualityWrap"><label>Quality: <span id="qualityVal">90</span>%<input type="range" id="qualityRange" min="10" max="100" step="5" value="90"></label><p class="time-hint">PNG is always lossless, so quality only applies to JPG and WebP.</p></div>
 </div>
-<div class="btnrow"><button type="button" class="button" id="cropBtn" disabled>Crop it (1 action)</button></div>
+<div class="btnrow"><button type="button" class="button" id="cropBtn" disabled>Crop it</button></div>
 <p id="cropError" class="error"></p>
 <div class="result-preview hidden" id="resultWrap"><h3 style="margin-bottom:8px">Cropped ✨</h3><img id="resultImg" alt="Cropped image preview"><div class="btnrow" style="justify-content:center"><a class="button" id="dlBtn" href="#" download>Download</a></div></div>
 </div>
@@ -146,7 +142,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Crop as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Crop as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Do my images upload anywhere?</summary>
@@ -341,7 +337,7 @@ cropBtn.addEventListener('click',async()=>{
     bbTrack('crop_done',{to:formatSel.value});
     if(window.BBDropStrip)window.BBDropStrip.show('image-cropper');
   }catch(e){
-    cropError.textContent=e.message==='actions'?'Out of actions for this month.':'Something went wrong with that crop. Try again?';
+    cropError.textContent=e.message==='actions'?'Something stopped that job. Try again?':'Something went wrong with that crop. Try again?';
   }
   cropBtn.disabled=false;
 });
