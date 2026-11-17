@@ -228,7 +228,7 @@ trimBtn.addEventListener('click',async()=>{
   trimBtn.disabled=true;trimProgress.classList.remove('hidden');barFill.style.width='2%';
   let step='starting';
   try{
-    step='quota';progText.textContent='Checking your actions...';
+    step='quota';progText.textContent='Checking in with Bum Bum...';
     const st=await apiCall({action:'status'});
     if(st.response.ok&&st.data.usage&&!st.data.usage.unlimited&&Number(st.data.usage.remaining)<=0)throw new Error('actions');
     step='engine';progText.textContent='Loading the trimmer (first trim downloads it, about 30 MB)...';barFill.style.width='8%';

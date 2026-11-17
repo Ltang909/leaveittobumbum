@@ -77,7 +77,7 @@
       "name": "¿Qué pasa si mi PDF no se hace más pequeño?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Algunos PDF ya son ligeros. Si el archivo reconstruido no es más pequeño que tu original, Bum Bum lo dice, no hay nada que descargar y no se cobra ninguna acción."
+        "text": "Algunos PDF ya son ligeros. Si el archivo reconstruido no es más pequeño que tu original, Bum Bum lo dice, no hay nada que descargar."
       }
     }
   ]
@@ -85,7 +85,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"PDF Compressor | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Herramientas","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Comprimir PDF","item":"https://leaveittobumbum.com/es/tools/pdf-compressor/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"Cómo usar Comprimir PDF","description":"Reduce un PDF en tu navegador hasta que quepa en el límite del correo o del formulario.","step":[{"@type":"HowToStep","position":1,"name":"Suelta un PDF en Comprimir PDF."},{"@type":"HowToStep","position":2,"name":"Elige un nivel: Más pequeño, Equilibrado o Alta calidad."},{"@type":"HowToStep","position":3,"name":"Bum Bum lo reconstruye más ligero en tu navegador; tu archivo nunca sale de tu dispositivo."},{"@type":"HowToStep","position":4,"name":"Descarga el PDF comprimido. Si no se redujo, no se cobra ninguna acción."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 3) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"Cómo usar Comprimir PDF","description":"Reduce un PDF en tu navegador hasta que quepa en el límite del correo o del formulario.","step":[{"@type":"HowToStep","position":1,"name":"Suelta un PDF en Comprimir PDF."},{"@type":"HowToStep","position":2,"name":"Elige un nivel: Más pequeño, Equilibrado o Alta calidad."},{"@type":"HowToStep","position":3,"name":"Bum Bum lo reconstruye más ligero en tu navegador; tu archivo nunca sale de tu dispositivo."},{"@type":"HowToStep","position":4,"name":"Descarga el PDF comprimido. Si no se redujo, Bum Bum te lo dice."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 3) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dropzone{border:2px dashed #d9cdae;border-radius:14px;background:#fffdf8;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .dropzone:hover,.dropzone.over{border-color:#b3a37e;background:#fff}
@@ -136,7 +136,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="controls">
 <div><label>Nivel<select id="levelSel"><option value="smaller">Más pequeño: el archivo más reducido, páginas más suaves</option><option value="balanced" selected>Equilibrado: la opción de cada día</option><option value="high">Alta calidad: páginas más nítidas, reducción más suave</option></select></label><p class="time-hint">Más pequeño sirve para límites estrictos, como adjuntos de correo y formularios de subida. Equilibrado vale para casi todo lo que se envía. Alta calidad mantiene las páginas más nítidas para leer e imprimir.</p></div>
 </div>
-<div class="btnrow"><button type="button" class="button hidden" id="compressBtn">Comprimir este PDF (1 acción)</button><button type="button" class="button secondary hidden" id="clearBtn">Borrar</button></div>
+<div class="btnrow"><button type="button" class="button hidden" id="compressBtn">Comprimir este PDF</button><button type="button" class="button secondary hidden" id="clearBtn">Borrar</button></div>
 <div class="progress-wrap hidden" id="compProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Trabajando...</p></div>
 <p id="compError" class="error"></p>
 <div id="resultList"></div>
@@ -166,7 +166,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </details>
 <details>
 <summary>¿Qué pasa si mi PDF no se hace más pequeño?</summary>
-<p>Algunos PDF ya son ligeros. Si el archivo reconstruido no es más pequeño que tu original, Bum Bum lo dice, no hay nada que descargar y no se cobra ninguna acción.</p>
+<p>Algunos PDF ya son ligeros. Si el archivo reconstruido no es más pequeño que tu original, Bum Bum lo dice, no hay nada que descargar.</p>
 </details>
 <details>
 <summary>¿Por qué falló mi PDF?</summary>
@@ -176,7 +176,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guía">
 <h2 style="margin-top:0">Reducir un PDF, la guía corta</h2>
 <h3>Cómo funciona aquí</h3>
-<p>La mayoría de los compresores en línea suben tu PDF a un servidor y lo aprietan allí. Este trabaja en tu navegador: cada página se vuelve a dibujar como una imagen en el nivel que elijas, y luego las páginas se reconstruyen en un PDF nuevo con los mismos tamaños de página. Nada se sube, se guarda ni se ve por nadie más. Es una acción por PDF, y la acción solo se cobra cuando el archivo nuevo es de verdad más pequeño que el que trajiste.</p>
+<p>La mayoría de los compresores en línea suben tu PDF a un servidor y lo aprietan allí. Este trabaja en tu navegador: cada página se vuelve a dibujar como una imagen en el nivel que elijas, y luego las páginas se reconstruyen en un PDF nuevo con los mismos tamaños de página. Nada se sube, se guarda ni se ve por nadie más. Si el archivo nuevo no es de verdad más pequeño que el que trajiste, no hay nada que descargar.</p>
 <h3>Cómo elegir el nivel</h3>
 <p>Más pequeño es el nivel para límites estrictos: el adjunto de correo que rebota, el portal de solicitudes con un límite de subida duro, la bandeja del cliente sin espacio. Equilibrado es la opción de cada día, lo bastante pequeño para enviar y aún cómodo de leer. Alta calidad reduce con suavidad y mantiene las páginas nítidas para lo que se lee de cerca o se imprime. Si un nivel no te baja del límite, vuelve a pasar la copia comprimida por el siguiente nivel hacia abajo.</p>
 <h3>Envía la copia y guarda el original</h3>
@@ -283,7 +283,7 @@ compressBtn.addEventListener('click',async()=>{
     const base=(f.name||'pdf').replace(/\.pdf$/i,'');
     if(bytes.length>=f.size){
       const block=document.createElement('div');block.className='result-block';
-      let msg='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Buenas y malas noticias: este PDF ya es ligero. El archivo reconstruido salió de '+fmtSize(bytes.length)+', nada más pequeño que tu original de '+fmtSize(f.size)+', así que no hay nada que descargar y no se cobró ninguna acción.</span>';
+      let msg='<div class="grow"><b>'+esc(f.name)+'</b><br><span class="meta">Buenas y malas noticias: este PDF ya es ligero. El archivo reconstruido salió de '+fmtSize(bytes.length)+', nada más pequeño que tu original de '+fmtSize(f.size)+', así que no hay nada que descargar.</span>';
       if(levelKey!=='smaller')msg+='<br><span class="meta">Si lo necesitas aún más pequeño, prueba el nivel Más pequeño. Las páginas saldrán más suaves.</span>';
       msg+='</div>';
       block.innerHTML=msg;

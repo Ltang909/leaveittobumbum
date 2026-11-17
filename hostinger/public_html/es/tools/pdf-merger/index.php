@@ -121,7 +121,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="btnrow"><button type="button" class="button secondary" id="btnPick">Elegir PDF</button></div>
 <div id="fileList"></div>
 <p id="totalLine" class="meta hidden" style="font-size:13px;opacity:.75;margin-top:10px"></p>
-<div class="btnrow"><button type="button" class="button hidden" id="mergeBtn">Unir PDF (1 acción)</button><button type="button" class="button secondary hidden" id="clearBtn">Borrar</button></div>
+<div class="btnrow"><button type="button" class="button hidden" id="mergeBtn">Unir PDF</button><button type="button" class="button secondary hidden" id="clearBtn">Borrar</button></div>
 <div class="progress-wrap hidden" id="mergeProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Trabajando...</p></div>
 <p id="mergeError" class="error"></p>
 <div id="resultList"></div>
@@ -219,7 +219,7 @@ function refresh(){
   totalLine.classList.toggle('hidden',!entries.length);
   if(entries.length)totalLine.textContent=good.length+' de '+entries.length+' PDF listos, '+totalPages+' páginas en total.';
   mergeBtn.classList.toggle('hidden',good.length<2);
-  mergeBtn.textContent='Unir '+good.length+' PDF (1 acción)';
+  mergeBtn.textContent='Unir '+good.length+' PDF';
   clearBtn.classList.toggle('hidden',!entries.length && !resultList.children.length);
 }
 async function addFiles(list){

@@ -645,7 +645,7 @@ renderBtn.addEventListener('click',async()=>{
   const setProg=(p,txt)=>{progWrap.classList.remove('hidden');progBar.style.width=Math.round(p*100)+'%';progText.textContent=txt;};
   let webmMB='';
   try{
-    setProg(0.02,'Checking your actions...');
+    setProg(0.02,'Checking in with Bum Bum...');
     const st=await apiCall({action:'status'});
     if(st.response.ok&&st.data.usage&&!st.data.usage.unlimited&&Number(st.data.usage.remaining)<=0){
       throw{limit:true};
@@ -759,7 +759,7 @@ renderBtn.addEventListener('click',async()=>{
         usageEl.textContent='Free, no limits.';
         bbTrack('action_completed',{tool:TOOL_KEY,used:u.used,limit:u.limit,remaining:u.remaining,seconds:Math.round(duration)});
       }else if(done.response.status===402){
-        progText.textContent='Your video is ready. Heads up: this render could not be counted against your actions.';
+        progText.textContent='Your video is ready.';
       }
     }catch(_){}
   }catch(e){
