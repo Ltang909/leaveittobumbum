@@ -238,7 +238,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" id="lookbackPanel">
 <details style="border-top:0;border-bottom:0;padding:0">
 <summary style="font-size:21px;font-weight:900">Look back</summary>
-<p class="meta" style="margin-top:10px">Turn a stretch of logs into highlights: accomplishments, learnings, and how you are growing over time. One action per fresh summary; re-opening the same stretch is free.</p>
+<p class="meta" style="margin-top:10px">Turn a stretch of logs into highlights: accomplishments, learnings, and how you are growing over time. Re-opening the same stretch is free.</p>
 <div class="btnrow"><button type="button" class="button secondary" id="sumWeek">Summarize my week</button><button type="button" class="button secondary" id="sumMonth">Summarize my month</button></div>
 <p id="sumStatus" class="mic-status" style="margin-top:8px"></p>
 <p id="sumError" class="error"></p>
@@ -294,7 +294,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Closing your day in five minutes, the short guide</h2>
 <h3>How it works here</h3>
-<p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next morning, a recap email arrives with tomorrow's priorities on top. One action per day filed, and re-filing the same day replaces the earlier version at no extra cost. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you. Lessons that land mid-day do not have to wait for the evening: jot them down under the log box the moment they happen, and they join the day's learnings in your own words when you file.</p>
+<p>Talk through the prompts above one box: what got done and what got in the way, what you learned, and what tomorrow needs. Bum Bum turns the ramble into clean jot notes, scores yesterday's top list against what you actually did, and files the day in your account. The next morning, a recap email arrives with tomorrow's priorities on top. Re-filing the same day replaces the earlier version. Day Log needs a free account, because the scorecard only works if yesterday's list is filed under you. Lessons that land mid-day do not have to wait for the evening: jot them down under the log box the moment they happen, and they join the day's learnings in your own words when you file.</p>
 <h3>Your voice is never kept</h3>
 <p>Recordings are transcribed and discarded; only the text of your log is stored, in your account, and it is never shared. Transcription tries your browser's live transcription first; on browsers without it, the recording is transcribed by Whisper and then discarded. The recording is only a way to get your words into the box.</p>
 <h3>Write tomorrow's list so it can be scored</h3>

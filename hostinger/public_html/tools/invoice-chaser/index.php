@@ -273,7 +273,7 @@ async function loadDraft(id){
   const renderSendZone=()=>{
     const fresh=DATA.invoices.find(x=>x.id===id);
     if(fresh.client_email){
-      sendZone.innerHTML=`<button type="button" class="button" id="sendChase">Send it via Bum Bum</button><p class="meta" style="margin:6px 0 0">Sends to ${esc(fresh.client_email)} from Bum Bum. Replies go to your email. One action.</p><p class="lede" id="sendMsg" style="margin:6px 0 0"></p>`;
+      sendZone.innerHTML=`<button type="button" class="button" id="sendChase">Send it via Bum Bum</button><p class="meta" style="margin:6px 0 0">Sends to ${esc(fresh.client_email)} from Bum Bum. Replies go to your email.</p><p class="lede" id="sendMsg" style="margin:6px 0 0"></p>`;
       const btn=sendZone.querySelector('#sendChase');
       btn.addEventListener('click',async()=>{
         if(!btn.dataset.armed){btn.dataset.armed='1';btn.textContent=`Tap again to send to ${fresh.client_email}`;return}

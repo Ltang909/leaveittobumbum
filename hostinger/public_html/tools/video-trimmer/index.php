@@ -155,7 +155,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Trimming video in your browser, the short guide</h2>
 <h3>How it works here</h3>
-<p>Drop in a video, mark where the good part starts and ends, and download the cut. The trim happens in your browser and your video never leaves your device; Bum Bum keeps no copy. One action per trim, and marking and previewing are free. If your browser can play the video, the trimmer can usually cut it.</p>
+<p>Drop in a video, mark where the good part starts and ends, and download the cut. The trim happens in your browser and your video never leaves your device; Bum Bum keeps no copy. Marking and previewing are free. If your browser can play the video, the trimmer can usually cut it.</p>
 <h3>Mark wide, then tighten</h3>
 <p>Mark a little wide on the first pass, then narrow in. You can always trim away an extra second of dead air later. A word clipped at the start cannot be put back. For a clip headed to social, trim to the moment itself and leave any background or context for the caption.</p>
 <h3>Big files, honest limits</h3>

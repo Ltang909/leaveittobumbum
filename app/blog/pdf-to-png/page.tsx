@@ -46,7 +46,6 @@ const faqLd = {
     { "@type": "Question", "name": "Why choose PNG over JPG for PDF pages?", "acceptedAnswer": { "@type": "Answer", "text": "PNG is lossless: text, lines, and diagrams render exactly, with none of JPG's soft edges around letters. For pages that exist to be read closely, that crispness is worth the bigger files." } },
     { "@type": "Question", "name": "How much bigger are PNG pages than JPG?", "acceptedAnswer": { "@type": "Answer", "text": "Often several times bigger, especially at the larger render sizes. That is the standing PNG trade: perfect fidelity, heavier files. Portals with tight size caps are usually happier with JPG." } },
     { "@type": "Question", "name": "Does each page become its own PNG?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every page renders as its own PNG image in page order, downloadable one by one or together in a ZIP bundle." } },
-    { "@type": "Question", "name": "Do I pay an action per page?", "acceptedAnswer": { "@type": "Answer", "text": "No. One action covers the whole PDF, however many pages it has." } },
     { "@type": "Question", "name": "Do I need an account to convert a PDF to PNG?", "acceptedAnswer": { "@type": "Answer", "text": "No. You can convert as a guest. It is free, with no limits." } }
   ]
 };
@@ -78,7 +77,7 @@ export default function PdfToPng() {
           <h2>The trade: PNG files are bigger</h2>
           <p>Lossless has a price, and it is file size. A text page as PNG can be several times its JPG weight, and a sixty-page document becomes a serious folder of images. If the destination is an upload portal with a size cap, or the pages are photos rather than text, <a href="/blog/pdf-to-jpg/">PDF to JPG</a> is the leaner trip. PNG is for when crispness is the point.</p>
           <h2>Convert a PDF now</h2>
-          <p><a href="/tools/pdf-to-image/">PDF to Image</a> runs in your browser: drop the PDF in, pick PNG, and download pages that read like the original. One action covers the whole PDF.</p>
+          <p><a href="/tools/pdf-to-image/">PDF to Image</a> runs in your browser: drop the PDF in, pick PNG, and download pages that read like the original. The whole PDF converts in one go, however many pages it has.</p>
           <h2>Frequently asked questions</h2>
           <h3>Why choose PNG over JPG for PDF pages?</h3>
           <p>PNG is lossless: text, lines, and diagrams render exactly, with none of JPG's soft edges around letters. For pages that exist to be read closely, that crispness is worth the bigger files.</p>
@@ -86,8 +85,6 @@ export default function PdfToPng() {
           <p>Often several times bigger, especially at the larger render sizes. That is the standing PNG trade: perfect fidelity, heavier files. Portals with tight size caps are usually happier with JPG.</p>
           <h3>Does each page become its own PNG?</h3>
           <p>Yes. Every page renders as its own PNG image in page order, downloadable one by one or together in a ZIP bundle.</p>
-          <h3>Do I pay an action per page?</h3>
-          <p>No. One action covers the whole PDF, however many pages it has.</p>
           <h3>Do I need an account to convert a PDF to PNG?</h3>
           <p>No. You can convert as a guest. It is free, with no limits.</p>
         </div>
