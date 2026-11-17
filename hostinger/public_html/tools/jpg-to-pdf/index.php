@@ -28,7 +28,7 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. This converter is free, uses no actions, and needs no sign-up. Drop your images in and download the PDF." } },
+    { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. This converter is free and needs no sign-up. Drop your images in and download the PDF." } },
     { "@type": "Question", "name": "Do my images upload anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. The PDF is built right in your browser, on your device. Your images are never sent to Bum Bum or anyone else." } },
     { "@type": "Question", "name": "Which image types can I use?", "acceptedAnswer": { "@type": "Answer", "text": "JPG and PNG. Photos from a camera or phone, scans, and screenshots all work. iPhone HEIC photos need the HEIC to JPG converter first, since browsers cannot open HEIC on their own." } },
     { "@type": "Question", "name": "Can I change the page order?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every image in the list has up and down buttons. The PDF follows the order you see, first image on page one." } },
@@ -93,7 +93,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2>Questions, answered</h2>
-<details><summary>Do I need an account?</summary><p>No. This converter is free, uses no actions, and needs no sign-up. Drop your images in and download the PDF.</p></details>
+<details><summary>Do I need an account?</summary><p>No. This converter is free and needs no sign-up. Drop your images in and download the PDF.</p></details>
 <details><summary>Do my images upload anywhere?</summary><p>No. The PDF is built right in your browser, on your device. Your images are never sent to Bum Bum or anyone else.</p></details>
 <details><summary>Which image types can I use?</summary><p>JPG and PNG. Photos from a camera or phone, scans, and screenshots all work. iPhone HEIC photos need the <a href="/tools/heic-to-jpg/">HEIC to JPG converter</a> first, since browsers cannot open HEIC on their own.</p></details>
 <details><summary>Can I change the page order?</summary><p>Yes. Every image in the list has up and down buttons. The PDF follows the order you see, first image on page one.</p></details>

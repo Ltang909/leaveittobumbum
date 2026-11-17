@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Scan as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Scan as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -95,13 +95,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"AI Brand Mention Checker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/hearsay.png" alt="AI Mention Tracker"><div><h1>AI Mention Tracker</h1><p class="lede bb-desc">Find out what the AI says about your brand. Ask three AI models the questions customers ask.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use AI Brand Mention Checker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use AI Brand Mention Checker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage && (int) $usage['used'] >= 2): ?><div class="nudge bb-guest-nudge" data-remaining="<?= (int) $usage['remaining'] ?>"><button type="button" class="bb-guest-nudge-dismiss" aria-label="Dismiss" style="float:right;border:none;background:none;cursor:pointer;font:inherit;font-weight:900;opacity:.55;padding:0 0 0 12px">&times;</button>You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions left. <a href="/account/?next=<?= urlencode('/tools/hearsay/') ?>">Create a free account</a> to save your work and keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php $out = empty($usage['unlimited']) && ($usage['remaining'] ?? 0) <= 0; ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php if ($out): ?>
 <div id="upgrade-slot"></div>
 <?php else: ?>
@@ -124,8 +120,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <script>
 const TOOL_KEY='hearsay';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
-if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+if(false){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
+function upgradeCard(){return ''}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 <?php if ($out): ?>
@@ -178,13 +174,13 @@ sumSec.classList.add('hidden');resSec.classList.add('hidden');
 try{
 const{response,data}=await apiCall({action:'scan',brand:brand,domain:domain,questions:questions,idempotencyKey:key});
 if(!response.ok){
-if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');usageEl.textContent='This scan was not counted.';}
+if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');usageEl.textContent='This scan did not go through.';}
 else{setStatus('AI Brand Mention Checker hiccup ('+(data.error||'hmm')+'). Nothing was counted, try again.',true);}
 return;}
 bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining,questions:questions.length});
 renderScan(data.scan);
 setStatus('Done. Go get mentioned more.');
-usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+usageEl.textContent='Free, no limits.';
 loadScans();
 }catch(e){setStatus('AI Brand Mention Checker hiccup. Nothing was counted, try again.',true);}
 finally{goBtn.disabled=false;}
@@ -197,7 +193,7 @@ loadScans();
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Scan as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Scan as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Which AI models does AI Brand Mention Checker ask?</summary>
@@ -215,7 +211,7 @@ loadScans();
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">What AI says about your brand, the short guide</h2>
 <h3>How it works here</h3>
-<p>The tracker asks AI models the questions your customers ask, and reports back your mention rate, the sentiment, direct quotes, and which competitors get cited instead of you. The scan sends your brand name and your questions to the models it checks; that is the whole point of the tool, and nothing else about your account goes along. One finished scan uses one action.</p>
+<p>The tracker asks AI models the questions your customers ask, and reports back your mention rate, the sentiment, direct quotes, and which competitors get cited instead of you. The scan sends your brand name and your questions to the models it checks; that is the whole point of the tool, and nothing else about your account goes along.</p>
 <h3>Ask like a customer</h3>
 <p>Write the questions the way customers type them, not the way your marketing page phrases them. The gap between those two is usually the finding.</p>
 <h3>A lost question is a content assignment</h3>

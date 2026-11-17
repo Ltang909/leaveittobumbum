@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Designing your signature is free and needs no account. Copying or downloading the finished signature uses one action: 15 free as a guest, 75 every month with a free account. Tweaking and copying again in the same visit is free. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Designing your signature is free and needs no account. Copying or downloading the finished signature is free. Tweaking and copying again in the same visit is free. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -111,7 +111,6 @@ input[type=color].pick{width:36px;height:36px;border:2px solid var(--ink);border
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Email Signature Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/email-signature-generator-sticker.png" alt="Email Signature Maker"><div><h1>Email Signature Generator</h1><p class="lede bb-desc">Sign off like a pro. Build a clean, professional email signature right in your browser.</p></div></div>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/email-signature-generator/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
 <div class="sig-grid">
 <form class="sig-card" id="sigForm" autocomplete="off">
 <h2>Your details</h2>
@@ -140,7 +139,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin:0 0 12px;font-size:18px">Preview</h2>
 <div class="sig-preview"><div id="sigPreview"></div></div>
 <div class="export-row"><button type="button" class="button" id="copyBtn">Copy signature</button><button type="button" class="button secondary" id="dlBtn">Download HTML</button><button type="button" class="button secondary" id="codeBtn">Copy HTML code</button></div>
-<p class="hint" id="sigStatus">Designing is free. Your first copy or download in a visit uses 1 action.</p>
+<p class="hint" id="sigStatus">Designing is free. Copying or downloading is free too.</p>
 </div>
 </div>
 <div id="upgrade-slot"></div>
@@ -153,7 +152,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="guide-row"><h3>Apple Mail</h3><ol><li>Open Settings, then Signatures.</li><li>Pick your account and click + to add one.</li><li>Paste into the signature box.</li><li>If the fonts shift, untick Always match my default message font.</li></ol></div>
 </div>
 <h3>How it works here</h3>
-<p>Fill in your name, title, company, and contact details, pick from four layouts and an accent color, and watch the preview update as you type. Then copy the finished signature, formatted, straight into Gmail, Outlook, or Apple Mail settings, or download it as an HTML file. Everything runs in your browser: your details are never uploaded or stored, and the form remembers them on this device for your next visit. Designing and previewing are free; the first copy or download in a visit uses one action.</p>
+<p>Fill in your name, title, company, and contact details, pick from four layouts and an accent color, and watch the preview update as you type. Then copy the finished signature, formatted, straight into Gmail, Outlook, or Apple Mail settings, or download it as an HTML file. Everything runs in your browser: your details are never uploaded or stored, and the form remembers them on this device for your next visit. Designing and previewing are free; the first copy or download in a visit is free.</p>
 <h3>Short beats complete</h3>
 <p>Name, title, one phone number, and one website beat a wall of links. Use your brand color as the accent, so the sign-off matches everything else you send. The signature itself is table-based HTML with inline styles, the format every mail app expects, which is why it survives the trip into settings intact.</p>
 <h3>The photo rule</h3>
@@ -256,7 +255,7 @@ async function spendSignatureAction(){
     const respData=await res.json().catch(()=>({}));
     if(res.status===402){
       if(respData&&respData.signup_required)return false;
-      document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">Copying or downloading your signature uses one action. Operator gives you unlimited actions for $49/month.</p><p><a class="button secondary" href="/account/">See your usage</a></p></div>';
+      document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>That did not go through.</h2><p class="lede">Copying or downloading your signature is free.</p><p><a class="button secondary" href="/account/">See your usage</a></p></div>';
       return false;
     }
     if(!res.ok){alert(respData.error||'Could not save. Try again.');return false}
@@ -315,7 +314,7 @@ try{bbTrack('tool_opened',{tool:'email-signature-generator'})}catch(e){}
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Designing your signature is free and needs no account. Copying or downloading the finished signature uses one action: 15 free as a guest, 75 every month with a free account. Tweaking and copying again in the same visit is free. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Designing your signature is free and needs no account. Copying or downloading the finished signature is free. Tweaking and copying again in the same visit is free. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Does my information leave my browser?</summary>

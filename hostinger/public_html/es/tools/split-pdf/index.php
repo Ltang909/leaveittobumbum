@@ -28,7 +28,7 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "¿Necesito una cuenta?", "acceptedAnswer": { "@type": "Answer", "text": "No. Este divisor es gratis, no usa acciones y no pide registro. Suelta tu PDF y descarga las partes." } },
+    { "@type": "Question", "name": "¿Necesito una cuenta?", "acceptedAnswer": { "@type": "Answer", "text": "No. Este divisor es gratis y no pide registro. Suelta tu PDF y descarga las partes." } },
     { "@type": "Question", "name": "¿Mi PDF se sube a algún sitio?", "acceptedAnswer": { "@type": "Answer", "text": "No. La división pasa en tu navegador, en tu dispositivo. Tu PDF nunca se envía a Bum Bum ni a nadie más." } },
     { "@type": "Question", "name": "¿Cómo funcionan los rangos de páginas?", "acceptedAnswer": { "@type": "Answer", "text": "Cada grupo que escribes se convierte en su propio PDF. Escribir 1-2, 3 te da dos archivos: uno con las páginas 1 y 2, y otro con la página 3. Cuando hay más de un grupo, los archivos llegan juntos en un ZIP. Un solo grupo se descarga como un PDF normal." } },
     { "@type": "Question", "name": "¿Qué me da separar cada página?", "acceptedAnswer": { "@type": "Answer", "text": "Un PDF por página, reunidos en una sola descarga ZIP. Un extracto de 12 páginas se convierte en 12 PDF pequeños nombrados por número de página." } },
@@ -94,7 +94,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" id="faq" aria-label="Preguntas frecuentes">
 <h2>Preguntas frecuentes</h2>
-<details><summary>¿Necesito una cuenta?</summary><p>No. Este divisor es gratis, no usa acciones y no pide registro. Suelta tu PDF y descarga las partes.</p></details>
+<details><summary>¿Necesito una cuenta?</summary><p>No. Este divisor es gratis y no pide registro. Suelta tu PDF y descarga las partes.</p></details>
 <details><summary>¿Mi PDF se sube a algún sitio?</summary><p>No. La división pasa en tu navegador, en tu dispositivo. Tu PDF nunca se envía a Bum Bum ni a nadie más.</p></details>
 <details><summary>¿Cómo funcionan los rangos de páginas?</summary><p>Cada grupo que escribes se convierte en su propio PDF. Escribir 1-2, 3 te da dos archivos: uno con las páginas 1 y 2, y otro con la página 3. Cuando hay más de un grupo, los archivos llegan juntos en un ZIP. Un solo grupo se descarga como un PDF normal.</p></details>
 <details><summary>¿Qué me da separar cada página?</summary><p>Un PDF por página, reunidos en una sola descarga ZIP. Un extracto de 12 páginas se convierte en 12 PDF pequeños nombrados por número de página.</p></details>

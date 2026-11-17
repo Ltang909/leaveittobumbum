@@ -4,15 +4,15 @@ require dirname(__DIR__, 2) . '/includes/purr-code-lib.php';
 purrcode_handle_redirect(); // /tools/purr-code/?go=CODE logs the scan and 302s.
 $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>QR Code Generator | Branded QR Codes in Your Colors | Leave It to Bum Bum</title>
-<meta name="description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
+<meta name="description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview and export are free. Optional scan tracking.">
 <meta property="og:title" content="QR Code Generator | Branded QR Codes in Your Colors | Leave It to Bum Bum">
-<meta property="og:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
+<meta property="og:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview and export are free. Optional scan tracking.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/purr-code/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/purr-code.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="QR Code Generator | Branded QR Codes in Your Colors | Leave It to Bum Bum">
-<meta name="twitter:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.">
+<meta name="twitter:description" content="QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview and export are free. Optional scan tracking.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/purr-code.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/purr-code/">
 <script type="application/ld+json">
@@ -27,7 +27,7 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview free, export uses one action. Optional scan tracking.",
+  "description": "QR codes, but cute. Soft dots, pretty colors, a cat in the middle. Preview and export are free. Optional scan tracking.",
   "url": "https://leaveittobumbum.com/tools/purr-code/"
 }
 </script>
@@ -41,7 +41,7 @@ $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user']
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Design as a guest. A free account gets 75 actions every month and saves your tracked codes. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Design as a guest. A free account saves your tracked codes. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -115,13 +115,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"QR Code Generator"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/purr-code.png" alt="QR Code Generator"><div><h1>QR Code Generator</h1><p class="lede bb-desc">QR codes, but cute. Your link, dressed up with soft dots, pretty colors, and a cat in the middle.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use QR Code Generator</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use QR Code Generator</h2><a class="button" href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage && (int) $usage['used'] >= 2): ?><div class="nudge bb-guest-nudge" data-remaining="<?= (int) $usage['remaining'] ?>"><button type="button" class="bb-guest-nudge-dismiss" aria-label="Dismiss" style="float:right;border:none;background:none;cursor:pointer;font:inherit;font-weight:900;opacity:.55;padding:0 0 0 12px">&times;</button>You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions left. <a href="/account/?next=<?= urlencode('/tools/purr-code/') ?>">Create a free account</a> to save your work and keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php $out = empty($usage['unlimited']) && ($usage['remaining'] ?? 0) <= 0; ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php if ($out): ?>
 <div id="upgrade-slot"></div>
 <?php else: ?>
@@ -142,7 +138,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </div></div>
 <div class="pc-field"><div class="toggle-row"><input id="pcLogo" type="checkbox" checked><label for="pcLogo" style="margin:0">Cat in the middle</label></div></div>
 <div class="pc-field"><div class="toggle-row"><input id="pcTrack" type="checkbox"><label for="pcTrack" style="margin:0">Track scans with a short link</label></div>
-<p class="pc-tip" id="pcTrackHint" style="display:none">1 action creates your tracked code. Downloads and copies are free after that, and you will see how many times it gets scanned.</p></div>
+<p class="pc-tip" id="pcTrackHint" style="display:none">Creating your tracked code is free. Downloads and copies are free after that, and you will see how many times it gets scanned.</p></div>
 <div class="pc-field" id="pcTrackCreateWrap" style="display:none"><button id="pcCreate" class="button" type="button">Create tracked QR code</button></div>
 </section>
 <section class="panel pc-preview">
@@ -168,8 +164,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <script>
 const TOOL_KEY='purr-code';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
-if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+if(false){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
+function upgradeCard(){return ''}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 <?php if ($out): ?>
 document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
@@ -302,11 +298,11 @@ const session=await fetch('/api/session.php').then(r=>r.json());
 const response=await fetch('/api/tools/purr-code.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'download',text:text,idempotencyKey:key,csrf:session.csrf})});
 let data={};try{data=await response.json()}catch(e){}
 if(!response.ok){
-if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This export was not counted.';}
+if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This export did not go through.';}
 else{statusEl.textContent=data.error||'QR Code Generator hiccup. Try again.';statusEl.classList.add('error');}
 return;}
 bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining});
-usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+usageEl.textContent='Free, no limits.';
 doExport();
 }catch(e){statusEl.textContent='QR Code Generator hiccup. Try again.';statusEl.classList.add('error');}
 finally{dlBtn.disabled=false;copyBtn.disabled=false;}
@@ -329,12 +325,12 @@ const session=await fetch('/api/session.php').then(r=>r.json());
 const response=await fetch('/api/tools/purr-code.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'create_link',text:text,idempotencyKey:key,csrf:session.csrf})});
 let data={};try{data=await response.json()}catch(e){}
 if(!response.ok){
-if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This code was not counted.';}
+if(response.status===402){bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});document.querySelector('#upgrade-slot').innerHTML=upgradeCard();bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');statusEl.textContent='This code did not go through.';}
 else if(response.status===503){statusEl.textContent='Scan tracking is still being set up. Try again soon.';statusEl.classList.add('error');}
 else{statusEl.textContent=data.error||'QR Code Generator hiccup. Try again.';statusEl.classList.add('error');}
 return;}
 bbTrack('action_completed',{tool:TOOL_KEY,used:data.usage.used,limit:data.usage.limit,remaining:data.usage.remaining,action:'create_link'});
-usageEl.textContent=data.usage.unlimited?'Unlimited actions.':data.usage.remaining+' actions left.';
+usageEl.textContent='Free, no limits.';
 showTracked({code:data.code,shortUrl:data.shortUrl,target:data.target},0);
 statusEl.textContent='Tracked code ready. Downloads and copies are free from here.';
 loadMyCodes();
@@ -397,7 +393,7 @@ draw();
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Design as a guest. A free account gets 75 actions every month and saves your tracked codes. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Design as a guest. A free account saves your tracked codes. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Can I track how many times my code is scanned?</summary>
@@ -415,7 +411,7 @@ draw();
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">QR codes that actually scan, the short guide</h2>
 <h3>How it works here</h3>
-<p>Your link becomes a branded code: soft dots, pretty colors, and a cat in the middle, ready to print. The code encodes your link and nothing else. Previewing is free; exporting a code uses one action. Codes do not expire, so a printed code keeps working as long as the link does.</p>
+<p>Your link becomes a branded code: soft dots, pretty colors, and a cat in the middle, ready to print. The code encodes your link and nothing else. Previewing and exporting are free. Codes do not expire, so a printed code keeps working as long as the link does.</p>
 <h3>Test at the real size</h3>
 <p>Print one, stick it where it will live, and scan it from a customer's distance. A code that scans beautifully off your monitor can fail off a menu across a table.</p>
 <h3>Contrast is king</h3>

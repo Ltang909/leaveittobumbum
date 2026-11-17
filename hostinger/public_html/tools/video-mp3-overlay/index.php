@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Mix videos as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Mix videos as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -115,13 +115,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Video MP3 Overlay"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/video-mp3-overlay.png" alt="Video MP3 Overlay"><div><h1>Video MP3 Overlay</h1><p class="lede bb-desc">Your video, your soundtrack. Pin MP3 clips where they should play in your video.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Video MP3 Overlay</h2><a class="button" href="/account/?next=<?= urlencode('/tools/video-mp3-overlay/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/video-mp3-overlay/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/video-mp3-overlay/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Video MP3 Overlay</h2><a class="button" href="/account/?next=<?= urlencode('/tools/video-mp3-overlay/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage): ?><div class="nudge">No account needed. You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions. <a href="/account/?next=<?= urlencode('/tools/video-mp3-overlay/') ?>">Create a free account</a> to keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php $out = empty($usage['unlimited']) && ($usage['remaining'] ?? 0) <= 0; ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php if ($out): ?>
 <div id="upgrade-slot"></div>
 <?php else: ?>
@@ -162,7 +158,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <button id="vmPreviewBtn" class="button secondary" type="button">Preview the mix: off</button>
 </div>
 <p id="vmPreviewNote" style="margin:8px 0 0;color:var(--muted);font-size:14px">Preview plays the video with a live approximation of your mix, at the volumes above. The render itself is exact.</p>
-<div class="vm-step"><button id="vmRender" class="button" type="button">Mix my video (1 action)</button><button id="vmBack1" class="button secondary" type="button">Back</button></div>
+<div class="vm-step"><button id="vmRender" class="button" type="button">Mix my video</button><button id="vmBack1" class="button secondary" type="button">Back</button></div>
 <p id="vmUsage"></p>
 </section>
 <section class="panel hidden" id="vmResult">
@@ -178,8 +174,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <script>
 const TOOL_KEY='video-mp3-overlay';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
-if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+if(false){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
+function upgradeCard(){return ''}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 <?php if ($out): ?>
@@ -433,7 +429,7 @@ renderBtn.addEventListener('click',async()=>{
     progText.textContent='Your mixed video is ready. One action was used.';
     if(done.data.usage){
       const u=done.data.usage;
-      usageEl.textContent=u.unlimited?'Unlimited actions.':u.remaining+' actions left.';
+      usageEl.textContent='Free, no limits.';
     }
     bbTrack('action_completed',{tool:TOOL_KEY,snippets:placements.length,mb:Math.round(videoFile.size/1048576)});
     resultSec.scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -442,7 +438,7 @@ renderBtn.addEventListener('click',async()=>{
       bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
       document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
       bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');
-      renderErr.textContent='You are out of actions, so this mix was not started.';
+      renderErr.textContent='This mix was not started. Try again?';
     }else if(step==='engine'||step==='core'||String((e&&e.message)||'').indexOf('script-load:')===0){
       renderErr.textContent='The mixing engine failed to load. Check your connection and try again.';
     }else if(step==='reading'){
@@ -472,7 +468,7 @@ againBtn.addEventListener('click',()=>{
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Mix videos as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Mix videos as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Do my video and MP3 get uploaded anywhere?</summary>
@@ -494,7 +490,7 @@ againBtn.addEventListener('click',()=>{
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Putting music on a video, the short guide</h2>
 <h3>How it works here</h3>
-<p>Drop in a video and an MP3. Snip the good bits of the song, pin each one where it should play, and set how loud everything sits. Snippets can repeat, overlap the original audio, and each source has its own volume. A video with no sound of its own still mixes fine. The render happens in your browser; neither file ever leaves your device. One finished mix uses one action, and placing snippets and previewing are free.</p>
+<p>Drop in a video and an MP3. Snip the good bits of the song, pin each one where it should play, and set how loud everything sits. Snippets can repeat, overlap the original audio, and each source has its own volume. A video with no sound of its own still mixes fine. The render happens in your browser; neither file ever leaves your device. Placing snippets, previewing, and the finished mix are all free.</p>
 <h3>Mix quieter than feels right</h3>
 <p>Pull the song down further than seems right under dialogue. If you are noticing the music while someone is talking, it is too loud. You can always lift it in the preview; your viewers cannot turn it down.</p>
 <h3>Land it a breath early</h3>

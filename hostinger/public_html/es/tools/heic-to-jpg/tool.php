@@ -39,7 +39,7 @@ $bbDesc = 'Convierte fotos HEIC de tu iPhone a JPG, PNG o PDF en tu navegador. G
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "¿Necesito una cuenta?", "acceptedAnswer": { "@type": "Answer", "text": "No. Este convertidor es gratis, no usa acciones y no pide registro. Suelta tus fotos y descarga los archivos convertidos." } },
+    { "@type": "Question", "name": "¿Necesito una cuenta?", "acceptedAnswer": { "@type": "Answer", "text": "No. Este convertidor es gratis y no pide registro. Suelta tus fotos y descarga los archivos convertidos." } },
     { "@type": "Question", "name": "¿Mis fotos se suben a algún sitio?", "acceptedAnswer": { "@type": "Answer", "text": "No. La conversión pasa en tu navegador, en tu dispositivo. Tus fotos nunca se envían a Bum Bum ni a nadie más." } },
     { "@type": "Question", "name": "¿Por qué mis fotos de iPhone terminan en .heic?", "acceptedAnswer": { "@type": "Answer", "text": "HEIC es el formato de foto que los iPhone guardan desde iOS 11. Mantiene los archivos pequeños en el teléfono, pero muchos sitios web, formularios de subida y PC con Windows aún no pueden abrirlo. JPG y PNG se abren en todas partes." } },
     { "@type": "Question", "name": "¿Cambiará la calidad?", "acceptedAnswer": { "@type": "Answer", "text": "PNG conserva cada píxel y crea un archivo más grande. JPG te deja elegir la calidad, y el ajuste por defecto mantiene las fotos iguales mientras se abren en todas partes. PDF guarda la misma calidad JPG, una foto por página." } },
@@ -104,7 +104,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" id="faq" aria-label="Preguntas frecuentes">
 <h2>Preguntas frecuentes</h2>
-<details><summary>¿Necesito una cuenta?</summary><p>No. Este convertidor es gratis, no usa acciones y no pide registro. Suelta tus fotos y descarga los archivos convertidos.</p></details>
+<details><summary>¿Necesito una cuenta?</summary><p>No. Este convertidor es gratis y no pide registro. Suelta tus fotos y descarga los archivos convertidos.</p></details>
 <details><summary>¿Mis fotos se suben a algún sitio?</summary><p>No. La conversión pasa en tu navegador, en tu dispositivo. Tus fotos nunca se envían a Bum Bum ni a nadie más.</p></details>
 <details><summary>¿Por qué mis fotos de iPhone terminan en .heic?</summary><p>HEIC es el formato de foto que los iPhone guardan desde iOS 11. Mantiene los archivos pequeños en el teléfono, pero muchos sitios web, formularios de subida y PC con Windows aún no pueden abrirlo. JPG y PNG se abren en todas partes.</p></details>
 <details><summary>¿Cambiará la calidad?</summary><p>PNG conserva cada píxel y crea un archivo más grande. JPG te deja elegir la calidad, y el ajuste por defecto mantiene las fotos iguales mientras se abren en todas partes. PDF guarda la misma calidad JPG, una foto por página.</p></details>

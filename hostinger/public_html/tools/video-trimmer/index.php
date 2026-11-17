@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Trim as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Trim as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -97,12 +97,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Video Trimmer"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/video-trimmer.png" alt="Video Trimmer"><div><h1>Video Trimmer</h1><p class="lede bb-desc">Keep the good part. Drop in a video, mark the start and end, and Bum Bum snips it <b>right in your browser</b>.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to trim videos</h2><a class="button" href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to trim videos</h2><a class="button" href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage && (int) $usage['used'] >= 2): ?><div class="nudge bb-guest-nudge" data-remaining="<?= (int) $usage['remaining'] ?>"><button type="button" class="bb-guest-nudge-dismiss" aria-label="Dismiss" style="float:right;border:none;background:none;cursor:pointer;font:inherit;font-weight:900;opacity:.55;padding:0 0 0 12px">&times;</button>You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions left. <a href="/account/?next=<?= urlencode('/tools/video-trimmer/') ?>">Create a free account</a> to save your work and keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
 <h2>Pick a video</h2>
@@ -125,7 +121,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </div>
 <div class="btnrow">
 <button type="button" class="button secondary" id="previewBtn">Play selection</button>
-<button type="button" class="button" id="trimBtn">Trim it (1 action)</button>
+<button type="button" class="button" id="trimBtn">Trim it</button>
 <button type="button" class="button secondary" id="newBtn">New video</button>
 </div>
 <div class="progress-wrap hidden" id="trimProgress"><div class="progress-bar"><div id="barFill"></div></div><p id="progText">Warming up...</p></div>
@@ -141,7 +137,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Trim as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Trim as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Does my video upload anywhere?</summary>
@@ -263,7 +259,7 @@ trimBtn.addEventListener('click',async()=>{
     resultCard.scrollIntoView({behavior:'smooth',block:'center'});
   }catch(e){
     console.warn('trim failed at step '+step+': '+(e&&e.message),ffLogs.slice(-6));
-    if(e.message==='actions')trimError.textContent='Out of actions for this month.';
+    if(e.message==='actions')trimError.textContent='Something stopped that job. Try again?';
     else if(step==='engine'||step==='core'||String(e.message).indexOf('script-load:')===0)trimError.textContent='The trimmer engine failed to load. Check your connection and try again.';
     else if(step==='reading')trimError.textContent='Bum Bum could not read that file. Try an MP4?';
     else if(step==='trimming')trimError.textContent='The snip failed on that video. It might be an unusual format or too large for this device. Try an MP4, or a shorter clip?';

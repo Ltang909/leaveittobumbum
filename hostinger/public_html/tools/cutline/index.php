@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Start as a guest. A free account gets 75 actions every month and keeps your list saved across devices. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Start as a guest. A free account keeps your list saved across devices. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -58,10 +58,10 @@
     },
     {
       "@type": "Question",
-      "name": "What counts as an action?",
+      "name": "What does it cost?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Adding a subscription uses one action. Viewing your list is free."
+        "text": "Adding a subscription is free. Viewing your list is free."
       }
     }
   ]
@@ -71,12 +71,8 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Subscription Tracker","item":"https://leaveittobumbum.com/tools/cutline/"}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><style>h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Subscription Tracker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum&rsquo;s toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/cutline.png" alt="Subscription Tracker"><div><h1>Subscription Tracker</h1><p class="lede bb-desc">Every subscription you forgot about, in one place, with renewals flagged in your Monday note.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Subscription Tracker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Subscription Tracker</h2><a class="button" href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage && (int) $usage['used'] >= 2): ?><div class="nudge bb-guest-nudge" data-remaining="<?= (int) $usage['remaining'] ?>"><button type="button" class="bb-guest-nudge-dismiss" aria-label="Dismiss" style="float:right;border:none;background:none;cursor:pointer;font:inherit;font-weight:900;opacity:.55;padding:0 0 0 12px">&times;</button>You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions left. <a href="/account/?next=<?= urlencode('/tools/cutline/') ?>">Create a free account</a> to save your work and keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php require dirname(__DIR__, 2) . '/includes/weekly-note.php'; ?>
 <section class="stat" id="total-card"><span>Estimated monthly spend</span><b id="total-month">Loading...</b><p id="total-sub"></p></section>
 <section class="panel" id="add-panel"><h2 style="margin-top:0">Add a subscription</h2><form id="add-form"><label>Name</label><input name="custom_name" type="text" maxlength="191" required placeholder="Netflix"><div class="grid"><div><label>Price (per billing period)</label><input name="price" type="number" min="0" step="0.01" required placeholder="15.49"></div><div><label>Billing cadence</label><select name="cadence" style="width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff"><option value="weekly">Weekly</option><option value="monthly" selected>Monthly</option><option value="quarterly">Quarterly</option><option value="semiannual">Every 6 months</option><option value="annual">Yearly</option></select></div></div><div class="grid"><div><label>Category</label><select name="category" style="width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff"><option value="streaming">Streaming</option><option value="music">Music</option><option value="software">Software &amp; SaaS</option><option value="cloud_storage">Cloud storage</option><option value="fitness">Fitness</option><option value="reading">News &amp; reading</option><option value="gaming">Gaming</option><option value="food_delivery">Food delivery</option><option value="other" selected>Other</option></select></div><div><label>Currency</label><select name="currency" style="width:100%;padding:14px;border:2px solid var(--line);border-radius:10px;font:inherit;background:#fff"><option value="USD" selected>USD</option><option value="CAD">CAD</option></select></div></div><label>Next renewal date</label><input name="next_renewal_on" type="date" required><label style="display:flex;align-items:center;gap:10px;font-weight:800"><input name="is_free_trial" type="checkbox" value="1" style="width:auto"> This is a free trial</label><div id="trial-row" class="hidden"><label>Trial ends</label><input name="trial_ends_on" type="date"></div><button>Add it</button><p id="add-error" class="error"></p></form></section>
@@ -85,8 +81,8 @@
 <script>
 const TOOL_KEY='cutline';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
-if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+if(false){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
+function upgradeCard(){return ''}
 const CATEGORY_LABELS={streaming:'Streaming',music:'Music',software:'Software & SaaS',cloud_storage:'Cloud storage',fitness:'Fitness',reading:'News & reading',gaming:'Gaming',food_delivery:'Food delivery',other:'Other'};
 const CADENCE_LABELS={weekly:'week',monthly:'month',quarterly:'quarter',semiannual:'6 months',annual:'year'};
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -109,7 +105,7 @@ load();
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Start as a guest. A free account gets 75 actions every month and keeps your list saved across devices. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Start as a guest. A free account keeps your list saved across devices. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>How do renewal reminders work?</summary>
@@ -120,14 +116,14 @@ load();
 <p>No. Subscription Tracker shows you everything in one place, but you cancel with the provider directly.</p>
 </details>
 <details>
-<summary>What counts as an action?</summary>
-<p>Adding a subscription uses one action. Viewing your list is free.</p>
+<summary>What does it cost?</summary>
+<p>Adding a subscription is free. Viewing your list is free.</p>
 </details>
 </section>
 <?php $bbTool = 'cutline'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Tracking subscriptions without a spreadsheet, the short guide</h2>
 <h3>How it works here</h3>
-<p>Add each subscription once, with what it costs and how often it renews: weekly, monthly, quarterly, every six months, or yearly. The list lives in your account, and renewals show up in the Monday note, Bum Bum's weekly email, for the week they fall in. Adding a subscription uses one action; editing, deleting, and the list itself are free.</p>
+<p>Add each subscription once, with what it costs and how often it renews: weekly, monthly, quarterly, every six months, or yearly. The list lives in your account, and renewals show up in the Monday note, Bum Bum's weekly email, for the week they fall in. Adding a subscription, editing, deleting, and the list itself are all free.</p>
 <h3>Free trials are the trap</h3>
 <p>Trials count as subscriptions here, on purpose. Add the trial the day you start it, with its trial end date, not the day you mean to decide. The Monday note can only warn you about a charge that is in the list.</p>
 <h3>What Bum Bum can and cannot see</h3>

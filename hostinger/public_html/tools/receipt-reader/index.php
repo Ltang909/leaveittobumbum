@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Scan as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Scan as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -123,12 +123,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}.sample-line{text-align:center;font-size:13px;opacity:.85;margin:10px 0 0}.sample-link{background:none;border:0;padding:0;font:inherit;font-weight:800;color:inherit;text-decoration:underline;cursor:pointer}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Receipt Scanner"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/receipt-reader.png" alt="Receipt Scanner"><div><h1>Receipt Scanner</h1><p class="lede bb-desc">Receipts in, spreadsheets out. Snap up to 10 receipts and Bum Bum pulls out the details.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to read receipts</h2><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to read receipts</h2><a class="button" href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage && (int) $usage['used'] >= 2): ?><div class="nudge bb-guest-nudge" data-remaining="<?= (int) $usage['remaining'] ?>"><button type="button" class="bb-guest-nudge-dismiss" aria-label="Dismiss" style="float:right;border:none;background:none;cursor:pointer;font:inherit;font-weight:900;opacity:.55;padding:0 0 0 12px">&times;</button>You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions left. <a href="/account/?next=<?= urlencode('/tools/receipt-reader/') ?>">Create a free account</a> to save your work and keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
 <h2>Snap or upload receipts</h2>
@@ -169,7 +165,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Scan as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Scan as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Do my receipt photos upload anywhere?</summary>
@@ -186,7 +182,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" aria-label="Guide"><h2 style="margin-top:0">Receipts into spreadsheets, the short guide</h2>
 <h3>How it works here</h3>
-<p>Snap up to 10 receipts at once. Bum Bum reads them right in your browser and pulls out the vendor, date, line items, tax, and total as clean, editable tables. Your photos never leave your device; only the typed-up numbers are saved, in your account, when you save a card to your log. One action per receipt read, and if a photo holds no receipt at all, it is skipped without charging an action.</p>
+<p>Snap up to 10 receipts at once. Bum Bum reads them right in your browser and pulls out the vendor, date, line items, tax, and total as clean, editable tables. Your photos never leave your device; only the typed-up numbers are saved, in your account, when you save a card to your log. If a photo holds no receipt at all, Bum Bum says so and skips it.</p>
 <h3>Photos that read well</h3>
 <p>Flat, well lit, and filling the frame. A creased receipt reads better smoothed flat and shot from directly above; shadows across the total are the top cause of a misread.</p>
 <h3>Check the doubtful number</h3>
@@ -273,7 +269,7 @@ function renderQueue(){
   const paidPending=pending.filter(q=>!q.sample).length;
   processBtn.textContent=pending.length>1
     ?'Read '+pending.length+' receipts ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')'
-    :(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this receipt (1 action)');
+    :(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this receipt');
 }
 
 processBtn.addEventListener('click',async()=>{
@@ -318,7 +314,7 @@ processBtn.addEventListener('click',async()=>{
     }
     if(blocked){
       queue.forEach(q=>{if(q.status==='queued')q.status='blocked'});
-      batchError.textContent='Out of actions for this month. The receipts above were read; the rest are waiting.';
+      batchError.textContent='Something stopped the batch. The receipts above were read; the rest are waiting.';
       renderQueue();
     }
     if(sawNotReceipt&&!blocked){

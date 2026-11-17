@@ -45,7 +45,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Convert videos as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Convert videos as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -102,13 +102,9 @@ h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spa
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Video Converter"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/video-converter.png" alt="Video Converter"><div><h1>Video Converter</h1><p class="lede bb-desc">Wrong format? Fixed. Convert video to MP4, WebM, or GIF right in your browser.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Video Converter</h2><a class="button" href="/account/?next=<?= urlencode('/tools/video-converter/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/video-converter/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/video-converter/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to use Video Converter</h2><a class="button" href="/account/?next=<?= urlencode('/tools/video-converter/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage && (int) $usage['used'] >= 2): ?><div class="nudge bb-guest-nudge" data-remaining="<?= (int) $usage['remaining'] ?>"><button type="button" class="bb-guest-nudge-dismiss" aria-label="Dismiss" style="float:right;border:none;background:none;cursor:pointer;font:inherit;font-weight:900;opacity:.55;padding:0 0 0 12px">&times;</button>You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions left. <a href="/account/?next=<?= urlencode('/tools/video-converter/') ?>">Create a free account</a> to save your work and keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
 <?php $out = empty($usage['unlimited']) && ($usage['remaining'] ?? 0) <= 0; ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> free actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 <?php if ($out): ?>
 <div id="upgrade-slot"></div>
 <?php else: ?>
@@ -142,8 +138,8 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <script>
 const TOOL_KEY='video-converter';
 const PERIOD=<?= json_encode($usage['period'] ?? '') ?>;
-if(<?= $low ? 'true' : 'false' ?>){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
-function upgradeCard(){return `<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) ($usage['limit'] ?? 75) ?> free actions this month. Operator gives you unlimited actions plus a custom tool built for you in 36 hours for $49/month.</p><p><a class="button" data-plan="operator" href="/checkout/?plan=operator">Get Operator, $49/mo</a></p><p><a href="/account/">See your usage</a></p></div>`}
+if(false){const seen='bb_m80_'+PERIOD;if(!localStorage.getItem(seen)){localStorage.setItem(seen,'1');bbTrack('usage_milestone_80',{tool:TOOL_KEY,used:<?= (int) ($usage['used'] ?? 0) ?>,limit:<?= (int) ($usage['limit'] ?? 0) ?>})}}
+function upgradeCard(){return ''}
 function bindUpgradeClicks(root,context){root.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>bbTrack('upgrade_clicked',{plan:a.dataset.plan,context:context,tool:TOOL_KEY})))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 <?php if ($out): ?>
@@ -289,7 +285,7 @@ convertBtn.addEventListener('click',async()=>{
     progText.textContent='Your '+outFmt.toUpperCase()+' is ready. One action was used.';
     if(done.data.usage){
       const u=done.data.usage;
-      usageEl.textContent=u.unlimited?'Unlimited actions.':u.remaining+' actions left.';
+      usageEl.textContent='Free, no limits.';
     }
     bbTrack('action_completed',{tool:TOOL_KEY,format:outFmt,mb:Math.round(videoFile.size/1048576)});
     dlLink.scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -298,7 +294,7 @@ convertBtn.addEventListener('click',async()=>{
       bbTrack('limit_reached',{tool:TOOL_KEY});bbTrack('upgrade_prompt_shown',{tool:TOOL_KEY,context:'limit'});
       document.querySelector('#upgrade-slot').innerHTML=upgradeCard();
       bindUpgradeClicks(document.querySelector('#upgrade-slot'),'limit');
-      convertErr.textContent='You are out of actions, so this conversion was not started.';
+      convertErr.textContent='This conversion was not started. Try again?';
     }else if(cancelled){
       convertErr.textContent='';
     }else if(step==='engine'||step==='core'||String((e&&e.message)||'').indexOf('script-load:')===0){
@@ -328,7 +324,7 @@ againBtn.addEventListener('click',()=>{
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Convert videos as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Convert videos as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>What formats can I convert?</summary>
@@ -346,7 +342,7 @@ againBtn.addEventListener('click',()=>{
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Converting video in your browser, the short guide</h2>
 <h3>How it works here</h3>
-<p>Drop in a video and convert it to MP4, WebM, or animated GIF, entirely in your browser. Your video never leaves your device and Bum Bum keeps no copy. One finished conversion uses one action, and changing your mind mid-conversion costs nothing: a cancelled conversion uses no action.</p>
+<p>Drop in a video and convert it to MP4, WebM, or animated GIF, entirely in your browser. Your video never leaves your device and Bum Bum keeps no copy. Changing your mind mid-conversion costs nothing.</p>
 <h3>Fast paths and honest limits</h3>
 <p>If your video is already in the format you pick, the converter repacks it without re-encoding, which is much faster. Videos taller than 720 pixels are converted at 720 tall; big recordings are where browser conversion goes to die, and 720 is plenty for posting and sharing. Long videos convert at the speed of your computer, because your computer is doing the work.</p>
 <h3>GIFs have rules</h3>

@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Read posters as a guest with 15 free actions, or create a free account for 75 actions every month. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Read posters as a guest. It is free, with no limits. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -106,12 +106,8 @@ section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media (max-width:860px){main.shell{display:flex;flex-direction:column}main.shell>p.lede.bb-desc{order:40}main.shell>section#faq{order:50}main.shell>section[aria-label="More tiny tools"]{order:60}main.shell>section[aria-label="Guide"]{order:70}}
 </style></head><body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Poster to Calendar"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/poster-to-calendar.png" alt="Poster to Calendar"><div><h1>Poster to Calendar</h1><p class="lede bb-desc">Posters in, calendar events out. Snap a poster and Bum Bum pulls out the event details.</p></div></div>
-<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to read posters</h2><a class="button" href="/account/?next=<?= urlencode('/tools/poster-to-calendar/') ?>">Sign in or create an account</a></section><?php elseif ($isGuest && $usage && (int) $usage['remaining'] <= 0): ?>
-<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">You used all <?= (int) $usage['limit'] ?> free actions. <a href="/account/?next=<?= urlencode('/tools/poster-to-calendar/') ?>">Create a free account</a> to keep going.</p><p><a class="button" href="/account/?next=<?= urlencode('/tools/poster-to-calendar/') ?>">Create a free account</a></p></div>
+<?php if (!$user && !$isGuest): ?><section class="panel"><h2>Sign in to read posters</h2><a class="button" href="/account/?next=<?= urlencode('/tools/poster-to-calendar/') ?>">Sign in or create an account</a></section>
 <?php else: ?>
-<?php if ($isGuest && $usage && (int) $usage['used'] >= 2): ?><div class="nudge bb-guest-nudge" data-remaining="<?= (int) $usage['remaining'] ?>"><button type="button" class="bb-guest-nudge-dismiss" aria-label="Dismiss" style="float:right;border:none;background:none;cursor:pointer;font:inherit;font-weight:900;opacity:.55;padding:0 0 0 12px">&times;</button>You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions left. <a href="/account/?next=<?= urlencode('/tools/poster-to-calendar/') ?>">Create a free account</a> to save your work and keep going.</div><?php endif; ?>
-<?php $low = !$isGuest && $usage && $usage['remaining'] > 0 && $usage['remaining'] <= (int) ceil($usage['limit'] * 0.2); ?>
-<?php if ($low): ?><div class="nudge">Heads up: only <?= (int) $usage['remaining'] ?> actions left this month. <a href="/account/#upgrade">Get more actions</a> before they run out.</div><?php endif; ?>
 
 <section class="panel" id="uploadPanel">
 <h2>Snap or upload a poster</h2>
@@ -147,7 +143,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Read posters as a guest with 15 free actions, or create a free account for 75 actions every month. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Read posters as a guest. It is free, with no limits. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Where does my photo go?</summary>
@@ -169,7 +165,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">Posters into calendar events, the short guide</h2>
 <h3>How it works here</h3>
-<p>Take a photo of an event poster, flyer, or screenshot, and get a ready-to-save calendar event with the title, date, time, and place filled in. One read covers up to six events on the poster for one action. Relative dates get resolved for you: a poster that says Friday means the coming Friday. Your photo is read and discarded, never stored.</p>
+<p>Take a photo of an event poster, flyer, or screenshot, and get a ready-to-save calendar event with the title, date, time, and place filled in. One read covers up to six events on the poster. Relative dates get resolved for you: a poster that says Friday means the coming Friday. Your photo is read and discarded, never stored.</p>
 <h3>Photos that read well</h3>
 <p>Square-on beats artistic. A crooked photo can be straightened first with the Image Cropper, or simply retaken head-on; dates read far more reliably that way. Screenshots of digital posters work just as well as photos of paper ones.</p>
 <h3>Honest about what it is</h3>
@@ -284,7 +280,7 @@ function renderQueue(){
   const pending=queue.filter(q=>q.status==='queued');
   processBtn.classList.toggle('hidden',!pending.length||batchRunning);
   const paidPending=pending.filter(q=>!q.sample).length;
-  processBtn.textContent=pending.length>1?'Read '+pending.length+' posters ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')':(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this poster (1 action)');
+  processBtn.textContent=pending.length>1?'Read '+pending.length+' posters ('+(paidPending===0?'free':paidPending+(paidPending===1?' action':' actions'))+')':(pending[0]&&pending[0].sample?'Read this sample (free)':'Read this poster');
 }
 
 function downscale(dataUrl){
@@ -354,7 +350,7 @@ processBtn.addEventListener('click',async()=>{
   if(queue.some(q=>q.status==='done')&&window.BBDropStrip)window.BBDropStrip.show('poster-to-calendar');
   if(blocked){
     queue.forEach(q=>{if(q.status==='queued')q.status='blocked'});
-    batchError.textContent='Out of actions for this month. The posters above were read; the rest are waiting.';
+    batchError.textContent='Something stopped the batch. The posters above were read; the rest are waiting.';
     renderQueue();
   }else if(sawNoEvents&&!lastFail){
     showScene('empty_input',{petpet:'I sniffed it twice. Nothing poster-shaped.',bumbum:'This tool reads event posters and flyers. If yours is in that photo, try it straight on, whole poster in frame, no glare.',cta:'Try another photo',onCta:()=>{clearScene();document.querySelector('#uploadPanel').scrollIntoView({behavior:'smooth'})}});

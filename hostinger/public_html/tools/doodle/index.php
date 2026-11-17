@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Draw as much as you like without signing up. Saving or copying uses one action: 15 free as a guest, 75 every month with a free account. See pricing: https://leaveittobumbum.com/pricing/."
+        "text": "No. Draw as much as you like without signing up. Saving or copying is free. See pricing: https://leaveittobumbum.com/pricing/."
       }
     },
     {
@@ -105,8 +105,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="tool-group"><span class="lbl">Paper</span><div class="seg" role="group" aria-label="Background"><button type="button" data-bg="transparent" class="on">Clear</button><button type="button" data-bg="#ffffff">White</button><button type="button" data-bg="#fdf6e3">Cream</button></div></div>
 <div class="tool-group"><span class="lbl">Shape</span><div class="seg" role="group" aria-label="Canvas shape"><button type="button" data-aspect="wide" class="on">Classic</button><button type="button" data-aspect="sig">Signature</button><button type="button" data-aspect="square">Square</button></div></div>
 </div>
-<?php if ($isGuest && $usage && (int) $usage['used'] >= 2): ?><div class="nudge bb-guest-nudge" data-remaining="<?= (int) $usage['remaining'] ?>"><button type="button" class="bb-guest-nudge-dismiss" aria-label="Dismiss" style="float:right;border:none;background:none;cursor:pointer;font:inherit;font-weight:900;opacity:.55;padding:0 0 0 12px">&times;</button>You have <strong><?= (int) $usage['remaining'] ?> of <?= (int) $usage['limit'] ?></strong> free actions left. <a href="/account/?next=<?= urlencode('/tools/doodle/') ?>">Create a free account</a> to save your work and keep going.</div><?php endif; ?>
-<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button><button type="button" class="button secondary" id="copyBtn">Copy</button><span class="hint" style="margin:0">1 action per save.</span></div>
+<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="svgBtn">Download SVG</button><button type="button" class="button secondary" id="copyBtn">Copy</button><span class="hint" style="margin:0">Saving is free.</span></div>
 <div class="canvas-wrap"><canvas id="pad"></canvas></div>
 <p class="hint">Tip: pick Signature shape and Clear paper for a transparent signature you can drop onto any document.</p>
 </div>
@@ -174,7 +173,7 @@ async function spendDoodleAction(){
     const data=await res.json().catch(()=>({}));
     if(res.status===402){
       if(data&&data.signup_required)return false;
-      document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>Out of free actions.</h2><p class="lede">Saving a doodle uses one action. Operator gives you unlimited actions for $49/month.</p><p><a class="button secondary" href="/account/">See your usage</a></p></div>';
+      document.querySelector('#upgrade-slot').innerHTML='<div class="upgrade-card"><h2>That did not go through.</h2><p class="lede">Saving a doodle is free.</p><p><a class="button secondary" href="/account/">See your usage</a></p></div>';
       return false;
     }
     if(!res.ok){alert(data.error||'Could not save. Try again.');return false}
@@ -227,7 +226,7 @@ try{bbTrack('tool_opened',{tool:'doodle'})}catch(e){}
 <h2 style="margin-top:0">Questions, answered</h2>
 <details>
 <summary>Do I need an account?</summary>
-<p>No. Draw as much as you like without signing up. Saving or copying uses one action: 15 free as a guest, 75 every month with a free account. <a href="/pricing/">See pricing</a>.</p>
+<p>No. Draw as much as you like without signing up. Saving or copying is free. <a href="/pricing/">See pricing</a>.</p>
 </details>
 <details>
 <summary>Does my drawing leave my browser?</summary>
@@ -245,7 +244,7 @@ try{bbTrack('tool_opened',{tool:'doodle'})}catch(e){}
 <section class="panel" aria-label="Guide">
 <h2 style="margin-top:0">A sketchpad in your browser, the short guide</h2>
 <h3>How it works here</h3>
-<p>Draw with a finger, stylus, or mouse, right in your browser. Nothing leaves your device while you draw; your sketch only goes anywhere when you choose to save, copy, or download it. Drawing is free and unlimited. Saving or copying a doodle uses one action, and exports come out as PNG or SVG.</p>
+<p>Draw with a finger, stylus, or mouse, right in your browser. Nothing leaves your device while you draw; your sketch only goes anywhere when you choose to save, copy, or download it. Drawing is free and unlimited. Saving or copying a doodle is free, and exports come out as PNG or SVG.</p>
 <h3>Signatures that survive export</h3>
 <p>Signing something? Draw big, then shrink it into place. Big signatures export cleaner than small, careful ones, because the lines have more room to be smooth.</p>
 <h3>PNG or SVG</h3>

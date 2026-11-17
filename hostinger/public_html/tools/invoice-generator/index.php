@@ -37,7 +37,7 @@
       "name": "Do I need an account?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. The Invoice Generator is free, uses no actions, and needs no sign-up. Fill it in and download the PDF."
+        "text": "No. The Invoice Generator is free and needs no sign-up. Fill it in and download the PDF."
       }
     },
     {
@@ -201,7 +201,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 </section>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2>Questions, answered</h2>
-<details><summary>Do I need an account?</summary><p>No. The Invoice Generator is free, uses no actions, and needs no sign-up. Fill it in and download the PDF.</p></details>
+<details><summary>Do I need an account?</summary><p>No. The Invoice Generator is free and needs no sign-up. Fill it in and download the PDF.</p></details>
 <details><summary>Where does my invoice data go?</summary><p>Nowhere. Everything runs in your browser and the PDF is built on your device. Your business details save in this browser only, so the form is half filled in next time. Nothing is sent to Bum Bum.</p></details>
 <details><summary>Can it handle tax?</summary><p>Yes. Name the tax whatever you call it, HST, GST, VAT, or sales tax, and set the rate. You can also add a percentage discount. The discount comes off the subtotal first, then tax applies to what is left, and the total updates as you type.</p></details>
 <details><summary>Which currencies does it support?</summary><p>US, Canadian, and Australian dollars, euros, and British pounds. Pick yours at the top of the form.</p></details>
