@@ -411,26 +411,20 @@ function teamSeats(int $ownerId, string $plan): array {
     } catch (Throwable $e) {
         $used = 0;
     }
-    if (planIsUnlimited($plan)) {
-        return ['used' => $used, 'limit' => 0, 'remaining' => PHP_INT_MAX, 'unlimited' => true];
-    }
-    $limit = PLAN_SEATS[$plan] ?? 0;
-    return ['used' => $used, 'limit' => $limit, 'remaining' => max(0, $limit - $used)];
+    // Pricing reset (2026-11-17): no subscription tiers anymore, so seats are
+    // not capped by plan. The used count still reports for the account page.
+    return ['used' => $used, 'limit' => 0, 'remaining' => PHP_INT_MAX, 'unlimited' => true];
 }
 
 function usageFor(array $user): array {
+    // Pricing reset (2026-11-17): every tool is free with no limits, for every
+    // plan. Usage is still counted (the account activity history reads it),
+    // but nothing resolves to a cap anymore.
     $period = periodKey($user);
-    if (isAdmin($user) || planIsUnlimited((string) ($user['plan'] ?? ''))) {
-        $stmt = db()->prepare('SELECT used_actions FROM usage_periods WHERE user_id = ? AND period_key = ?');
-        $stmt->execute([$user['id'], $period]);
-        $used = (int) ($stmt->fetchColumn() ?: 0);
-        return ['period' => $period, 'used' => $used, 'limit' => 0, 'remaining' => 0, 'unlimited' => true];
-    }
-    $limit = PLAN_LIMITS[$user['plan']] ?? PLAN_LIMITS['free'];
     $stmt = db()->prepare('SELECT used_actions FROM usage_periods WHERE user_id = ? AND period_key = ?');
     $stmt->execute([$user['id'], $period]);
     $used = (int) ($stmt->fetchColumn() ?: 0);
-    return ['period' => $period, 'used' => $used, 'limit' => $limit, 'remaining' => max(0, $limit - $used)];
+    return ['period' => $period, 'used' => $used, 'limit' => 0, 'remaining' => PHP_INT_MAX, 'unlimited' => true];
 }
 
 function consumeAction(int $userId, string $plan, string $period, string $tool, string $idempotency): array {
@@ -445,6 +439,10 @@ function consumeAction(int $userId, string $plan, string $period, string $tool, 
         $unlimited = isAdmin(['email' => (string) $emailStmt->fetchColumn()]);
     } catch (Throwable $e) { $unlimited = false; }
     if (!$unlimited && planIsUnlimited($plan)) $unlimited = true;
+    // Pricing reset (2026-11-17): tools are free with no limits for everyone.
+    // Usage is still recorded below so the activity history stays accurate;
+    // only the limit check is skipped, same as the old admin path.
+    $unlimited = true;
     $pdo->beginTransaction();
     try {
         $existing = $pdo->prepare('SELECT id FROM action_ledger WHERE user_id = ? AND idempotency_key = ?');
@@ -468,7 +466,7 @@ function consumeAction(int $userId, string $plan, string $period, string $tool, 
         $pdo->prepare('UPDATE usage_periods SET used_actions = used_actions + 1 WHERE user_id = ? AND period_key = ?')->execute([$userId, $period]);
         $pdo->commit();
         $out = ['counted' => true, 'used' => $used + 1, 'limit' => $limit];
-        if ($unlimited) { $out['limit'] = 0; $out['remaining'] = 0; $out['unlimited'] = true; }
+        if ($unlimited) { $out['limit'] = 0; $out['remaining'] = PHP_INT_MAX; $out['unlimited'] = true; }
         return $out;
     } catch (Throwable $error) {
         if ($pdo->inTransaction()) $pdo->rollBack();
@@ -480,10 +478,10 @@ function consumeAction(int $userId, string $plan, string $period, string $tool, 
 // Guest actions: use the tools with no account.
 //
 // A guest is a server-minted identity: a UUID stored in the `guests` table,
-// carried in a long-lived HMAC-signed cookie. Guests are metered in their own
-// tables (`guest_usage`, `guest_ledger`) so the user metering tables are never
-// touched. At the limit the API answers 402 with `signup_required: true`; on
-// signup/login everything merges into the new account.
+// carried in a long-lived HMAC-signed cookie. Guest jobs are recorded in their
+// own tables (`guest_usage`, `guest_ledger`) so the user tables are never
+// touched. Since the 2026-11-17 pricing reset there is no guest limit and no
+// 402; on signup/login the recorded history merges into the new account.
 //
 // Deliberately NOT used: browser fingerprinting (creepy, unreliable) and IP
 // as identity (shared networks). Clearing cookies resets the allowance; that
@@ -641,6 +639,8 @@ function guestPeriodKey(): string {
 }
 
 function guestUsage(string $guestId): array {
+    // Pricing reset (2026-11-17): guests are unlimited too. The used count is
+    // still read for analytics continuity; no cap is reported.
     ensureGuestTables();
     $period = guestPeriodKey();
     $stmt = db()->prepare('SELECT used_actions FROM guest_usage WHERE guest_id = ? AND period_key = ?');
@@ -649,9 +649,9 @@ function guestUsage(string $guestId): array {
     return [
         'period' => $period,
         'used' => $used,
-        'limit' => GUEST_ACTION_LIMIT,
-        'remaining' => max(0, GUEST_ACTION_LIMIT - $used),
-        'unlimited' => false,
+        'limit' => 0,
+        'remaining' => PHP_INT_MAX,
+        'unlimited' => true,
         'is_guest' => true,
     ];
 }
@@ -686,15 +686,14 @@ function consumeGuestAction(string $guestId, string $tool, string $idempotency):
         $lock = $pdo->prepare('SELECT used_actions FROM guest_usage WHERE guest_id = ? AND period_key = ? FOR UPDATE');
         $lock->execute([$guestId, $period]);
         $used = (int) $lock->fetchColumn();
-        if ($used >= GUEST_ACTION_LIMIT) {
-            $pdo->rollBack();
-            return ['counted' => false, 'limit_reached' => true, 'used' => $used, 'limit' => GUEST_ACTION_LIMIT, 'remaining' => 0, 'is_guest' => true];
-        }
+        // Pricing reset (2026-11-17): no guest limit anymore. The job is still
+        // recorded (guest analytics + the merge-on-signup history), but this
+        // function never returns limit_reached now.
         $pdo->prepare('INSERT INTO guest_ledger (guest_id, period_key, tool_key, idempotency_key) VALUES (?, ?, ?, ?)')->execute([$guestId, $period, $tool, $idempotency]);
         $pdo->prepare('UPDATE guest_usage SET used_actions = used_actions + 1 WHERE guest_id = ? AND period_key = ?')->execute([$guestId, $period]);
         $pdo->commit();
-        posthogCapture('guest_action', $guestId, ['tool' => $tool, 'used' => $used + 1, 'limit' => GUEST_ACTION_LIMIT]);
-        return ['counted' => true, 'used' => $used + 1, 'limit' => GUEST_ACTION_LIMIT, 'remaining' => GUEST_ACTION_LIMIT - $used - 1, 'is_guest' => true];
+        posthogCapture('guest_action', $guestId, ['tool' => $tool, 'used' => $used + 1]);
+        return ['counted' => true, 'used' => $used + 1, 'limit' => 0, 'remaining' => PHP_INT_MAX, 'unlimited' => true, 'is_guest' => true];
     } catch (Throwable $error) {
         if ($pdo->inTransaction()) $pdo->rollBack();
         throw $error;
