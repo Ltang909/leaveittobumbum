@@ -200,6 +200,13 @@ h1 em { color:var(--blue); font-style:italic; font-weight:800; }
 .guide-tool-callout-blurb { margin:0 0 14px; }
 .guide-tool-callout .button { text-decoration:none; }
 @media (max-width:640px){ .guide-tool-callout{ flex-direction:column; align-items:flex-start; gap:14px; padding:18px; } .guide-tool-callout .sticker{ width:84px; height:84px; } }
+/* Guide tool callout v2 ("band"): no sticker, heading tied to the guide's H1, one line, one simple link */
+.guide-tool-callout-band { display:block; background:var(--paper); box-shadow:none; padding:18px 22px; }
+.guide-tool-callout-heading { font-family:var(--font-display),serif; font-size:1.35rem; line-height:1.2; margin:0 0 4px; }
+.guide-tool-callout-line { margin:0 0 10px; }
+.guide-tool-callout-link { font-weight:900; text-decoration:underline; text-underline-offset:4px; }
+.guide-tool-callout-link::after { content:" \2192"; }
+@media (max-width:640px){ .guide-tool-callout-band{ padding:16px 18px; } }
 @media (max-width:600px){ .nap-bubble{white-space:normal; width:max-content; max-width:88vw} }
 @media (prefers-reduced-motion:reduce){ .boing,.dance{animation:none} .confetti{display:none} .ticker.zoomies .ticker-track{animation-duration:28s} }
 
