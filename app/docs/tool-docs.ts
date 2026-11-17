@@ -35,7 +35,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     goodToKnow: [
       "Works on a desktop browser; mobile browsers do not offer screen capture.",
-      "One finished recording uses one action. Recording and previewing are free.",
+      "Recording, previewing, and the finished recording are all free.",
       "Your video is rendered on your device, so long recordings are limited by your computer, not by us.",
     ],
     data: "Nothing uploads anywhere. Your recording never leaves your computer, and Bum Bum keeps no copy.",
@@ -44,12 +44,12 @@ export const TOOL_DOCS: ToolDoc[] = [
       "A short test recording first saves you from discovering a muted mic at minute nine.",
     ],
     faq: [
-      ["Do I need an account to record my screen?", "You can record as a guest. A free account gives you a monthly bucket of actions for finished recordings and keeps everything under one roof."],
+      ["Do I need an account to record my screen?", "You can record as a guest, free with no limits. A free account keeps your finished recordings and everything else under one roof."],
       ["Can I include my webcam?", "Yes. Turn on the camera bubble and it sits in the corner of your recording."],
       ["What format does my recording download as?", "MP4 wherever your browser can record it, which covers most people. A few browsers (Firefox among them) record WebM instead, so the format follows your browser."],
       ["Why doesn't the floating bubble follow me into other tabs and windows?", "The floating bubble is a small mirror that lives on this page, and websites are not allowed to draw inside other tabs or apps, so it cannot travel with you. Tools that seem to do it use a browser extension, which has permissions a website does not. Your finished recording still includes your camera in the corner either way, because it is blended into the video as you record. To see yourself while you work in another window, share your entire screen and keep the bubble up."],
     ],
-    updated: "November 12, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "notes",
@@ -67,7 +67,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     goodToKnow: [
       "Your recording stays in your browser, so you can listen back right away or download the audio to keep it.",
       "On iPhone, live transcription is not available in the browser, so your audio is sent to our server to be transcribed instead.",
-      "One finished note uses one action.",
+      "Finished notes are free, and so is recording them.",
     ],
     data: "Recordings live in your browser and are never saved to our servers. Transcripts are saved to your account library so you can come back to them.",
     tips: [
@@ -78,7 +78,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Where does my recording go?", "Nowhere, on desktop. It stays in your browser. On iPhone it is sent to our server for transcription because iPhone browsers cannot transcribe live."],
       ["Can I download my transcripts?", "Yes, any note in your library can be copied or downloaded as text, and the audio too when you want it."],
     ],
-    updated: "November 12, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "cutline",
@@ -94,7 +94,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Cancel the keepers' dead weight with the service itself, then delete the entry here.",
     ],
     goodToKnow: [
-      "Adding a subscription uses one action. Editing, deleting, and the list itself are free.",
+      "Adding a subscription is free. Editing, deleting, and the list itself are free.",
       "Cadences: weekly, monthly, quarterly, every six months, and yearly.",
       "Free trials count too. Add one with its trial end date and it shows up in the Monday note for that week.",
     ],
@@ -107,7 +107,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["How do renewal reminders work?", "There are no per-renewal reminder emails. Renewals ride along in the Monday note, the weekly email that rounds up everything coming due that week, Monday through Sunday."],
       ["Can Subscription Tracker cancel a subscription for me?", "No. Cancelling happens with the service itself. The tracker makes sure you remember in time, and shows you the total of what is about to renew."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "purrsuit",
@@ -123,7 +123,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Move people along the pipeline as conversations progress, and log the follow-ups into the Monday note automatically.",
     ],
     goodToKnow: [
-      "Adding a contact uses one action. Everything else, moving, editing, checking the list, is free.",
+      "Adding a contact is free. Everything else, moving, editing, checking the list, is free.",
       "You can import contacts from a CSV instead of typing them one by one.",
       "Follow-ups that come due show up in the Monday note for that week.",
     ],
@@ -136,7 +136,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["How is this different from a big CRM?", "It skips deal-pipeline setup, required fields, and admin settings. It tracks who the contact is, where things stand, and who needs a nudge today."],
       ["Can I import my contacts?", "Yes, there is a CSV import on the page. Name and company are enough to start."],
     ],
-    updated: "November 12, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "corporate-bum-bum",
@@ -152,7 +152,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Move applications along as stages change, from applied to interview to offer, or close them out honestly.",
     ],
     goodToKnow: [
-      "Adding an application uses one action. Everything else is free.",
+      "Adding an application is free. Everything else is free.",
       "You can import applications from a CSV.",
       "Applications with a follow-up due show up in the Monday note for that week.",
     ],
@@ -165,7 +165,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["How is this different from a spreadsheet?", "This tracker tells you who to follow up with today and drafts what to say. A spreadsheet holds the list but never reminds you."],
       ["Can I import my applications?", "Yes, CSV import is on the page."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "doodle",
@@ -180,7 +180,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Save or copy your doodle when it looks right, or download it as a PNG or SVG.",
     ],
     goodToKnow: [
-      "Drawing is free and unlimited. Saving or copying a doodle uses one action.",
+      "Drawing is free and unlimited. Saving or copying a doodle is free.",
       "Exports come out as PNG or SVG.",
       "Works with touch, stylus, and mouse.",
     ],
@@ -193,7 +193,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Does my drawing leave my browser?", "Not while you draw. Only when you save, copy, or download it, and then only where you send it."],
       ["Can I use a stylus?", "Yes, anything your device can draw with works, finger included."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "invoice-chaser",
@@ -209,7 +209,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Mark invoices paid as money lands. Overdue and due-this-week invoices show up in your Monday note.",
     ],
     goodToKnow: [
-      "Adding an invoice or sending a chase uses one action each. Everything else is free.",
+      "Adding an invoice or sending a chase is free. Everything else is free.",
       "The chaser learns each client's usual payment timing, so a client who always pays on day 20 does not get nudged on day 2.",
       "You always see and approve the email before anything sends.",
       "The tool page itself carries the copy-paste templates (first send, polite reminder, firm reminder, final notice) plus a filled example, for invoices you would rather send by hand.",
@@ -223,7 +223,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Does it actually send the emails?", "Yes, with your approval each time. Nothing sends itself; you read the draft and tap send."],
       ["Will it annoy my clients?", "The drafts start friendly and firm up gradually, and the timing adapts to when each client usually pays. You can edit every word before sending."],
     ],
-    updated: "November 16, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "receipt-reader",
@@ -240,10 +240,10 @@ export const TOOL_DOCS: ToolDoc[] = [
       "No receipt handy? Use the sample receipt on the page and watch a full read happen for free.",
     ],
     goodToKnow: [
-      "Up to 10 receipts in one batch. One action per receipt read.",
+      "Up to 10 receipts in one batch, every read free.",
       "Reading works best with the receipt flat, well lit, and filling the frame.",
       "Saving to your log and CSV exports are free.",
-      "If a photo holds no receipt at all, Bum Bum says so and skips it without charging an action, instead of handing back a blank card.",
+      "If a photo holds no receipt at all, Bum Bum says so and skips it, instead of handing back a blank card.",
     ],
     data: "Your photos never leave your device. The reading happens in your browser, and only the typed-up numbers are saved, in your account, when you save a card to your log.",
     tips: [
@@ -254,7 +254,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Do my receipt photos upload anywhere?", "No. The reader runs in your browser. Photos stay on your device; only the extracted numbers are saved when you save to your log."],
       ["How many receipts can I scan at once?", "Ten at a time. Queue more after the batch finishes."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "poster-to-calendar",
@@ -270,7 +270,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Save with one tap as a calendar file, or add it straight to Google Calendar.",
     ],
     goodToKnow: [
-      "One poster read uses one action, however many events it holds, up to six.",
+      "One poster read covers however many events it holds, up to six.",
       "Screenshots of digital posters work just as well as photos of paper ones.",
       "Relative dates get resolved for you: a poster that says Friday means the coming Friday.",
       "No poster handy? The sample poster on the page drops three editable events in for free, so you can see the whole flow first.",
@@ -285,7 +285,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["What if the poster lists more than one event?", "You get an event card for each one, up to six, and you can save them individually or all at once."],
       ["Which calendars does it work with?", "The download is a standard calendar file that works with Apple Calendar, Outlook, and everything else, plus there is a direct Add to Google Calendar option."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "meal-scanner",
@@ -301,7 +301,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "The day total keeps running on the page as you add meals.",
     ],
     goodToKnow: [
-      "One photo read uses one action.",
+      "Photo reads are free.",
       "Vision estimates of portions typically run 20 to 40 percent off in either direction. The range is the honest answer, because it reflects that spread.",
       "Your running day total is kept in your browser only.",
       "No meal photo handy? The sample meal on the page shows the full result for free, every number editable.",
@@ -315,7 +315,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["How accurate is it?", "It is an estimate with a stated range, good for staying aware without tracker-app friction. It is not a medical measurement."],
       ["Where does my photo go?", "To the reader and nowhere else. It is read and discarded, never stored."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "gap-scout",
@@ -333,7 +333,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     goodToKnow: [
       "Compare against up to five job descriptions at once.",
       "Everything happens in your browser.",
-      "One finished check uses one action.",
+      "Finished checks are free.",
     ],
     data: "Your resume never leaves your device. The comparison runs in your browser, and nothing is uploaded or stored.",
     tips: [
@@ -344,7 +344,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["How many job descriptions can I compare?", "Up to five at once, which is enough to see the pattern for a role without drowning in it."],
       ["Does my resume leave my device?", "No. The whole comparison happens in your browser."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "video-trimmer",
@@ -359,7 +359,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Trim it, preview the cut, and download.",
     ],
     goodToKnow: [
-      "One action per trim. Marking and previewing are free.",
+      "Trimming is free. Marking and previewing are free.",
       "Common video formats work; if your browser can play it, the trimmer can usually cut it.",
       "Rendering happens on your device, so very large files take a while and a strong sneeze of patience.",
     ],
@@ -372,7 +372,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Does my video upload anywhere?", "No. Everything happens in your browser."],
       ["What video formats work?", "The common ones your browser can play, like MP4 and WebM."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "image-converter",
@@ -387,7 +387,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Convert, then download each file or grab them together.",
     ],
     goodToKnow: [
-      "One action per image converted. Picking and previewing are free.",
+      "Every image converted is free. Picking and previewing are free.",
       "Supports the everyday web formats: PNG, JPG, and WebP.",
       "Batch friendly: line up several images and convert them the same way.",
     ],
@@ -400,7 +400,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Do my images upload anywhere?", "No. The conversion runs in your browser."],
       ["Is there a size limit?", "Only what your device can comfortably hold in memory. Ordinary photos and screenshots are no problem."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "image-cropper",
@@ -415,7 +415,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Crop it and download the result.",
     ],
     goodToKnow: [
-      "One action per crop.",
+      "Cropping is free.",
       "Aspect presets cover the common profile and post shapes, and freeform cropping is always there.",
       "You can set an exact crop area, not just eyeball it.",
     ],
@@ -428,7 +428,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Do my images upload anywhere?", "No, cropping is fully in your browser."],
       ["Which formats work?", "The everyday image formats your browser can open: PNG, JPG, WebP, and friends."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "pdf-merger",
@@ -443,7 +443,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Merge, then download the combined PDF.",
     ],
     goodToKnow: [
-      "One action per merge. Adding, reordering, and checking page counts are free.",
+      "Merging is free. Adding, reordering, and checking page counts are free.",
       "Pages are copied exactly as they are: no re-compression and no quality loss.",
       "Password-protected PDFs need to be unlocked first, then merged.",
     ],
@@ -456,7 +456,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Do my PDFs upload anywhere?", "No. The merge runs in your browser."],
       ["Is there a size limit?", "Only what your device can comfortably hold in memory. Ordinary contracts and reports are no problem."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "pdf-to-image",
@@ -471,7 +471,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Convert, then download each page on its own or grab them all in a zip.",
     ],
     goodToKnow: [
-      "One action per PDF converted, however many pages it has.",
+      "Converting a PDF is free, however many pages it has.",
       "JPG is accepted everywhere, PNG keeps text crispest, and WebP makes the smallest files.",
       "Three resolutions: Standard for forms and uploads, High for reading and printing, Extra high for small print.",
       "Password-protected PDFs need to be unlocked first, then converted.",
@@ -485,7 +485,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Do my PDFs upload anywhere?", "No, conversion is fully in your browser."],
       ["What do I get from a multi-page PDF?", "One image per page, in order and in the format you picked, plus a zip with all of them together."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "pdf-compressor",
@@ -500,7 +500,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Compress, check the before and after sizes, then download the smaller PDF.",
     ],
     goodToKnow: [
-      "One action per PDF, charged only when the compressed file is actually smaller. If it does not shrink, no action is used.",
+      "Free for every PDF. If the compressed file does not shrink, there is nothing to download.",
       "Pages are rebuilt as pictures, so text in the compressed copy is not selectable or searchable, and links and form fields do not carry over.",
       "Three levels: Smaller for strict size caps, Balanced for everyday sending, High quality for pages read closely or printed.",
       "Password-protected PDFs need to be unlocked first, then compressed.",
@@ -512,9 +512,9 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     faq: [
       ["Do my PDFs upload anywhere?", "No, compression is fully in your browser."],
-      ["What if my PDF does not get smaller?", "Bum Bum says so, there is nothing to download, and no action is charged. Some PDFs are already lean."],
+      ["What if my PDF does not get smaller?", "Bum Bum says so, there is nothing to download. Some PDFs are already lean."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "ghostwriter",
@@ -530,7 +530,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Pick the angle you like, tweak the words so they sound like you on a good day, and post.",
     ],
     goodToKnow: [
-      "One finished pack uses one action.",
+      "Finished packs are free.",
       "Your packs are saved in your account, so a good hook from Tuesday is still there on Friday.",
       "Talking works better than writing here. The tool is built for the ramble.",
     ],
@@ -543,7 +543,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["What do I get in a content pack?", "Three hooks testing different angles, a script that runs about 60 seconds spoken, and a caption ready to paste."],
       ["What happens to my audio?", "It is transcribed and discarded. Only the resulting pack is saved."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "sound-human",
@@ -559,7 +559,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Compare the reply with what the same prompt gave you before.",
     ],
     goodToKnow: [
-      "Sound Human is free and uses no actions.",
+      "Sound Human is free.",
       "Everything runs in your browser. Your prompt text is never sent anywhere.",
       "Add-ons work with any AI that follows written instructions.",
     ],
@@ -572,7 +572,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Will this beat an AI detector?", "That is the wrong target. Detectors are unreliable. These add-ons aim at writing a reader can get through comfortably."],
       ["Can I edit an add-on?", "Yes. Copy one, paste it into your notes, and change the wording to suit you. They are plain text."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "invoice-generator",
@@ -588,7 +588,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Download the PDF and email it to your client.",
     ],
     goodToKnow: [
-      "The Invoice Generator is free and uses no actions.",
+      "The Invoice Generator is free.",
       "Everything runs in your browser. Nothing you type is sent to Bum Bum.",
       "The discount comes off the subtotal first, then tax applies to what is left.",
     ],
@@ -598,10 +598,10 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Pair it with the Invoice Reminder: this tool makes the invoice, that one chases it when it goes unpaid.",
     ],
     faq: [
-      ["Do I need an account?", "No. The Invoice Generator is free, uses no actions, and needs no sign-up."],
+      ["Do I need an account?", "No. The Invoice Generator is free and needs no sign-up."],
       ["Can I add my logo?", "Not yet. Your business name sits large at the top. Logo support is first on the list if people ask for it."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "heic-to-jpg",
@@ -617,7 +617,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Download each photo on its own, all of them in one ZIP, or the whole set as one PDF.",
     ],
     goodToKnow: [
-      "This converter is free and uses no actions.",
+      "This converter is free.",
       "Everything runs in your browser. Your photos are never uploaded or sent anywhere.",
       "PNG keeps every pixel. JPG lets you trade a little quality for a smaller file, using the slider.",
     ],
@@ -630,7 +630,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Why do my iPhone photos end in .heic?", "HEIC is the format iPhones have saved in since iOS 11. It keeps files small on the phone, but many websites, forms, and Windows PCs still cannot open it."],
       ["Can I convert a batch?", "Yes. Drop in as many as you like, then take them one by one, in a ZIP, or as a single PDF."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "jpg-to-pdf",
@@ -646,7 +646,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Build the PDF and download it.",
     ],
     goodToKnow: [
-      "JPG to PDF is free and uses no actions.",
+      "JPG to PDF is free.",
       "Everything runs in your browser. Your images are never uploaded or sent anywhere.",
       "JPGs are embedded exactly as they are, with no second round of compression, and PNGs stay lossless.",
     ],
@@ -659,7 +659,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Which image types can I use?", "JPG and PNG. Photos, scans, and screenshots all work. iPhone HEIC photos go through HEIC to JPG first, since browsers cannot open HEIC on their own."],
       ["Can I change the page order?", "Yes. Every image in the list has up and down buttons, and the PDF follows the order you see."],
     ],
-    updated: "November 11, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "split-pdf",
@@ -675,7 +675,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Download the new PDF, or the ZIP of single pages.",
     ],
     goodToKnow: [
-      "Split PDF is free and uses no actions.",
+      "Split PDF is free.",
       "Everything runs in your browser. Your PDF is never uploaded or sent anywhere.",
       "Pages are copied exactly as they are. Nothing is re-rendered or compressed.",
     ],
@@ -688,7 +688,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["How do page ranges work?", "Each group you type becomes its own PDF. Typing 1-2, 3 gives you two files: one with pages 1 and 2, one with page 3. When there is more than one group, the files arrive together in a ZIP."],
       ["What does splitting every page give me?", "One PDF per page, gathered into a single ZIP download, named by page number."],
     ],
-    updated: "November 11, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "audiogram",
@@ -704,7 +704,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Preview, render, and download the MP4.",
     ],
     goodToKnow: [
-      "One finished video uses one action. Setting up and previewing are free.",
+      "Setting up, previewing, and the finished video are all free.",
       "Caption lines break where the singer pauses, and one section of the song shows at a time: a verse stays on screen as a block, with the line being sung lit up, and clears before the next section starts.",
       "After a quiet break of a few seconds, a 3, 2, 1 countdown leads back into the singing, and the caption size stays the same from the first line to the last.",
       "Caption styles and sizes cover the usual feed formats, square and vertical included.",
@@ -725,7 +725,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Why did my transcription fail?", "The caption upload needs a steady connection. Weak Wi-Fi can stall it or get it refused partway through. Move closer to the router, switch to a stronger connection, or run the upload over your phone's hotspot, then try again."],
       ["What video sizes can I make?", "The standard feed shapes, including square and vertical. Pick the one your platform rewards."],
     ],
-    updated: "November 16, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "purr-code",
@@ -741,7 +741,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Turn on tracking if you want to see how many times it gets scanned.",
     ],
     goodToKnow: [
-      "Previewing is free. Exporting a code uses one action.",
+      "Previewing and exporting a code are free.",
       "Codes do not expire. A printed code keeps working as long as the link does.",
       "Tracking is optional and shows scan counts, so a poster or a menu can prove it is working.",
     ],
@@ -754,7 +754,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Do the QR codes expire?", "No. The code points at your link for as long as the link lives."],
       ["Can I track how many times my code is scanned?", "Yes, turn tracking on when you make the code and its scan count shows in your account."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "sop-ify",
@@ -770,7 +770,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Skim it, fix anything only you would know, and hand it over.",
     ],
     goodToKnow: [
-      "One finished playbook uses one action.",
+      "Finished playbooks are free.",
       "You do not need to organize the input first. Sorting it out is the job you are delegating to the tool.",
       "You can talk instead of typing if the process lives in your head better than on a keyboard.",
     ],
@@ -783,7 +783,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["How detailed is the playbook?", "Step by step, written for someone with zero context, because that is who usually reads it at 9 AM on their first day."],
       ["Can I talk instead of typing?", "Yes. Dictate the whole mess and let the tool sort it out."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "hearsay",
@@ -799,7 +799,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Read the verdict, then go question by question to see the quotes and who got cited instead.",
     ],
     goodToKnow: [
-      "One finished scan uses one action.",
+      "Finished scans are free.",
       "Your scans are saved, so you can rerun the same questions next month and see whether you are gaining or losing ground.",
       "Results are a snapshot of real answers, not a simulation, and answers vary run to run the way real AI answers do.",
     ],
@@ -812,7 +812,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Which AI models does it ask?", "Three of the major ones your customers are most likely to be asking. The scan shows which model said what, per question."],
       ["How accurate are the results?", "They are real answers collected at scan time. AI answers shift over time, which is why rerunning the same scan monthly is the honest way to track it."],
     ],
-    updated: U,
+    updated: "November 17, 2026",
   },
   {
     key: "video-converter",
@@ -827,12 +827,12 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Convert, preview, and download.",
     ],
     goodToKnow: [
-      "One finished conversion uses one action.",
+      "Finished conversions are free.",
       "Animated GIFs are capped at 15 seconds, because a GIF longer than that is a video wearing a costume.",
       "Rendering happens on your device, so long videos convert at the speed of your computer.",
       "If your video is already in the format you pick, the converter repacks it without re-encoding, which is much faster.",
       "Videos taller than 720 pixels are converted at 720 tall. Big recordings are where browser conversion goes to die, and 720 is plenty for posting and sharing.",
-      "Changed your mind mid-conversion? Cancel it. A cancelled conversion uses no action.",
+      "Changed your mind mid-conversion? Cancel it. Cancelling costs nothing.",
       "Two trips have their own preset pages: MP4 to WebM for web embeds, and MP4 to GIF for animated GIFs. Same engine, output already set.",
     ],
     data: "Your video never leaves your device. Conversion happens entirely in your browser.",
@@ -844,7 +844,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Does my video get uploaded anywhere?", "No. The whole conversion happens in your browser."],
       ["Why is my GIF only 15 seconds?", "GIFs balloon in size fast. Fifteen seconds keeps the file shareable; for anything longer, convert to MP4 instead."],
     ],
-    updated: "November 16, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "mp4-to-webm",
@@ -859,7 +859,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Preview and download your WebM.",
     ],
     goodToKnow: [
-      "One finished conversion uses one action. A cancelled conversion uses no action.",
+      "Finished conversions are free, and a cancelled conversion costs nothing.",
       "The encoder writes VP9, the current WebM standard. If your video is already VP9 or VP8 with Opus or Vorbis sound, the converter repacks it without re-encoding, which is much faster and loses nothing.",
       "Videos taller than 720 pixels are converted at 720 tall, which is plenty for web embeds.",
       "WebM is not a guaranteed diet: a tightly compressed MP4 can come out about the same size or larger. The tool page publishes measured examples.",
@@ -874,7 +874,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Does WebM play in Safari?", "Safari on the Mac has played WebM since 14.1, and recent iPhones handle it too. Keep the MP4 as a fallback source for older holdouts."],
       ["Can I turn a WebM back into an MP4?", "Yes, in the Video Converter: drop the WebM in and pick MP4."],
     ],
-    updated: "November 16, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "mp4-to-gif",
@@ -889,7 +889,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Preview and download your GIF.",
     ],
     goodToKnow: [
-      "One finished conversion uses one action. A cancelled conversion uses no action.",
+      "Finished conversions are free, and a cancelled conversion costs nothing.",
       "GIFs are capped at the first 15 seconds, at 480 pixels wide and 12 frames per second, because GIF files get heavy fast.",
       "The converter builds a colour palette from your footage in two passes, which keeps gradients from banding. A GIF frame still holds at most 256 colours.",
       "Detail and motion cost more than duration: a calm clip runs about 1 MB per 5 seconds, detailed footage about 5 MB per 5 seconds.",
@@ -904,7 +904,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Why is my GIF only 15 seconds?", "GIFs balloon in size fast. Fifteen seconds keeps the file shareable; for anything longer, convert to MP4 instead."],
       ["Will my GIF have sound?", "No. GIF is a picture format that happens to move."],
     ],
-    updated: "November 16, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "video-mp3-overlay",
@@ -921,7 +921,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Render and download your mixed video.",
     ],
     goodToKnow: [
-      "One finished mix uses one action. Placing snippets and previewing the mix are free.",
+      "Placing snippets, previewing the mix, and the finished mix are all free.",
       "Snippets can repeat, overlap the original audio, and each source has its own volume.",
       "Nothing gets uploaded; the render happens in your browser.",
       "A video with no sound of its own still mixes fine. Your snippets play over silence where its track would be.",
@@ -935,7 +935,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Do my video and MP3 get uploaded anywhere?", "No. Everything happens in your browser."],
       ["Can I use the same part of the MP3 more than once?", "Yes. Snip it once, pin it as many times as the video needs."],
     ],
-    updated: "October 30, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "day-log",
@@ -953,12 +953,12 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Any time, open Look back and summarize your week or month into highlights.",
     ],
     goodToKnow: [
-      "One action per day filed. Re-filing the same day replaces the earlier version and costs no extra action.",
+      "Filing a day is free. Re-filing the same day replaces the earlier version, also free.",
       "Learnings can be jotted the moment they land, all day, free and as often as you like. They are appended to the filed day's learnings in your own words, and one jotted after filing still joins that day's record.",
       "Filed a day and spotted a mistake? Open it in Recent logs and edit any jot note, including the scorecard marks. Saving is free, and your Notion page updates to match. Delete this day removes a log entirely and archives its Notion page.",
       "Recap emails go out every morning, and only once you have filed a log. Miss a day and you get a single nudge; after that, no emails until you log again.",
       "Optional: connect Google Calendar from Advanced settings on the Day Log page, and your top list also lands as an all-day event on recap mornings. Disconnect any time; the emails keep coming either way.",
-      "Week and month summaries cost one action when freshly generated. Re-opening the same stretch of logs is free.",
+      "Week and month summaries are free, freshly generated or re-opened.",
       "Advanced settings can file each day as its own Notion page inside a page or database you pick, using your own Notion integration token. Bum Bum stays the source of truth; re-filing a day rewrites its Notion page.",
       "Day Log needs a free account: the scorecard only works if yesterday's list is filed under you.",
       "Transcription tries your browser's live transcription first. On browsers without it, your recording is transcribed by Whisper and then discarded. While that runs, the page shows Bum Bum finishing up your writing; your words land in the box when it is done.",
@@ -976,11 +976,11 @@ export const TOOL_DOCS: ToolDoc[] = [
       ["Can I capture a learning before I file?", "Yes. Jot it into Day Log as it happens, free and as often as you like. When you file that evening, jottings are appended to the day's learnings in your own words. Jot one after filing and it still joins the day's record."],
       ["What if I skip a day?", "Nothing breaks. The scorecard compares against your most recent filed day, whenever that was."],
       ["How does the scorecard work?", "When you file today, Bum Bum takes the tomorrow list from your most recent filed day and checks each item against what you said in today's log: done, partial, or not mentioned. It only ever uses your own words, and it never marks something done from the plan alone."],
-      ["Can I fix a day after filing it?", "Yes. Open the day in Recent logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version and does not cost another action."],
+      ["Can I fix a day after filing it?", "Yes. Open the day in Recent logs to edit any jot note, flip a scorecard mark, or delete the day entirely; editing and deleting are free. Filing again the same day also replaces the earlier version , free."],
       ["Can I type instead of talking?", "Yes. The one big box takes typing too, and you can mix talking and typing in the same log."],
       ["Can my top list go on my calendar?", "Yes. Connect Google Calendar in Advanced settings and, on the mornings your recap email goes out, your top list also lands as an all-day event. It is optional, and disconnecting stops the events, not the emails."],
     ],
-    updated: "November 11, 2026",
+    updated: "November 17, 2026",
   },
   {
     key: "email-signature-generator",
@@ -998,7 +998,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Or download the signature as an HTML file, or copy the raw HTML code for apps that ask for it.",
     ],
     goodToKnow: [
-      "Designing and previewing are free. The first copy or download in a visit uses one action; tweaking and copying again in the same visit is free.",
+      "Designing, previewing, copying, and downloading are all free, as many times in a visit as you like.",
       "Everything runs in your browser. Your details are never uploaded or stored, and the form remembers them on this device for your next visit.",
       "The photo is optional and needs a public link: email apps cannot carry image files inside a pasted signature, so the signature points at the image address instead.",
       "Social links are optional and render as small linked icons, hosted on Leave It To Bum Bum so they show up in every mail app.",
@@ -1011,11 +1011,11 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Set the signature up on a computer. The Gmail app on your phone uses the signature you saved on desktop.",
     ],
     faq: [
-      ["Do I need an account?", "No. Designing is free; the first copy or download in a visit uses one action."],
+      ["Do I need an account?", "No. Designing is free, and so are copying and downloading."],
       ["Why does the photo need a link?", "Email apps cannot carry image files inside a pasted signature. Your photo has to already live at a public web address, and the signature points at it."],
       ["Will it work in Gmail and Outlook?", "Yes. The signature is plain table-based HTML, and the copy button pastes it in formatted, ready to save."],
       ["Can I change it later?", "Any time. The form remembers your details on this device, so an update takes seconds."],
     ],
-    updated: "October 30, 2026",
+    updated: "November 17, 2026",
   },
 ];
