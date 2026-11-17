@@ -19,8 +19,8 @@ $next = '/join/?token=' . urlencode($token);
 <a class="button" href="/account/">Go to your account</a>
 <?php elseif (!$user): ?>
 <p class="eyebrow">Team invite</p><h1><?= htmlspecialchars($invite['owner_email']) ?> invited you to their Bum Bum team.</h1>
-<p class="lede">Sign in or create a free account to accept. Your work will draw from their shared action bucket.</p>
-<div class="grid"><section class="panel"><h2>Sign in</h2><form data-action="login"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Sign in</button><p class="error"></p></form></section><section class="panel"><h2>Create an account</h2><p>Joining a team is free. Your actions count against the team owner's plan.</p><form data-action="register"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Create free account</button><p class="error"></p></form></section></div>
+<p class="lede">Sign in or create a free account to accept. The tools are free for everyone, so there is nothing to draw from.</p>
+<div class="grid"><section class="panel"><h2>Sign in</h2><form data-action="login"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Sign in</button><p class="error"></p></form></section><section class="panel"><h2>Create an account</h2><p>Joining a team is free, and every tool is free with no limits.</p><form data-action="register"><label>Work email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" minlength="10" required><button>Create free account</button><p class="error"></p></form></section></div>
 <script>
 document.querySelectorAll('form').forEach(form=>form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button');button.disabled=true;const session=await fetch('/api/session.php').then(r=>r.json());const fields=Object.fromEntries(new FormData(form));const response=await fetch('/api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...fields,action:form.dataset.action,csrf:session.csrf})});const data=await response.json();if(response.ok){location.href=<?= json_encode($next) ?>}else{form.querySelector('.error').textContent=data.error;button.disabled=false}}));
 </script>
@@ -29,7 +29,7 @@ document.querySelectorAll('form').forEach(form=>form.addEventListener('submit',a
 <div class="grid"><section class="panel">
 <p><img src="/bum/cat-peeking.png" alt="Bum Bum peeking in" class="sticker" style="width:96px;vertical-align:middle;margin-right:10px">Here's the deal:</p>
 <ul>
-<li>Your completed actions draw from <b><?= htmlspecialchars($invite['owner_email']) ?></b>'s shared bucket (<?= htmlspecialchars(ucfirst($invite['owner_plan'])) ?> plan).</li>
+<li>You will work in <b><?= htmlspecialchars($invite['owner_email']) ?></b>'s shared workspace. The tools are free with no limits, for you and for them.</li>
 <li>You keep your own login. Only the owner can manage billing and seats.</li>
 <?php if ($hasPaid): ?><li><b>Heads up:</b> your own <?= htmlspecialchars(ucfirst($user['plan'])) ?> subscription will sit dormant while you're on the team. It keeps its billing schedule, and your own plan takes over again if you leave.</li><?php endif; ?>
 </ul>
