@@ -662,6 +662,37 @@ export const TOOL_DOCS: ToolDoc[] = [
     updated: "November 17, 2026",
   },
   {
+    key: "image-to-pdf",
+    name: "Image to PDF",
+    href: "/tools/image-to-pdf/",
+    icon: "/bum/icons/image-to-pdf.png",
+    summary:
+      "Image to PDF gathers JPG, PNG, WebP, GIF, and BMP images into a single PDF, one image per page, in the order you set. Pick a page size, fit to image or a uniform A4 or Letter, and download the finished file. It runs entirely in your browser.",
+    steps: [
+      "Drop your images into the converter, or click to pick them.",
+      "Put the images in order with the up and down buttons. The first image becomes page one.",
+      "Pick a page size: fit to image, A4, or Letter.",
+      "Build the PDF and download it.",
+    ],
+    goodToKnow: [
+      "Image to PDF is free.",
+      "Everything runs in your browser. Your images are never uploaded or sent anywhere.",
+      "JPGs are embedded exactly as they are, with no second round of compression, and PNGs stay lossless. WebP, GIF, and BMP images are decoded in your browser and rebuilt without squeezing them.",
+      "An animated GIF lands in the PDF as its first frame.",
+    ],
+    data: "Your images are read and assembled into a PDF on your device. Nothing is stored or sent to Bum Bum.",
+    tips: [
+      "Choose A4 or Letter when the PDF will be printed or attached to a form; wide images turn sideways so nothing gets cropped.",
+      "Working with JPG and PNG only? JPG to PDF does the same job for those two. iPhone photos go through HEIC to PDF or HEIC to JPG first.",
+      "Need the reverse trip later? PDF to Image turns a PDF back into pictures, page by page.",
+    ],
+    faq: [
+      ["Which image types can I use?", "JPG, PNG, WebP, GIF, and BMP. Photos, scans, screenshots, and images saved from websites all work. iPhone HEIC photos go through HEIC to JPG first, since browsers cannot open HEIC on their own."],
+      ["Can I change the page order?", "Yes. Every image in the list has up and down buttons, and the PDF follows the order you see."],
+    ],
+    updated: "November 18, 2026",
+  },
+  {
     key: "split-pdf",
     name: "Split PDF",
     href: "/tools/split-pdf/",

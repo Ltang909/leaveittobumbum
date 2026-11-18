@@ -361,6 +361,18 @@
       "mascot": "/bum/cat-curious.png"
     },
     {
+      "key": "image-to-pdf",
+      "name": "Image to PDF",
+      "tag": "Files",
+      "icon": "📄",
+      "iconImg": "/bum/icons/image-to-pdf.png",
+      "description": "Turn JPG, PNG, WebP, GIF, or BMP images into one PDF, in your order, right in your browser. Files stay on your device.",
+      "url": "/tools/image-to-pdf/",
+      "cardTitle": ["Image to", "PDF"],
+      "cta": "Make a PDF",
+      "mascot": "/bum/cat-curious.png"
+    },
+    {
       "key": "split-pdf",
       "name": "Split PDF",
       "tag": "Files",

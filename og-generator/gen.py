@@ -50,6 +50,7 @@ CARDS = {
     'heic-to-png': ("HEIC to PNG Converter", "Turn HEIC photos into PNGs in seconds."),
     'heic-to-pdf': ("HEIC to PDF Converter", "Turn HEIC photos into one tidy PDF."),
     'jpg-to-pdf': ("JPG to PDF Converter", "Turn your images into one tidy PDF."),
+    'image-to-pdf': ("Image to PDF Converter", "Turn your images into one tidy PDF."),
     'split-pdf': ("Split PDF", "Pull the pages you need out of any PDF."),
     'png-to-jpg': ("PNG to JPG Converter", "Turn PNGs into smaller JPGs in seconds."),
     'webp-to-png': ("WebP to PNG Converter", "Turn WebP images into PNGs in seconds."),
