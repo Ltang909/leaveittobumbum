@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/png-to-jpg/" },
@@ -65,22 +66,32 @@ export default function PngToJpg() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p>PNG is a wonderful format that produces enormous photos. A phone screenshot or camera image saved as PNG can be five to ten times the size of the same picture as a JPG, which is how you end up staring at an upload form's file size error or an email that refuses to send.</p>
-          <p>For photos, JPG is the fix: nearly the same picture, a fraction of the bytes. Here is how to convert PNG to JPG in your browser, and the two things worth knowing before you do.</p>
-          <h2>Why JPG wins for photos</h2>
-          <p>PNG stores every pixel perfectly, which is exactly right for text, logos, and diagrams, and wildly wasteful for a photo of your dog. JPG throws away detail the eye barely notices and keeps the file small. That is why every camera, marketplace, and listing site on earth prefers it.</p>
-          <p>A browser-based converter like the <a href="/tools/png-to-jpg/">PNG to JPG Converter</a> from Leave It to Bum Bum does the work on your own device, so the photo never gets uploaded to a stranger's server on the way through.</p>
-          <h2>Step 1: Drop the PNG in</h2>
+          <ToolCallout
+            variant="band"
+            name="PNG to JPG Converter"
+            href="/tools/png-to-jpg/"
+            heading="Just want your PNG as a JPG?"
+            blurb="PNG to JPG Converter converts your PNGs in your browser, in batches, with no upload. Free, with no limits."
+            cta="Open PNG to JPG Converter"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>Drop the PNG in</h3>
           <p>Open the <a href="/tools/png-to-jpg/">PNG to JPG Converter</a> and drop in your PNG. If you have a pile of them, drop the pile: they can all convert to JPG in one pass.</p>
-          <h2>Step 2: Pick JPG, and mind the quality slider</h2>
+
+          <h3>Pick JPG, and mind the quality slider</h3>
           <p>Choose JPG in the Convert to list. JPG output comes with a quality slider: higher quality means a bigger file that looks closer to the original, lower means smaller with softer edges. For photos you plan to share or upload, keep quality high; the size savings versus PNG are still dramatic. Text in screenshots is where low quality shows first, so screenshots you need to read deserve the top of the slider.</p>
-          <h2>Step 3: Convert and download</h2>
+
+          <h3>Convert and download</h3>
           <p>Convert and download the JPG. Compare the file size against the PNG for a small moment of satisfaction, then delete or archive the PNG if the big original was only taking up space.</p>
-          <h2>The one real warning: transparency flattens</h2>
-          <p>JPG has no transparency. If your PNG has transparent areas, a logo on a clear background, say, those areas get flattened onto a solid background in the JPG. For graphics that need to stay transparent, convert to <a href="/blog/png-to-webp/">WebP instead</a>: it keeps transparency and still shrinks the file. JPG is for photos; keep PNG or WebP for graphics with clear backgrounds.</p>
-          <h2>Convert a PNG now</h2>
-          <p>The <a href="/tools/png-to-jpg/">PNG to JPG Converter</a> runs in your browser and handles batches. Drop the PNG in, pick JPG, keep the quality up, done. Converting between other formats instead? The <a href="/tools/image-converter/">Image Converter</a> covers the rest.</p>
-          <h2>Frequently asked questions</h2>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>PNG to JPG Converter: free, with no limits, and no account needed.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>Does converting PNG to JPG lose quality?</h3>
           <p>A little, by design: JPG is a lossy format. At high quality settings the difference is invisible in photos. Crisp text and hard edges in screenshots soften the most, so for images you need to read, keep the quality slider at the top.</p>
           <h3>What happens to transparent parts of my PNG?</h3>

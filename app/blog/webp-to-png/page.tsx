@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/webp-to-png/" },
@@ -65,22 +66,32 @@ export default function WebpToPng() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p>You saved an image from a website and it arrived as a WebP. Your upload form, your older photo app, or your client's system took one look at it and said no. WebP is a fine format that a stubborn slice of the internet still refuses, and PNG is the format almost nothing refuses.</p>
-          <p>Converting WebP to PNG takes about a minute, and it does not need your file to visit anyone's server. Here is the whole thing.</p>
-          <h2>Why WebP files get stuck</h2>
-          <p>WebP was built for websites: small files, sharp images, happy page speeds. The trouble starts when the image leaves the web. Desktop apps that predate it, office upload forms, print services, and plenty of business software still expect PNG or JPG. The image is fine; the door is just the wrong shape.</p>
-          <p>PNG is the safe shape. It is lossless, it keeps transparency, and everything from a decade-old scanner app to a government form accepts it. Converting with a browser-based tool like the <a href="/tools/image-converter/">Image Converter</a> from Leave It to Bum Bum also means the file never leaves your device: the conversion runs on your own computer, not on a server that keeps a copy.</p>
-          <h2>Step 1: Drop the WebP file in</h2>
+          <ToolCallout
+            variant="band"
+            name="Image Converter"
+            href="/tools/image-converter/"
+            heading="Just want your WebP as a PNG?"
+            blurb="Image Converter turns WebP images into PNG in your browser, in batches, with no upload. Free, with no limits."
+            cta="Open Image Converter"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>Drop the WebP file in</h3>
           <p>Open the converter and drop your WebP image in, or pick it from your files. You can line up several images at once; batch converting a whole folder of saved WebPs the same way is exactly what it is for.</p>
-          <h2>Step 2: Pick PNG as the output</h2>
+
+          <h3>Pick PNG as the output</h3>
           <p>Choose PNG in the Convert to list. PNG is the preselected default, so if that is already showing, you are done with this step. There is no quality slider to worry about for PNG: the format is lossless, so the converted file keeps every pixel the WebP had.</p>
-          <h2>Step 3: Convert and download</h2>
+
+          <h3>Convert and download</h3>
           <p>Convert, then download the PNG. Spot-check it once: the image should look identical, and any transparent areas in the original should still be transparent. WebP and PNG both keep transparency, so nothing flattens or gains a background on the way through.</p>
-          <h2>One honest trade: the file gets bigger</h2>
-          <p>WebP's whole trick is being smaller than PNG at the same quality, so the PNG will usually be the larger file, sometimes much larger for photos. That is the price of universal acceptance. If the destination accepts JPG and the image is a photo with no transparency, <a href="/blog/webp-to-jpg/">WebP to JPG</a> gives you a smaller file instead.</p>
-          <h2>Convert a WebP now</h2>
-          <p>The <a href="/tools/image-converter/">Image Converter</a> runs in your browser, keeps your files on your device, and handles the whole batch at once. Drop the WebP in, pick PNG, done.</p>
-          <h2>Frequently asked questions</h2>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>Image Converter: free, with no limits, and no account needed.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>Does converting WebP to PNG lose quality?</h3>
           <p>No. PNG is a lossless format, and the WebP is decoded at full quality before being saved as PNG, so the converted image keeps everything the original had. The file size usually grows, because WebP compresses harder, but the picture does not change.</p>
           <h3>Does the PNG keep transparent areas?</h3>

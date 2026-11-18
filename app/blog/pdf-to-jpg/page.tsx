@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/pdf-to-jpg/" },
@@ -64,21 +65,32 @@ export default function PdfToJpg() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p>The PDF is finished, and the destination wants pictures of it. A government portal that only accepts image uploads. A marketplace that wants the spec sheet as photos. A client whose whole system is built around JPGs. It feels backwards, because it is, but converting the PDF's pages to JPGs takes about a minute.</p>
-          <p>Here is how to turn PDF pages into JPGs in your browser, with your files staying on your device.</p>
-          <h2>Why the browser part matters here</h2>
-          <p>PDFs that get converted for portals and clients tend to be the sensitive kind: applications, statements, signed documents. Most online converters upload the file to their server to do the work. A browser-based converter like <a href="/tools/pdf-to-image/">PDF to Image</a> from Leave It to Bum Bum renders the pages on your own device instead, so the document never leaves your computer.</p>
-          <h2>Step 1: Drop the PDF in</h2>
+          <ToolCallout
+            variant="band"
+            name="PDF to Image"
+            href="/tools/pdf-to-image/"
+            heading="Just want your PDF pages as JPGs?"
+            blurb="PDF to Image renders every page of your PDF as a JPG in your browser, with no upload. Free, with no limits."
+            cta="Open PDF to Image"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>Drop the PDF in</h3>
           <p>Open the tool and drop in your PDF. It works page by page through the whole document, however many pages that is. Password-protected PDFs need to be unlocked first: open yours in your usual PDF app, save an unprotected copy, and drop that in.</p>
-          <h2>Step 2: Pick JPG, a size, and a quality</h2>
+
+          <h3>Pick JPG, a size, and a quality</h3>
           <p>JPG is the preselected format. Then pick a render size: the standard size suits most uploads, while the larger sizes render pages at two or three times the resolution, which keeps small text crisp when the JPG will be zoomed or printed. Quality sits at 90 percent by default, the sweet spot between sharp pages and sane file sizes.</p>
-          <h2>Step 3: Convert and download</h2>
+
+          <h3>Convert and download</h3>
           <p>Convert, then download each page's JPG individually, or grab them all at once as a single ZIP bundle, which is the sane choice for a long document. Each page arrives as its own image, in page order.</p>
-          <h2>JPG or PNG for PDF pages?</h2>
-          <p>JPG is the accepted-everywhere default and makes the smallest files, which is what upload portals want. Pages that are mostly text and line art stay crisper as PNG, at a bigger file size. If the destination is fussy about readability, <a href="/blog/pdf-to-png/">PDF to PNG</a> is the sharper trip; if it is fussy about file size, JPG wins.</p>
-          <h2>Convert a PDF now</h2>
-          <p><a href="/tools/pdf-to-image/">PDF to Image</a> runs in your browser: drop the PDF in, pick JPG, and take the pages home as pictures. The whole PDF converts in one go, whether it has two pages or sixty-two.</p>
-          <h2>Frequently asked questions</h2>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>PDF to Image: free, with no limits, and no account needed.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>Does each page become its own JPG?</h3>
           <p>Yes. Every page of the PDF is rendered as a separate JPG image, in page order. Download them one at a time or all together in a ZIP bundle.</p>
           <h3>Will the text stay sharp?</h3>

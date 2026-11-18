@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/how-to-make-an-audiogram/" },
@@ -65,18 +66,38 @@ export default function HowToMakeAnAudiogram() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p>Social feeds do not play audio files. So the best thirty seconds of your episode, the moment that would win a new listener, sits in an MP3 nobody can post. An audiogram fixes that: it wraps the audio in a video with a moving waveform and captions, so the clip can travel where people actually are.</p>
-          <h2>Step 1: Pick a moment that works alone</h2>
+          <ToolCallout
+            variant="band"
+            name="Audiogram Maker"
+            href="/tools/audiogram/"
+            heading="Just want the audiogram made?"
+            blurb="Audiogram Maker turns your audio clip into a captioned video with a moving waveform, right in your browser. Free, with no limits."
+            cta="Open Audiogram Maker"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>Pick a moment that works alone</h3>
           <p>The clip has to make sense to someone who has never heard your show. Look for a strong claim, a funny exchange, a story with a turn, or a question answered completely. Thirty to sixty seconds is the sweet spot. If the moment needs two minutes of setup, it is the wrong moment.</p>
-          <h2>Step 2: Trim tightly</h2>
+
+          <h3>Trim tightly</h3>
           <p>Cut the dead air at both ends. The clip should start mid-energy, on the first interesting word, not on a greeting or a wind-up. Every second of throat-clearing costs you viewers, because the scroll decision happens almost immediately.</p>
-          <h2>Step 3: Add the waveform and captions</h2>
+
+          <h3>Add the waveform and captions</h3>
           <p>The waveform tells a scrolling thumb that this video has sound worth unmuting. Captions do the real work: most social video is watched silently, so the words on screen are the product. Keep the text large, highlight it as it is spoken if your tool supports it, and proofread the captions. Auto-captions mangle names, and a mangled name in a shareable clip is forever.</p>
-          <h2>Step 4: Export for the feed you are posting to</h2>
+
+          <h3>Export for the feed you are posting to</h3>
           <p>Square suits most feeds; vertical suits Reels, TikTok, and Shorts. Export in the shape of the destination rather than cropping later. The <a href="/tools/audiogram/">Audiogram Maker</a> from Leave It to Bum Bum handles the whole job in the browser: pick the clip, style the waveform and captions, and download a finished video, with no editing suite to learn.</p>
-          <h2>Step 5: Post it like a trailer, not an announcement</h2>
+
+          <h3>Post it like a trailer, not an announcement</h3>
           <p>The caption should sell the moment, not the episode number. Quote the strongest line, say what the listener will learn or feel, and link the full episode where the platform allows it. One sharp clip a week beats a graphic per episode that nobody clicks.</p>
-          <h2>Frequently asked questions</h2>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>Audiogram Maker: free, with no limits.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>What is an audiogram?</h3>
           <p>An audiogram is a short video made from an audio clip, usually a podcast moment, with a moving waveform and captions added. It exists because social platforms host video, not audio, so it is how podcast highlights get shared.</p>
           <h3>How long should an audiogram be?</h3>

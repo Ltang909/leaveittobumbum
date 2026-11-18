@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/how-to-add-an-email-signature/" },
@@ -106,9 +107,18 @@ export default function EmailSignatureGuide() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p><strong>Quick answer:</strong> Build the signature first so the formatting is done for you, copy it, then paste it into your mail app's signature settings and set it as the default. In Gmail that is Settings, See all settings, General, Signature, Create new. A free tool like <strong><a href="/tools/email-signature-generator/">Email Signature Maker</a></strong> builds the whole block in your browser, so the paste lands formatted and ready.</p>
-          <p>An email signature is the small block of contact details that sits at the bottom of every email you send. It looks like a tiny thing, but it is the most-seen piece of branding most businesses have. Here is how to add one properly, in the three mail apps people actually use.</p>
-          <h2>What should an email signature include?</h2>
+          <ToolCallout
+            variant="band"
+            name="Email Signature Maker"
+            href="/tools/email-signature-generator/"
+            heading="Just want the signature built for you?"
+            blurb="Email Signature Maker builds the formatted signature in your browser, ready to copy and paste into your mail app. Free, with no limits."
+            cta="Open Email Signature Maker"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>What should an email signature include?</h3>
           <p>Less than you think:</p>
           <ul>
             <li><strong>Your name,</strong> in bold, the biggest thing in the block.</li>
@@ -116,11 +126,12 @@ export default function EmailSignatureGuide() {
             <li><strong>One phone number</strong> and <strong>your website</strong>. Your email address is usually already in the From field, but including it does no harm.</li>
             <li><strong>Optional:</strong> a photo or logo, and links to your main social profiles.</li>
           </ul>
-          <p>Leave out the motivational quotes, the fax number, three different phone numbers, and the long legal disclaimer if you work for yourself. A signature that is longer than your average email works against you.</p>
-          <h2>Step 1: Build the signature</h2>
+
+          <h3>Build the signature</h3>
           <p>You can type a plain text signature straight into your mail app, and for a name-and-title sign-off that is enough. The moment you want bold text, a color, a photo, or social icons, you need formatted HTML, and building that by hand is nobody's idea of fun.</p>
           <p><a href="/tools/email-signature-generator/">Email Signature Maker</a> does it in the browser: fill in your details, pick one of four layouts and an accent color, and copy. Social links come out as small linked icons, and the <a href="/docs/tools/email-signature-generator/">docs page</a> covers every option. Copy the signature before you open your mail settings.</p>
-          <h2>Step 2: Add it in Gmail</h2>
+
+          <h3>Add it in Gmail</h3>
           <ol>
             <li>Open Gmail on a computer and click the gear icon, then <strong>See all settings</strong>.</li>
             <li>On the <strong>General</strong> tab, scroll down to <strong>Signature</strong> and click <strong>Create new</strong>. Give it a name.</li>
@@ -129,7 +140,8 @@ export default function EmailSignatureGuide() {
             <li>Scroll to the bottom and click <strong>Save Changes</strong>.</li>
           </ol>
           <p>Send yourself a test email to check it. Set it up on a computer first: the Gmail app uses this same signature unless you give the app a different mobile one.</p>
-          <h2>Step 2: Add it in Outlook</h2>
+
+          <h3>Add it in Outlook</h3>
           <ol>
             <li>In Outlook on the web, open <strong>Settings</strong>, then <strong>Mail</strong>, then <strong>Compose and reply</strong>.</li>
             <li>Click <strong>New signature</strong>, name it, and paste into the box.</li>
@@ -137,7 +149,8 @@ export default function EmailSignatureGuide() {
             <li>Click <strong>Save</strong>.</li>
           </ol>
           <p>On the Outlook desktop app the same idea lives under File, Options, Mail, Signatures on Windows, and Settings, Signatures on a Mac.</p>
-          <h2>Step 2: Add it in Apple Mail</h2>
+
+          <h3>Add it in Apple Mail</h3>
           <ol>
             <li>Open Mail and go to <strong>Settings</strong>, then <strong>Signatures</strong>.</li>
             <li>Select your account on the left, then click <strong>+</strong> to add a signature.</li>
@@ -145,16 +158,14 @@ export default function EmailSignatureGuide() {
             <li>If the fonts shift after pasting, untick <strong>Always match my default message font</strong>.</li>
           </ol>
           <p>You can also paste a signature on an iPhone under Settings, Mail, Signature, but the small screen makes a fiddly job of it. Desktop first is easier.</p>
-          <h2>When it goes wrong</h2>
-          <h3>Images do not show</h3>
-          <p>Signature images have to live at a public web address. Email apps cannot carry image files inside a pasted signature, so a photo pasted straight from your computer goes missing at the other end. Use an image link instead. Some inboxes also hide images until the reader taps to show them, which is normal and not something your signature can control.</p>
-          <h3>The signature shows on new emails but not replies</h3>
-          <p>Every mail app has separate defaults for new messages and for replies and forwards. Go back to the defaults setting and set both.</p>
-          <h3>The formatting breaks</h3>
-          <p>Copy from the generator, not from a word processor document, which drags in its own formatting. If your app asks for HTML directly, use the signature's downloaded HTML file instead of pasting.</p>
-          <h3>It looks fine on desktop and odd on a phone</h3>
-          <p>Keep the signature narrow and short, and avoid wide banners. Test by emailing your own phone before you send it to a client.</p>
-          <h2>Email signature questions</h2>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>Typing a plain text signature into your mail app: free.</li>
+          <li>Email Signature Maker: free, with no limits.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>How do I add an email signature in Gmail?</h3>
           <p>Open Gmail on a computer, click the gear icon, then See all settings. On the General tab, scroll to Signature, click Create new, paste your signature into the box, set it as the default under Signature defaults, and scroll down to Save Changes.</p>
           <h3>Can I add an email signature for free?</h3>
@@ -165,7 +176,6 @@ export default function EmailSignatureGuide() {
           <p>It is optional. A photo or logo helps people recognize you, which is worth it in client-facing work. If you do not have a hosted image link handy, a clean text signature with your name, title, and website does the job fine.</p>
           <h3>How long should an email signature be?</h3>
           <p>Three to five short lines plus a row of social links is plenty: name, title and company, one phone number, and your website. If your signature is longer than the emails you usually send, trim it.</p>
-          <p><strong><a href="/tools/email-signature-generator/">Make your signature</a></strong></p>
         </div>
       </section>
       <SiteFooter />

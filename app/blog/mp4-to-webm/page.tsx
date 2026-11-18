@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/mp4-to-webm/" },
@@ -65,22 +66,32 @@ export default function Mp4ToWebm() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p>Video is the heaviest thing most websites serve, and MP4 files carry a lot of that weight. WebM was built for the web the way WebP was built for images: the same clip, visibly the same quality, in a smaller file that starts playing sooner. If your site embeds video, hero loops, demos, explainers, converting to WebM is one of the easiest speed wins available.</p>
-          <p>Here is how to convert MP4 to WebM in your browser, and the one place MP4 still wins.</p>
-          <h2>What WebM buys you</h2>
-          <p>WebM's modern compression squeezes video harder than the MP4 default, so files commonly land noticeably smaller at the same visual quality. Smaller files mean faster starts, less buffering on mediocre connections, and cheaper bandwidth bills. Every current major browser plays WebM natively in web pages, which is the whole job it was designed for.</p>
-          <p>The conversion can happen on your own machine: the <a href="/tools/mp4-to-webm/">MP4 to WebM Converter</a> from Leave It to Bum Bum runs entirely in your browser, so your video is never uploaded to a server to be converted.</p>
-          <h2>Step 1: Drop the MP4 in</h2>
+          <ToolCallout
+            variant="band"
+            name="MP4 to WebM Converter"
+            href="/tools/mp4-to-webm/"
+            heading="Just want your MP4 as a WebM?"
+            blurb="MP4 to WebM Converter converts your video in your browser, with no upload. Free, with no limits."
+            cta="Open MP4 to WebM Converter"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>Drop the MP4 in</h3>
           <p>Open the converter and drop in your MP4. Files up to 100 MB are fine, and WebM, MOV, MKV, and AVI sources work too if the clip did not start life as an MP4.</p>
-          <h2>Step 2: Pick WebM as the format</h2>
+
+          <h3>Pick WebM as the format</h3>
           <p>Choose the WebM format card. One pleasant surprise: if a video is already in a WebM-friendly encoding, the converter repacks it without re-encoding, which is much faster than a full conversion.</p>
-          <h2>Step 3: Convert and download</h2>
+
+          <h3>Convert and download</h3>
           <p>Convert and download the WebM, then swap it into your page in place of the MP4. Compare the two file sizes side by side; on video, the savings tend to announce themselves.</p>
-          <h2>Where MP4 still wins</h2>
-          <p>Outside web pages, MP4 remains the plays-everywhere default: phones' gallery apps, desktop players, TVs, and older browsers and software are all safest with MP4, and some older Safari setups are the weak spot for WebM. Rule of thumb: video embedded on your own website goes WebM (keeping the MP4 as a fallback source in the same player is the belt-and-braces move); video you send to people stays MP4. Need the reverse trip later? The same converter turns WebM back into MP4.</p>
-          <h2>Convert an MP4 now</h2>
-          <p>The <a href="/tools/mp4-to-webm/">MP4 to WebM Converter</a> runs in your browser and keeps your files on your device. Drop the MP4 in, convert, download the WebM.</p>
-          <h2>Frequently asked questions</h2>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>MP4 to WebM Converter: free, with no limits, and no account needed.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>How much smaller is WebM than MP4?</h3>
           <p>It depends on the clip, but WebM commonly lands meaningfully smaller than an MP4 of the same video at similar visual quality, which is why it exists. Busy, detailed footage shows the biggest savings.</p>
           <h3>Does converting MP4 to WebM lose quality?</h3>
