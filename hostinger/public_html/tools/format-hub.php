@@ -138,6 +138,7 @@ $bbHubs = [
         ['/tools/pdf-to-png/', 'PDF to PNG Converter', 'Turn PDF pages into crisp PNG images, one per page.'],
       ]],
       ['Convert to PDF', [
+        ['/tools/image-to-pdf/', 'Image to PDF', 'Gather JPG, PNG, WebP, GIF, or BMP images into one tidy PDF, in your order.'],
         ['/tools/jpg-to-pdf/', 'JPG to PDF', 'Gather JPG and PNG images into one tidy PDF, in your order.'],
         ['/tools/heic-to-pdf/', 'HEIC to PDF Converter', 'Turn a set of iPhone HEIC photos into one tidy PDF.'],
       ]],

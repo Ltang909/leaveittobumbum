@@ -100,6 +100,7 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   "heic-to-jpg": "Drop the iPhone photos here to turn them into JPGs…",
   "invoice-generator": "Hit Do it! and the invoice maker opens, blank and ready…",
   "jpg-to-pdf": "Drop the images here to make one PDF…",
+  "image-to-pdf": "Drop the images here to make one PDF…",
   "split-pdf": "Drop the PDF here to pull pages out of it…",
   "png-to-jpg": "Drop the PNG here to turn it into a JPG…",
   "sound-human": "e.g. Paste the AI-sounding draft, get the add-ons that fix the voice…",
