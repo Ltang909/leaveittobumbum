@@ -29,20 +29,6 @@ export default function TranscribeIphoneVoiceMemosGuide() {
             cta="Open Voice Notes to Text"
           />
 
-          <h2>Methods</h2>
-
-          <h3>Transcribe a memo you already recorded</h3>
-          <p>Open the memo on your iPhone, play it out loud, and record it in <a href="/tools/notes/">Voice Notes to Text</a> as it plays. Your words come back as a transcript in your library, ready to copy or download. This is the route for the recordings already sitting in Voice Memos: client call notes, an idea on a walk, a list you meant to send someone.</p>
-
-          <h3>Record the note as text from the start</h3>
-          <p>If the note is still in your head, skip the memo app and record straight into Voice Notes to Text instead. The transcript exists from the start and saves to your library, and you can listen back in the browser or download the audio if you want to keep it. This suits new notes you have not recorded yet.</p>
-
-          <h2>Cost</h2>
-          <ul>
-          <li>Transcribe a memo you already recorded: free, for guests and free accounts alike, with no limits.</li>
-          <li>Record the note as text from the start: free, with no limits.</li>
-          </ul>
-
           <h2>What to do</h2>
 
           <h3>Transcribe a memo you already recorded</h3>
@@ -60,6 +46,12 @@ export default function TranscribeIphoneVoiceMemosGuide() {
           <li>Talk the note out. Short notes beat one long ramble: three tidy transcripts are faster to read later than one saga.</li>
           <li>Stop recording. The transcript saves to your library, and you can listen back in the browser or download the audio if you want to keep it.</li>
           </ol>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>Transcribe a memo you already recorded: free, for guests and free accounts alike, with no limits.</li>
+          <li>Record the note as text from the start: free, with no limits.</li>
+          </ul>
 
           <h2>FAQs</h2>
           <h3>Can I transcribe iPhone voice memos for free?</h3>
