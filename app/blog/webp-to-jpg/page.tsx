@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/webp-to-jpg/" },
@@ -65,22 +66,32 @@ export default function WebpToJpg() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p>Images saved from websites keep arriving as WebP, and the rest of the world keeps asking for JPG. Print shops want JPG. Marketplace and listing uploads want JPG. Half the office software ever written wants JPG. When the destination is that specific, converting is faster than arguing.</p>
-          <p>Here is how to convert WebP to JPG in your browser, with the one caveat that actually matters.</p>
-          <h2>Why JPG is the universal fallback</h2>
-          <p>JPG is older than most of the people uploading photos today, and that is its superpower: every device, app, form, and printer speaks it. WebP is better technology with patchier acceptance. Converting to JPG trades a little efficiency for a file that will simply work wherever it lands.</p>
-          <p>A browser-based tool like the <a href="/tools/image-converter/">Image Converter</a> from Leave It to Bum Bum does the conversion on your own device, so the image never gets uploaded to a server in between.</p>
-          <h2>Step 1: Drop the WebP in</h2>
+          <ToolCallout
+            variant="band"
+            name="Image Converter"
+            href="/tools/image-converter/"
+            heading="Just want your WebP as a JPG?"
+            blurb="Image Converter turns WebP images into JPG in your browser, in batches, with no upload. Free, with no limits."
+            cta="Open Image Converter"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>Drop the WebP in</h3>
           <p>Open the converter and drop in the WebP. If a browsing session left you with a folder of them, drop the folder's worth and convert the lot at once.</p>
-          <h2>Step 2: Pick JPG and set quality</h2>
+
+          <h3>Pick JPG and set quality</h3>
           <p>Choose JPG in the Convert to list, and keep the quality slider high: you are already changing formats to please a destination, so give it the good version. Photos destined for print deserve the top of the slider.</p>
-          <h2>Step 3: Convert and download</h2>
+
+          <h3>Convert and download</h3>
           <p>Convert and download the JPG, then upload it to the place that refused the WebP and enjoy the small ceremony of the form finally saying yes.</p>
-          <h2>The caveat: transparency does not survive</h2>
-          <p>If your WebP has a transparent background, JPG cannot keep it: transparent areas flatten onto a solid background. For images where the clear background is the whole point, convert to <a href="/blog/webp-to-png/">PNG instead</a>, which keeps transparency and is nearly as widely accepted. For photos, which is most WebP saves, JPG is exactly right.</p>
-          <h2>Convert a WebP now</h2>
-          <p>The <a href="/tools/image-converter/">Image Converter</a> runs in your browser and converts batches in one pass. Drop the WebP in, pick JPG, done.</p>
-          <h2>Frequently asked questions</h2>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>Image Converter: free, with no limits, and no account needed.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>Why do some sites and apps refuse WebP?</h3>
           <p>WebP is newer than JPG and PNG, and older software, office tools, and upload forms were built before it existed or never added support. JPG has been accepted everywhere for decades, which is why it is the safe conversion target.</p>
           <h3>Does converting WebP to JPG lose quality?</h3>

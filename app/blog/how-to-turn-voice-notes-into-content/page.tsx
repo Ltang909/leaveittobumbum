@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/how-to-turn-voice-notes-into-content/" },
@@ -65,12 +66,24 @@ export default function HowToTurnVoiceNotesIntoContent() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p>Talking runs at roughly three times typing speed, and it happens anywhere: walking, driving, between meetings. That is why so many solopreneurs have a phone full of voice notes and a content calendar full of nothing. The notes were never the problem. The gap between a rambling recording and a publishable post is.</p>
-          <h2>Step 1: Capture with one idea per note</h2>
+          <ToolCallout
+            variant="band"
+            name="Voice to Content"
+            href="/tools/ghostwriter/"
+            heading="Just want the draft written?"
+            blurb="Voice to Content shapes your spoken notes into a post, a newsletter section, or a script, in your phrasing. Free, with no limits."
+            cta="Open Voice to Content"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>Capture with one idea per note</h3>
           <p>When an idea lands, record it as its own note and say the point out loud first: this is about why clients ghost after a quote. One idea per note makes the pile sortable later. A ten-minute note with six ideas in it is six drafts buried in a swamp.</p>
-          <h2>Step 2: Transcribe, then read the transcript like an editor</h2>
+
+          <h3>Transcribe, then read the transcript like an editor</h3>
           <p>Transcription turns the recording into something you can scan, cut, and rearrange. Read it hunting for the structure that talking hides: the claim, the story that proves it, the line worth repeating. Most voice notes contain one of the three and gesture at the others. Mark what is missing before you draft.</p>
-          <h2>Step 3: Shape it into the format you are publishing</h2>
+
+          <h3>Shape it into the format you are publishing</h3>
           <ul>
             <li>A social post: one claim, one proof, one closing line</li>
             <li>A newsletter section: the story first, the lesson after</li>
@@ -78,11 +91,20 @@ export default function HowToTurnVoiceNotesIntoContent() {
             <li>A blog paragraph: the idea, expanded with the example you mentioned</li>
           </ul>
           <p>This shaping step is where voice notes usually die, because it is a blank-page problem wearing a transcript costume. <a href="/tools/ghostwriter/">Voice to Content</a> from Leave It to Bum Bum is built for this step: it takes your spoken notes and drafts them into the format you asked for, in your phrasing, so you edit a draft instead of wrestling a transcript.</p>
-          <h2>Step 4: Edit for voice, out loud</h2>
+
+          <h3>Edit for voice, out loud</h3>
           <p>Read the draft aloud. Anything you stumble on, your reader will stumble on too. Cut sentences you would never say, restore any phrase from the original note that sounded like you, and check that the opening line still carries the idea you recorded the note for.</p>
-          <h2>Step 5: Keep the leftovers</h2>
+
+          <h3>Keep the leftovers</h3>
           <p>Every shaped note leaves scraps: the second example, the tangent, the line that did not fit. Save them with the original recordings. Next week's content problem is often solved by last week's leftovers, and a searchable pile of your own thinking compounds the longer you keep it.</p>
-          <h2>Frequently asked questions</h2>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>Shaping the drafts yourself: free.</li>
+          <li>Voice to Content: free, with no limits.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>What is the difference between transcription and voice to content?</h3>
           <p>Transcription gives you your exact words as text, including the rambles. Voice to content goes further: it shapes those words into a finished format, a post, a newsletter section, or a script, so you start from a draft instead of a transcript.</p>
           <h3>How long should a voice note for one post be?</h3>

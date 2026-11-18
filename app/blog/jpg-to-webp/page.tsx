@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/jpg-to-webp/" },
@@ -65,22 +66,32 @@ export default function JpgToWebp() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p>Images are usually the heaviest thing on a web page, and JPGs are usually most of the images. WebP was built to fix exactly that: the same picture, visibly the same quality, in a notably smaller file. Faster pages, happier visitors, better search rankings. Converting your JPGs is one of the cheapest speed wins a website has.</p>
-          <p>Here is how to convert JPG to WebP in your browser, plus the honest limits of the format so you do not convert the wrong files.</p>
-          <h2>What WebP actually buys you</h2>
-          <p>WebP compresses photos harder than JPG at the same visual quality, so page images commonly land a quarter to a third smaller. On an image-heavy page, a product gallery or a portfolio, that is the difference between a page that feels instant and one that assembles itself while your visitor watches.</p>
-          <p>The conversion itself can happen right on your device with a browser-based tool like the <a href="/tools/image-converter/">Image Converter</a> from Leave It to Bum Bum: no uploads, no server queue, and the originals stay exactly where they were.</p>
-          <h2>Step 1: Drop the JPG in</h2>
+          <ToolCallout
+            variant="band"
+            name="Image Converter"
+            href="/tools/image-converter/"
+            heading="Just want your JPG as a WebP?"
+            blurb="Image Converter turns JPGs into WebP in your browser, in batches, with no upload. Free, with no limits."
+            cta="Open Image Converter"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>Drop the JPG in</h3>
           <p>Open the converter and drop in the JPG. Website work usually means a batch: drop the whole set of page images and convert them all the same way in one pass.</p>
-          <h2>Step 2: Pick WebP and set quality</h2>
+
+          <h3>Pick WebP and set quality</h3>
           <p>Choose WebP in the Convert to list. WebP output has a quality slider; for web photos, the upper-middle of the slider is the sweet spot where files shrink hard and eyes cannot tell the difference. Push it lower only for thumbnails.</p>
-          <h2>Step 3: Convert, download, and swap the files</h2>
-          <p>Convert and download the WebPs, then swap them into your page in place of the JPGs. Keep the original JPGs in a folder somewhere: WebP is a one-way door for a few uses, covered next.</p>
-          <h2>When not to convert</h2>
-          <p>WebP is a web format. Email attachments, print jobs, office documents, and older software can still refuse it, and social platforms are inconsistent about accepting uploads. Rule of thumb: images that live on web pages become WebP; images you send to people and other software stay JPG. And if a WebP ever lands on you and will not open, the reverse trip is easy: <a href="/blog/webp-to-png/">WebP to PNG</a> fixes it in a minute.</p>
-          <h2>Convert a JPG now</h2>
-          <p>The <a href="/tools/image-converter/">Image Converter</a> runs in your browser and converts batches at once. Drop the JPGs in, pick WebP, download the lighter set.</p>
-          <h2>Frequently asked questions</h2>
+
+          <h3>Convert, download, and swap the files</h3>
+          <p>Convert and download the WebPs, then swap them into your page in place of the JPGs. Keep the original JPGs in a folder somewhere as the untouched masters.</p>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>Image Converter: free, with no limits, and no account needed.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>How much smaller is WebP than JPG?</h3>
           <p>At the same visual quality, WebP photos typically come out about a quarter to a third smaller than JPG. Exact numbers depend on the image; busy detailed photos save the most.</p>
           <h3>Does converting JPG to WebP lose quality?</h3>

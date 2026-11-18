@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "../../components/chrome";
+import ToolCallout from "../../components/tool-callout";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/blog/how-to-trim-a-video-online/" },
@@ -65,8 +66,18 @@ export default function HowToTrimAVideoOnline() {
       </section>
       <section className="shell">
         <div className="prose blog-wide">
-          <p>Open any full editing program and you face a timeline, tracks, effects, and a tutorial's worth of interface, all to do the one thing you actually came for: cut a video down. Trimming is the most common video edit there is, and it needs almost none of that machinery.</p>
-          <h2>Step 1: Know what you are cutting and why</h2>
+          <ToolCallout
+            variant="band"
+            name="Video Trimmer"
+            href="/tools/video-trimmer/"
+            heading="Just want the clip trimmed?"
+            blurb="Video Trimmer cuts your video in the browser. Set the start and end points and download the clip. Free, with no limits."
+            cta="Open Video Trimmer"
+          />
+
+          <h2>What to do</h2>
+
+          <h3>Know what you are cutting and why</h3>
           <ul>
             <li>The wind-up: greetings, setup, and dead air before the point</li>
             <li>The wind-down: goodbyes and trailing seconds after it</li>
@@ -74,15 +85,22 @@ export default function HowToTrimAVideoOnline() {
             <li>The long take: a webinar or demo that only needs its best two minutes</li>
           </ul>
           <p>Deciding which job you are doing before you open the file keeps you from fiddling. Each one has a natural start and end point; find those first.</p>
-          <h2>Step 2: Set the start and end points generously, then tighten</h2>
+
+          <h3>Set the start and end points generously, then tighten</h3>
           <p>Pick the rough window first, a few seconds wider than the final clip on both sides, then nudge each end while previewing. Cut on completed words, not between syllables, and leave a small breath at the start rather than clipping the first sound. Your ears will find the right frame faster than your eyes will.</p>
-          <h2>Step 3: Trim in the browser</h2>
+
+          <h3>Trim in the browser</h3>
           <p>For a straight trim, a browser tool is the whole job. The <a href="/tools/video-trimmer/">Video Trimmer</a> from Leave It to Bum Bum runs in your browser: open the video, set the start and end, and download the cut clip. Nothing to install, no project file, and no watermark on the result. If the trimmed clip then needs to change format for wherever it is going, the <a href="/tools/video-converter/">Video Converter</a> handles that as the follow-up step.</p>
-          <h2>Step 4: Check the joins before you share</h2>
+
+          <h3>Check the joins before you share</h3>
           <p>Watch the first three seconds and the last three. Most bad trims fail at the edges: a clipped first word, a sentence that ends in the middle, a freeze frame at the tail. If you cut a middle section out, watch the join once at full speed; a tiny jump is fine, a chopped word is not.</p>
-          <h2>When you do need a real editor</h2>
-          <p>Trimming is all you need until the job involves layers: captions burned in, music under speech, several clips arranged, effects, or colour work. At that point an editor like CapCut or Descript earns its keep. The mistake is using one for everything, including the ninety percent of edits that are just a beginning and an end in the wrong place.</p>
-          <h2>Frequently asked questions</h2>
+
+          <h2>Cost</h2>
+          <ul>
+          <li>Video Trimmer: free, with no limits.</li>
+          </ul>
+
+          <h2>FAQs</h2>
           <h3>Does trimming a video reduce its quality?</h3>
           <p>A simple trim should keep the original quality, because you are cutting footage, not changing it. Quality drops when a tool re-encodes at lower settings, so if the result looks softer than the source, try a trimmer that preserves the original file.</p>
           <h3>Can I trim a video without installing software?</h3>
