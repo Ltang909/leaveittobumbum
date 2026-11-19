@@ -1,8 +1,8 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Free Business Card Maker | Design a Card and Download a Print-Ready PDF | Leave It to Bum Bum</title>
-<meta name="description" content="Free business card maker that runs in your browser. Type your details, add a logo, pick a template and a color, and download a print-ready PDF or PNG at 300 DPI. No sign-up, no watermark, and your details never leave your device.">
+<meta name="description" content="Free business card maker that runs in your browser. Type your details, add a logo, pick a template and a color, and design the back too: a logo and tagline, a QR code, or your name in big type. Download a print-ready PDF or PNG at 300 DPI. No sign-up, no watermark, and your details never leave your device.">
 <meta property="og:title" content="Free Business Card Maker | Design a Card and Download a Print-Ready PDF | Leave It to Bum Bum">
-<meta property="og:description" content="Free business card maker that runs in your browser. Type your details, pick a template and a color, and download a print-ready PDF or PNG at 300 DPI. No sign-up, and your details never leave your device.">
+<meta property="og:description" content="Free business card maker that runs in your browser. Type your details, pick a template and a color, design the back, and download a print-ready PDF or PNG at 300 DPI. No sign-up, and your details never leave your device.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/business-card-maker/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/business-card-maker.jpg">
@@ -31,6 +31,7 @@
     { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. The maker is free and needs no sign-up. Type your details and download the card." } },
     { "@type": "Question", "name": "Do my details upload anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. The card is drawn right in your browser, on your device. Your details and your logo are never sent to Bum Bum or anyone else." } },
     { "@type": "Question", "name": "What size are the cards?", "acceptedAnswer": { "@type": "Answer", "text": "Standard business card size, 3.5 by 2 inches. The PDF page is exactly that size and the artwork renders at 300 DPI, 1050 by 600 pixels, the sharpness print shops ask for. The PNG is the same 1050 by 600 artwork." } },
+    { "@type": "Question", "name": "Can I design the back of the card?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Switch to the Back side to add your logo with a tagline, a QR code that points at your site, or your business name in big type. When a back is designed, the PDF downloads as two pages, front then back, each exactly 3.5 by 2 inches. You can leave the back blank instead, and then the PDF stays one page." } },
     { "@type": "Question", "name": "Can I add my logo?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Pick any image file and it is placed on the card. The file is read on your device and never uploaded. Square or wide logos both work; the maker fits them into the template's logo spot." } },
     { "@type": "Question", "name": "What if a printer asks for bleed?", "acceptedAnswer": { "@type": "Answer", "text": "These cards are drawn at exact trim size with no bleed area. Most online printers accept that. If yours insists on bleed, a white-background template hides the trim line best." } },
     { "@type": "Question", "name": "What does it cost?", "acceptedAnswer": { "@type": "Answer", "text": "Nothing. Designing and downloading are free, as many times as you like, and downloads carry no watermark." } }
@@ -39,7 +40,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Free Business Card Maker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Business Card Maker","item":"https://leaveittobumbum.com/tools/business-card-maker/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use the Business Card Maker","description":"Design a standard business card in your browser and download a print-ready PDF or PNG.","step":[{"@type":"HowToStep","position":1,"name":"Type your name, title, business, and contact details."},{"@type":"HowToStep","position":2,"name":"Add your logo if you have one. It is read on your device only."},{"@type":"HowToStep","position":3,"name":"Pick a template and an accent color. The preview updates as you type."},{"@type":"HowToStep","position":4,"name":"Download the print-ready PDF for a print shop, or the PNG for sharing online."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use the Business Card Maker","description":"Design a standard business card in your browser and download a print-ready PDF or PNG.","step":[{"@type":"HowToStep","position":1,"name":"Type your name, title, business, and contact details."},{"@type":"HowToStep","position":2,"name":"Add your logo if you have one. It is read on your device only."},{"@type":"HowToStep","position":3,"name":"Pick a template and an accent color. The preview updates as you type."},{"@type":"HowToStep","position":4,"name":"Switch to the Back side to add a logo and tagline, a QR code, or your business name in big type, or leave the back blank."},{"@type":"HowToStep","position":5,"name":"Download the print-ready PDF for a print shop, or the PNGs for sharing online."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .bc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;margin-top:20px}
 .bc-card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:16px}
@@ -66,16 +67,20 @@ input[type=color].pick{width:36px;height:36px;border:2px solid var(--ink);border
 .shell .button{box-shadow:0 2px 0 #2f2a22;font-weight:700}
 .shell .button:active{box-shadow:none;transform:translateY(2px)}
 .hint{font-size:13px;opacity:.7;margin:10px 0 0}
+.bb-hide{display:none!important}
 .hc-status{font-size:13px;font-weight:700;margin-top:10px;min-height:18px}
 .hc-status.error{color:#b3261e}
 section.panel{border:1px solid #e2d7bf;box-shadow:0 2px 10px rgba(90,72,38,.08)}
 details{border-top:1px solid var(--line);padding:10px 0}details:last-child{border-bottom:1px solid var(--line)}summary{font-weight:800;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:"+ ";color:var(--accent,#b3541e)}details[open] summary::before{content:"- "}
 @media(max-width:900px){.bc-grid{grid-template-columns:1fr}.bc-preview-wrap{position:static}}
 </style></head>
-<body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Business Card Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/business-card-maker.png" alt="Business Card Maker"><div><h1>Free Business Card Maker</h1><p class="lede bb-desc">Design a sharp business card in your browser and download a print-ready PDF. Free.</p></div></div>
+<body><?php $showMeter = true; require dirname(__DIR__, 2) . '/includes/site-header.php'; ?><main class="shell"><?php $crumbTrail=[["label"=>"Toolbox","url"=>"/tools/"],["label"=>"Business Card Maker"]]; require dirname(__DIR__,2)."/includes/breadcrumbs.php"; ?><p class="eyebrow">Bum Bum's toolbox</p><div class="tool-head"><img class="tool-mascot-page" src="/bum/icons/business-card-maker.png" alt="Business Card Maker"><div><h1>Free Business Card Maker</h1><p class="lede bb-desc">Design a sharp business card, front and back, in your browser and download a print-ready PDF. Free.</p></div></div>
 <div class="bc-grid">
 <form class="bc-card" id="bcForm" autocomplete="off">
 <h2>Your details</h2>
+<p class="grp">Card side</p>
+<div class="seg" role="group" aria-label="Card side"><button type="button" data-side="front" class="on">Front</button><button type="button" data-side="back">Back</button></div>
+<div id="sideFront">
 <p class="grp">On the card</p>
 <div class="fld"><label for="fName">Full name</label><input id="fName" type="text" placeholder="Jane Appleseed" maxlength="60"></div>
 <div class="fld"><label for="fTitle">Job title</label><input id="fTitle" type="text" placeholder="Founder and Dog Walker" maxlength="60"></div>
@@ -85,24 +90,37 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="fld"><label for="fEmail">Email</label><input id="fEmail" type="email" placeholder="jane@appleseed.co" maxlength="60"></div>
 <div class="fld"><label for="fWebsite">Website</label><input id="fWebsite" type="text" placeholder="appleseed.co" maxlength="60"></div>
 <div class="fld"><label for="fLogo">Logo (optional)</label><input id="fLogo" type="file" accept="image/*"><p class="note">Read on your device only. Nothing uploads. Square or wide logos both fit.</p></div>
+</div>
+<div id="sideBack" class="bb-hide">
+<p class="grp">Back side</p>
+<div class="seg" role="group" aria-label="Back side design"><button type="button" data-backblank="design" class="on">Design a back</button><button type="button" data-backblank="blank">Leave it blank</button></div>
+<div id="backDesign">
+<p class="grp">Back layout</p>
+<div class="seg" role="group" aria-label="Back layout"><button type="button" data-backlayout="logo" class="on">Logo &amp; tagline</button><button type="button" data-backlayout="qr">QR code</button><button type="button" data-backlayout="bigname">Big name</button></div>
+<div class="fld" id="fldTagline" style="margin-top:14px"><label for="fTagline">Tagline</label><input id="fTagline" type="text" placeholder="Good work, done properly." maxlength="80"></div>
+<div class="fld bb-hide" id="fldQr"><label for="fQrLink">QR code link</label><input id="fQrLink" type="text" placeholder="yourbusiness.com" maxlength="300"><p class="note">The code points here. It starts filled in with your website; change it if the code should land somewhere else.</p></div>
+<p class="note">The back wears the same template and accent color as the front, so the two sides match.</p>
+</div>
+</div>
 <p class="grp">Template</p>
 <div class="seg" role="group" aria-label="Card template"><button type="button" data-tpl="classic" class="on">Classic</button><button type="button" data-tpl="bold">Bold</button><button type="button" data-tpl="sidebar">Sidebar</button><button type="button" data-tpl="centered">Centered</button><button type="button" data-tpl="minimal">Minimal</button><button type="button" data-tpl="bumbum">Bum Bum</button></div>
 <p class="grp">Accent color</p>
 <div class="color-row"><button type="button" class="swatch on" data-color="#b3541e" style="background:#b3541e" aria-label="Rust"></button><button type="button" class="swatch" data-color="#2f6fed" style="background:#2f6fed" aria-label="Blue"></button><button type="button" class="swatch" data-color="#2f9e5f" style="background:#2f9e5f" aria-label="Green"></button><button type="button" class="swatch" data-color="#8e4ec6" style="background:#8e4ec6" aria-label="Purple"></button><button type="button" class="swatch" data-color="#1a1a1a" style="background:#1a1a1a" aria-label="Black"></button><input type="color" class="pick" id="customColor" value="#b3541e" aria-label="Custom color"></div>
 </form>
 <div class="bc-preview-wrap">
-<h2 style="margin:0 0 12px;font-size:18px">Preview</h2>
+<h2 style="margin:0 0 12px;font-size:18px">Preview <span id="previewSide" style="opacity:.55;font-size:14px">front</span></h2>
 <div class="bc-preview"><canvas id="cardCanvas" width="1050" height="600" aria-label="Your business card preview"></canvas></div>
-<div class="export-row"><button type="button" class="button" id="pdfBtn">Download print-ready PDF</button><button type="button" class="button secondary" id="pngBtn">Download PNG</button></div>
+<div class="export-row"><button type="button" class="button" id="pdfBtn">Download print-ready PDF</button><button type="button" class="button secondary" id="pngBtn">Download front PNG</button><button type="button" class="button secondary" id="backPngBtn">Download back PNG</button></div>
 <p class="hc-status" id="statusLine" role="status"></p>
-<p class="hint">The PDF page is exactly 3.5 by 2 inches and the artwork renders at 300 DPI. Blank fields show as soft gray sample text in the preview, so fill in a field to replace its sample. Your details and logo are drawn on your device. Nothing is uploaded, stored, or sent to Bum Bum.</p>
+<p class="hint">Each PDF page is exactly 3.5 by 2 inches and the artwork renders at 300 DPI. Design a back and the PDF downloads as two pages, front then back; leave the back blank and it stays one page. Blank fields show as soft gray sample text in the preview, so fill in a field to replace its sample. Your details and logo are drawn on your device. Nothing is uploaded, stored, or sent to Bum Bum.</p>
 </div>
 </div>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2>Questions, answered</h2>
 <details><summary>Do I need an account?</summary><p>No. The maker is free and needs no sign-up. Type your details and download the card.</p></details>
 <details><summary>Do my details upload anywhere?</summary><p>No. The card is drawn right in your browser, on your device. Your details and your logo are never sent to Bum Bum or anyone else. The form remembers your text entries on this device for your next visit; your logo file is never kept.</p></details>
-<details><summary>What size are the cards?</summary><p>Standard business card size, 3.5 by 2 inches. The PDF page is exactly that size and the artwork renders at 300 DPI, 1050 by 600 pixels, the sharpness print shops ask for. The PNG is the same 1050 by 600 artwork.</p></details>
+<details><summary>What size are the cards?</summary><p>Standard business card size, 3.5 by 2 inches. The PDF page is exactly that size and the artwork renders at 300 DPI, 1050 by 600 pixels, the sharpness print shops ask for. The PNGs are the same 1050 by 600 artwork. Design a back and the PDF comes out as two pages, one per side.</p></details>
+<details><summary>Can I design the back of the card?</summary><p>Yes. Use the Front and Back switch in the editor to design the back: your logo with a tagline under it, a QR code that points at your site, or your business name in big type. The back picks up the front's template and accent color on its own. When a back is designed, the PDF downloads as two pages, front then back, and you can grab a PNG of each side. Leave the back blank instead and the PDF stays one page.</p></details>
 <details><summary>Can I add my logo?</summary><p>Yes. Pick any image file and it is placed on the card. The file is read on your device and never uploaded. Square or wide logos both work; the maker fits them into the template's logo spot.</p></details>
 <details><summary>What if a printer asks for bleed?</summary><p>These cards are drawn at exact trim size with no bleed area. Most online printers accept that. If yours insists on bleed, a white-background template hides the trim line best.</p></details>
 <details><summary>What does it cost?</summary><p>Nothing. Designing and downloading are free, as many times as you like, and downloads carry no watermark.</p></details>
@@ -111,11 +129,12 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2>Business cards, the short guide</h2>
 <p>A good card does one job: it hands a new contact your name, what you do, and one easy way to reach you, in a form that survives a wallet, a pocket, and a desk drawer. This maker keeps that job small. Six templates, one accent color, your details, done.</p>
 <p>What to put on it: your name, your title or trade in plain words, your business name, one phone number, one email, one website. That is the whole list. A card people can read at a glance gets kept; a crowded one gets recycled. Leave a field blank and it simply stays off the card.</p>
-<p>Printing: send the PDF to the print shop. The page is exactly 3.5 by 2 inches at 300 DPI, the size and sharpness printers ask for. Keep the PNG on your phone too; texting your card to a new contact beats spelling your email out loud. Match the accent color to your <a href="/tools/email-signature-generator/">email signature</a> and your <a href="/tools/invoice-generator/">invoices</a>, and everything you hand out looks like one business. A <a href="/tools/purr-code/">QR code</a> pointing at your site makes a fine back of card later.</p>
+<p>Printing: send the PDF to the print shop. The page is exactly 3.5 by 2 inches at 300 DPI, the size and sharpness printers ask for. Keep the PNG on your phone too; texting your card to a new contact beats spelling your email out loud. Match the accent color to your <a href="/tools/email-signature-generator/">email signature</a> and your <a href="/tools/invoice-generator/">invoices</a>, and everything you hand out looks like one business. For the back, give it one job: your logo with a tagline under it, your business name in big type, or a QR code that sends people to your site. One clear back beats a busy one.</p>
 </section>
 <?php $bbTool = 'business-card-maker'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
 </main><?php require dirname(__DIR__, 2) . '/includes/site-footer.php'; ?>
 <script src="/tools/pdf-merger/vendor/pdf-lib.min.js"></script>
+<script src="/tools/purr-code/qrcode.min.js"></script>
 <script>
 (function(){
 "use strict";
@@ -124,8 +143,9 @@ var W=1050,H=600,PAD=70;
 var SANS="'Nunito Sans',Helvetica,Arial,sans-serif";
 var SERIF="Fraunces,Georgia,serif";
 var canvas=$("cardCanvas"),ctx=canvas.getContext("2d");
-var state={tpl:"classic",color:"#b3541e",logo:null};
+var state={tpl:"classic",color:"#b3541e",logo:null,side:"front",backLayout:"logo",backBlank:false,qrDirty:false};
 var FIELDS=["fName","fTitle","fBusiness","fPhone","fEmail","fWebsite"];
+var BACKFIELDS=["fTagline","fQrLink"];
 var SAMPLE={fName:"Your Name",fTitle:"Your Title",fBusiness:"Your Business",fPhone:"416-555-0134",fEmail:"you@yourbusiness.com",fWebsite:"yourbusiness.com"};
 
 function val(id){return ($(id).value||"").trim();}
@@ -347,25 +367,181 @@ bumbum:function(d,ph,ac){
   });
 }
 };
+function backTheme(ac){
+  if(state.tpl==="bold")return{bg:ac,fg:"#ffffff",sub:"#ffffff",subPh:0.55};
+  if(state.tpl==="bumbum")return{bg:"#fff6e9",fg:"#3a2a1c",sub:"#8a6d4f",subPh:0.35};
+  if(state.tpl==="minimal")return{bg:"#fdfcf9",fg:"#14171c",sub:"#6b7280",subPh:0.35};
+  return{bg:"#ffffff",fg:"#20242a",sub:"#5a6068",subPh:0.35};
+}
+function inkA(color,alpha){ctx.fillStyle=color;ctx.globalAlpha=alpha;}
+function qrLinkRaw(){
+  var q=val("fQrLink");
+  return q||val("fWebsite");
+}
+function qrPayload(){
+  var p=qrLinkRaw()||SAMPLE.fWebsite;
+  if(!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(p))p="https://"+p.replace(/^\/+/,"");
+  return p;
+}
+function drawQR(x,y,size,fg){
+  var qr;
+  try{qr=qrcode(0,"M");qr.addData(qrPayload());qr.make();}
+  catch(e){return false;}
+  var n=qr.getModuleCount(),quiet=4,total=n+quiet*2;
+  var m=Math.floor(size/total);
+  if(m<1)return false;
+  var drawn=m*total,ox=x+Math.round((size-drawn)/2),oy=y+Math.round((size-drawn)/2);
+  ctx.fillStyle=fg;ctx.globalAlpha=1;
+  for(var r=0;r<n;r++)for(var c=0;c<n;c++){
+    if(qr.isDark(r,c))ctx.fillRect(ox+(c+quiet)*m,oy+(r+quiet)*m,m,m);
+  }
+  return true;
+}
+var drawBack={
+logo:function(d,ph,ac){
+  var th=backTheme(ac);
+  ctx.fillStyle=th.bg;ctx.fillRect(0,0,W,H);
+  ctx.textAlign="center";
+  var tagY;
+  if(state.logo){
+    drawLogo((W-480)/2,84,480,236);
+    tagY=424;
+  }else{
+    ink(th.fg,ph.fBusiness);
+    fit(d.fBusiness,W-PAD*2,96,44,"700",SERIF);
+    ctx.fillText(d.fBusiness,W/2,272);
+    ctx.globalAlpha=1;
+    tagY=352;
+  }
+  var tag=val("fTagline"),tagText=tag||"Good work, done properly.";
+  inkA(th.sub,tag?1:th.subPh);
+  fit(tagText,W-PAD*2,42,22,"600",SANS);
+  ctx.fillText(tagText,W/2,tagY);
+  ctx.globalAlpha=1;
+  if(state.tpl==="bumbum")paw(W/2,472,30,ac);
+  ink(state.tpl==="bold"?"#ffffff":ac,ph.fWebsite);spacing("3px");
+  fit(d.websiteDisp.toUpperCase(),W-PAD*2,28,16,"800",SANS);
+  ctx.fillText(d.websiteDisp.toUpperCase(),W/2,530);
+  spacing("0px");ctx.globalAlpha=1;ctx.textAlign="left";
+},
+qr:function(d,ph,ac){
+  var th=backTheme(ac);
+  ctx.fillStyle=th.bg;ctx.fillRect(0,0,W,H);
+  var size=324,x=(W-size)/2,y=54;
+  ctx.fillStyle="#ffffff";roundRect(x-20,y-20,size+40,size+40,22);ctx.fill();
+  if(!drawQR(x,y,size,"#14171c")){
+    ctx.fillStyle="#b3261e";ctx.font="700 28px "+SANS;ctx.textAlign="center";
+    ctx.fillText("That link is too long for a QR code.",W/2,y+size/2);
+  }
+  ctx.textAlign="center";
+  ink(th.fg,ph.fBusiness);
+  fit(d.fBusiness,W-PAD*2,46,24,"800",SANS);
+  ctx.fillText(d.fBusiness,W/2,478);
+  ctx.globalAlpha=1;
+  inkA(th.sub,state.tpl==="bold"?0.85:0.8);
+  ctx.font="600 29px "+SANS;
+  ctx.fillText("Scan to take a look",W/2,528);
+  ctx.globalAlpha=1;ctx.textAlign="left";
+},
+bigname:function(d,ph,ac){
+  var th=backTheme(ac);
+  ctx.fillStyle=th.bg;ctx.fillRect(0,0,W,H);
+  var tag=val("fTagline");
+  ctx.textAlign="center";
+  ink(th.fg,ph.fBusiness);
+  fit(d.fBusiness,W-PAD*2,168,58,"900",SANS);
+  ctx.fillText(d.fBusiness,W/2,tag?322:338);
+  ctx.globalAlpha=1;
+  if(tag){
+    inkA(th.sub,1);
+    fit(tag,W-PAD*2,38,20,"600",SANS);
+    ctx.fillText(tag,W/2,398);
+    ctx.globalAlpha=1;
+  }
+  if(state.tpl==="bumbum")paw(W/2,492,34,ac);
+  ctx.textAlign="left";
+}
+};
+function drawBlankBack(ac){
+  var th=backTheme(ac);
+  ctx.fillStyle=th.bg;ctx.fillRect(0,0,W,H);
+}
 function render(){
   var o=data();
   ctx.save();
   ctx.globalAlpha=1;ctx.textAlign="left";ctx.textBaseline="alphabetic";spacing("0px");
-  draw[state.tpl](o.d,o.ph,state.color);
+  if(state.side==="back"){
+    if(state.backBlank)drawBlankBack(state.color);
+    else drawBack[state.backLayout](o.d,o.ph,state.color);
+  }else{
+    draw[state.tpl](o.d,o.ph,state.color);
+  }
   ctx.restore();
+}
+function sideCanvas(side){
+  var c=document.createElement("canvas");c.width=W;c.height=H;
+  var main=ctx;ctx=c.getContext("2d");
+  var o=data();
+  ctx.save();
+  ctx.globalAlpha=1;ctx.textAlign="left";ctx.textBaseline="alphabetic";spacing("0px");
+  if(side==="back")drawBack[state.backLayout](o.d,o.ph,state.color);
+  else draw[state.tpl](o.d,o.ph,state.color);
+  ctx.restore();
+  ctx=main;
+  return c;
+}
+function canvasBytes(c){
+  return new Promise(function(res,rej){
+    c.toBlob(function(b){
+      if(!b){rej(new Error("png failed"));return;}
+      b.arrayBuffer().then(res,rej);
+    },"image/png");
+  });
 }
 FIELDS.forEach(function(id){
   $(id).addEventListener("input",function(){render();persist();});
 });
+BACKFIELDS.forEach(function(id){
+  $(id).addEventListener("input",function(){render();persist();});
+});
+$("fQrLink").addEventListener("input",function(){
+  state.qrDirty=!!val("fQrLink");
+  persist();
+});
+$("fWebsite").addEventListener("input",function(){
+  if(!state.qrDirty)$("fQrLink").value=val("fWebsite");
+});
 function persist(){
-  var o={};FIELDS.forEach(function(id){o[id]=val(id);});
+  var o={};
+  FIELDS.concat(BACKFIELDS).forEach(function(id){o[id]=val(id);});
+  o._layout=state.backLayout;o._blank=state.backBlank;o._qrDirty=state.qrDirty;
   try{localStorage.setItem("bb-bcm-fields",JSON.stringify(o));}catch(e){}
+}
+function segOn(sel,attr,value){
+  document.querySelectorAll(sel).forEach(function(b){b.classList.toggle("on",b.getAttribute(attr)===value);});
+}
+function syncBackUI(){
+  $("sideFront").classList.toggle("bb-hide",state.side!=="front");
+  $("sideBack").classList.toggle("bb-hide",state.side!=="back");
+  $("previewSide").textContent=state.side;
+  $("backDesign").classList.toggle("bb-hide",state.backBlank);
+  $("fldTagline").classList.toggle("bb-hide",state.backLayout==="qr");
+  $("fldQr").classList.toggle("bb-hide",state.backLayout!=="qr");
+  $("backPngBtn").classList.toggle("bb-hide",state.backBlank);
+  segOn("[data-side]","data-side",state.side);
+  segOn("[data-backblank]","data-backblank",state.backBlank?"blank":"design");
+  segOn("[data-backlayout]","data-backlayout",state.backLayout);
 }
 (function restore(){
   try{
     var o=JSON.parse(localStorage.getItem("bb-bcm-fields")||"{}");
-    FIELDS.forEach(function(id){if(o[id])$(id).value=o[id];});
+    FIELDS.concat(BACKFIELDS).forEach(function(id){if(o[id])$(id).value=o[id];});
+    if(o._layout&&drawBack[o._layout])state.backLayout=o._layout;
+    state.backBlank=!!o._blank;
+    state.qrDirty=!!o._qrDirty;
   }catch(e){}
+  if(!state.qrDirty&&!val("fQrLink"))$("fQrLink").value=val("fWebsite");
+  syncBackUI();
 })();
 $("fLogo").addEventListener("change",function(){
   var file=this.files&&this.files[0];
@@ -393,30 +569,56 @@ $("customColor").addEventListener("input",function(){
   document.querySelectorAll(".swatch").forEach(function(s){s.classList.remove("on");});
   state.color=this.value;render();
 });
+document.querySelectorAll("[data-side]").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    state.side=btn.getAttribute("data-side");syncBackUI();render();
+  });
+});
+document.querySelectorAll("[data-backblank]").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    state.backBlank=btn.getAttribute("data-backblank")==="blank";syncBackUI();render();persist();
+  });
+});
+document.querySelectorAll("[data-backlayout]").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    state.backLayout=btn.getAttribute("data-backlayout");syncBackUI();render();persist();
+  });
+});
 $("pngBtn").addEventListener("click",function(){
-  if(canvas.toBlob){
-    canvas.toBlob(function(blob){
-      if(!blob){setStatus("The PNG could not be built in this browser.",true);return;}
-      saveBlob(blob,"business-card.png");
-      setStatus("Your PNG is downloading: 1050 by 600 pixels, ready to share.");
-      if(window.BBDropStrip)window.BBDropStrip.show('business-card-maker');
-    },"image/png");
-  }
+  sideCanvas("front").toBlob(function(blob){
+    if(!blob){setStatus("The PNG could not be built in this browser.",true);return;}
+    saveBlob(blob,"business-card-front.png");
+    setStatus("Your front PNG is downloading: 1050 by 600 pixels, ready to share.");
+    if(window.BBDropStrip)window.BBDropStrip.show('business-card-maker');
+  },"image/png");
+});
+$("backPngBtn").addEventListener("click",function(){
+  sideCanvas("back").toBlob(function(blob){
+    if(!blob){setStatus("The PNG could not be built in this browser.",true);return;}
+    saveBlob(blob,"business-card-back.png");
+    setStatus("Your back PNG is downloading: 1050 by 600 pixels, ready to share.");
+    if(window.BBDropStrip)window.BBDropStrip.show('business-card-maker');
+  },"image/png");
 });
 $("pdfBtn").addEventListener("click",async function(){
   var btn=this;btn.disabled=true;var old=btn.textContent;btn.textContent="Building...";
   try{
-    var blob=await new Promise(function(res){canvas.toBlob(res,"image/png");});
-    if(!blob)throw new Error("png failed");
     var doc=await window.PDFLib.PDFDocument.create();
-    var img=await doc.embedPng(await blob.arrayBuffer());
-    var page=doc.addPage([252,144]);
-    page.drawImage(img,{x:0,y:0,width:252,height:144});
+    var frontImg=await doc.embedPng(await canvasBytes(sideCanvas("front")));
+    var page1=doc.addPage([252,144]);
+    page1.drawImage(frontImg,{x:0,y:0,width:252,height:144});
+    var pages=1;
+    if(!state.backBlank){
+      var backImg=await doc.embedPng(await canvasBytes(sideCanvas("back")));
+      var page2=doc.addPage([252,144]);
+      page2.drawImage(backImg,{x:0,y:0,width:252,height:144});
+      pages=2;
+    }
     var bytes=await doc.save();
     saveBlob(new Blob([bytes],{type:"application/pdf"}),"business-card.pdf");
-    setStatus("Your PDF is downloading: one page, exactly 3.5 by 2 inches.");
+    setStatus(pages===2?"Your PDF is downloading: two pages, front and back, each exactly 3.5 by 2 inches.":"Your PDF is downloading: one page, exactly 3.5 by 2 inches.");
     if(window.BBDropStrip)window.BBDropStrip.show('business-card-maker');
-  }catch(e){setStatus("The PDF could not be built in this browser. The PNG download still works.",true);}
+  }catch(e){setStatus("The PDF could not be built in this browser. The PNG downloads still work.",true);}
   btn.disabled=false;btn.textContent=old;
 });
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(render);
