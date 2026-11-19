@@ -1049,4 +1049,38 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     updated: "November 17, 2026",
   },
+  {
+    key: "business-card-maker",
+    name: "Business Card Maker",
+    href: "/tools/business-card-maker/",
+    icon: "/bum/icons/business-card-maker.png",
+    summary:
+      "Business Card Maker designs a standard 3.5 by 2 inch business card in your browser. Type your name, title, business, and contact details, add a logo if you have one, pick from six templates and an accent color, and download a print-ready PDF or a PNG at 300 DPI. It is free, with no sign-up and no watermark.",
+    steps: [
+      "Type your name, job title, and business name, then your phone, email, and website.",
+      "Add a logo if you have one. It is read on your device and placed on the card.",
+      "Pick a template and an accent color. The preview updates as you type.",
+      "Download the print-ready PDF for a print shop, or the PNG for sharing online.",
+    ],
+    goodToKnow: [
+      "Business Card Maker is free. Designing and downloading cost nothing, as many times as you like.",
+      "Everything runs in your browser. Your details and logo are never uploaded or sent anywhere.",
+      "The PDF page is exactly 3.5 by 2 inches and the artwork renders at 300 DPI (1050 by 600 pixels), the size and sharpness print shops ask for.",
+      "Fields you leave blank print as soft gray sample text, so the preview always shows the full layout. Fill a field to replace its sample.",
+      "The form remembers your text entries on this device, so fixing a phone number later takes seconds. Your logo file is never kept.",
+    ],
+    data: "Your details are typed into your browser and drawn onto the card on your device. Nothing is stored or sent to Bum Bum. The form remembers your text entries on this device only; your logo file is never kept.",
+    tips: [
+      "Keep the card short: name, what you do, one phone number, and one web address. A card people can read at a glance gets kept.",
+      "Match the accent color to your logo and your email signature, so everything you hand out looks like one business. The Email Signature Maker uses the same colors.",
+      "Send the PDF to the print shop and keep the PNG on your phone for texting your details to new contacts.",
+    ],
+    faq: [
+      ["What size are the cards?", "Standard business card size, 3.5 by 2 inches. The PDF page is exactly that size and the artwork renders at 300 DPI."],
+      ["Can I add my logo?", "Yes. Pick any image file and it is placed on the card. The file is read on your device and never uploaded."],
+      ["Do I need an account?", "No. The maker is free and needs no sign-up, and downloads carry no watermark."],
+      ["What if a printer asks for bleed?", "These cards are drawn at exact trim size with no bleed area. Most online printers accept that; if yours insists on bleed, a white-background template hides the trim line best."],
+    ],
+    updated: "November 19, 2026",
+  },
 ];

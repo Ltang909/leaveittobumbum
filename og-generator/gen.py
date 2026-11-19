@@ -44,6 +44,7 @@ CARDS = {
     'video-mp3-overlay': ("Video MP3 Overlay", "Pin your soundtrack onto your video."),
     'day-log': ("Day Log", "Five minutes a night to log your day and lessons."),
     'email-signature-generator': ("Email Signature Generator", "A clean, professional signature in minutes."),
+    'business-card-maker': ("Business Card Maker", "A sharp card in minutes, print-ready and free."),
     'pdf-compressor': ("PDF Compressor", "Same PDF, smaller file, right in your browser."),
     'invoice-generator': ("Invoice Generator", "Build a clean invoice and download the PDF."),
     'heic-to-jpg': ("HEIC to JPG Converter", "Turn HEIC photos into JPGs in seconds."),
