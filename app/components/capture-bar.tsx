@@ -97,6 +97,7 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   "video-converter": "Drop the video here to convert it…",
   "day-log": "e.g. Finished the proposal, the client call ran long, tomorrow I chase the invoice…",
   "email-signature-generator": "e.g. Make me a clean email signature for Gmail…",
+  "business-card-maker": "e.g. Make me a business card for my dog walking business…",
   "heic-to-jpg": "Drop the iPhone photos here to turn them into JPGs…",
   "invoice-generator": "Hit Do it! and the invoice maker opens, blank and ready…",
   "jpg-to-pdf": "Drop the images here to make one PDF…",

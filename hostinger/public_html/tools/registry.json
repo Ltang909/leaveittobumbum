@@ -313,6 +313,18 @@
       "mascot": "/bum/cat-laptop.png"
     },
     {
+      "key": "business-card-maker",
+      "name": "Business Card Maker",
+      "tag": "Brand",
+      "icon": "🪪",
+      "iconImg": "/bum/icons/business-card-maker.png",
+      "description": "Pick a template, type your details, and download a print-ready business card as a PDF or PNG. Runs in your browser.",
+      "url": "/tools/business-card-maker/",
+      "cardTitle": ["Business Card", "Maker"],
+      "cta": "Make my card",
+      "mascot": "/bum/cat-bowtie.png"
+    },
+    {
       "key": "pdf-compressor",
       "name": "PDF Compressor",
       "tag": "Files",
