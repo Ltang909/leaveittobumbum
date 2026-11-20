@@ -1,0 +1,96 @@
+import { expect, test } from '@playwright/test';
+import { TOOLS, desk } from '../../helpers';
+
+/**
+ * Public-surface smoke: the pages a first-time visitor (and Google) sees.
+ * Read-only — this is the only tier allowed to run against production.
+ */
+
+test.describe('public pages', () => {
+  test('homepage front desk renders', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('h1')).toContainText('Leave it to Bum Bum');
+    await expect(desk.card(page)).toBeVisible();
+    // The tool-first desk (Nov 2026) dropped the greeting line: the
+    // section carries the "Log anything" label, and the composer's
+    // idle placeholder is what teaches the @ move now.
+    await expect(page.locator('section.front-desk')).toHaveAttribute(
+      'aria-label',
+      'Log anything at the front desk',
+    );
+    await expect(desk.box(page)).toBeVisible();
+    await expect(desk.box(page)).toHaveAttribute('placeholder', 'Start with @ to pick a tool');
+    await expect(desk.doIt(page)).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Attach a photo, video, audio file, or PDF' }),
+    ).toBeVisible();
+    // Four task chips are drawn under the composer.
+    await expect(page.locator('.desk-task-chips .capture-home-chip')).toHaveCount(4);
+    await expect(page.locator('.desk-browse')).toHaveAttribute('href', '/tools/');
+  });
+
+  test('/tools/ lists all 35 tools', async ({ page }) => {
+    await page.goto('/tools/');
+    await expect(page.locator('h1')).toContainText('Every tiny tool');
+    // The grid paginates client-side, 16 cards per page; walk every
+    // numbered page and check every registry tool gets a card. Cards
+    // are matched by href: the card title renders as joined spans
+    // ("SubscriptionTracker"), so name-text matching no longer works.
+    const cards = page.locator('.tool-grid .tool-card');
+    await expect(cards.first()).toBeVisible();
+    const hrefs = new Set<string>();
+    for (let pageNo = 1; ; pageNo++) {
+      if (pageNo > 1) {
+        const firstHref = await cards.first().getAttribute('href');
+        await page.getByRole('button', { name: String(pageNo), exact: true }).click();
+        await expect(cards.first()).not.toHaveAttribute('href', firstHref ?? '');
+      }
+      for (const href of await cards.evaluateAll((els) => els.map((el) => el.getAttribute('href')))) {
+        if (href) hrefs.add(href);
+      }
+      const hasNextPage =
+        (await page.getByRole('button', { name: String(pageNo + 1), exact: true }).count()) > 0;
+      if (!hasNextPage) break;
+    }
+    expect(
+      TOOLS.filter((tool) => !hrefs.has(tool.url)).map((tool) => tool.key),
+      'every registry tool should have a card on one of the grid pages',
+    ).toEqual([]);
+    expect(hrefs.size, 'the grid should not carry extra tool cards').toBe(TOOLS.length);
+  });
+
+  test('/team/ carries the crew copy verbatim', async ({ page }) => {
+    await page.goto('/team/');
+    await expect(page.locator('h1')).toHaveText('Meet the team.');
+    const body = page.locator('body');
+    await expect(body).toContainText('CEO, CTO, COO, CMO, CRO');
+    await expect(body).toContainText('Responsibilities: all of it');
+    await expect(body).toContainText('Born Apr 3 2025, talk about a child prodigy.');
+    await expect(body).toContainText('Middle Manager');
+    await expect(body).toContainText('Born Oct 13 2021, got some experience under her belt!');
+    await expect(body).toContainText('Responsibilities: feeder, poop scooper');
+    await expect(body).toContainText('Responsibilities: Groomer, Coach');
+  });
+
+  test('sitemap lists the blog and not the retired Cat Translator', async ({ request }) => {
+    const res = await request.get('/sitemap.xml');
+    expect(res.ok()).toBeTruthy();
+    const xml = await res.text();
+    for (const path of [
+      '/blog/',
+      '/blog/best-business-account-software/',
+      '/blog/best-free-crm-small-business/',
+      '/blog/best-small-business-software/',
+    ]) {
+      expect(xml, `sitemap should contain ${path}`).toContain(`https://leaveittobumbum.com${path}`);
+    }
+    expect(xml).not.toContain('cat-translator');
+  });
+
+  test('retired and diagnostic URLs stay tombstoned (410)', async ({ request }) => {
+    for (const path of ['/api/diag-admin.php', '/tools/cat-translator/']) {
+      const res = await request.get(path);
+      expect(res.status(), `${path} should be 410`).toBe(410);
+    }
+  });
+});
