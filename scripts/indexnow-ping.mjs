@@ -1,22 +1,30 @@
 #!/usr/bin/env node
 /**
- * IndexNow ping: submits every URL in the production sitemap to
- * api.indexnow.org so Bing (and other IndexNow engines) pick up new and
- * changed pages right after a production deploy instead of waiting for a
- * crawl.
+ * IndexNow ping: submits every URL in the sitemap to api.indexnow.org so
+ * Bing (and other IndexNow engines) pick up new and changed pages right
+ * after a deploy instead of waiting for a crawl.
  *
  * Key discovery: the key file lives at hostinger/public_html/<key>.txt and
- * is served at https://leaveittobumbum.com/<key>.txt (the IndexNow
- * keyLocation). Set INDEXNOW_KEY to override discovery.
+ * is served at https://<host>/<key>.txt (the IndexNow keyLocation) on both
+ * the production and staging docroots. Set INDEXNOW_KEY to override
+ * discovery.
  *
- * Usage: node scripts/indexnow-ping.mjs [--dry-run]
+ * Usage: node scripts/indexnow-ping.mjs [--dry-run] [--host <host>]
+ *   --host defaults to leaveittobumbum.com (production). The staging
+ *   workflow passes --host staging.leaveittobumbum.com: the sitemap's
+ *   production URLs are rewritten onto the staging host and the
+ *   keyLocation points at the staging copy of the key file.
  * Uses Node 18+ built-ins only.
  */
 import { readdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const HOST = "leaveittobumbum.com";
+const hostArg = process.argv.indexOf("--host");
+const HOST =
+  hostArg !== -1 && process.argv[hostArg + 1]
+    ? process.argv[hostArg + 1].trim()
+    : "leaveittobumbum.com";
 const SITEMAP_URL = `https://${HOST}/sitemap.xml`;
 const ENDPOINT = "https://api.indexnow.org/indexnow";
 const BATCH = 10000; // IndexNow per-request URL limit
@@ -36,7 +44,19 @@ async function sitemapUrls() {
   if (!res.ok) throw new Error(`sitemap fetch failed: HTTP ${res.status}`);
   const xml = await res.text();
   const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
-  return [...new Set(urls)].filter((u) => u.startsWith(`https://${HOST}/`));
+  // The sitemap lists production URLs. When submitting for another host
+  // (staging), rewrite each URL onto that host: same paths, and the key
+  // file is served from the same tree on that host, so IndexNow's
+  // host/keyLocation match still validates.
+  const rewritten = urls.map((u) => {
+    try {
+      const parsed = new URL(u);
+      return `https://${HOST}${parsed.pathname}${parsed.search}`;
+    } catch {
+      return null;
+    }
+  });
+  return [...new Set(rewritten)].filter((u) => u && u.startsWith(`https://${HOST}/`));
 }
 
 async function main() {
