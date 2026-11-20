@@ -130,3 +130,55 @@ for (const { full, rel } of agentPages) {
   agentCount++;
 }
 console.log("postbuild: agent markdown written for " + agentCount + " pages");
+
+// Product feed for ChatGPT merchant onboarding (OpenAI Agentic Commerce
+// product feed schema, OpenAI format delivered as TSV, which the hosted-URL
+// form accepts uncompressed). One row per free tool, generated from the
+// same registry the tools index and OG cards use, so the feed stays
+// current as tools ship. Served at /feeds/products.tsv.
+// Spec: https://developers.openai.com/commerce/specs/file-upload/products
+const feedRegistry = JSON.parse(
+  fs.readFileSync("hostinger/public_html/tools/registry.json", "utf8")
+);
+function tsvCell(v) {
+  return String(v).replace(/[\t\r\n]+/g, " ").trim();
+}
+const FEED_COLUMNS = [
+  "item_id",
+  "title",
+  "description",
+  "url",
+  "brand",
+  "seller_name",
+  "image_url",
+  "availability",
+  "price",
+  "target_countries",
+  "store_country",
+  "is_eligible_search",
+];
+const feedRows = feedRegistry.tools.map((t) =>
+  [
+    t.key,
+    t.name,
+    t.description,
+    SITE + t.url,
+    "Leave It To Bum Bum",
+    "Leave It To Bum Bum",
+    SITE + "/bum/og/" + t.key + ".jpg",
+    "in_stock",
+    "0.00 USD",
+    '["US"]',
+    "CA",
+    "true",
+  ]
+    .map(tsvCell)
+    .join("\t")
+);
+fs.mkdirSync("out/feeds", { recursive: true });
+fs.writeFileSync(
+  "out/feeds/products.tsv",
+  FEED_COLUMNS.join("\t") + "\n" + feedRows.join("\n") + "\n",
+  "utf8"
+);
+console.log("postbuild: product feed written for " + feedRows.length + " tools");
