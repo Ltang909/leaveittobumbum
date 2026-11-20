@@ -98,7 +98,7 @@ export default async function GuidePage({
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Docs", item: "https://leaveittobumbum.com/docs/" },
-      { "@type": "ListItem", position: 2, name: g.section },
+      { "@type": "ListItem", position: 2, name: g.section, item: "https://leaveittobumbum.com/docs/" },
       {
         "@type": "ListItem",
         position: 3,
