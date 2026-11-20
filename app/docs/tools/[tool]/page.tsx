@@ -47,7 +47,7 @@ export default async function ToolDocPage({
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Docs", item: "https://leaveittobumbum.com/docs/" },
-      { "@type": "ListItem", position: 2, name: "The toolbox" },
+      { "@type": "ListItem", position: 2, name: "The toolbox", item: "https://leaveittobumbum.com/docs/" },
       {
         "@type": "ListItem",
         position: 3,
