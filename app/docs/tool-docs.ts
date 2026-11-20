@@ -1097,7 +1097,7 @@ export const TOOL_DOCS: ToolDoc[] = [
     summary:
       "Digital Business Card Maker designs a tall business card for a phone screen in your browser. Type your name, title, business, tagline, and contact details, add a logo if you have one, and pick from six templates and an accent color. Every design carries a QR code that holds your contact card, so anyone who scans it, off your screen or off the image you send, can save you to their phone. Download the card as a PNG, JPG, or PDF, or download the contact file (.vcf) on its own. It is free, with no sign-up and no watermark.",
     steps: [
-      "Type your name, job title, and business name, then your tagline, phone, email, and website.",
+      "Type your name, job title, and business name, then your tagline, phone, email, website, and LinkedIn profile.",
       "Add a logo if you have one. It is read on your device and placed on the card.",
       "Pick a template and an accent color. The preview updates as you type, QR code included.",
       "Download the card as a PNG, JPG, or PDF, or download the contact file (.vcf) on its own.",
@@ -1120,7 +1120,7 @@ export const TOOL_DOCS: ToolDoc[] = [
       "Match the accent color and template to your paper card from the Business Card Maker, so both cards look like one business.",
     ],
     faq: [
-      ["What does the QR code do?", "It carries a contact card (a vCard) built from your details. A phone that scans it offers to save you as a contact with your name, title, business, phone, email, website, and tagline."],
+      ["What does the QR code do?", "It carries a contact card (a vCard) built from your details. A phone that scans it offers to save you as a contact with your name, title, business, phone, email, website, LinkedIn, and tagline."],
       ["What size is the card?", "1080 by 1920 pixels, the tall shape of a phone screen. The PDF is one page in the same tall shape."],
       ["What is the contact (.vcf) download?", "Your contact card as a small file. Send it by text, email, or message and the person who opens it adds you to their contacts in one tap."],
       ["Can I add my logo?", "Yes. Pick any image file and it is placed on the card. The file is read on your device and never uploaded."],
