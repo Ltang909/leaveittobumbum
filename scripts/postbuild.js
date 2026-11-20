@@ -115,12 +115,15 @@ function collectHtml(dir, base, acc) {
 
 const agentPages = collectHtml("out", "", []);
 let agentCount = 0;
+const mdByRoute = new Map();
 for (const { full, rel } of agentPages) {
   const route = routeFor(rel);
   if (!route) continue;
   const mdPath = route === "/" ? "/index.md" : route.replace(/\/$/, "") + ".md";
   const html = fs.readFileSync(full, "utf8");
-  fs.writeFileSync("out" + mdPath, htmlToMd(html, SITE + route));
+  const md = htmlToMd(html, SITE + route);
+  mdByRoute.set(route, md);
+  fs.writeFileSync("out" + mdPath, md);
   if (!html.includes('type="text/markdown"') && html.includes("</head>")) {
     fs.writeFileSync(
       full,
@@ -130,6 +133,57 @@ for (const { full, rel } of agentPages) {
   agentCount++;
 }
 console.log("postbuild: agent markdown written for " + agentCount + " pages");
+
+// llms-full.txt: the full-content companion to llms.txt, per the llms.txt
+// convention. llms.txt is the curated index (hand-kept in
+// hostinger/public_html/llms.txt); llms-full.txt concatenates the FULL
+// markdown of the site's pages, generated from the same page sources the
+// per-page .md twins above are built from, so it regenerates on every
+// build and never goes stale. Pages are ordered by the sitemap (the
+// site's canonical URL list); any exported page missing from the sitemap
+// is appended in route order. PHP tool pages are not part of the export;
+// their content is represented in llms.txt and the tool docs pages, which
+// are included here. Served at /llms-full.txt.
+const llmsHeader = [
+  "# Leave It to Bum Bum: full site content",
+  "",
+  "> The full text of leaveittobumbum.com in one file, for AI agents and search engines. For the short curated index, see https://leaveittobumbum.com/llms.txt. Leave It to Bum Bum is a toolbox of small, single-job tools for solopreneurs and small business owners: every tool is free with no limits, and the one paid offer is the 36-hour Promise, one scoped custom tool built on request for a one-time $49. Operated by Leon Tang, Aurora, Ontario, Canada. Contact: hello@leaveittobumbum.com.",
+  "",
+].join("\n");
+const sitemapXml = fs.readFileSync("hostinger/public_html/sitemap.xml", "utf8");
+const sitemapRoutes = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => {
+  try {
+    return new URL(m[1].trim()).pathname;
+  } catch {
+    return null;
+  }
+});
+const orderedRoutes = [];
+const seenRoutes = new Set();
+for (const r of sitemapRoutes) {
+  if (r && mdByRoute.has(r) && !seenRoutes.has(r)) {
+    seenRoutes.add(r);
+    orderedRoutes.push(r);
+  }
+}
+for (const r of [...mdByRoute.keys()].sort()) {
+  if (!seenRoutes.has(r)) {
+    seenRoutes.add(r);
+    orderedRoutes.push(r);
+  }
+}
+const llmsFull =
+  llmsHeader +
+  orderedRoutes.map((r) => mdByRoute.get(r).trim()).join("\n\n---\n\n") +
+  "\n";
+fs.writeFileSync("out/llms-full.txt", llmsFull, "utf8");
+console.log(
+  "postbuild: llms-full.txt written with " +
+    orderedRoutes.length +
+    " pages, " +
+    llmsFull.length +
+    " chars"
+);
 
 // Product feed for ChatGPT merchant onboarding (OpenAI Agentic Commerce
 // product feed schema, OpenAI format delivered as TSV, which the hosted-URL
