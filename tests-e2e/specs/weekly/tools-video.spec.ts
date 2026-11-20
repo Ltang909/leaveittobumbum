@@ -26,8 +26,19 @@ test.describe('video tools @slow', () => {
     await page.locator('#vcToFmt').click();
     await expect(page.locator('#vcConvert')).toBeVisible({ timeout: 30_000 });
     await page.locator('#vcConvert').click();
+    // The result panel unhides the moment Convert is clicked (it hosts
+    // the progress bar), so it proves nothing on its own. The real
+    // end state: the status line announces the finished MP4 and the
+    // download anchor unhides, named for the converted file. The whole
+    // pipeline (engine load, encode, metering call) gets the slow
+    // tier's full window.
     await expect(page.locator('#vcResult')).toBeVisible({ timeout: 240_000 });
+    await expect(page.locator('#vcProgText')).toHaveText('Your MP4 is ready.', {
+      timeout: 240_000,
+    });
     await expect(page.locator('#vcDl')).toBeVisible();
+    await expect(page.locator('#vcDl')).toContainText('Download MP4');
+    await expect(page.locator('#vcDl')).toHaveAttribute('download', /converted\.mp4$/);
   });
 
   test('video-mp3-overlay: place a snippet and render', async ({ page }) => {

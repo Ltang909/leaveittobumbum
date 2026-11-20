@@ -10,6 +10,9 @@ import { expect, test } from '@playwright/test';
  *    block) keep their pricing/help targets on purpose.
  *  - One documented exception: the CRM FAQ sentence whose anchor text
  *    literally names "Pipedrive's current pricing page".
+ *  - One ItemList-only exception: the CRM article's Salesforce Free
+ *    Suite entry keeps its deep /crm/free-crm/ URL in the JSON-LD
+ *    (see ITEMLIST_EXCEPTIONS below).
  *  - No em dashes or en dashes anywhere in the article prose.
  */
 
@@ -21,6 +24,18 @@ const ARTICLES = [
 
 const KNOWN_EXCEPTIONS = [
   { article: '/blog/best-free-crm-small-business/', href: 'https://www.pipedrive.com/en/pricing' },
+];
+
+/**
+ * ItemList-only exceptions: entries whose JSON-LD `item` URL is a deep
+ * link by design, even though the visible product links point at vendor
+ * homepages. The CRM article's Salesforce Free Suite entry keeps its
+ * /crm/free-crm/ target in the ItemList (the same deep link the page's
+ * "Source:" citation keeps); Leon confirmed 2026-11-20 that the spec
+ * asserts the ItemList as served.
+ */
+const ITEMLIST_EXCEPTIONS = [
+  { article: '/blog/best-free-crm-small-business/', href: 'https://www.salesforce.com/crm/free-crm/' },
 ];
 
 type LinkReport = { href: string; text: string; citation: boolean };
@@ -133,8 +148,10 @@ test.describe('blog listicles', () => {
         return urls;
       });
       expect(itemListUrls.length).toBeGreaterThanOrEqual(12);
+      const itemListExceptions = ITEMLIST_EXCEPTIONS.filter((e) => e.article === path).map((e) => e.href);
       for (const u of itemListUrls) {
         if (u.includes('leaveittobumbum.com')) continue;
+        if (itemListExceptions.includes(u)) continue;
         const url = new URL(u);
         expect(url.pathname === '/' || url.pathname === '', `ItemList URL ${u} should be a homepage`).toBeTruthy();
       }

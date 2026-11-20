@@ -37,7 +37,7 @@ rules in the test plan).
 
 ```bash
 npm run test:smoke     # specs/smoke/    public pages, blog, footers (desktop + mobile)
-npm run test:weekly    # specs/weekly/   desk routing, handoffs, all 31 tools, pair/hub pages, guest prompt
+npm run test:weekly    # specs/weekly/   desk routing, handoffs, all 35 tools, pair/hub pages, guest prompt
 npm run test:billable  # specs/billable/ AI happy paths + Stripe test checkout (spends money-adjacent things)
 ```
 

@@ -11,35 +11,46 @@ test.describe('public pages', () => {
     await page.goto('/');
     await expect(page.locator('h1')).toContainText('Leave it to Bum Bum');
     await expect(desk.card(page)).toBeVisible();
-    await expect(page.locator('.desk-greeting')).toHaveText('What are we handling today?');
-    await expect(page.locator('.desk-hint').first()).toContainText('Psst: type @');
+    // The tool-first desk (Nov 2026) dropped the greeting line: the
+    // section carries the "Log anything" label, and the composer's
+    // idle placeholder is what teaches the @ move now.
+    await expect(page.locator('section.front-desk')).toHaveAttribute(
+      'aria-label',
+      'Log anything at the front desk',
+    );
     await expect(desk.box(page)).toBeVisible();
-    await expect(desk.box(page)).toHaveAttribute('placeholder', /.+/);
+    await expect(desk.box(page)).toHaveAttribute('placeholder', 'Start with @ to pick a tool');
     await expect(desk.doIt(page)).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Attach a photo, video, or audio file' })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Attach a photo, video, audio file, or PDF' }),
+    ).toBeVisible();
     // Four task chips are drawn under the composer.
     await expect(page.locator('.desk-task-chips .capture-home-chip')).toHaveCount(4);
     await expect(page.locator('.desk-browse')).toHaveAttribute('href', '/tools/');
   });
 
-  test('/tools/ lists all 31 tools', async ({ page }) => {
+  test('/tools/ lists all 35 tools', async ({ page }) => {
     await page.goto('/tools/');
     await expect(page.locator('h1')).toContainText('Every tiny tool');
-    // The grid paginates client-side (16 + 15); walk both pages and
-    // check every registry tool gets a card. Cards are matched by href:
-    // the card title renders as joined spans ("SubscriptionTracker"),
-    // so name-text matching no longer works.
+    // The grid paginates client-side, 16 cards per page; walk every
+    // numbered page and check every registry tool gets a card. Cards
+    // are matched by href: the card title renders as joined spans
+    // ("SubscriptionTracker"), so name-text matching no longer works.
     const cards = page.locator('.tool-grid .tool-card');
     await expect(cards.first()).toBeVisible();
     const hrefs = new Set<string>();
-    for (const pageNo of [1, 2]) {
+    for (let pageNo = 1; ; pageNo++) {
       if (pageNo > 1) {
+        const firstHref = await cards.first().getAttribute('href');
         await page.getByRole('button', { name: String(pageNo), exact: true }).click();
-        await expect(cards.first()).not.toHaveAttribute('href', '/tools/clips/');
+        await expect(cards.first()).not.toHaveAttribute('href', firstHref ?? '');
       }
       for (const href of await cards.evaluateAll((els) => els.map((el) => el.getAttribute('href')))) {
         if (href) hrefs.add(href);
       }
+      const hasNextPage =
+        (await page.getByRole('button', { name: String(pageNo + 1), exact: true }).count()) > 0;
+      if (!hasNextPage) break;
     }
     expect(
       TOOLS.filter((tool) => !hrefs.has(tool.url)).map((tool) => tool.key),

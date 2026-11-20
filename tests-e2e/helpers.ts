@@ -4,7 +4,7 @@ import { join } from 'node:path';
 export const FIXTURES = join(__dirname, 'fixtures');
 export const fixture = (name: string) => join(FIXTURES, name);
 
-/** The 31 live tools, mirroring hostinger/public_html/tools/registry.json.
+/** The 35 live tools, mirroring hostinger/public_html/tools/registry.json.
  *  `primary` is each page's primary control (real id from the page source).
  *  Day Log is accounts-only: for a guest its primary control is the
  *  sign-in CTA, which is all a signed-out visitor ever sees. */
@@ -36,11 +36,15 @@ export const TOOLS: ToolDef[] = [
   { key: 'video-mp3-overlay', name: 'Video MP3 Overlay', url: '/tools/video-mp3-overlay/', primary: '#vmMp3Drop' },
   { key: 'day-log', name: 'Day Log', url: '/tools/day-log/', primary: 'a[href*="/account/?next="]' },
   { key: 'email-signature-generator', name: 'Email Signature Maker', url: '/tools/email-signature-generator/', primary: '#sigForm' },
+  { key: 'business-card-maker', name: 'Business Card Maker', url: '/tools/business-card-maker/', primary: '#bcForm' },
   { key: 'pdf-compressor', name: 'PDF Compressor', url: '/tools/pdf-compressor/', primary: '#dropzone' },
   { key: 'invoice-generator', name: 'Invoice Generator', url: '/tools/invoice-generator/', primary: '#invForm' },
   { key: 'heic-to-jpg', name: 'HEIC to JPG', url: '/tools/heic-to-jpg/', primary: '#dropzone' },
   { key: 'jpg-to-pdf', name: 'JPG to PDF', url: '/tools/jpg-to-pdf/', primary: '#dropzone' },
+  { key: 'image-to-pdf', name: 'Image to PDF', url: '/tools/image-to-pdf/', primary: '#dropzone' },
   { key: 'split-pdf', name: 'Split PDF', url: '/tools/split-pdf/', primary: '#dropzone' },
+  { key: 'mp4-to-webm', name: 'MP4 to WebM Converter', url: '/tools/mp4-to-webm/', primary: '#vcDrop' },
+  { key: 'mp4-to-gif', name: 'MP4 to GIF Converter', url: '/tools/mp4-to-gif/', primary: '#vcDrop' },
 ];
 
 /** Social links every footer (Next chrome AND the PHP tool-page footer)
@@ -62,10 +66,12 @@ export async function assertFooter(page: Page) {
   await expect(footer.locator('a[href*="facebook.com"]')).toHaveCount(0);
 }
 
-/** The homepage front desk (app/components/capture-bar.tsx). */
+/** The homepage front desk (app/components/capture-bar.tsx). The desk
+ *  is tool-first since Nov 2026: the composer's aria-label teaches the
+ *  @ move ("Pick a tool with @, then type"). */
 export const desk = {
   card: (page: Page) => page.locator('.desk-card'),
-  box: (page: Page) => page.getByLabel('Type anything to log it'),
+  box: (page: Page) => page.getByLabel('Pick a tool with @, then type'),
   doIt: (page: Page) => page.getByRole('button', { name: 'Do it!' }),
   pin: (page: Page) => page.locator('.desk-pin'),
   success: (page: Page) => page.locator('.capture-home-success'),

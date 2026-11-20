@@ -5,29 +5,53 @@ import { desk, fixture, pinToolViaMention, seedDeskChips } from '../../helpers';
  * Front-desk routing (homepage capture bar -> /api/capture.php).
  * Runs against STAGING only — these tests file real (tiny) records as a
  * guest, which is the small guest-filing set the data rules allow.
- * The router is an LLM for unpinned text, so assertions target the
- * user-visible outcome (success line / picker / message), never internals.
+ *
+ * The desk is TOOL-FIRST since Nov 2026 (Leon's call): bare words file
+ * nothing. A tool is pinned first (via @, a task chip, or the tool list
+ * the desk opens over unpinned words), and only then do words file —
+ * natively for the log-style tools, or as a handoff into the tool page.
+ * Assertions target the user-visible outcome (success line / lesson
+ * note / tool list / navigation), never internals.
+ *
+ * Submits here press Enter in the composer: Enter is the desk's own
+ * submit key (same submit path as the Do it! button), and at the
+ * desktop test viewport the hero cat art overlays the Do it! button's
+ * click point, so a centre click never lands.
  */
 
 test.describe('front desk routing', () => {
-  test('unpinned subscription text files to Subscription Tracker', async ({ page }) => {
+  test('pinned subscription text files to Subscription Tracker', async ({ page }) => {
     await page.goto('/');
+    await pinToolViaMention(page, 'sub', 'Subscription Tracker');
+    await expect(desk.box(page)).toHaveAttribute('placeholder', 'e.g. Netflix, $15.99, monthly');
     await desk.box(page).fill('Netflix $15.99 a month');
-    await desk.doIt(page).click();
+    await desk.box(page).press('Enter');
     await expect(desk.success(page)).toBeVisible({ timeout: 45_000 });
     await expect(desk.success(page)).toContainText('Netflix');
     await expect(desk.success(page)).toContainText('Subscription Tracker');
   });
 
-  test('keyword route: "add music to my video" points at Video MP3 Overlay', async ({ page }) => {
+  test('keyword route: "add music to my video" reaches Video MP3 Overlay via the tool list', async ({
+    page,
+  }) => {
     await page.goto('/');
-    await desk.box(page).fill('add music to my video');
-    await desk.doIt(page).click();
-    const open = page.getByRole('link', { name: /Open Video MP3 Overlay/ });
-    await expect(open).toBeVisible({ timeout: 30_000 });
-    await expect(open).toHaveAttribute('href', '/tools/video-mp3-overlay/');
-    await open.click();
-    await page.waitForURL('**/tools/video-mp3-overlay/**');
+    // Real keystrokes: the desk's search/picker state is keystroke-driven.
+    await desk.box(page).pressSequentially('add music to my video', { delay: 20 });
+    await desk.box(page).press('Enter');
+    // Bare words file nothing: the desk says so, and opens the full
+    // tool list over the words so the visitor can pick the destination.
+    await expect(desk.note(page)).toContainText('Pick the tool first, then give it your words');
+    await expect(desk.note(page)).toContainText('Nothing was logged');
+    const item = page.locator('.desk-mention-item', { hasText: 'Video MP3 Overlay' });
+    await expect(item.first()).toBeVisible({ timeout: 30_000 });
+    await item.first().click();
+    await expect(desk.pin(page)).toContainText('@Video MP3 Overlay');
+    // The words ride along; submitting again opens the pinned tool.
+    await desk.box(page).press('Enter');
+    await page.waitForURL('**/tools/video-mp3-overlay/**', {
+      timeout: 90_000,
+      waitUntil: 'domcontentloaded',
+    });
     await expect(page.locator('#vmMp3Drop')).toBeAttached();
   });
 
@@ -36,20 +60,29 @@ test.describe('front desk routing', () => {
     await pinToolViaMention(page, 'inv', 'Invoice Reminder');
     await expect(desk.box(page)).toHaveAttribute('placeholder', 'e.g. hud.io, $20.00, due in 2 weeks');
     await desk.box(page).fill('log an invoice due in 2 weeks for hud.io $20.00');
-    await desk.doIt(page).click();
+    await desk.box(page).press('Enter');
     await expect(desk.success(page)).toBeVisible({ timeout: 45_000 });
     await expect(desk.success(page)).toContainText('Invoice Reminder');
     await expect(desk.success(page)).toContainText('hud.io');
   });
 
-  test('gibberish gets the Hmm picker with an Other chip', async ({ page }) => {
+  test('unpinned gibberish files nothing: the pick-a-tool lesson and the tool list', async ({
+    page,
+  }) => {
     await page.goto('/');
-    await desk.box(page).fill('zxqv jibberwock snizzlefrax quondle');
-    await desk.doIt(page).click();
-    await expect(desk.picker(page)).toBeVisible({ timeout: 45_000 });
-    await expect(desk.picker(page)).toContainText('Hmm, where should this go?');
-    await expect(desk.picker(page).getByRole('button', { name: 'Other' })).toBeVisible();
-    await expect(desk.picker(page).getByRole('button', { name: 'Subscription Tracker' })).toBeVisible();
+    await desk.box(page).pressSequentially('zxqv jibberwock snizzlefrax quondle', { delay: 20 });
+    await desk.box(page).press('Enter');
+    await expect(desk.note(page)).toContainText('Pick the tool first, then give it your words');
+    await expect(desk.note(page)).toContainText('Nothing was logged');
+    // The full tool list opens over the words, real tools included.
+    const list = page.locator('.desk-mention-list');
+    await expect(list).toBeVisible();
+    await expect(
+      list.locator('.desk-mention-item', { hasText: 'Subscription Tracker' }).first(),
+    ).toBeVisible();
+    // Nothing filed, nothing navigated.
+    await expect(desk.success(page)).toHaveCount(0);
+    expect(page.url()).not.toContain('/tools/');
   });
 
   test('staged photo (unpinned) asks for a destination and routes nowhere', async ({ page }) => {
@@ -66,7 +99,7 @@ test.describe('front desk routing', () => {
       'Photo ready. @Receipt Reader, @Poster to Calendar, or @Meal Scanner…',
     );
     // Submitting without a pin teaches the @ pick; nothing navigates.
-    await desk.doIt(page).click();
+    await desk.box(page).press('Enter');
     await expect(desk.note(page)).toContainText('That photo needs a destination first');
     await expect(desk.note(page)).toContainText('Receipt Reader');
     expect(page.url()).not.toContain('/tools/');

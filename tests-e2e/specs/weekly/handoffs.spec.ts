@@ -6,6 +6,9 @@ import { desk, fixture, pinToolViaMention, sawWorkingIndicator, watchWorkingIndi
  * Text drop-ins: the desk marker carries the words and the tool page
  * drops them into its primary field under the full-width banner.
  * File handoffs: the file rides IndexedDB and the tool auto-runs.
+ * Text submits press Enter in the composer (the desk's own submit key,
+ * same submit path as Do it!): at the desktop test viewport the hero
+ * cat art overlays the Do it! button's click point.
  */
 
 async function expectFullWidthBanner(page: Page) {
@@ -63,7 +66,7 @@ test.describe('desk text drop-ins', () => {
       await page.goto('/');
       await pinToolViaMention(page, fill.query, fill.toolName);
       await desk.box(page).fill(fill.text);
-      await desk.doIt(page).click();
+      await desk.box(page).press('Enter');
       // domcontentloaded + a generous ceiling: staging tool pages keep
       // long-lived resources trickling (see the file-handoff note below),
       // and through a slow proxy the document lifecycle can take well
