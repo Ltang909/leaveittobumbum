@@ -325,6 +325,18 @@
       "mascot": "/bum/cat-bowtie.png"
     },
     {
+      "key": "digital-business-card-maker",
+      "name": "Digital Business Card Maker",
+      "tag": "Brand",
+      "icon": "📱",
+      "iconImg": "/bum/icons/digital-business-card-maker.png",
+      "description": "Design a tall card for your phone with a QR code that saves your contact, and download it as a PNG, JPG, or PDF. Runs in your browser.",
+      "url": "/tools/digital-business-card-maker/",
+      "cardTitle": ["Digital Business", "Card Maker"],
+      "cta": "Make my digital card",
+      "mascot": "/bum/cat-bowtie.png"
+    },
+    {
       "key": "pdf-compressor",
       "name": "PDF Compressor",
       "tag": "Files",

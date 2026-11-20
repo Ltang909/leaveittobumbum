@@ -98,6 +98,7 @@ const PIN_PLACEHOLDERS: Record<string, string> = {
   "day-log": "e.g. Finished the proposal, the client call ran long, tomorrow I chase the invoice…",
   "email-signature-generator": "e.g. Make me a clean email signature for Gmail…",
   "business-card-maker": "e.g. Make me a business card for my dog walking business…",
+  "digital-business-card-maker": "e.g. Make me a digital business card with a QR code for my dog walking business…",
   "heic-to-jpg": "Drop the iPhone photos here to turn them into JPGs…",
   "invoice-generator": "Hit Do it! and the invoice maker opens, blank and ready…",
   "jpg-to-pdf": "Drop the images here to make one PDF…",
