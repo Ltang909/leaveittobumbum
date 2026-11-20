@@ -30,7 +30,7 @@
   "mainEntity": [
     { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. The maker is free and needs no sign-up. Type your details and download the card." } },
     { "@type": "Question", "name": "Do my details upload anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. The card is drawn right in your browser, on your device. Your details and your logo are never sent to Bum Bum or anyone else." } },
-    { "@type": "Question", "name": "What does the QR code do?", "acceptedAnswer": { "@type": "Answer", "text": "The QR code carries a contact card (a vCard) built from your details. When someone points their phone camera at it, the phone offers to save you as a contact with your name, title, business, phone, email, website, and tagline. It works in person off your screen, and it works from the PNG, JPG, or PDF you send or post." } },
+    { "@type": "Question", "name": "What does the QR code do?", "acceptedAnswer": { "@type": "Answer", "text": "The QR code carries a contact card (a vCard) built from your details. When someone points their phone camera at it, the phone offers to save you as a contact with your name, title, business, phone, email, website, LinkedIn, and tagline. It works in person off your screen, and it works from the PNG, JPG, or PDF you send or post." } },
     { "@type": "Question", "name": "What size is the card?", "acceptedAnswer": { "@type": "Answer", "text": "1080 by 1920 pixels, the tall shape of a phone screen, so it fills the screen when you show it and looks right when you send it. The PDF is a single page in the same tall shape." } },
     { "@type": "Question", "name": "What is the contact (.vcf) download?", "acceptedAnswer": { "@type": "Answer", "text": "It is your contact card as a small file. Send it by text, email, or message and the person who opens it can add you to their phone contacts in one tap, no scanning needed." } },
     { "@type": "Question", "name": "Can I add my logo?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Pick any image file and it is placed on the card. The file is read on your device and never uploaded. Square or wide logos both work; the maker fits them into the template's logo spot." } },
@@ -41,7 +41,7 @@
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Free Digital Business Card Maker | Leave It to Bum Bum","speakable":{"@type":"SpeakableSpecification","cssSelector":["#faq summary","#faq details p"]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Toolbox","item":"https://leaveittobumbum.com/tools/"},{"@type":"ListItem","position":2,"name":"Digital Business Card Maker","item":"https://leaveittobumbum.com/tools/digital-business-card-maker/"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use the Digital Business Card Maker","description":"Design a tall digital business card with a scannable QR contact code in your browser and download it as a PNG, JPG, PDF, or contact file.","step":[{"@type":"HowToStep","position":1,"name":"Type your name, title, business, tagline, and contact details."},{"@type":"HowToStep","position":2,"name":"Add your logo if you have one. It is read on your device only."},{"@type":"HowToStep","position":3,"name":"Pick a template, a font, and an accent color. The preview updates as you type, QR code included."},{"@type":"HowToStep","position":4,"name":"Download the card as a PNG, JPG, or PDF, or download the contact file (.vcf) on its own."},{"@type":"HowToStep","position":5,"name":"Show the card on your phone or send the image. Anyone who scans the QR code saves your contact."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to use the Digital Business Card Maker","description":"Design a tall digital business card with a scannable QR contact code in your browser and download it as a PNG, JPG, PDF, or contact file.","step":[{"@type":"HowToStep","position":1,"name":"Type your name, title, business, tagline, and contact details."},{"@type":"HowToStep","position":2,"name":"Add your logo if you have one. It is read on your device only."},{"@type":"HowToStep","position":3,"name":"Pick a template, a font, and an accent color. The preview updates as you type, QR code included."},{"@type":"HowToStep","position":4,"name":"Download the card as a PNG, JPG, or PDF, download the contact file (.vcf) on its own, or tap Share to send the card to your phone or by email."},{"@type":"HowToStep","position":5,"name":"Show the card on your phone or send the image. Anyone who scans the QR code saves your contact."}]}</script><link rel="stylesheet" href="/app.css?v=11"><link rel="icon" href="/bum/favicon-cat.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..900&family=Nunito+Sans:wght@400;700;800;900&display=swap" rel="stylesheet"><?php require dirname(__DIR__, 2) . '/includes/analytics.php'; ?><style>
 h1{font-family:Fraunces,Georgia,serif;font-weight:650;line-height:.98;letter-spacing:-.045em;margin:0 0 20px;font-size:clamp(2rem,5.2vw,4.5rem);max-width:none}.lede{max-width:none}
 .dc-grid{display:grid;grid-template-columns:1fr 430px;gap:16px;align-items:start;margin-top:20px}
 .dc-card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:16px}
@@ -66,6 +66,10 @@ input[type=color].pick{width:36px;height:36px;border:2px solid var(--ink);border
 .export-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .export-row .button{min-height:48px}
 .export-row .button[disabled]{opacity:.45;cursor:not-allowed}
+.share-wrap{position:relative}
+.share-menu{position:absolute;left:0;bottom:calc(100% + 8px);background:#fff;border:2px solid var(--ink);border-radius:12px;box-shadow:4px 4px 0 var(--ink);padding:6px;min-width:220px;z-index:30}
+.share-menu button{display:block;width:100%;text-align:left;background:transparent;border:0;padding:10px 12px;font:inherit;font-weight:700;cursor:pointer;border-radius:8px;color:var(--ink);margin:0;min-height:44px}
+.share-menu button:hover{background:#fff4e0}
 .shell .button{box-shadow:0 2px 0 #2f2a22;font-weight:700}
 .shell .button:active{box-shadow:none;transform:translateY(2px)}
 .hint{font-size:13px;opacity:.7;margin:10px 0 0}
@@ -89,6 +93,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="fld"><label for="fPhone">Phone</label><input id="fPhone" type="tel" placeholder="416-555-0134" maxlength="40"></div>
 <div class="fld"><label for="fEmail">Email</label><input id="fEmail" type="email" placeholder="jane@appleseed.co" maxlength="60"></div>
 <div class="fld"><label for="fWebsite">Website</label><input id="fWebsite" type="text" placeholder="appleseed.co" maxlength="60"></div>
+<div class="fld"><label for="fLinkedin">LinkedIn profile</label><input id="fLinkedin" type="text" placeholder="linkedin.com/in/yourname" maxlength="80"></div>
 <div class="fld"><label for="fLogo">Logo (optional)</label><input id="fLogo" type="file" accept="image/*"><p class="note">Read on your device only. Nothing uploads. Square or wide logos both fit.</p></div>
 <p class="grp">Template</p>
 <div class="seg" role="group" aria-label="Card template"><button type="button" data-tpl="classic" class="on">Classic</button><button type="button" data-tpl="bold">Bold</button><button type="button" data-tpl="topband">Top Band</button><button type="button" data-tpl="centered">Centered</button><button type="button" data-tpl="minimal">Minimal</button></div>
@@ -100,17 +105,17 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="dc-preview-wrap">
 <h2 style="margin:0 0 12px;font-size:18px">Preview</h2>
 <div class="dc-preview"><canvas id="cardCanvas" width="1080" height="1920" aria-label="Your digital business card preview"></canvas></div>
-<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="jpgBtn">Download JPG</button><button type="button" class="button secondary" id="pdfBtn">Download PDF</button><button type="button" class="button secondary" id="vcfBtn">Download contact (.vcf)</button></div>
+<div class="export-row"><button type="button" class="button" id="pngBtn">Download PNG</button><button type="button" class="button secondary" id="jpgBtn">Download JPG</button><button type="button" class="button secondary" id="pdfBtn">Download PDF</button><button type="button" class="button secondary" id="vcfBtn">Download contact (.vcf)</button><span class="share-wrap" id="shareWrap"><button type="button" class="button secondary" id="shareBtn" aria-haspopup="true" aria-expanded="false">Share</button><span class="share-menu bb-hide" id="shareMenu" role="menu"><button type="button" id="shareEmail">Email it</button><button type="button" id="shareCopy">Copy image</button></span></span></div>
 <p class="hc-status" id="statusLine" role="status"></p>
 <p class="hint bb-hide" id="nameHint">Add your name and the download buttons unlock. The card, the QR code, and the contact file all carry it.</p>
-<p class="hint">The card is 1080 by 1920 pixels, the tall shape of a phone screen. Hold your phone up and the preview itself can be scanned; the QR code on it saves your contact to the other person's phone. Send the PNG or JPG when you are not in the room, and the code still works. Blank fields show as soft gray sample text in the preview, so fill in a field to replace its sample. Your details and logo are drawn on your device. Nothing is uploaded, stored, or sent to Bum Bum.</p>
+<p class="hint">The card is 1080 by 1920 pixels, the tall shape of a phone screen. Hold your phone up and the preview itself can be scanned; the QR code on it saves your contact to the other person's phone. Send the PNG or JPG when you are not in the room, and the code still works. Making the card on a computer? Tap Share to send it to your phone or by email in one go. Blank fields show as soft gray sample text in the preview, so fill in a field to replace its sample. Your details and logo are drawn on your device. Nothing is uploaded, stored, or sent to Bum Bum.</p>
 </div>
 </div>
 <section class="panel" id="faq" aria-label="Frequently asked questions">
 <h2>Questions, answered</h2>
 <details><summary>Do I need an account?</summary><p>No. The maker is free and needs no sign-up. Type your details and download the card.</p></details>
 <details><summary>Do my details upload anywhere?</summary><p>No. The card is drawn right in your browser, on your device. Your details and your logo are never sent to Bum Bum or anyone else. The form remembers your text entries on this device for your next visit; your logo file is never kept.</p></details>
-<details><summary>What does the QR code do?</summary><p>The QR code carries a contact card (a vCard) built from your details. When someone points their phone camera at it, the phone offers to save you as a contact with your name, title, business, phone, email, website, and tagline. It works in person off your screen, and it works from the PNG, JPG, or PDF you send or post.</p></details>
+<details><summary>What does the QR code do?</summary><p>The QR code carries a contact card (a vCard) built from your details. When someone points their phone camera at it, the phone offers to save you as a contact with your name, title, business, phone, email, website, LinkedIn, and tagline. It works in person off your screen, and it works from the PNG, JPG, or PDF you send or post.</p></details>
 <details><summary>What size is the card?</summary><p>1080 by 1920 pixels, the tall shape of a phone screen, so it fills the screen when you show it and looks right when you send it. The PDF is a single page in the same tall shape.</p></details>
 <details><summary>What is the contact (.vcf) download?</summary><p>It is your contact card as a small file. Send it by text, email, or message and the person who opens it can add you to their phone contacts in one tap, no scanning needed.</p></details>
 <details><summary>Can I add my logo?</summary><p>Yes. Pick any image file and it is placed on the card. The file is read on your device and never uploaded. Square or wide logos both work; the maker fits them into the template's logo spot.</p></details>
@@ -120,7 +125,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2>Digital business cards, the short guide</h2>
 <p>A paper card gets photographed, pocketed, and lost. A digital card skips all three: it lives on your phone as an image, fills the screen when you hold it up, and the person you just met scans it and has you in their contacts before you both walk away. No app for them to install, no account for you to keep.</p>
-<p>What to put on it: your name, your title or trade in plain words, your business name, one phone number, one email, one website, and a short tagline if you have one. That is the whole list, and it is exactly what the QR code carries, so what they see is what gets saved. Leave a field blank and it simply stays off the card and out of the code.</p>
+<p>What to put on it: your name, your title or trade in plain words, your business name, one phone number, one email, one website, your LinkedIn profile, and a short tagline if you have one. That is the whole list, and it is exactly what the QR code carries, so what they see is what gets saved. Leave a field blank and it simply stays off the card and out of the code.</p>
 <p>Where it earns its keep: markets, trade shows, networking nights, and any counter where spelling your email out loud has already failed you once. Save the PNG to your photos, or set it as your lock screen during an event, and your card is one glance away. Send the JPG in a follow-up message and the new contact can scan it right off the thread. Want it on paper instead? The <a href="/tools/business-card-maker/">Business Card Maker</a> designs the classic card, front and back, as a print-ready PDF, and the two makers share templates and colors so your paper and phone cards match.</p>
 </section>
 <?php $bbTool = 'digital-business-card-maker'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
@@ -148,8 +153,8 @@ function ensureFonts(){
 var canvas=$("cardCanvas"),ctx=canvas.getContext("2d");
 var state={tpl:"classic",color:"#b3541e",logo:null,font:"serif"};
 var RE=false;
-var FIELDS=["fName","fTitle","fBusiness","fTagline","fPhone","fEmail","fWebsite"];
-var SAMPLE={fName:"Your Name",fTitle:"Your Title",fBusiness:"Your Business",fTagline:"Good work, done properly.",fPhone:"416-555-0134",fEmail:"you@yourbusiness.com",fWebsite:"yourbusiness.com"};
+var FIELDS=["fName","fTitle","fBusiness","fTagline","fPhone","fEmail","fWebsite","fLinkedin"];
+var SAMPLE={fName:"Your Name",fTitle:"Your Title",fBusiness:"Your Business",fTagline:"Good work, done properly.",fPhone:"416-555-0134",fEmail:"you@yourbusiness.com",fWebsite:"yourbusiness.com",fLinkedin:"linkedin.com/in/yourname"};
 try{if(window.qrcode&&qrcode.stringToBytesFuncs&&qrcode.stringToBytesFuncs["UTF-8"])qrcode.stringToBytes=qrcode.stringToBytesFuncs["UTF-8"];}catch(e){}
 
 function val(id){return ($(id).value||"").trim();}
@@ -157,12 +162,18 @@ function liNorm(raw){
   var s=(raw||"").trim();
   if(!s)return null;
   var handle="";
+  /* Full or partial profile URL: keep only the /in/<handle> segment, so a
+     pasted URL with trailing path segments, a query string, or a fragment
+     still normalizes to the clean profile address. */
   var m=s.match(/linkedin\.com\/in\/([^\/?#\s]+)/i);
   if(m)handle=m[1];
   else{
     var t=s.replace(/^https?:\/\//i,"").replace(/^www\./i,"").replace(/^in\//i,"").replace(/[/?#].*$/,"").trim();
     if(t&&t.indexOf(".")<0&&t.indexOf(" ")<0)handle=t;
   }
+  if(!handle)return null;
+  try{handle=decodeURIComponent(handle);}catch(e){}
+  handle=handle.replace(/[\s.,;:)\]]+$/,"");
   if(!handle)return null;
   return {full:"https://www.linkedin.com/in/"+handle,disp:"linkedin.com/in/"+handle};
 }
@@ -174,10 +185,6 @@ function data(){
     ph[id]=!v;
   });
   d.websiteDisp=d.fWebsite.replace(/^https?:\/\//i,"").replace(/\/+$/,"");
-  /* LinkedIn is hidden for now (2026-11-20): there is no form field, so
-     d.fLinkedin is always unset and this stays inert. Saved form data from
-     the brief window it was live is never read back, so a stale value
-     cannot leak onto a card or into an export. */
   var lin=liNorm(d.fLinkedin);
   d.liFull=lin?lin.full:"";
   d.liDisp=lin?lin.disp:"";
@@ -241,10 +248,11 @@ function wrapText(text,x,y,maxW,size,step,weight,family,align){
 function vcard(){
   var name=val("fName"),biz=val("fBusiness"),title=val("fTitle"),
       phone=val("fPhone"),email=val("fEmail"),web=val("fWebsite"),tag=val("fTagline"),
-      li=""; /* LinkedIn hidden for now (2026-11-20): always unset, see data(). */
+      li=val("fLinkedin");
   if(!name&&!biz&&!phone&&!email&&!web){
     name=SAMPLE.fName;biz=SAMPLE.fBusiness;title=SAMPLE.fTitle;
     phone=SAMPLE.fPhone;email=SAMPLE.fEmail;web=SAMPLE.fWebsite;tag=SAMPLE.fTagline;
+    li=SAMPLE.fLinkedin;
   }
   function esc(s){return s.replace(/\\/g,"\\\\").replace(/\r?\n/g,"\\n").replace(/;/g,"\\;").replace(/,/g,"\\,");}
   var parts=name.split(/\s+/).filter(Boolean);
@@ -257,7 +265,11 @@ function vcard(){
   if(email)L.push("EMAIL:"+esc(email));
   if(web){var u=web;if(!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(u))u="https://"+u.replace(/^\/+/,"");L.push("URL:"+esc(u));}
   var lin=liNorm(li);
-  if(lin)L.push("URL:"+esc(lin.full));
+  /* X-SOCIALPROFILE is the field phone contact importers map to the
+     contact's LinkedIn profile (iOS does). A second bare URL: line was
+     dropped inconsistently by importers, so LinkedIn never rides as one;
+     the website stays the single URL: entry. */
+  if(lin)L.push("X-SOCIALPROFILE;TYPE=linkedin:"+esc(lin.full));
   if(tag)L.push("NOTE:"+esc(tag));
   L.push("END:VCARD");
   return L.join("\r\n");
@@ -544,7 +556,7 @@ function persist(){
 }
 function syncExports(){
   var ready=!!val("fName");
-  ["pngBtn","jpgBtn","pdfBtn","vcfBtn"].forEach(function(id){$(id).disabled=!ready;});
+  ["pngBtn","jpgBtn","pdfBtn","vcfBtn","shareBtn"].forEach(function(id){$(id).disabled=!ready;});
   $("nameHint").classList.toggle("bb-hide",ready);
 }
 FIELDS.forEach(function(id){
@@ -644,6 +656,74 @@ $("vcfBtn").addEventListener("click",function(){
   saveBlob(new Blob([vcard()],{type:"text/vcard;charset=utf-8"}),slug+"-contact.vcf");
   setStatus("Your contact file is downloading. Send it by text or email and one tap adds you to their contacts.");
   dropStrip();
+});
+var shareBlob=null;
+var SHARE_URL="https://leaveittobumbum.com/tools/digital-business-card-maker/";
+var SHARE_CREDIT="Made with the Free Digital Business Card Maker from Leave It To Bum Bum";
+function shareHead(){
+  var name=val("fName"),biz=val("fBusiness");
+  return name+(biz?" \u2014 "+biz:"");
+}
+function closeShareMenu(){
+  $("shareMenu").classList.add("bb-hide");
+  $("shareBtn").setAttribute("aria-expanded","false");
+}
+function openShareMenu(){
+  var canCopy=!!(navigator.clipboard&&navigator.clipboard.write&&typeof ClipboardItem!=="undefined");
+  $("shareCopy").classList.toggle("bb-hide",!canCopy);
+  $("shareMenu").classList.remove("bb-hide");
+  $("shareBtn").setAttribute("aria-expanded","true");
+}
+document.addEventListener("click",function(e){
+  if(!$("shareWrap").contains(e.target))closeShareMenu();
+});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape")closeShareMenu();
+});
+$("shareBtn").addEventListener("click",async function(){
+  if(needName())return;
+  if(!$("shareMenu").classList.contains("bb-hide")){closeShareMenu();return;}
+  await ensureFonts();
+  var blob=await new Promise(function(res){exportCanvas().toBlob(res,"image/png");});
+  if(!blob){setStatus("The card image could not be built in this browser. The PNG download still works.",true);return;}
+  shareBlob=blob;
+  var head=shareHead();
+  var file=null;
+  try{file=new File([blob],"digital-business-card.png",{type:"image/png"});}catch(e){}
+  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({files:[file],title:head+" \u2014 digital business card",text:head+"\n\n"+SHARE_CREDIT+"\n"+SHARE_URL});
+      setStatus("Shared. Your card is on its way.");
+      dropStrip();
+      return;
+    }catch(e){
+      if(e&&e.name==="AbortError")return;
+    }
+  }
+  openShareMenu();
+});
+$("shareEmail").addEventListener("click",function(){
+  closeShareMenu();
+  if(!shareBlob)return;
+  saveBlob(shareBlob,"digital-business-card.png");
+  var subject=encodeURIComponent(shareHead()+" \u2014 digital business card");
+  var body=encodeURIComponent("Here is my digital business card.\n\nYour card image just downloaded as digital-business-card.png. Attach it to this email before sending.\n\n"+SHARE_CREDIT+"\n"+SHARE_URL);
+  setStatus("Your card image is downloading. Your email app opens next; attach the image before sending.");
+  setTimeout(function(){window.location.href="mailto:?subject="+subject+"&body="+body;},400);
+});
+$("shareCopy").addEventListener("click",async function(){
+  closeShareMenu();
+  if(!shareBlob)return;
+  try{
+    await navigator.clipboard.write([new ClipboardItem({"image/png":shareBlob})]);
+    setStatus("Card image copied. Paste it into a message, an email, or a doc.");
+    var b=$("shareBtn"),old=b.textContent;
+    b.textContent="Copied";
+    setTimeout(function(){b.textContent=old;},1600);
+    dropStrip();
+  }catch(e){
+    setStatus("Copying the image is not available in this browser. The PNG download works instead.",true);
+  }
 });
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(render);
 ensureFonts().then(render);
