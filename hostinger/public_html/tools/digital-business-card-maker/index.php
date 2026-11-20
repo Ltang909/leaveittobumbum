@@ -30,7 +30,7 @@
   "mainEntity": [
     { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. The maker is free and needs no sign-up. Type your details and download the card." } },
     { "@type": "Question", "name": "Do my details upload anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. The card is drawn right in your browser, on your device. Your details and your logo are never sent to Bum Bum or anyone else." } },
-    { "@type": "Question", "name": "What does the QR code do?", "acceptedAnswer": { "@type": "Answer", "text": "The QR code carries a contact card (a vCard) built from your details. When someone points their phone camera at it, the phone offers to save you as a contact with your name, title, business, phone, email, website, and tagline. It works in person off your screen, and it works from the PNG, JPG, or PDF you send or post." } },
+    { "@type": "Question", "name": "What does the QR code do?", "acceptedAnswer": { "@type": "Answer", "text": "The QR code carries a contact card (a vCard) built from your details. When someone points their phone camera at it, the phone offers to save you as a contact with your name, title, business, phone, email, website, LinkedIn, and tagline. It works in person off your screen, and it works from the PNG, JPG, or PDF you send or post." } },
     { "@type": "Question", "name": "What size is the card?", "acceptedAnswer": { "@type": "Answer", "text": "1080 by 1920 pixels, the tall shape of a phone screen, so it fills the screen when you show it and looks right when you send it. The PDF is a single page in the same tall shape." } },
     { "@type": "Question", "name": "What is the contact (.vcf) download?", "acceptedAnswer": { "@type": "Answer", "text": "It is your contact card as a small file. Send it by text, email, or message and the person who opens it can add you to their phone contacts in one tap, no scanning needed." } },
     { "@type": "Question", "name": "Can I add my logo?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Pick any image file and it is placed on the card. The file is read on your device and never uploaded. Square or wide logos both work; the maker fits them into the template's logo spot." } },
@@ -89,6 +89,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <div class="fld"><label for="fPhone">Phone</label><input id="fPhone" type="tel" placeholder="416-555-0134" maxlength="40"></div>
 <div class="fld"><label for="fEmail">Email</label><input id="fEmail" type="email" placeholder="jane@appleseed.co" maxlength="60"></div>
 <div class="fld"><label for="fWebsite">Website</label><input id="fWebsite" type="text" placeholder="appleseed.co" maxlength="60"></div>
+<div class="fld"><label for="fLinkedin">LinkedIn profile</label><input id="fLinkedin" type="text" placeholder="linkedin.com/in/yourname" maxlength="80"></div>
 <div class="fld"><label for="fLogo">Logo (optional)</label><input id="fLogo" type="file" accept="image/*"><p class="note">Read on your device only. Nothing uploads. Square or wide logos both fit.</p></div>
 <p class="grp">Template</p>
 <div class="seg" role="group" aria-label="Card template"><button type="button" data-tpl="classic" class="on">Classic</button><button type="button" data-tpl="bold">Bold</button><button type="button" data-tpl="topband">Top Band</button><button type="button" data-tpl="centered">Centered</button><button type="button" data-tpl="minimal">Minimal</button><button type="button" data-tpl="bumbum">Bum Bum</button></div>
@@ -108,7 +109,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <h2>Questions, answered</h2>
 <details><summary>Do I need an account?</summary><p>No. The maker is free and needs no sign-up. Type your details and download the card.</p></details>
 <details><summary>Do my details upload anywhere?</summary><p>No. The card is drawn right in your browser, on your device. Your details and your logo are never sent to Bum Bum or anyone else. The form remembers your text entries on this device for your next visit; your logo file is never kept.</p></details>
-<details><summary>What does the QR code do?</summary><p>The QR code carries a contact card (a vCard) built from your details. When someone points their phone camera at it, the phone offers to save you as a contact with your name, title, business, phone, email, website, and tagline. It works in person off your screen, and it works from the PNG, JPG, or PDF you send or post.</p></details>
+<details><summary>What does the QR code do?</summary><p>The QR code carries a contact card (a vCard) built from your details. When someone points their phone camera at it, the phone offers to save you as a contact with your name, title, business, phone, email, website, LinkedIn, and tagline. It works in person off your screen, and it works from the PNG, JPG, or PDF you send or post.</p></details>
 <details><summary>What size is the card?</summary><p>1080 by 1920 pixels, the tall shape of a phone screen, so it fills the screen when you show it and looks right when you send it. The PDF is a single page in the same tall shape.</p></details>
 <details><summary>What is the contact (.vcf) download?</summary><p>It is your contact card as a small file. Send it by text, email, or message and the person who opens it can add you to their phone contacts in one tap, no scanning needed.</p></details>
 <details><summary>Can I add my logo?</summary><p>Yes. Pick any image file and it is placed on the card. The file is read on your device and never uploaded. Square or wide logos both work; the maker fits them into the template's logo spot.</p></details>
@@ -118,7 +119,7 @@ details{border-top:1px solid var(--line);padding:10px 0}details:last-child{borde
 <section class="panel" aria-label="Guide">
 <h2>Digital business cards, the short guide</h2>
 <p>A paper card gets photographed, pocketed, and lost. A digital card skips all three: it lives on your phone as an image, fills the screen when you hold it up, and the person you just met scans it and has you in their contacts before you both walk away. No app for them to install, no account for you to keep.</p>
-<p>What to put on it: your name, your title or trade in plain words, your business name, one phone number, one email, one website, and a short tagline if you have one. That is the whole list, and it is exactly what the QR code carries, so what they see is what gets saved. Leave a field blank and it simply stays off the card and out of the code.</p>
+<p>What to put on it: your name, your title or trade in plain words, your business name, one phone number, one email, one website, your LinkedIn profile, and a short tagline if you have one. That is the whole list, and it is exactly what the QR code carries, so what they see is what gets saved. Leave a field blank and it simply stays off the card and out of the code.</p>
 <p>Where it earns its keep: markets, trade shows, networking nights, and any counter where spelling your email out loud has already failed you once. Save the PNG to your photos, or set it as your lock screen during an event, and your card is one glance away. Send the JPG in a follow-up message and the new contact can scan it right off the thread. Want it on paper instead? The <a href="/tools/business-card-maker/">Business Card Maker</a> designs the classic card, front and back, as a print-ready PDF, and the two makers share templates and colors so your paper and phone cards match.</p>
 </section>
 <?php $bbTool = 'digital-business-card-maker'; require dirname(__DIR__, 2) . '/includes/next-tasks.php'; ?>
@@ -135,8 +136,8 @@ var SERIF="Fraunces,Georgia,serif";
 var canvas=$("cardCanvas"),ctx=canvas.getContext("2d");
 var state={tpl:"classic",color:"#b3541e",logo:null};
 var RE=false;
-var FIELDS=["fName","fTitle","fBusiness","fTagline","fPhone","fEmail","fWebsite"];
-var SAMPLE={fName:"Your Name",fTitle:"Your Title",fBusiness:"Your Business",fTagline:"Good work, done properly.",fPhone:"416-555-0134",fEmail:"you@yourbusiness.com",fWebsite:"yourbusiness.com"};
+var FIELDS=["fName","fTitle","fBusiness","fTagline","fPhone","fEmail","fWebsite","fLinkedin"];
+var SAMPLE={fName:"Your Name",fTitle:"Your Title",fBusiness:"Your Business",fTagline:"Good work, done properly.",fPhone:"416-555-0134",fEmail:"you@yourbusiness.com",fWebsite:"yourbusiness.com",fLinkedin:"linkedin.com/in/yourname"};
 try{if(window.qrcode&&qrcode.stringToBytesFuncs&&qrcode.stringToBytesFuncs["UTF-8"])qrcode.stringToBytes=qrcode.stringToBytesFuncs["UTF-8"];}catch(e){}
 
 var sticker=new Image();
@@ -144,6 +145,19 @@ sticker.onload=function(){render();};
 sticker.src="/bum/icons/digital-business-card-maker.png";
 
 function val(id){return ($(id).value||"").trim();}
+function liNorm(raw){
+  var s=(raw||"").trim();
+  if(!s)return null;
+  var handle="";
+  var m=s.match(/linkedin\.com\/in\/([^\/?#\s]+)/i);
+  if(m)handle=m[1];
+  else{
+    var t=s.replace(/^https?:\/\//i,"").replace(/^www\./i,"").replace(/^in\//i,"").replace(/[/?#].*$/,"").trim();
+    if(t&&t.indexOf(".")<0&&t.indexOf(" ")<0)handle=t;
+  }
+  if(!handle)return null;
+  return {full:"https://www.linkedin.com/in/"+handle,disp:"linkedin.com/in/"+handle};
+}
 function data(){
   var d={},ph={};
   FIELDS.forEach(function(id){
@@ -152,6 +166,9 @@ function data(){
     ph[id]=!v;
   });
   d.websiteDisp=d.fWebsite.replace(/^https?:\/\//i,"").replace(/\/+$/,"");
+  var lin=liNorm(d.fLinkedin);
+  d.liFull=lin?lin.full:"";
+  d.liDisp=lin?lin.disp:"";
   return {d:d,ph:ph};
 }
 function vis(phFlag){return !RE||!phFlag;}
@@ -191,6 +208,7 @@ function contacts(d,ph){
   if(d.fPhone)out.push({t:d.fPhone,ph:ph.fPhone});
   if(d.fEmail)out.push({t:d.fEmail,ph:ph.fEmail});
   if(d.fWebsite)out.push({t:d.websiteDisp,ph:ph.fWebsite});
+  if(d.liDisp)out.push({t:"LinkedIn: "+d.liDisp,ph:ph.fLinkedin});
   if(RE)out=out.filter(function(l){return !l.ph;});
   return out;
 }
@@ -216,10 +234,12 @@ function wrapText(text,x,y,maxW,size,step,weight,family,align){
 }
 function vcard(){
   var name=val("fName"),biz=val("fBusiness"),title=val("fTitle"),
-      phone=val("fPhone"),email=val("fEmail"),web=val("fWebsite"),tag=val("fTagline");
+      phone=val("fPhone"),email=val("fEmail"),web=val("fWebsite"),tag=val("fTagline"),
+      li=val("fLinkedin");
   if(!name&&!biz&&!phone&&!email&&!web){
     name=SAMPLE.fName;biz=SAMPLE.fBusiness;title=SAMPLE.fTitle;
     phone=SAMPLE.fPhone;email=SAMPLE.fEmail;web=SAMPLE.fWebsite;tag=SAMPLE.fTagline;
+    li=SAMPLE.fLinkedin;
   }
   function esc(s){return s.replace(/\\/g,"\\\\").replace(/\r?\n/g,"\\n").replace(/;/g,"\\;").replace(/,/g,"\\,");}
   var parts=name.split(/\s+/).filter(Boolean);
@@ -231,6 +251,8 @@ function vcard(){
   if(phone)L.push("TEL;TYPE=CELL:"+esc(phone));
   if(email)L.push("EMAIL:"+esc(email));
   if(web){var u=web;if(!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(u))u="https://"+u.replace(/^\/+/,"");L.push("URL:"+esc(u));}
+  var lin=liNorm(li);
+  if(lin)L.push("URL:"+esc(lin.full));
   if(tag)L.push("NOTE:"+esc(tag));
   L.push("END:VCARD");
   return L.join("\r\n");
@@ -278,11 +300,11 @@ classic:function(d,ph,ac){
   ctx.fillStyle="#ffffff";ctx.fillRect(0,0,W,H);
   if(vis(ph.fBusiness)){
     ink(ac,ph.fBusiness);spacing("3px");
-    fit(d.fBusiness,620,30,18,"800",SANS);
+    fit(d.fBusiness,state.logo?540:620,30,18,"800",SANS);
     ctx.fillText(d.fBusiness.toUpperCase(),PAD,142);
     spacing("0px");ctx.globalAlpha=1;
   }
-  if(state.logo)drawLogo(W-PAD-210,84,210,118);
+  if(state.logo)drawLogo(W-PAD-315,84,315,177);
   var y=660;
   if(vis(ph.fName)){
     ink("#20242a",ph.fName);
@@ -322,8 +344,8 @@ bold:function(d,ph,ac){
     spacing("0px");ctx.globalAlpha=1;
   }
   if(state.logo){
-    ctx.fillStyle="#ffffff";roundRect(W-PAD-184,84,184,184,20);ctx.fill();
-    drawLogo(W-PAD-184+14,98,156,156);
+    ctx.fillStyle="#ffffff";roundRect(W-PAD-276,84,276,276,20);ctx.fill();
+    drawLogo(W-PAD-276+16,100,244,244);
   }
   var y=660;
   if(vis(ph.fName)){
@@ -356,16 +378,16 @@ bold:function(d,ph,ac){
 },
 topband:function(d,ph,ac){
   ctx.fillStyle="#ffffff";ctx.fillRect(0,0,W,H);
-  ctx.fillStyle=ac;ctx.fillRect(0,0,W,540);
+  ctx.fillStyle=ac;ctx.fillRect(0,0,W,620);
   if(state.logo){
-    ctx.fillStyle="#ffffff";roundRect(W/2-120,84,240,240,24);ctx.fill();
-    drawLogo(W/2-106,98,212,212);
+    ctx.fillStyle="#ffffff";roundRect(W/2-180,64,360,360,24);ctx.fill();
+    drawLogo(W/2-164,80,328,328);
   }else{
-    monogram(W/2,204,104,d.fBusiness||d.fName,"#ffffff",ac);
+    monogram(W/2,250,104,d.fBusiness||d.fName,"#ffffff",ac);
   }
   if(vis(ph.fBusiness)){
     ctx.fillStyle="#ffffff";ctx.globalAlpha=ph.fBusiness?0.55:1;spacing("2px");
-    wrapText(d.fBusiness.toUpperCase(),W/2,428,780,30,42,"800",SANS,"center");
+    wrapText(d.fBusiness.toUpperCase(),W/2,520,780,30,42,"800",SANS,"center");
     spacing("0px");ctx.globalAlpha=1;
   }
   var y=836;
@@ -400,7 +422,7 @@ topband:function(d,ph,ac){
 },
 centered:function(d,ph,ac){
   ctx.fillStyle="#ffffff";ctx.fillRect(0,0,W,H);
-  if(state.logo){drawLogo(W/2-160,110,320,160);}
+  if(state.logo){drawLogo(W/2-240,100,480,240);}
   else{monogram(W/2,196,86,d.fBusiness||d.fName,ac,"#ffffff");}
   var y=620;
   if(vis(ph.fName)){
@@ -449,7 +471,7 @@ minimal:function(d,ph,ac){
     ctx.fillText(d.fBusiness.toUpperCase(),PAD+32,100);
     spacing("0px");ctx.globalAlpha=1;
   }
-  if(state.logo)drawLogo(W-PAD-200,140,200,110);
+  if(state.logo)drawLogo(W-PAD-300,120,300,160);
   var list=contacts(d,ph);
   if(list.length){
     ctx.textAlign="right";
@@ -492,6 +514,7 @@ bumbum:function(d,ph,ac){
     ctx.fillText(d.fBusiness.toUpperCase(),PAD,140);
     spacing("0px");ctx.globalAlpha=1;
   }
+  if(state.logo)drawLogo(PAD,196,300,168);
   var y=560;
   if(vis(ph.fName)){
     ink("#3a2a1c",ph.fName);
