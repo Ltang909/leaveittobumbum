@@ -29,7 +29,7 @@ test.describe('public pages', () => {
     await expect(page.locator('.desk-browse')).toHaveAttribute('href', '/tools/');
   });
 
-  test('/tools/ lists all 35 tools', async ({ page }) => {
+  test('/tools/ lists all 36 tools', async ({ page }) => {
     await page.goto('/tools/');
     await expect(page.locator('h1')).toContainText('Every tiny tool');
     // The grid paginates client-side, 16 cards per page; walk every
