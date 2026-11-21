@@ -1129,4 +1129,41 @@ export const TOOL_DOCS: ToolDoc[] = [
     ],
     updated: "November 20, 2026",
   },
+  {
+    key: "background-remover",
+    name: "Background Remover",
+    href: "/tools/background-remover/",
+    icon: "/bum/icons/background-remover.png",
+    summary:
+      "Background Remover takes the background off a photo right in your browser and hands back a transparent PNG at the full size of the original. Drop in a JPG, PNG, or WebP, check the before and after, and download the cutout. The removal model runs on your device, so the photo itself is never uploaded anywhere. It is free, with no sign-up and no watermark.",
+    steps: [
+      "Drop in a JPG, PNG, or WebP photo, or tap the drop area to pick one.",
+      "On your first visit, the removal model downloads once (about 44 MB). It runs on your device, not on a server.",
+      "Check the before and after. The after view sits on a checkerboard so you can see exactly which parts are transparent.",
+      "Download the transparent PNG, or start over with another photo.",
+    ],
+    goodToKnow: [
+      "Background Remover is free. Removing backgrounds costs nothing, as many times as you like, and downloads carry no watermark.",
+      "Everything runs in your browser. Your photo is never uploaded, stored, or sent to Bum Bum or anyone else.",
+      "The first visit downloads the removal model once, about 44 MB. After that, photos are processed right away, and most browsers keep the model cached for the next visit.",
+      "The download is a transparent PNG at the same size as the photo you put in, ready for listings, designs, and documents.",
+      "Photos with a clear subject and some contrast against the background give the cleanest edges: product shots, portraits, pets, and logos.",
+      "Fur and hair come out well. Fine flyaway strands against a busy background are the hardest case for any remover, this one included.",
+    ],
+    data: "Your photo is opened in your browser and processed on your device by a model the page downloads on your first visit. The photo is never uploaded or sent anywhere, and nothing about it is stored by Bum Bum.",
+    tips: [
+      "Shoot products against a plain, contrasting background and the cutout edge comes out clean enough to drop straight onto a white listing.",
+      "Trim the empty space around a cutout with the Image Cropper so the subject fills the frame.",
+      "Need a JPG on white for a marketplace instead of a transparent PNG? Run the cutout through the Image Converter.",
+      "Pets make great stickers: cut one out, print it on sticker paper, and the transparent edge does the hard part.",
+    ],
+    faq: [
+      ["Does my photo upload anywhere?", "No. The background is removed in your browser, on your device. The only download is the removal model itself, on your first visit."],
+      ["Why did my first photo take longer?", "The removal model is about 44 MB and downloads once, on your first visit. After that, photos are processed right away."],
+      ["What format comes out?", "A transparent PNG at the same size as the photo you put in."],
+      ["What photos work best?", "A clear subject with some contrast against its background: product shots, portraits, pets, and logos."],
+      ["Do I need an account?", "No. The remover is free and needs no sign-up, and downloads carry no watermark."],
+    ],
+    updated: "November 21, 2026",
+  },
 ];

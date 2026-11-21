@@ -1,0 +1,17 @@
+Background Remover, vendored third-party components
+====================================================
+
+ONNX Runtime Web 1.20.1 (ort.min.js, ort-wasm-simd-threaded.wasm,
+ort-wasm-simd-threaded.js, the last renamed from .mjs because this host
+serves .mjs as text/plain)
+License: MIT License, Microsoft Corporation.
+Source: https://www.npmjs.com/package/onnxruntime-web (v1.20.1)
+
+Background removal model (model.onnx)
+The "silueta" model: a compact U^2-Net variant distributed with the
+rembg project (https://github.com/danielgatis/rembg, MIT License),
+from the U^2-Net project by Xuebin Qin et al.
+(https://github.com/xuebinqin/U-2-Net).
+License: Apache License 2.0.
+Model file: silueta.onnx from rembg release v0.0.0, 44,173,029 bytes,
+unmodified.
