@@ -4,7 +4,7 @@ import { join } from 'node:path';
 export const FIXTURES = join(__dirname, 'fixtures');
 export const fixture = (name: string) => join(FIXTURES, name);
 
-/** The 36 live tools, mirroring hostinger/public_html/tools/registry.json.
+/** The 37 live tools, mirroring hostinger/public_html/tools/registry.json.
  *  `primary` is each page's primary control (real id from the page source).
  *  Day Log is accounts-only: for a guest its primary control is the
  *  sign-in CTA, which is all a signed-out visitor ever sees. */
@@ -38,6 +38,7 @@ export const TOOLS: ToolDef[] = [
   { key: 'email-signature-generator', name: 'Email Signature Maker', url: '/tools/email-signature-generator/', primary: '#sigForm' },
   { key: 'business-card-maker', name: 'Business Card Maker', url: '/tools/business-card-maker/', primary: '#bcForm' },
   { key: 'digital-business-card-maker', name: 'Digital Business Card Maker', url: '/tools/digital-business-card-maker/', primary: '#dcForm' },
+  { key: 'background-remover', name: 'Background Remover', url: '/tools/background-remover/', primary: '#dropzone' },
   { key: 'pdf-compressor', name: 'PDF Compressor', url: '/tools/pdf-compressor/', primary: '#dropzone' },
   { key: 'invoice-generator', name: 'Invoice Generator', url: '/tools/invoice-generator/', primary: '#invForm' },
   { key: 'heic-to-jpg', name: 'HEIC to JPG', url: '/tools/heic-to-jpg/', primary: '#dropzone' },

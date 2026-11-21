@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { TOOLS } from '../../helpers';
 
 /**
- * Per-tool coverage, default tier: every one of the 36 tool pages loads
+ * Per-tool coverage, default tier: every one of the 37 tool pages loads
  * and exposes its primary control. AI/Groq-backed tools additionally get
  * validation-state checks here (no provider call is made); their happy
  * paths live in the gated billable project. The browser-side tools that
@@ -11,7 +11,7 @@ import { TOOLS } from '../../helpers';
  * form tools in tools-forms.spec.ts.
  */
 
-test.describe('all 36 tool pages load with their primary control', () => {
+test.describe('all 37 tool pages load with their primary control', () => {
   for (const tool of TOOLS) {
     test(`${tool.name} (${tool.key})`, async ({ page }) => {
       const res = await page.goto(tool.url);

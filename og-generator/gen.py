@@ -46,6 +46,7 @@ CARDS = {
     'email-signature-generator': ("Email Signature Generator", "A clean, professional signature in minutes."),
     'business-card-maker': ("Business Card Maker", "A sharp card in minutes, print-ready and free."),
     'digital-business-card-maker': ("Digital Business Card Maker", "A tall card for your phone, with a QR code that saves your contact."),
+    'background-remover': ("Background Remover", "The background comes off in your browser. Your photo never uploads."),
     'pdf-compressor': ("PDF Compressor", "Same PDF, smaller file, right in your browser."),
     'invoice-generator': ("Invoice Generator", "Build a clean invoice and download the PDF."),
     'heic-to-jpg': ("HEIC to JPG Converter", "Turn HEIC photos into JPGs in seconds."),

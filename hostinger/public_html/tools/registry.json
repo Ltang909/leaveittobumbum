@@ -193,6 +193,18 @@
       "mascot": "/bum/cat-box-v2.png"
     },
     {
+      "key": "background-remover",
+      "name": "Background Remover",
+      "tag": "Files",
+      "icon": "🪄",
+      "iconImg": "/bum/icons/background-remover.png",
+      "description": "Remove the background from a photo right in your browser and download a transparent PNG. Your photo never uploads.",
+      "url": "/tools/background-remover/",
+      "cardTitle": ["Background", "Remover"],
+      "cta": "Remove a background",
+      "mascot": "/bum/cat-bowtie.png"
+    },
+    {
       "key": "ghostwriter",
       "name": "Voice to Content",
       "tag": "Content",
