@@ -112,8 +112,8 @@ var session=null,sessionPromise=null,resultBlob=null,resultName="background-remo
 function setStatus(msg,isErr){var s=$("statusLine");s.textContent=msg||"";s.className="hc-status"+(isErr?" error":"");}
 if(window.ort){
   ort.env.wasm.wasmPaths={
-    "ort-wasm-simd-threaded.wasm":VENDOR+"ort-wasm-simd-threaded.wasm",
-    "ort-wasm-simd-threaded.mjs":VENDOR+"ort-wasm-simd-threaded.js"
+    wasm:VENDOR+"ort-wasm-simd-threaded.wasm",
+    mjs:VENDOR+"ort-wasm-simd-threaded.js"
   };
   ort.env.wasm.numThreads=1;
 }
