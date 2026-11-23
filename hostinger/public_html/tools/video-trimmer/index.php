@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Free Video Trimmer Online | Trim Videos in Your Browser | Leave It to Bum Bum</title>
-<meta name="description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
+<meta name="description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free, no account needed.">
 <meta property="og:title" content="Free Video Trimmer Online | Trim Videos in Your Browser | Leave It to Bum Bum">
-<meta property="og:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
+<meta property="og:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-trimmer/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/video-trimmer.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Free Video Trimmer Online | Trim Videos in Your Browser | Leave It to Bum Bum">
-<meta name="twitter:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.">
+<meta name="twitter:description" content="Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/video-trimmer.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-trimmer/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free to try, no account needed.",
+  "description": "Trim videos in your browser. Mark the good part, Bum Bum snips it. Your video never leaves your device. Free, no account needed.",
   "url": "https://leaveittobumbum.com/tools/video-trimmer/"
 }
 </script>

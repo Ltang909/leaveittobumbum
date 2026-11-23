@@ -21,7 +21,7 @@ export default function Team() {
       <section className="shell" style={{ paddingBottom: 110 }}>
         <CrewCards />
         <p className="prose" style={{ marginTop: 48, textAlign: "center" }}>
-          Want to work with this elite squad? <a href="/tools/">Grab a tool</a> or <a href="/pricing/">join the plan</a>. Bum Bum approves.
+          Want to work with this elite squad? <a href="/tools/">Grab a tool</a> or <a href="/36-hours/">get a custom tool built</a>. Bum Bum approves.
         </p>
       </section>
       <SiteFooter />

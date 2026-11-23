@@ -5,15 +5,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no">
 <title>Free Screen Recorder Online | Record Your Screen in the Browser | Leave It to Bum Bum</title>
-<meta name="description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
+<meta name="description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free, with no usage limits.">
 <meta property="og:title" content="Free Screen Recorder Online | Record Your Screen in the Browser | Leave It to Bum Bum">
-<meta property="og:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
+<meta property="og:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free, with no usage limits.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/clips/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/clips.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Free Screen Recorder Online | Record Your Screen in the Browser | Leave It to Bum Bum">
-<meta name="twitter:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.">
+<meta name="twitter:description" content="Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free, with no usage limits.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/clips.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/clips/">
 <script type="application/ld+json">
@@ -28,7 +28,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free to try.",
+  "description": "Record your screen in your browser. Tab, window, or full screen, mic and camera bubble included. Trim and download. Nothing uploads. Free, with no usage limits.",
   "url": "https://leaveittobumbum.com/tools/clips/"
 }
 </script>

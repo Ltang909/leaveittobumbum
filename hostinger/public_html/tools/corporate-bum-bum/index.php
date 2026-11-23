@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Job Application Tracker | Track Every Application and Follow-Up | Leave It to Bum Bum</title>
-<meta name="description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
+<meta name="description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free, no account needed.">
 <meta property="og:title" content="Job Application Tracker | Track Every Application and Follow-Up | Leave It to Bum Bum">
-<meta property="og:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
+<meta property="og:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/corporate-bum-bum/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/corporate-bum-bum.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Job Application Tracker | Track Every Application and Follow-Up | Leave It to Bum Bum">
-<meta name="twitter:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.">
+<meta name="twitter:description" content="Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/corporate-bum-bum.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/corporate-bum-bum/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free to try, no account needed.",
+  "description": "Track job applications without the spreadsheet. Every morning, get told who to follow up with and what to say. Free, no account needed.",
   "url": "https://leaveittobumbum.com/tools/corporate-bum-bum/"
 }
 </script>

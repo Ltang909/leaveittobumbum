@@ -1,6 +1,6 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Email Signature Maker | Build a Professional Email Signature | Leave It to Bum Bum</title>
-<meta name="description" content="Build a professional email signature in your browser. Fill in your details, pick a layout, copy it into Gmail or Outlook. Nothing is uploaded. Free to try.">
+<meta name="description" content="Build a professional email signature in your browser. Fill in your details, pick a layout, copy it into Gmail or Outlook. Nothing is uploaded. Free, with no usage limits.">
 <meta property="og:title" content="Email Signature Maker | Build a Professional Email Signature | Leave It to Bum Bum">
 <meta property="og:description" content="Fill in your details, pick a layout, copy a professional email signature into Gmail or Outlook. Built in your browser, nothing uploaded.">
 <meta property="og:type" content="website">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Build a professional email signature in your browser. Fill in your details, pick a layout, copy it into Gmail or Outlook. Nothing is uploaded. Free to try.",
+  "description": "Build a professional email signature in your browser. Fill in your details, pick a layout, copy it into Gmail or Outlook. Nothing is uploaded. Free, with no usage limits.",
   "url": "https://leaveittobumbum.com/tools/email-signature-generator/"
 }
 </script>

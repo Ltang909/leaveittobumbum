@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Receipt Scanner | Scan Receipts Into Clean Tables in Your Browser | Leave It to Bum Bum</title>
-<meta name="description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<meta name="description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free, with no usage limits.">
 <meta property="og:title" content="Receipt Scanner | Scan Receipts Into Clean Tables in Your Browser | Leave It to Bum Bum">
-<meta property="og:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<meta property="og:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free, with no usage limits.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/receipt-reader/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/receipt-reader.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Receipt Scanner | Scan Receipts Into Clean Tables in Your Browser | Leave It to Bum Bum">
-<meta name="twitter:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.">
+<meta name="twitter:description" content="Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free, with no usage limits.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/receipt-reader.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/receipt-reader/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free to try.",
+  "description": "Snap receipts, get clean tables. Vendor, date, line items, tax, and total extracted in your browser. Download your log as CSV. Free, with no usage limits.",
   "url": "https://leaveittobumbum.com/tools/receipt-reader/"
 }
 </script>

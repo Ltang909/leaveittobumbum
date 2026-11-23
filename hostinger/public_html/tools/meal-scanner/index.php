@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>Meal Scanner | Snap Your Food, Get Calories and Macros | Leave It to Bum Bum</title>
-<meta name="description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free to try.">
+<meta name="description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free, with no usage limits.">
 <meta property="og:title" content="Meal Scanner | Snap Your Food, Get Calories and Macros | Leave It to Bum Bum">
-<meta property="og:description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free to try.">
+<meta property="og:description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free, with no usage limits.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/meal-scanner/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/meal-scanner.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Meal Scanner | Snap Your Food, Get Calories and Macros | Leave It to Bum Bum">
-<meta name="twitter:description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free to try.">
+<meta name="twitter:description" content="Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free, with no usage limits.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/meal-scanner.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/meal-scanner/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free to try.",
+  "description": "Snap a photo of your meal. Bum Bum estimates the calories, protein, carbs, and fat in seconds, with an honest range instead of a fake-exact number. Free, with no usage limits.",
   "url": "https://leaveittobumbum.com/tools/meal-scanner/"
 }
 </script>

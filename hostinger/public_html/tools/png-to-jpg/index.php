@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>PNG to JPG Converter | Convert PNG Images in Your Browser | Leave It to Bum Bum</title>
-<meta name="description" content="Convert PNG images to JPG in your browser. Smaller files that open anywhere, with a quality slider to set the size. Files never leave your device. Free to try, no account needed.">
+<meta name="description" content="Convert PNG images to JPG in your browser. Smaller files that open anywhere, with a quality slider to set the size. Files never leave your device. Free, no account needed.">
 <meta property="og:title" content="PNG to JPG Converter | Convert PNG Images in Your Browser | Leave It to Bum Bum">
-<meta property="og:description" content="Convert PNG images to JPG in your browser. Smaller files that open anywhere, with a quality slider to set the size. Files never leave your device. Free to try, no account needed.">
+<meta property="og:description" content="Convert PNG images to JPG in your browser. Smaller files that open anywhere, with a quality slider to set the size. Files never leave your device. Free, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/png-to-jpg/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/png-to-jpg.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PNG to JPG Converter | Convert PNG Images in Your Browser | Leave It to Bum Bum">
-<meta name="twitter:description" content="Convert PNG images to JPG in your browser. Smaller files that open anywhere, with a quality slider to set the size. Files never leave your device. Free to try, no account needed.">
+<meta name="twitter:description" content="Convert PNG images to JPG in your browser. Smaller files that open anywhere, with a quality slider to set the size. Files never leave your device. Free, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/png-to-jpg.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/png-to-jpg/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Convert PNG images to JPG in your browser. Smaller files that open anywhere, with a quality slider to set the size. Files never leave your device. Free to try, no account needed.",
+  "description": "Convert PNG images to JPG in your browser. Smaller files that open anywhere, with a quality slider to set the size. Files never leave your device. Free, no account needed.",
   "url": "https://leaveittobumbum.com/tools/png-to-jpg/"
 }
 </script>

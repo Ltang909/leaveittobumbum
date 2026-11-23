@@ -8,15 +8,15 @@
 // the single-threaded core, now with a load timeout as a hang guard.
 ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum</title>
-<meta name="description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
+<meta name="description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free, with no usage limits.">
 <meta property="og:title" content="Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum">
-<meta property="og:description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
+<meta property="og:description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free, with no usage limits.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/video-converter/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/video-converter.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Video Converter | Convert MP4, WebM, and GIF in Your Browser | Leave It to Bum Bum">
-<meta name="twitter:description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.">
+<meta name="twitter:description" content="Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free, with no usage limits.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/video-converter.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/video-converter/">
 <script type="application/ld+json">
@@ -31,7 +31,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free to try.",
+  "description": "Wrong format? Fixed. Drop in a video and convert it to MP4, WebM, or animated GIF right in your browser. Your video never leaves your device. Free, with no usage limits.",
   "url": "https://leaveittobumbum.com/tools/video-converter/"
 }
 </script>
