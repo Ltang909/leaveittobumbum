@@ -163,12 +163,16 @@ function ensureCustomRequestTables(): void {
         user_id INT UNSIGNED NOT NULL,
         title VARCHAR(180) NOT NULL,
         details TEXT NOT NULL,
-        status ENUM('open','delivered','overdue_credited','cancelled') NOT NULL DEFAULT 'open',
+        status ENUM('open','delivered','overdue_credited','cancelled','pending_payment','paid','overdue_refunded','refunded','expired') NOT NULL DEFAULT 'open',
         requested_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        deadline_at DATETIME NOT NULL,
+        deadline_at DATETIME NULL,
         delivered_at DATETIME NULL,
         credit_owed TINYINT(1) NOT NULL DEFAULT 0,
         stripe_credit_id VARCHAR(80) NULL,
+        payment_status VARCHAR(20) NOT NULL DEFAULT 'none',
+        stripe_session_id VARCHAR(120) NULL,
+        stripe_payment_intent VARCHAR(120) NULL,
+        paid_at DATETIME NULL,
         queue_id INT UNSIGNED NULL,
         INDEX idx_user (user_id),
         INDEX idx_status_deadline (status, deadline_at),
@@ -183,6 +187,10 @@ function ensureCustomRequestTables(): void {
         'delivered_at' => 'DATETIME NULL',
         'credit_owed' => 'TINYINT(1) NOT NULL DEFAULT 0',
         'stripe_credit_id' => 'VARCHAR(80) NULL',
+        'payment_status' => "VARCHAR(20) NOT NULL DEFAULT 'none'",
+        'stripe_session_id' => 'VARCHAR(120) NULL',
+        'stripe_payment_intent' => 'VARCHAR(120) NULL',
+        'paid_at' => 'DATETIME NULL',
         'queue_id' => 'INT UNSIGNED NULL',
     ];
     try {
@@ -191,10 +199,19 @@ function ensureCustomRequestTables(): void {
         foreach ($want as $col => $def) {
             if (!isset($have[$col])) db()->exec("ALTER TABLE custom_requests ADD COLUMN $col $def");
         }
-        // Widen the status enum on older tables so admin cancellations have
-        // somewhere to land. ADD COLUMN above never touches existing columns.
-        if (isset($have['status']) && strpos((string) $have['status'], "'cancelled'") === false) {
-            db()->exec("ALTER TABLE custom_requests MODIFY status ENUM('open','delivered','overdue_credited','cancelled') NOT NULL DEFAULT 'open'");
+        // Widen the status enum on older tables so admin cancellations and
+        // the $49 Promise payment states have somewhere to land. ADD COLUMN
+        // above never touches existing columns.
+        if (isset($have['status']) && strpos((string) $have['status'], "'pending_payment'") === false) {
+            db()->exec("ALTER TABLE custom_requests MODIFY status ENUM('open','delivered','overdue_credited','cancelled','pending_payment','paid','overdue_refunded','refunded','expired') NOT NULL DEFAULT 'open'");
+        }
+        // Promise requests are created before their scope (and therefore
+        // their deadline) exists, so the deadline must allow NULL on tables
+        // created under the old Operator flow.
+        $nulls = [];
+        foreach (db()->query('SHOW COLUMNS FROM custom_requests')->fetchAll() as $c) $nulls[$c['Field']] = $c['Null'];
+        if (($nulls['deadline_at'] ?? 'YES') === 'NO') {
+            db()->exec('ALTER TABLE custom_requests MODIFY deadline_at DATETIME NULL');
         }
         if (!isset($have['queue_id'])) {
             try { db()->exec('ALTER TABLE custom_requests ADD INDEX idx_queue (queue_id)'); }
