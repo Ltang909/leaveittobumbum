@@ -1,6 +1,8 @@
 <?php
-// Custom tool requests (Operator plan). GET lists the billing account's
-// requests, POST submits a new one against the billing account's monthly slot.
+// Custom tool requests. GET lists the billing account's requests (admins
+// can pass ?all=1 for every $49 Promise request), POST submits a new one
+// against the billing account's monthly Operator slot, and admins start
+// the 36-hour clock / mark delivery on paid Promise requests.
 // Team members draw on the team owner's Operator perk and shared allowance.
 // Every Operator request is also mirrored into the public community queue,
 // flagged as an operator request, so everyone can follow along.
@@ -25,8 +27,20 @@ function requestRow(array $r): array {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Admin view: every Promise request (anything that went through the
+    // $49 checkout), newest first, with the customer's email.
+    if (isAdmin($user) && ($_GET['all'] ?? '') === '1') {
+        try {
+            $stmt = db()->query("SELECT r.id, r.title, r.details, r.status, r.payment_status, r.requested_at, r.deadline_at, r.delivered_at, u.email AS user_email FROM custom_requests r JOIN users u ON u.id = r.user_id WHERE r.payment_status <> 'none' ORDER BY r.requested_at DESC LIMIT 50");
+            jsonResponse(['all_requests' => array_map('requestRow', $stmt->fetchAll())]);
+        } catch (PDOException $error) {
+            error_log('Admin request list failed: ' . $error->getMessage());
+            jsonResponse(['error' => 'Requests are not set up yet.'], 503);
+        }
+    }
     try {
-        $stmt = db()->prepare('SELECT id, title, status, requested_at, deadline_at, delivered_at FROM custom_requests WHERE user_id = ? ORDER BY requested_at DESC LIMIT 20');
+        ensureToolRequestTables();
+        $stmt = db()->prepare('SELECT cr.id, cr.title, cr.status, cr.payment_status, cr.requested_at, cr.deadline_at, cr.delivered_at, tr.status AS queue_status FROM custom_requests cr LEFT JOIN tool_requests tr ON tr.id = cr.queue_id WHERE cr.user_id = ? ORDER BY cr.requested_at DESC LIMIT 20');
         $stmt->execute([$billId]);
         $monthStart = periodKey($bill) . '-01 00:00:00';
         $used = db()->prepare('SELECT id FROM custom_requests WHERE user_id = ? AND requested_at >= ? LIMIT 1');
@@ -42,6 +56,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 requirePost();
 $input = body();
 requireCsrf($input);
+// Admin actions on paid Promise requests: starting the 36-hour clock once
+// scope is agreed, and marking a build delivered. These sit ahead of the
+// Operator gate below because Promise customers are on the free plan.
+$action = (string) ($input['action'] ?? '');
+if ($action === 'start_clock' || $action === 'mark_delivered') {
+    if (!isAdmin($user)) jsonResponse(['error' => 'Admins only.'], 403);
+    $rid = (int) ($input['request_id'] ?? 0);
+    if ($rid <= 0) jsonResponse(['error' => 'Pick a request.'], 422);
+    if ($action === 'start_clock') {
+        $stmt = db()->prepare("UPDATE custom_requests SET status = 'open', deadline_at = DATE_ADD(NOW(), INTERVAL 36 HOUR) WHERE id = ? AND payment_status = 'paid' AND status = 'paid'");
+        $stmt->execute([$rid]);
+        if ($stmt->rowCount() === 0) jsonResponse(['error' => 'That request is not waiting for its clock to start.'], 409);
+        try {
+            $row = db()->prepare('SELECT r.title, u.email FROM custom_requests r JOIN users u ON u.id = r.user_id WHERE r.id = ?');
+            $row->execute([$rid]);
+            if ($req = $row->fetch()) {
+                bbSendEmail((string) $req['email'], 'Your 36 hours just started: ' . mb_substr((string) $req['title'], 0, 80), "Hi!\n\nScope is agreed, so the clock is running on your Promise request \"{$req['title']}\".\n\nBum Bum ships it within 36 hours (weekends and US federal holidays do not count, and the clock pauses while we wait on you). If we miss, the \$49 comes back automatically.\n\nFollow along: https://leaveittobumbum.com/account/\n\n— Bum Bum");
+            }
+        } catch (Throwable $mailError) {
+            error_log('Clock-start email failed: ' . $mailError->getMessage());
+        }
+        jsonResponse(['ok' => true]);
+    }
+    $stmt = db()->prepare("UPDATE custom_requests SET status = 'delivered', delivered_at = NOW() WHERE id = ? AND status = 'open'");
+    $stmt->execute([$rid]);
+    if ($stmt->rowCount() === 0) jsonResponse(['error' => 'That request is not in progress.'], 409);
+    jsonResponse(['ok' => true]);
+}
 if ($bill['plan'] !== 'operator' || !in_array($bill['subscription_status'], ['active', 'trialing', 'past_due'], true)) {
     jsonResponse(['error' => 'Custom tool requests are an Operator perk.'], 403);
 }
@@ -76,6 +118,12 @@ try {
         ensureToolRequestTables();
         $mirror = db()->prepare('INSERT INTO tool_requests (name, email, problem, outcome, status, is_operator) VALUES (?, ?, ?, ?, ?, 1)');
         $mirror->execute(['', (string) ($user['email'] ?? ''), $title, $details, 'requested']);
+        // Link the mirror to the custom request so admin queue statuses can
+        // propagate back to the account page.
+        $queueId = (int) db()->lastInsertId();
+        if ($queueId > 0) {
+            db()->prepare('UPDATE custom_requests SET queue_id = ? WHERE id = ?')->execute([$queueId, $id]);
+        }
     } catch (Throwable $mirrorError) {
         error_log('Operator queue mirror failed: ' . $mirrorError->getMessage());
     }

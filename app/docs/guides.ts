@@ -180,12 +180,12 @@ export const GUIDES: GuideDoc[] = [
     title: "Requesting a tool",
     summary:
       "Missing a tool? There are two lanes. The community queue is free: your request joins a public list where everyone can upvote it, and the most-wanted tools get built. The fast lane is the 36-hour Promise: one scoped request, $49 one-time, built within 36 hours.",
-    updated: "November 17, 2026",
+    updated: "November 23, 2026",
     blocks: [
       { h: "The community queue" },
       { p: "Hit **Request a tool** anywhere on the site, or browse the [public queue](/requests/). Requests are visible to everyone, anyone can upvote, and we build the most-wanted tools as fast as we can. There is no timeline promise on this lane and no cost. If you are not signed in, we will nudge you to peek at the toolbox first (your task might already be solved) and make a free account so your request has a home." },
       { h: "The Promise lane" },
-      { p: "For a one-time $49, one scoped request goes down the fast lane: agreed scope, built within 36 hours, or the request is on us. Say in your request that it is a Promise request; we agree the scope with you, payment is arranged, and the clock starts when scope and access are confirmed. Promise requests also appear in the public queue with a promise badge, so everyone can follow along. The promise, its clock rules, and what fits in it are spelled out on [the 36-hour promise page](/docs/the-36-hour-promise/)." },
+      { p: "For a one-time $49, one scoped request goes down the fast lane: agreed scope, built within 36 hours, or the request is on us. Send it from your account page and pay the $49 at checkout; we agree the scope with you by email, and the clock starts when scope and access are confirmed. If we cannot scope it, the $49 comes straight back. Promise requests also appear in the public queue with a promise badge, so everyone can follow along. The promise, its clock rules, and what fits in it are spelled out on [the 36-hour promise page](/docs/the-36-hour-promise/)." },
       { h: "What makes a good request" },
       { ul: [
         "Describe the annoying task in plain words. 'Turn my supplier PDF invoices into a spreadsheet' tells us what to build far better than 'build an invoice app'.",
@@ -200,12 +200,12 @@ export const GUIDES: GuideDoc[] = [
     title: "The 36-hour promise",
     summary:
       "One scoped tool request, $49 one-time. Once the tiny, useful version is agreed, Bum Bum ships it within 36 hours, or the request is on us.",
-    updated: "November 17, 2026",
+    updated: "November 23, 2026",
     blocks: [
       { h: "How it runs" },
       { ul: [
-        "Tell us the one annoying task, from your account page or the request form.",
-        "We reply with the tiny, useful version we can actually build. Nothing vague ships.",
+        "Tell us the one annoying task from your account page, and pay the one-time $49 at checkout.",
+        "We reply with the tiny, useful version we can actually build. Nothing vague ships. If we cannot scope it, the $49 comes straight back.",
         "The 36-hour clock starts when scope **and** access are confirmed.",
         "The tool lands in your toolbox, tested and working.",
       ] },
@@ -213,7 +213,7 @@ export const GUIDES: GuideDoc[] = [
       { ul: [
         "Weekends and US federal holidays do not count.",
         "The clock pauses while we are waiting on you, for an answer, a login, or an example file.",
-        "Miss the window and the request is on us: you do not pay for that request, with no forms to file.",
+        "Miss the window and the $49 is refunded automatically, with no forms to file.",
       ] },
       { h: "What fits in 36 hours" },
       { p: "One focused workflow that can be built in about four working hours, using approved existing services where it makes sense. It cannot include regulated data (health records, finance credentials, that neighborhood), complex data migrations, mobile app store review timelines, or work stuck waiting on a third party." },

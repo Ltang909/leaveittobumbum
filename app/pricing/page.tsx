@@ -25,7 +25,7 @@ export default function Pricing() {
           <ul>
             <li><strong>What it includes:</strong> one scoped custom tool request, built and tested, landing in the toolbox within 36 hours of agreed scope.</li>
             <li><strong>What scoped means:</strong> one focused task, the tiny useful version of it. Bigger ideas get carved into a first slice that fits, and we tell you honestly what the rest would take.</li>
-            <li><strong>How to request:</strong> add it to the <a href="/requests/">public request queue</a> and say it is a Promise request. We agree the scope with you first, and payment is arranged then, before the clock starts.</li>
+            <li><strong>How to request:</strong> send it from your <a href="/account/#requests">account page</a> and pay the $49 at checkout. We agree the scope with you by email, and the clock starts when scope and access are confirmed. If we cannot scope it, the $49 comes back.</li>
           </ul>
           <p><a href="/36-hours/"><strong>Read the full promise</strong></a>.</p>
           <h2>The free lane: the community queue</h2>

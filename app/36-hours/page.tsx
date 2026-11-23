@@ -19,7 +19,7 @@ export default function ThirtySixHours() {
       </section>
       <section className="shell">
         <div className="promise-steps">
-          <article className="promise-step ps-1"><b>Step 1</b><h3>You request</h3><p>Tell us the one annoying task, from your account page or the request form.</p></article>
+          <article className="promise-step ps-1"><b>Step 1</b><h3>You request</h3><p>Tell us the one annoying task from your account page, and pay the one-time $49 at checkout.</p></article>
           <article className="promise-step ps-2"><b>Step 2</b><h3>We scope it together</h3><p>We reply with the tiny, useful version we can actually build. Nothing vague ships.</p></article>
           <article className="promise-step ps-3"><b>Step 3</b><h3>The clock starts</h3><p>36 hours begins when scope <em>and</em> access are confirmed. We can&rsquo;t build on a maybe.</p></article>
           <article className="promise-step ps-4"><b>Step 4</b><h3>Bum Bum ships</h3><p>The tool lands in your toolbox, tested and working.</p></article>
@@ -37,6 +37,7 @@ export default function ThirtySixHours() {
           <h2>The fine print (short, we promise)</h2>
           <ul>
             <li><strong>One scoped request per Promise.</strong> Each request is its own $49, and its own 36-hour clock.</li>
+            <li><strong>Paid upfront, refunded if it falls through.</strong> If we can&rsquo;t scope your request, the $49 comes straight back. If we miss the 36 hours, same thing, automatically.</li>
             <li><strong>Weekends and US federal holidays</strong> don&rsquo;t count against the clock. Bum Bum naps.</li>
             <li><strong>The clock pauses</strong> if we&rsquo;re waiting on you for access, answers, or approvals.</li>
           </ul>

@@ -118,7 +118,7 @@ function RequestPaths() {
         </div>
         <div>
           <strong>The 36-hour Promise</strong>
-          <p>$49 one-time. One scoped request, built within 36 hours of agreed scope, or the request is on us. Say it is a Promise request and we will scope it with you.</p>
+          <p>$49 one-time, paid when you send it from your account page. One scoped request, built within 36 hours of agreed scope, or the $49 comes back. We scope it with you by email after checkout.</p>
           <p><a href="/36-hours/">Read the promise</a></p>
         </div>
       </div>
