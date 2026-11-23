@@ -24,11 +24,11 @@ export default function Terms() {
           <h2>Pricing</h2>
           <ul>
             <li><strong>Every tool is free</strong>, with no usage limits, no counts, and no subscription. An account is optional and also free.</li>
-            <li>The only paid offer is the <strong>36-hour Promise</strong>: a one-time $49 per request, described below. Payment is arranged when a request is scoped.</li>
+            <li>The only paid offer is the <strong>36-hour Promise</strong>: a one-time $49 per request, described below. You pay when you send the request; if we cannot scope it, the $49 is refunded in full.</li>
             <li>Paid plans sold before November 17, 2026 (Helper, Operator) are retired. An existing subscription can be cancelled anytime from your account page; it runs until the end of its billing period. No refunds for partial months, but no hard feelings either.</li>
           </ul>
           <h2>The 36-hour Promise</h2>
-          <p>One scoped request per Promise: one focused workflow buildable in about four working hours. It can use approved existing services, but can&apos;t include regulated data, complex migrations, app-store review work, or anything waiting on a third party. The clock starts when scope and access are confirmed; weekends and US federal holidays are excluded. If we miss the window, the request is on us: you don&apos;t pay for it.</p>
+          <p>One scoped request per Promise: one focused workflow buildable in about four working hours. It can use approved existing services, but can&apos;t include regulated data, complex migrations, app-store review work, or anything waiting on a third party. The clock starts when scope and access are confirmed; weekends and US federal holidays are excluded. If we miss the window, the $49 is refunded in full.</p>
           <h2>Acceptable use</h2>
           <p>Don&apos;t use the tools for anything illegal, abusive, or wildly outside their purpose. Don&apos;t try to break, scrape, or resell the service. We may suspend accounts that do &mdash; after a warning, unless it&apos;s egregious.</p>
           <h2>Your content</h2>

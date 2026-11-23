@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no,date=no,address=no,email=no"><title>PDF Compressor | Shrink a PDF in Your Browser | Leave It to Bum Bum</title>
-<meta name="description" content="Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free to try, no account needed.">
+<meta name="description" content="Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free, no account needed.">
 <meta property="og:title" content="PDF Compressor | Shrink a PDF in Your Browser | Leave It to Bum Bum">
-<meta property="og:description" content="Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free to try, no account needed.">
+<meta property="og:description" content="Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/pdf-compressor/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/pdf-compressor.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PDF Compressor | Shrink a PDF in Your Browser | Leave It to Bum Bum">
-<meta name="twitter:description" content="Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free to try, no account needed.">
+<meta name="twitter:description" content="Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/pdf-compressor.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/pdf-compressor/"><link rel="alternate" hreflang="es" href="https://leaveittobumbum.com/es/tools/pdf-compressor/"><link rel="alternate" hreflang="en" href="https://leaveittobumbum.com/tools/pdf-compressor/"><link rel="alternate" hreflang="x-default" href="https://leaveittobumbum.com/tools/pdf-compressor/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free to try, no account needed.",
+  "description": "Shrink a PDF right in your browser until it fits the email or upload limit. Fast, private, files never leave your device. Free, no account needed.",
   "url": "https://leaveittobumbum.com/tools/pdf-compressor/"
 }
 </script>

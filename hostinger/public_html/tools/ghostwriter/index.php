@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Voice to Content | Turn a Voice Ramble Into Hooks, a Script, and a Caption | Leave It to Bum Bum</title>
-<meta name="description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.">
+<meta name="description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free, no account needed.">
 <meta property="og:title" content="Voice to Content | Turn a Voice Ramble Into Hooks, a Script, and a Caption | Leave It to Bum Bum">
-<meta property="og:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.">
+<meta property="og:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/ghostwriter/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/ghostwriter.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Voice to Content | Turn a Voice Ramble Into Hooks, a Script, and a Caption | Leave It to Bum Bum">
-<meta name="twitter:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.">
+<meta name="twitter:description" content="Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/ghostwriter.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/ghostwriter/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free to try, no account needed.",
+  "description": "Turn voice rambles into content packs: 3 hooks, a 60-second script, and a caption. Free, no account needed.",
   "url": "https://leaveittobumbum.com/tools/ghostwriter/"
 }
 </script>

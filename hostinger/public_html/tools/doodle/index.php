@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Online Sketchpad | Draw in Your Browser, Export PNG or SVG | Leave It to Bum Bum</title>
-<meta name="description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
+<meta name="description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free, with no usage limits.">
 <meta property="og:title" content="Online Sketchpad | Draw in Your Browser, Export PNG or SVG | Leave It to Bum Bum">
-<meta property="og:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
+<meta property="og:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free, with no usage limits.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/doodle/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/doodle.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Online Sketchpad | Draw in Your Browser, Export PNG or SVG | Leave It to Bum Bum">
-<meta name="twitter:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.">
+<meta name="twitter:description" content="A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free, with no usage limits.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/doodle.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/doodle/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free to try.",
+  "description": "A pocket sketchpad in your browser. Draw with finger, stylus, or mouse. Drawing is free and nothing leaves your browser. Free, with no usage limits.",
   "url": "https://leaveittobumbum.com/tools/doodle/"
 }
 </script>

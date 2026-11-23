@@ -12,11 +12,11 @@ export const metadata: Metadata = {
   // own self-referencing canonical in its page metadata.
   alternates: { canonical: "/" },
   title: "Leave It to Bum Bum | Tiny tools for busy businesses",
-  description: "Useful little tools for the annoying parts of running a small business. Start free, then pay as your business uses more.",
+  description: "Useful little tools for the annoying parts of running a small business. Every tool is free, with no usage limits.",
   icons: { icon: "/bum/favicon-cat.png" },
   openGraph: {
     title: "Leave It to Bum Bum | Tiny tools for busy businesses",
-    description: "Useful little tools for the annoying parts of running a small business. Start free, then pay as your business uses more.",
+    description: "Useful little tools for the annoying parts of running a small business. Every tool is free, with no usage limits.",
     url: "https://leaveittobumbum.com/",
     siteName: "Leave It to Bum Bum",
     images: [{ url: "https://leaveittobumbum.com/bum/favicon-cat.png" }],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Leave It to Bum Bum | Tiny tools for busy businesses",
-    description: "Useful little tools for the annoying parts of running a small business. Start free, then pay as your business uses more.",
+    description: "Useful little tools for the annoying parts of running a small business. Every tool is free, with no usage limits.",
   },
   other: {
     "p:domain_verify": "3773f0aa66ddbed21dcef0b9b6a93798",
@@ -40,7 +40,7 @@ const organizationLd = {
   logo: "https://leaveittobumbum.com/bum/favicon-cat.png",
   sameAs: [
     "https://www.instagram.com/leaveittobumbum/",
-    "https://www.linkedin.com/in/leaveittobumbum/",
+    "https://www.linkedin.com/company/leave-it-to-bum-bum",
     "https://ca.pinterest.com/0s5nekxyh3lt53n8j9balgylnaznz9/",
   ],
 };

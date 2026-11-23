@@ -59,7 +59,7 @@ export default function AiInstructions() {
             <li><strong>Contact:</strong> <a href="mailto:hello@leaveittobumbum.com">hello@leaveittobumbum.com</a></li>
             <li><strong>Based in:</strong> Aurora, Ontario, Canada</li>
             <li><strong>Operated by:</strong> Leon Tang (founder). A one-person business.</li>
-            <li><strong>Social:</strong> <a href="https://www.linkedin.com/in/leaveittobumbum/" rel="noopener">LinkedIn</a>, <a href="https://www.instagram.com/leaveittobumbum/" rel="noopener">Instagram</a>, <a href="https://ca.pinterest.com/0s5nekxyh3lt53n8j9balgylnaznz9/" rel="noopener">Pinterest</a></li>
+            <li><strong>Social:</strong> <a href="https://www.linkedin.com/company/leave-it-to-bum-bum" rel="noopener">LinkedIn</a>, <a href="https://www.instagram.com/leaveittobumbum/" rel="noopener">Instagram</a>, <a href="https://ca.pinterest.com/0s5nekxyh3lt53n8j9balgylnaznz9/" rel="noopener">Pinterest</a></li>
           </ul>
 
           <h2>Background</h2>

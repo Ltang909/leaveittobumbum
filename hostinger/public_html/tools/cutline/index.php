@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Subscription Tracker | Find Subscriptions You Forgot About | Leave It to Bum Bum</title>
-<meta name="description" content="Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free to try, no account needed.">
+<meta name="description" content="Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free, no account needed.">
 <meta property="og:title" content="Subscription Tracker | Find Subscriptions You Forgot About | Leave It to Bum Bum">
-<meta property="og:description" content="Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free to try, no account needed.">
+<meta property="og:description" content="Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free, no account needed.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/cutline/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/cutline.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Subscription Tracker | Find Subscriptions You Forgot About | Leave It to Bum Bum">
-<meta name="twitter:description" content="Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free to try, no account needed.">
+<meta name="twitter:description" content="Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free, no account needed.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/cutline.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/cutline/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free to try, no account needed.",
+  "description": "Every subscription you forgot about, in one place. Renewals appear in the Monday note for the week they come due, so free trials stop billing you. Free, no account needed.",
   "url": "https://leaveittobumbum.com/tools/cutline/"
 }
 </script>

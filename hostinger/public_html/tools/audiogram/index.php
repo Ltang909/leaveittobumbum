@@ -1,14 +1,14 @@
 <?php require dirname(__DIR__, 2) . '/api/_bootstrap.php'; $subject = pageSubject(); $user = $subject['kind'] === 'user' ? $subject['user'] : null; $isGuest = $subject['kind'] === 'guest'; $guestId = $isGuest ? $subject['guest_id'] : null; $usage = $subject['kind'] === 'none' ? null : subjectUsage($subject); ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="format-detection" content="telephone=no"><title>Audiogram Maker | Turn an MP3 Into a Captioned Video | Leave It to Bum Bum</title>
-<meta name="description" content="Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free to try.">
+<meta name="description" content="Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free, with no usage limits.">
 <meta property="og:title" content="Audiogram Maker | Turn an MP3 Into a Captioned Video | Leave It to Bum Bum">
-<meta property="og:description" content="Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free to try.">
+<meta property="og:description" content="Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free, with no usage limits.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://leaveittobumbum.com/tools/audiogram/">
 <meta property="og:image" content="https://leaveittobumbum.com/bum/og/audiogram.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Audiogram Maker | Turn an MP3 Into a Captioned Video | Leave It to Bum Bum">
-<meta name="twitter:description" content="Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed. Free to try.">
+<meta name="twitter:description" content="Turn MP3s into captioned videos. Upload audio and a background image, pick a caption style, get a video ready for the feed. Free, with no usage limits.">
 <meta name="twitter:image" content="https://leaveittobumbum.com/bum/og/audiogram.jpg">
 <link rel="canonical" href="https://leaveittobumbum.com/tools/audiogram/">
 <script type="application/ld+json">
@@ -23,7 +23,7 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "description": "Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free to try.",
+  "description": "Turn MP3s into videos, with captions or without. Upload audio and a background image, pick a caption style or none at all, get a video ready for the feed. Free, with no usage limits.",
   "url": "https://leaveittobumbum.com/tools/audiogram/"
 }
 </script>
