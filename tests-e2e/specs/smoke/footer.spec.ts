@@ -2,7 +2,7 @@ import { test } from '@playwright/test';
 import { assertFooter } from '../../helpers';
 
 /**
- * Footer socials: LinkedIn points at the /in/ profile, Pinterest replaced
+ * Footer socials: LinkedIn points at the company page, Pinterest replaced
  * Facebook (Oct 26, 2026), and no facebook.com link survives anywhere in
  * the footer. Checked on BOTH footer implementations: the Next chrome
  * footer (homepage) and the shared PHP footer (tool pages).

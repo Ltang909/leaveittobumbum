@@ -52,7 +52,7 @@ export const TOOLS: ToolDef[] = [
 /** Social links every footer (Next chrome AND the PHP tool-page footer)
  *  must carry. Facebook must be gone entirely. */
 export const FOOTER_SOCIALS = [
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/leaveittobumbum/' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/leave-it-to-bum-bum' },
   { label: 'Instagram', href: 'https://www.instagram.com/leaveittobumbum/' },
   { label: 'Pinterest', href: 'https://ca.pinterest.com/0s5nekxyh3lt53n8j9balgylnaznz9/' },
 ];
