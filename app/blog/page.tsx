@@ -10,6 +10,12 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    href: "/blog/solopreneur-stack/",
+    title: "The Solopreneur Stack: A Working Setup Built on Free Plans",
+    description: "A one-person business setup built on free plans, sorted by job: getting clients, doing the work, getting paid, and staying organized, with each free plan's real limits stated plainly.",
+    date: "November 27, 2026",
+  },
+  {
     href: "/blog/bonsai-alternatives-2026/",
     title: "6 Best Bonsai Alternatives for Freelancers in 2026 (Prices & Fees Compared)",
     description: "Looking beyond Bonsai? Compare Indy, Moxie, HoneyBook, Dubsado, Wave and Leave It To Bum Bum by price, contracts, invoicing, payment fees and fit.",
