@@ -139,7 +139,7 @@ export default function BestFreeClientFollowUpTracker() {
                 <tr><th>Tool</th><th>Best for</th><th>Free plan</th><th>Main limitation</th></tr>
               </thead>
               <tbody>
-                <tr><td><strong><a href="/tools/purrsuit/">LeaveItToBumBum</a></strong></td><td>Everyday follow-ups</td><td>Free access</td><td>Not a full team CRM</td></tr>
+                <tr><td><strong><a href="/tools/purrsuit/">LeaveItToBumBum</a></strong></td><td>Everyday follow-ups</td><td>Free, no limits</td><td>Not a full team CRM</td></tr>
                 <tr><td><strong><a href="https://clientplot.com/" rel="noopener">ClientPlot</a></strong></td><td>Freelance client work</td><td>100 clients</td><td>Client limit</td></tr>
                 <tr><td><strong><a href="https://fwdtools.com/" rel="noopener">FWD Tools</a></strong></td><td>Private browser-based tracking</td><td>Free browser tool</td><td>Limited team workflow</td></tr>
                 <tr><td><strong><a href="https://www.bigin.com/" rel="noopener">Bigin by Zoho</a></strong></td><td>First sales pipeline</td><td>500 records</td><td>1 user and pipeline</td></tr>
@@ -165,7 +165,7 @@ export default function BestFreeClientFollowUpTracker() {
             <li>Available as part of the LeaveItToBumBum toolbox.</li>
           </ul>
           <p><strong>What to know</strong></p>
-          <p>Purrsuit is not designed to replace a full CRM with shared pipelines, sales forecasting or complex team workflows. Free-access terms and current usage limits should be checked on the tool page.</p>
+          <p>Purrsuit is not designed to replace a full CRM with shared pipelines, sales forecasting or complex team workflows. Purrsuit is free with no limits, so you can add every client you have without watching a usage count.</p>
           <p><strong>Our verdict</strong></p>
           <p>Choose Purrsuit when your biggest challenge isn't managing your sales pipeline. It's remembering to follow through.</p>
           <p><a href="/tools/purrsuit/">Try the Client Follow-Up Tracker</a></p>
@@ -318,7 +318,7 @@ export default function BestFreeClientFollowUpTracker() {
           <p>Choose Google Sheets if you want maximum flexibility and don't mind doing some of the work yourself.</p>
           <h2>How to choose a free client follow-up tracker</h2>
           <p>The most useful tracker is the one that matches how you already work.</p>
-          <p><strong>If you're a freelancer with a handful of active clients:</strong> Start with Purrsuit. A focused follow-up workflow may be enough.</p>
+          <p><strong>If you're a freelancer with a handful of active clients:</strong> Start with <a href="/tools/purrsuit/">Purrsuit</a>. A focused follow-up workflow may be enough.</p>
           <p><strong>If you're juggling projects, deadlines and client communication:</strong> ClientPlot is worth considering because it keeps these activities together.</p>
           <p><strong>If you need reminders tied to a sales pipeline:</strong> Bigin gives you more structure.</p>
           <p><strong>If multiple people are contacting the same customers:</strong> Zoho CRM or HubSpot provides more collaborative functionality.</p>
@@ -345,7 +345,7 @@ export default function BestFreeClientFollowUpTracker() {
           <p>You don't need a complicated sales process to send that message. You just need to remember to send it.</p>
           <h2>Frequently asked questions</h2>
           <h3>What is the best free client follow-up tracker?</h3>
-          <p>For a solo business focused on remembering who to contact and what to say, LeaveItToBumBum's Client Follow-Up Tracker is our editorial pick.</p>
+          <p>For a solo business focused on remembering who to contact and what to say, LeaveItToBumBum's <a href="/tools/purrsuit/">Client Follow-Up Tracker</a> is our editorial pick.</p>
           <p>For freelancers managing projects alongside follow-ups, ClientPlot offers additional features. For small teams, Zoho CRM and HubSpot are stronger options.</p>
           <h3>What is the difference between a follow-up tracker and a CRM?</h3>
           <p>A follow-up tracker focuses on the next interaction with a client: who needs attention, when and why.</p>
@@ -367,7 +367,7 @@ export default function BestFreeClientFollowUpTracker() {
           <p>A missed follow-up doesn't always mean you need more software.</p>
           <p>Sometimes it means you need a better place to keep the promises you make to clients.</p>
           <p>Start with the smallest tool that solves the problem. Add complexity when your business actually needs it.</p>
-          <p>For a simple place to manage your next client conversations, <a href="/tools/purrsuit/">try LeaveItToBumBum's free-access Client Follow-Up Tracker</a>.</p>
+          <p>For a simple place to manage your next client conversations, <a href="/tools/purrsuit/">try LeaveItToBumBum's Client Follow-Up Tracker</a>. It is free, with no limits.</p>
           <p>Need something more substantial? Read our <a href="/blog/best-free-crm-small-business/">guide to the best free CRMs for small businesses</a>.</p>
         </div>
       </section>
